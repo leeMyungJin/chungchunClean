@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.limefood.Mappers.LoginMapper">
+
+<select id="getPassword" parameterType = "com.limefood.vo.CustInfoVO" resultType="com.limefood.vo.CustInfoVO">
+	select
+		id,
+		password,
+		password_key
+	from
+		limefood.cust_info_bas ci
+	where
+		1 = 1
+		and ci.id = #{id}
+</select>
+
+<update id="updateLoginTime" parameterType = "com.limefood.vo.CustInfoVO">
+	update
+		limefood.cust_info_bas cust
+	set
+		last_login = #{lastLogin}::timestamp,
+		browser = #{browser},
+		user_agent = #{userAgent}
+	where
+		cust.id = #{id}
+</update>
+
+</mapper>

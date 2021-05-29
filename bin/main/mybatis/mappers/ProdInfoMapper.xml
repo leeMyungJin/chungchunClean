@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.limefood.Mappers.ProdInfoMapper">
+
+
+	<select id="getProdInfoList" resultType="com.limefood.vo.ProdInfoVO">
+	 <![CDATA[
+	select
+		pib.prod_code,
+		pib.prod_name,
+		'D-' || pib.dead_line || ' 21:00' as dead_line,
+		pib.unit,
+		pib.origin,
+		case when pib.vat_yn = 'Y' then '과세' else '면세' end as vat_yn,
+		pib.cost,
+		pib.price,
+		pib.inven,
+		case when coalesce(cfb.prod_code,'') = '' then 'N' else 'Y' end bookmark,
+		case when (#{date}::date - now()::date) = pib.dead_line and to_char(now(),'HH24') < '21' then 'O' 
+		     when (#{date}::date - now()::date) > pib.dead_line then 'O' 
+			 else 'X' end  as status
+	]]>			 
+	from
+		limefood.prod_info_bas pib
+	left join (
+		select
+			*
+		from
+			limefood.cust_bookmark_bas
+		where
+			id =#{id} ) cfb on
+		pib.prod_code = cfb.prod_code
+	where 1 = 1 
+	   <if test="prod != null">
+	   		AND (	
+				<foreach collection="prod" item="item"
+					index="index" open="(" close=")" separator="or">
+					pib.prod_name LIKE '%' || #{item} || '%'
+				</foreach>
+				OR
+				<foreach collection="prod" item="item"
+					index="index" open="(" close=")" separator="or">
+					pib.prod_code LIKE '%' || #{item} || '%'
+				</foreach>					
+			)
+		</if>	   
+	order by pib.prod_code 
+	</select>	
+
+
+</mapper>

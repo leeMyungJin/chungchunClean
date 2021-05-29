@@ -1,0 +1,53 @@
+@media (max-width:1700px){
+  .dashboard_area .dashboard_tit{white-space:nowrap;}
+  
+  .filter_area .filter_sum_area .sum_tit{font-size:11px;white-space:nowrap;}
+  .filter_area .filter_sum_area .sub_txt{font-size:16px;white-space:nowrap;}
+  
+  .admin05 .admin_filter{flex-wrap:wrap;}
+  .admin05 .filter_area{height:auto;padding:20px;}
+  .admin05 .filter_area .filter_sum_area{position:relative;right:auto;margin-top: 20px;border-top:2px solid #ddd;width: 100%;padding-top: 20px;transform: inherit;}
+
+  .admin06 .admin_filter{flex-wrap:wrap;}
+  .admin06 .filter_area{height:auto;padding:20px;}
+  .admin06 .filter_area .filter_sum_area{position:relative;right:auto;margin-top: 20px;border-top:2px solid #ddd;width: 100%;padding-top: 20px;transform: inherit;}
+
+
+  .over_area{align-items: flex-start;}
+  .over_area .over_box .over_tit{font-size:15px;}
+  .over_area .over_box .over_txt{font-size:16px;}
+  
+}
+
+@media (max-width:1500px){
+  #customer header .inner{display:flex;align-items:center;justify-content:space-between;padding:0 20px;}
+  #customer header .header_logo{position:relative;top:auto;left:auto;transform:none;}
+  #customer header .gnb{position:relative;top:auto;left:auto;transform:none;}
+  #customer header .gnb li{width:110px;}
+  #customer header .gnb li a{font-size:14px;}
+  #customer header .admin{position:relative;right:auto;top:auto;transform:none;margin-right:-50px;width:82px;}
+  #customer header .my_wrap{position:relative;right:auto;top:auto;transform:none;}
+  
+  footer .inner{padding:30px 20px 20px;}
+
+  .sub_tabs{height:46px;}
+  .sub_tabs li.sub_tab{line-height:46px;width:140px;}
+  .sub_cont_area{padding:40px 20px 20px;}
+  .sub_cont_area h1.sub_tit{margin:50px 0 30px;}
+  .filter_area{height:70px;}
+  #admin .filter_area select{width:120px;background: #fff url(../img/select_arrow.png) no-repeat 93px 50%;}
+  .filter_area .search_btn{width:100px;}
+
+  .dash_top .mark_area p.possible,.dash_top .mark_area p.impossible{font-size:14px;}
+
+  #admin .sidebar{width:180px;}
+  #admin .sidebar ul.nav{width:160px;}
+  #admin .sidebar ul.nav ul.nav_dept2{margin-top:0;}
+  #admin .sub_cont_area{padding:20px;margin-left:180px;}
+  #admin .mark_area p.impossible, #admin .mark_area p.possible{font-size:14px;}
+
+  .filter_area .resp_box_style01{display:block;margin-top:20px;}
+  .filter_area .resp_box_style01 label{margin-left:0!important;}
+
+  /* input.search::placeholder{color:#fff;} */
+}

@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.limefood.Mappers.CustInfoMapper">
+
+	<select id="getCustInfoList" resultType="com.limefood.vo.CustInfoVO">
+		select
+			ID,
+			password,
+			NAME,
+			telphone ,
+			celphone ,
+			email ,
+			corp_name ,
+			corp_num ,
+			bas_addr,
+			dtl_addr,
+			to_char(cret_time , 'yyyy-mm-dd hh24:mi:ss') as cret_time,
+			to_char(last_login , 'yyyy-mm-dd hh24:mi:ss') as last_login
+		from
+			limefood.cust_info_bas c
+	</select>
+
+
+	<select id="getCustInfo" parameterType="com.limefood.vo.CustInfoVO" resultType="com.limefood.vo.CustInfoVO">
+		select
+			ID,
+			password,
+			NAME,
+			telphone ,
+			celphone ,
+			email ,
+			corp_name ,
+			corp_num ,
+			bas_addr,
+			dtl_addr,
+			to_char(cret_time , 'yyyy-mm-dd hh24:mi:ss') cret_time,
+			to_char(last_login , 'yyyy-mm-dd hh24:mi:ss') as last_login,
+			admin_flag,
+			lock_flag
+		from
+			limefood.cust_info_bas cust
+		where
+			cust.ID = #{id}
+	</select>
+
+	<insert id="regCustInfo">
+		insert into	limefood.cust_info_bas 
+				(id, password, name, telphone, celphone, email, corp_name, corp_num, addr, cust_type, cret_time, chg_time, last_login, admin_flag, password_key)
+		values(#{id}, #{password}, #{name}, #{telPhone}, #{celPhone}, #{email}, #{corpName}, #{corpNum}, #{addr}, #{custType}, now(), null, null, #{adminFlag},#{passwordKey});
+	</insert>
+
+	<update id="updateCustInfo" parameterType="com.limefood.vo.CustInfoVO">
+		update
+			limefood.cust_info_bas
+		set
+			name = #{name} ,
+			telphone = #{telPhone} ,
+			celphone = #{celPhone} ,
+			email = #{email} ,
+			corp_name = #{corpName} ,
+			corp_num = #{corpNum} ,
+			bas_addr = #{basAddr} ,
+			dtl_addr = #{dtlAddr} ,
+			chg_time = now()
+		where
+			id =#{id}
+	</update>
+
+
+	<select id="getProdInfoList" parameterType ="hashMap" resultType="com.limefood.vo.ProdInfoVO">
+	 <![CDATA[
+	select
+		pib.prod_code,
+		pib.prod_name,
+		case when pib.dead_line is null then ''
+		     else 'D-' || pib.dead_line || ' 21:00' end as dead_line,
+		pib.unit,
+		pib.origin,
+		case when pib.vat_yn = 'Y' then '과세' else '면세' end as vat_yn,
+		pib.cost,
+		coalesce(ppb.price,pib.price) as price,
+		pib.inven,
+		case when coalesce(cfb.prod_code,'') = '' then 'N' else 'Y' end bookmark,
+		case when pib.dead_line is null then 'O'
+		     when (#{shipDate}::date - now()::date) = pib.dead_line and to_char(now(),'HH24') < '21' then 'O' 
+		     when (#{shipDate}::date - now()::date) > pib.dead_line then 'O' 
+			 else 'X' end  as status,
+	]]>
+	coalesce(head.price,coalesce(ppb.price, pib.price))  as head_price			 
+	from
+		limefood.prod_info_bas pib
+	left join (
+		select
+			*
+		from
+			limefood.cust_bookmark_bas
+		where
+			id =#{id} ) cfb on
+		pib.prod_code = cfb.prod_code
+  	left outer join limefood.prod_price_bas ppb on
+		pib.prod_code = ppb.prod_code
+		and ppb.corp_num = (select corp_num from limefood.cust_info_bas where id = #{id})
+	left outer join limefood.prod_price_bas head on 
+		pib.prod_code  = head.prod_code 
+		and head.corp_num  = (select corp_num from limefood.cust_info_bas where id = (select coalesce(head_corp_id,#{id}) from limefood.cust_info_bas where id=#{id}))
+	where 1 = 1
+	   and pib.use_flag ='Y' 
+	   <if test="prod != null">
+	   		AND (	
+				<foreach collection="prod" item="item"
+					index="index" open="(" close=")" separator="or">
+					pib.prod_name LIKE '%' || #{item} || '%'
+				</foreach>
+				OR
+				<foreach collection="prod" item="item"
+					index="index" open="(" close=")" separator="or">
+					pib.prod_code LIKE '%' || #{item} || '%'
+				</foreach>					
+			)
+		</if>
+		<if test="ctgCode != ''">
+			and pib.prod_code like #{ctgCode} || '%'
+		</if>
+		<if test="ctgCode == '' and largeCtg != ''"> 
+			and pib.prod_code like #{largeCtg}|| '%'
+		</if>
+	order by pib.prod_code 
+	</select>	
+
+
+	<insert id="addBookmark">
+		insert into	limefood.cust_bookmark_Bas 
+				(prod_code,id,cret_time)
+		values(#{prod}, #{id}, now())
+	</insert>
+
+	<delete id="delBookmark">
+		delete from limefood.cust_bookmark_Bas 
+		where 1=1
+			and id=#{id}
+			and prod_code=#{prod}
+	</delete>
+
+	<select id="getBookmarkList" parameterType ="hashMap" resultType="com.limefood.vo.ProdInfoVO">
+		<![CDATA[
+		select
+			pib.prod_code,
+			pib.prod_name,
+			case when pib.dead_line is null then ''
+			     else 'D-' || pib.dead_line || ' 21:00' end as dead_line,
+			pib.unit,
+			pib.origin,
+			case when pib.vat_yn = 'Y' then '과세' else '면세' end as vat_yn,
+			pib.cost,
+			coalesce(ppb.price, pib.price) price,
+			pib.inven,
+			case when coalesce(cfb.prod_code,'') = '' then 'N' else 'Y' end bookmark,
+			case when pib.dead_line is null then 'O'
+			    when (#{shipDate}::date - now()::date) = pib.dead_line and to_char(now(),'HH24') < '21' then 'O' 
+				when (#{shipDate}::date - now()::date) > pib.dead_line then 'O' 
+				else 'X' end  as status,
+		]]>	
+		coalesce(head.price,coalesce(ppb.price, pib.price))  as head_price		 
+		from
+			limefood.prod_info_bas pib
+		INNER  join (
+			select
+				*
+			from
+				limefood.cust_bookmark_bas
+			where
+				id =#{id} ) cfb on
+			pib.prod_code = cfb.prod_code
+  		left outer join limefood.prod_price_bas ppb on
+			pib.prod_code = ppb.prod_code
+			and ppb.corp_num = (select corp_num from limefood.cust_info_bas where id = #{id})			
+		left outer join limefood.prod_price_bas head on 
+			pib.prod_code  = head.prod_code 
+			and head.corp_num  = (select corp_num from limefood.cust_info_bas where id = (select coalesce(head_corp_id,#{id}) from limefood.cust_info_bas where id=#{id}))						
+		where 1 = 1 
+		and pib.use_flag ='Y'
+		<if test="prod != null">
+				AND (	
+					<foreach collection="prod" item="item"
+						index="index" open="(" close=")" separator="or">
+						pib.prod_name LIKE '%' || #{item} || '%'
+					</foreach>
+					OR
+					<foreach collection="prod" item="item"
+						index="index" open="(" close=")" separator="or">
+						pib.prod_code LIKE '%' || #{item} || '%'
+					</foreach>					
+				)
+			</if>
+		<if test="ctgCode != ''">
+			and pib.prod_code like #{ctgCode} || '%'
+		</if>
+		<if test="ctgCode == '' and largeCtg != ''"> 
+			and pib.prod_code like #{largeCtg}|| '%'
+		</if>				   
+		order by pib.prod_code 
+	</select>
+
+	<insert id="addShopBasket">
+		insert into	limefood.cust_shop_basket_Bas 
+				(prod_code,id,order_cnt,cret_time, cret_id)
+		values(#{prod}, #{id}, coalesce(#{orderCnt},0), now(), #{id})
+	</insert>
+
+	<delete id="delShopBasket">
+		delete from limefood.cust_shop_basket_Bas 
+		where 1=1
+			and id=#{id}
+			and prod_code=#{prod}
+	</delete>
+	<select id="getShopBasketList" resultType="com.limefood.vo.ProdInfoVO">
+		<![CDATA[
+		select
+			csbb.id,
+			case when pib.dead_line is null then ''
+			     else 'D-' || pib.dead_line || ' 21:00' end as dead_line,
+			pib.prod_code,
+			pib.prod_name,
+			pib.unit ,
+			pib.origin ,
+			csbb.order_cnt,
+			case when pib.vat_yn = 'Y' then '과세'
+			     else '면세' end vat_yn,
+			coalesce(ppb.price, pib.price) price,
+			case when pib.dead_line is null then 'O'
+			     when (#{date}::date - now()::date) = pib.dead_line and to_char(now(),'HH24') < '21' then 'O' 
+				when (#{date}::date - now()::date) > pib.dead_line then 'O' 
+				else 'X' end  as status	,
+			csbb.order_cnt * coalesce(ppb.price, pib.price) supPrice,
+			case when pib.vat_yn  ='Y' then round(( csbb.order_cnt * coalesce(ppb.price, pib.price) ) * 0.1)
+					else 0 end vatPrice,
+			case when pib.vat_yn = 'Y' then round(csbb.order_cnt * coalesce(ppb.price, pib.price) * 1.1 )
+			     else csbb.order_cnt * coalesce(ppb.price,pib.price)
+				  end  totalPrice,
+			#{date}::date shipDate,
+			pib.cost,
+			pib.use_flag,
+		]]>
+		coalesce(head.price,coalesce(ppb.price, pib.price))  as head_price,
+		csbb.order_cnt * coalesce(head.price,coalesce(ppb.price, pib.price)) head_sup,
+		case when pib.vat_yn  ='Y' then round(( csbb.order_cnt * coalesce(head.price,coalesce(ppb.price, pib.price)) ) * 0.1)
+			 else 0 end head_vat,
+		case when pib.vat_yn = 'Y' then round(csbb.order_cnt * coalesce(head.price,coalesce(ppb.price, pib.price)) * 1.1 )
+			 else csbb.order_cnt * coalesce(head.price,coalesce(ppb.price, pib.price)) end  head_total					
+		from
+			limefood.cust_shop_basket_bas csbb
+		left outer join limefood.prod_info_bas pib on
+			csbb.prod_code = pib.prod_code
+		left outer join limefood.prod_price_bas ppb on
+			csbb.prod_code = ppb.prod_code
+			and ppb.corp_num = (select corp_num from limefood.cust_info_bas where id = #{id})
+		left outer join limefood.prod_price_bas head on 
+			pib.prod_code  = head.prod_code 
+			and head.corp_num  = (select corp_num from limefood.cust_info_bas where id = (select coalesce(head_corp_id,#{id}) from limefood.cust_info_bas where id=#{id}))			
+		where csbb.id = #{id}
+		<if test="prod != null">
+				AND (	
+					<foreach collection="prod" item="item"
+						index="index" open="(" close=")" separator="or">
+						pib.prod_name LIKE '%' || #{item} || '%'
+					</foreach>
+					OR
+					<foreach collection="prod" item="item"
+						index="index" open="(" close=")" separator="or">
+						pib.prod_code LIKE '%' || #{item} || '%'
+					</foreach>					
+				)
+			</if>	   
+		order by csbb.cret_time
+	</select>
+
+	<update id="upShopBasket">
+		update limefood.cust_shop_basket_bas
+			set 
+				order_cnt = #{orderCnt},
+				chg_time = now(),
+				chg_id = #{id}
+		where id = #{id}
+		  and prod_code = #{prodCode} 
+	</update>	
+
+	<select id ="getShipCorpList" resultType="com.limefood.vo.CustInfoVO">
+		select
+			id, name, corp_name , corp_num 
+		from
+			limefood.cust_info_bas cib2
+		where
+			id in (
+			select
+				coalesce(id, #{id}) as sub_id
+			from
+				limefood.cust_info_bas cib
+			where
+				1 = 1
+				and cib.head_corp_id = #{id}
+			union
+			select #{id})
+		order by head_corp_id  desc, name;
+	</select>
+
+	<select id= "getMonthOrderAmt" resultType="String">
+		select
+			to_char(case when count(total_price) = 0 then 0
+				 else sum(total_price) end,'999,999,999,999,999,999')   as total_price
+		from
+			limefood.cust_order_hst coh
+		where
+			1 = 1
+			and id = #{id}
+			and ship_date like to_char(now(),'yyyy-mm') || '%'
+	</select>
+
+	<select id="getOrderHist" parameterType ="hashMap" resultType = "com.limefood.vo.ProdInfoVO">
+		<![CDATA[
+		select
+			pib.prod_code,
+			pib.prod_name,
+			case when pib.dead_line is null then ''
+			     else 'D-' || pib.dead_line || ' 21:00' end as dead_line,
+			pib.unit,
+			pib.origin,
+			case when pib.vat_yn = 'Y' then '과세' else '면세' end as vat_yn,
+			pib.cost,
+			coalesce(ppb.price,pib.price) price,
+			pib.inven,
+			case when coalesce(cfb.prod_code,'') = '' then 'N' else 'Y' end bookmark,
+			case when dead_line is null then 'O'
+			     when (#{shipDate}::date - now()::date) = pib.dead_line and to_char(now(),'HH24') < '21' then 'O' 
+				when (#{shipDate}::date - now()::date) > pib.dead_line then 'O' 
+				else 'X' end  as status,
+		]]>
+		coalesce(head.price,coalesce(ppb.price, pib.price))  as head_price			 
+		from
+			limefood.prod_info_bas pib
+		left join (
+			select
+				*
+			from
+				limefood.cust_bookmark_bas
+			where
+				id =#{id} ) cfb on
+			pib.prod_code = cfb.prod_code
+		inner join (
+					select
+						distinct prod_code
+					from
+						limefood.cust_order_hst coh
+					where
+						1 = 1
+						and id = #{id}
+						and ship_date::timestamp > now() - interval '1 months'
+		) hist on pib.prod_code = hist.prod_code
+		left outer join limefood.prod_price_bas ppb 
+			on ppb.prod_code  = pib.prod_code 
+			and ppb.corp_num = (select corp_num from limefood.cust_info_Bas where id=#{id})
+		left outer join limefood.prod_price_bas head on 
+			pib.prod_code  = head.prod_code 
+			and head.corp_num  = (select corp_num from limefood.cust_info_bas where id = (select coalesce(head_corp_id,#{id}) from limefood.cust_info_bas where id=#{id}))						
+		where 1 = 1 
+		and pib.use_flag ='Y'
+		<if test="prod != null">
+				AND (	
+					<foreach collection="prod" item="item"
+						index="index" open="(" close=")" separator="or">
+						pib.prod_name LIKE '%' || #{item} || '%'
+					</foreach>
+						OR
+					<foreach collection="prod" item="item"
+						index="index" open="(" close=")" separator="or">
+						pib.prod_code LIKE '%' || #{item} || '%'
+					</foreach>					
+					)
+		</if>
+		<if test="ctgCode != ''">
+			and pib.prod_code like #{ctgCode} || '%'
+		</if>
+		<if test="ctgCode == '' and largeCtg != ''"> 
+			and pib.prod_code like #{largeCtg}|| '%'
+		</if>	   
+			order by pib.prod_code 		
+	</select>
+	<!--주문요청 -->
+	<select id="orderRequest" parameterType="com.limefood.vo.OrderInfoVO" >
+		insert
+			into
+			limefood.cust_order_hst (id, name,dead_line, ship_date, prod_code, prod_name, corp_name, corp_num, unit, origin, vat_yn, order_cnt, price, sup_price, vat_price, total_price, order_no, ship_id, cret_id, cret_time, cost,
+			<!-- 본사 단가로 계산 항목 추가-->
+			head_price,head_sup,head_vat,head_total)
+		values(#{id},#{name}, #{deadLine}, #{shipDate}, #{prodCode}, #{prodName}, (select corp_name from limefood.cust_info_bas where id =#{shipCorp})
+		       , (select corp_num from limefood.cust_info_bas where id =#{shipCorp}), #{unit}, #{origin},
+		<choose>
+				<when test="vatYn == '과세'">
+					'Y',
+				</when>
+				<when test="vatYn == '면세'">
+					'N',
+				</when>
+		</choose>
+		#{orderCnt}, #{price}, #{supPrice}, #{vatPrice}, #{totalPrice}, #{orderNo}, #{shipCorp}, #{id}, now(), #{cost},
+		#{headPrice}, #{headSup}, #{headVat}, #{headTotal}
+		);
+	</select>
+
+	<select id="getOrderList" resultType = "com.limefood.vo.OrderInfoVO">
+	<![CDATA[
+	select
+		id,
+		dead_line,
+		case when dead_line is null or dead_line = '' then 'O'
+		     when (ship_date::date - now()::date) = substring(dead_line,3,position(' ' in dead_line)-2)::integer and to_char(now(),'HH24') < '21'  then 'O'
+			when (ship_date::date - now()::date) > substring(dead_line,3,position(' ' in dead_line)-2)::integer then 'O'
+			else 'X' end status,		
+		ship_date,
+		prod_code,
+		prod_name,
+		corp_name,
+		corp_num,
+		unit,
+		origin,
+		case when vat_yn = 'Y' then '과세'
+		     else '면세' end vat_yn,
+		order_cnt,
+		price,
+		sup_price,
+		vat_price,
+		total_price,
+		order_no,
+		name,
+		head_price,
+		head_sup,
+		head_vat,
+		head_total
+	]]>		
+	from
+		limefood.cust_order_hst
+	where 1=1
+	<if test= "shipId == id or shipId == '' ">
+		and corp_num = (select corp_num from limefood.cust_info_bas where id = #{id})
+	</if>
+	<if test= "shipId != '' and shipId != id">
+		and ship_id = #{shipId}
+	</if>  
+	  and ship_date::date between #{shipDateFrom}::date and #{shipDateTo}::date
+	<if test="prod != null">
+		  <choose>
+				<when test="searchMode == 'all'">
+					AND (
+					<foreach collection="prod" item="item"	index="index" open="(" close=")" separator="or">
+					 	prod_name LIKE '%' || #{item} || '%'
+					</foreach>
+					OR
+					<foreach collection="prod" item="item" index="index" open="(" close=")" separator="or">
+					 	prod_code LIKE '%' || #{item} || '%'
+					</foreach>
+					OR
+					order_no in
+					<foreach collection="prod" item="item" index="index" open="(" close=")" separator=",">
+					 	 #{item} 
+					</foreach>					
+					)
+				</when>
+				<when test="searchMode == 'prodName'">
+				AND
+					<foreach collection="prod" item="item" index="index" open="(" close=")" separator="or">
+					 prod_name LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<when test="searchMode == 'prodCode'">
+				AND	
+					<foreach collection="prod" item="item" index="index" open="(" close=")" separator="or">
+						prod_code LIKE  '%' || #{item} || '%'
+					</foreach>					
+				</when>
+				<when test="searchMode == 'orderNo'">
+				AND order_no in
+					<foreach collection="prod" item="item" index="index" open="(" close=")" separator=",">
+						 #{item} 
+					</foreach>					
+				</when>				
+			</choose>
+		</if>
+	union 
+	<![CDATA[
+	select
+		id,
+		dead_line,
+		case when dead_line is null or dead_line = '' then 'O'
+		     when (ship_date::date - now()::date) = substring(dead_line,3,position(' ' in dead_line)-2)::integer and to_char(now(),'HH24') < '21'  then 'O'
+			when (ship_date::date - now()::date) > substring(dead_line,3,position(' ' in dead_line)-2)::integer then 'O'
+			else 'X' end status,		
+		ship_date,
+		prod_code,
+		prod_name,
+		corp_name,
+		corp_num,
+		unit,
+		origin,
+		case when vat_yn = 'Y' then '과세'
+		     else '면세' end vat_yn,
+		order_cnt,
+		case when (select count(*)  from cust_info_Bas where head_corp_id = #{id} ) > 0 then head_price 
+		     else price end as price,
+		case when (select count(*)  from cust_info_Bas where head_corp_id = #{id} ) > 0 then head_sup 
+		     else sup_price end as sup_price,
+		case when (select count(*)  from cust_info_Bas where head_corp_id = #{id} ) > 0 then head_vat 
+		     else vat_price end as vat_price,
+		case when (select count(*)  from cust_info_Bas where head_corp_id = #{id} ) > 0 then head_total 
+		     else total_price end as total_price,
+		order_no,
+		name,
+		head_price,
+		head_sup,
+		head_vat,
+		head_total
+	]]>		
+	from
+		limefood.cust_order_hst
+	where 1=1
+	<if test= "shipId == '' ">
+		and ship_id in (select id from limefood.cust_info_Bas where id = #{id} union select id from limefood.cust_info_Bas where head_corp_id = #{id})
+	</if>
+	<if test= "shipId != ''">
+		and ship_id = #{shipId}
+	</if>   
+	  and ship_date::date between #{shipDateFrom}::date and #{shipDateTo}::date
+	<if test="prod != null">
+		  <choose>
+				<when test="searchMode == 'all'">
+					AND (
+					<foreach collection="prod" item="item"	index="index" open="(" close=")" separator="or">
+					 	prod_name LIKE '%' || #{item} || '%'
+					</foreach>
+					OR
+					<foreach collection="prod" item="item" index="index" open="(" close=")" separator="or">
+					 	prod_code LIKE '%' || #{item} || '%'
+					</foreach>
+					OR
+					order_no in
+					<foreach collection="prod" item="item" index="index" open="(" close=")" separator=",">
+					 	 #{item} 
+					</foreach>					
+					)
+				</when>
+				<when test="searchMode == 'prodName'">
+				AND
+					<foreach collection="prod" item="item" index="index" open="(" close=")" separator="or">
+					 prod_name LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<when test="searchMode == 'prodCode'">
+				AND	
+					<foreach collection="prod" item="item" index="index" open="(" close=")" separator="or">
+						prod_code LIKE  '%' || #{item} || '%'
+					</foreach>					
+				</when>
+				<when test="searchMode == 'orderNo'">
+				AND order_no in
+					<foreach collection="prod" item="item" index="index" open="(" close=")" separator=",">
+						 #{item} 
+					</foreach>					
+				</when>				
+			</choose>
+		</if>
+	order by order_no , prod_code		  
+	</select>
+
+	<delete id="delOrder">
+		delete from limefood.cust_order_hst 
+		where 1=1
+			and order_no = #{orderNo}
+			and id=#{id}
+			<if test="prod != '' and prod != null">
+			and prod_code=#{prod}
+			</if>
+	</delete>
+	<update id="upOrder" parameterType="hashMap">
+		update limefood.cust_order_hst 
+			set
+				order_cnt = #{orderCnt}::numeric,
+				sup_price = #{supPrice}::numeric,
+				vat_price = #{vatPrice}::numeric,
+				total_price= #{totalPrice}::numeric,
+				head_sup = #{headSup}::numeric,
+				head_vat = #{headVat}::numeric,
+				head_total = #{headTotal}::numeric,
+				chg_time = now(),
+				chg_id = #{id}
+		where 1=1
+			and id=#{id}
+			and prod_code=#{prod}
+			and order_no = #{orderNo}
+	</update>
+	<update id="updatePwd">
+		update limefood.cust_info_bas 
+		    set 
+				password = #{pwd},
+				chg_time = now(),
+				chg_id	 = #{id}
+		where id = #{id}
+	</update>
+	<select id="getOrderNo" resultType="String">
+	select 'A' || LPAD(nextval('limefood.sq_orderno')::varchar,5,'0') as orderNo
+	</select>
+	<select id="findId" parameterType="hashMap" resultType="String">
+	select id
+	  from limefood.cust_info_bas
+	 where name =#{name}
+	   and celphone =#{celPhone}
+	   and corp_num=#{corpNum}
+	</select>
+	<select id="findPwd" parameterType="hashMap" resultType="String">
+	select id
+	  from limefood.cust_info_bas
+	 where name =#{name}
+	   and celphone =#{celPhone}
+	   and corp_num=#{corpNum}
+	   and id=#{id}
+	</select>	
+
+	<select id="getNotice" parameterType="hashMap" resultType="String">
+	select content
+	  from limefood.admin_notice
+	  where 1=1
+	   and notice_yn = 'C'
+	   and index=#{index}::numeric
+	</select>
+
+	<update id="disagree" parameterType="hashMap">
+	update limefood.cust_info_bas 
+	   set last_login = null 
+	   where id = #{id}
+	</update>
+	<insert id="emailRequest" parameterType="com.limefood.vo.OrderInfoVO">
+	INSERT INTO limefood.email_send_hst
+	(title,  complete_yn, recv_email, recv_id, cret_time,  ship_date, order_no)
+	VALUES('[라임푸드]에서 주문하신 내역을 알려드립니다.', 'N', #{email}, #{id}, now(), #{shipDate}, #{orderNo});
+	</insert>
+	<delete id="delEmail" parameterType="hashMap">
+	delete from limefood.email_send_hst 
+	  where recv_id = #{id}
+	  and order_no = #{orderNo}
+	</delete>
+	<update id="updateInven" parameterType="hashMap">
+		update limefood.prod_info_bas 
+		set inven = inven - #{orderCnt}::numeric
+		   ,chg_time = now()
+		   , chg_id = #{userId}
+		where prod_code = #{prodCode}
+	</update>
+	<select id="getLargeCtg" parameterType="hashMap" resultType="com.limefood.vo.ProdInfoVO">
+		select distinct large_ctg_code, large_ctg_name
+		from limefood.prod_ctg_bas
+	</select>
+
+	<select id="getMediumCtg" parameterType="hashMap" resultType="com.limefood.vo.ProdInfoVO">
+	select distinct large_ctg_code || medium_ctg_code as medium_ctg_code, medium_ctg_name
+		from limefood.prod_ctg_bas
+		where 1=1 
+		<if test="largeCtgCode != ''">
+		and large_ctg_code = #{largeCtgCode}
+		</if>
+	order by medium_ctg_name
+	</select>
+	<select id="getOrderInfo" parameterType = "hashMap" resultType="com.limefood.vo.OrderInfoVO">
+		select prod_code, order_cnt 
+		from limefood.cust_order_hst 
+		where 1=1
+		and order_no = #{orderNo}
+	</select>
+</mapper>
