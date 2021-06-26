@@ -35,6 +35,9 @@
 <script src="../wijmo/Dist/controls/wijmo.chart.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.input.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.gauge.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.grid.xlsx.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.xlsx.min.js"></script>
+<script src="../wijmo/Dist/jszip.min.js"></script>
 
 <!-- Wijmo custom culture (옵션, 원하는 문화권을 추가) -->
 <script src="../wijmo/Dist/controls//cultures/wijmo.culture.ko.min.js"></script>
