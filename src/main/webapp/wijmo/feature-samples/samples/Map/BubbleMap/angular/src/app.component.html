@@ -1,0 +1,9 @@
+<div class="container-fluid">
+    <wj-flex-map #map header="Europe - GDP per capita" [tooltipContent]="tooltipContent">
+        <wj-geo-map-layer #layer url="data/europe.json" [style]="{fill:'rgba(153,216,201,1)',stroke:'white'}"
+            (itemsSourceChanged)="itemsSourceChanged(layer)">
+        </wj-geo-map-layer>
+        <wj-scatter-map-layer binding="x,y,gdp" [symbolMaxSize]="20" [symbolMinSize]="5"
+            [style]="{fill:'rgba(44,162,95,1)'}"></wj-scatter-map-layer>
+    </wj-flex-map>
+</div>

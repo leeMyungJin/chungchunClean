@@ -1,0 +1,78 @@
+<script>
+    function removeHashFromURL(){
+        let parentWindow = window.parent;
+        if (parentWindow){
+            var newUrl = parentWindow.location.href.split("#")[0];
+            parentWindow.history.replaceState(parentWindow.history.state, parentWindow.document.title, newUrl);
+        }
+    }
+
+    function closeDialog(){
+        let parentWindow = window.parent;
+        if (parentWindow) {
+
+            removeHashFromURL();
+            let dialog = parentWindow.document.querySelector(".reference-samples__dialog");
+            if (dialog) {
+                dialog.parentElement.removeChild(dialog);
+            }
+            let layer = parentWindow.document.querySelector(".reference-samples__shade-layer");
+            if (layer) {
+                layer.parentElement.removeChild(layer);
+            }
+
+        }
+    }
+
+    window.addEventListener("keydown", function(e){
+        if(e.which === 27){
+            closeDialog();
+        }
+    });
+    document.querySelector(".reference-samples__details__close").addEventListener("click", function (e) {
+        closeDialog();
+    });
+
+    
+    document.querySelector('.reference-samples__details__buttons__code').addEventListener('click', function (e) {
+        alert('Not supported');
+    });
+
+    let buttons = document.querySelectorAll('.reference-samples__details__button__selector');
+    for (let i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', function (e) {
+            e.currentTarget.parentElement.classList.toggle("reference-samples__details__selector__open");
+        });
+        buttons[i].parentElement.addEventListener('focusout', function (e) {
+            let relatedTarget = e.relatedTarget;
+            if (relatedTarget === e.currentTarget) {
+                return;
+            }
+            if (!isDescendant(e.currentTarget, relatedTarget)) {
+                e.currentTarget.classList.remove("reference-samples__details__selector__open");
+            }
+        });
+    }
+
+    let selectorItems = document.querySelectorAll('.reference-samples__details__selector__item');
+    for (let i = 0; i < selectorItems.length; i++) {
+        selectorItems[i].addEventListener("click", function (e) {
+            document.querySelector(".reference-samples__details__selector__open").classList.remove('reference-samples__details__selector__open');
+        });
+    }
+
+    function isDescendant(parent, child) {
+        if (!child) {
+            return false;
+        }
+
+        let node = child.parentNode;
+        while (node != null) {
+            if (node == parent) {
+                return true;
+            }
+            node = node.parentNode;
+        }
+        return false;
+    }
+</script>

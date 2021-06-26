@@ -1,0 +1,6 @@
+Customize Search Algorithm
+=============
+
+This sample demonstrates 2 unique searching beahivors, The first [AutoComplete](https://www.grapecity.com/wijmo/api/classes/wijmo_input.autocomplete.html) uses the default search. The second [AutoComplete](https://www.grapecity.com/wijmo/api/classes/wijmo_input.autocomplete.html) uses the [itemsSourceFunction](https://www.grapecity.com/wijmo/api/classes/wijmo_input.autocomplete.html#itemssourcefunction) property to customize the serach algorithm. Instead of looking for items that **contain** the user input, it looks for items that **start** with it, like the [ComboBox](https://www.grapecity.com/wijmo/api/classes/wijmo_input.combobox.html).
+
+[Learn about Input Controls](https://www.grapecity.com/wijmo/input-controls-javascript) | [AutoComplete Searching Documentation](https://www.grapecity.com/wijmo/docs/Topics/Input/AutoComplete/Searching) | [AutoComplete API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_input.autocomplete.html)

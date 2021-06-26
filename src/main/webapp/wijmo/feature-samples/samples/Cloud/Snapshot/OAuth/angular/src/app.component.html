@@ -1,0 +1,34 @@
+<div *ngIf="snapshot" class="container-fluid">
+    <div class="auth">
+        <div id="auth-msg"></div>
+        <button id="auth-btn" class="btn btn-primary">
+            Sign In
+        </button>
+    </div>
+    <wj-flex-grid
+        selectionMode="MultiRange"
+        [showMarquee]="true"
+        [isReadOnly] = "isReadOnly"
+        [itemsSource]="snapshot">
+        <wj-flex-grid-column binding="id" header="ID"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="name" header="Name"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="type" header="Type"></wj-flex-grid-column>
+    </wj-flex-grid>
+</div>
+
+<div *ngIf="!snapshot" class="container-fluid">
+    <h4>
+        IE and Safari are not supported
+    </h4>
+    <p>
+        Sorry, this sample requires features that are not available in IE or Safari.
+        Please try it in Chrome, Firefox, or Edge.
+    </p>
+    <p>
+        Running the firestore client libraries in IE or Safari is possible, but
+        requires a polyfill. For more information, please see 
+        <a href="https://firebase.google.com/support/guides/environments_js-sdk">
+        Supported environments for the Firebase JavaScript SDK</a>.
+    </p>
+</div>
+

@@ -1,0 +1,7 @@
+<div class="container-fluid">
+    <wj-flex-grid #flex
+        (loadingRows)="loadingRows(flex, $event)"
+        (formatItem)="formatItem(flex, $event)"
+        [itemsSource]="data">
+    </wj-flex-grid>
+</div>

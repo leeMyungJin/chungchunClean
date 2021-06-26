@@ -1,0 +1,24 @@
+<div class="container-fluid">
+    <div class="input-group">
+        <div class="input-group-addon">
+            <span class="glyphicon glyphicon-search"></span>
+        </div>
+        <input #filter class="form-control"
+            placeholder="Filter"
+            (input)="applyHierarchicalFilter()" />
+    </div>    
+    <wj-flex-grid #flex
+        [childItemsPath]="'cities'"
+        [headersVisibility]="'Column'"
+        [itemsSource]="data"
+        (sortedColumn)="applyHierarchicalFilter()">
+    </wj-flex-grid>
+
+    <p>
+      For more details in hierarchical filtering, please see our
+      <a href="https://www.grapecity.com/blogs/filter-hierarchical-data-flexgrid/" target="_blank">
+        How to Filter Hierarchical Data in FlexGrid and Angular
+    </a>
+      blog.
+    </p>
+</div>

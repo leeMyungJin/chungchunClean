@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Export to file</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SystemJS -->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('./src/app');
+    </script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <!-- Export settings -->
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        Export Settings
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-inline">
+                        <li>
+                            <select id="lbScaleMode">
+                                <option value="0" selected>ActualSize</option>
+                                <option value="1">PageWidth</option>
+                                <option value="2">SinglePage</option>
+                            </select>
+                        </li>
+                        <li>
+                            <select id="lbOrientation">
+                                <option value="0" selected>Portrait</option>
+                                <option value="1">Landscape</option>
+                            </select>
+                        </li>
+                        <li>
+                            <select id="lbExportMode">
+                                <option value="0" selected>All</option>
+                                <option value="1">Selection</option>
+                            </select>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export button -->
+        <button class="btn btn-default" id="btnExport">Export</button>
+
+        <!-- FlexGrid -->
+        <div id="flexGrid" class="grid"></div>
+    </div>
+</body>
+
+</html>

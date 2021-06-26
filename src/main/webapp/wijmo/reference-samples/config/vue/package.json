@@ -1,0 +1,43 @@
+{
+    "name": "sample-ts",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "rb": "node -r @grapecity/build-tools reference-branch --dir .",
+        "rbni": "npm run rb -- --noinstall",
+        "preinstall": "npx rimraf node_modules/@grapecity"
+    },
+    "dependencies": {
+        "@grapecity/wijmo.vue2.all": "5.20211.794-rc",
+        "core-js": "^3.4.3",
+        "vue": "^2.6.10",
+        "bootstrap": "3.3.7"
+    },
+    "devDependencies": {
+        "@vue/cli-plugin-babel": "^4.1.0",
+        "@vue/cli-plugin-eslint": "^4.1.0",
+        "@vue/cli-service": "^4.1.0",
+        "babel-eslint": "^10.0.3",
+        "eslint": "^5.16.0",
+        "eslint-plugin-vue": "^5.0.0",
+        "vue-template-compiler": "^2.6.10"
+    },
+    "eslintConfig": {
+        "root": true,
+        "env": {
+            "node": true
+        },
+        "extends": [
+            "plugin:vue/essential",
+            "eslint:recommended"
+        ],
+        "rules": {},
+        "parserOptions": {
+            "parser": "babel-eslint"
+        }
+    },
+    "browserslist": [
+        "> 1%",
+        "last 2 versions"
+    ]
+}

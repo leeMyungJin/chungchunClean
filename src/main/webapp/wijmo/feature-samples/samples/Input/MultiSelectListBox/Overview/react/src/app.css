@@ -1,0 +1,10 @@
+.wj-multiselectlistbox {
+    max-height: 200px;
+    min-width: 150px;
+}
+label input {
+    margin-left: 3px !important;
+}
+body {
+    margin-bottom: 24pt;
+}

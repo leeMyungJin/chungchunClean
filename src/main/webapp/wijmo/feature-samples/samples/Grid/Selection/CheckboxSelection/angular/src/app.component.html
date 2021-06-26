@@ -1,0 +1,32 @@
+<div class="container-fluid">
+    <label>
+        Grouped Data
+        <input #groupedCheckbox type="checkbox" 
+            [checked]="grouped" 
+            (change)="setGroups(groupedCheckbox.checked)"/>
+    </label>
+    <label>
+        Header Column
+        <input #headersCheckbox type="checkbox" 
+            [checked]="headers" 
+            (change)="setHeaders(headersCheckbox.checked)"/>
+    </label>
+    <p>
+        There are now <b>{{selectedItems.length}}</b> items selected.
+    </p>
+
+    <wj-flex-grid #flex
+        [deferResizing]="true"
+        [showMarquee]="true"
+        [alternatingRowStep]="0"
+        [(itemsSource)]="view"
+        (initialized)="initGrid(flex)">
+        <wj-flex-grid-column binding="id" header="ID" [isReadOnly]="true"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="country" header="Country"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="product" header="Product"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="discount" header="Discount" format="p0"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="downloads" header="Downloads"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="sales" header="Sales"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="expenses" header="Expenses"></wj-flex-grid-column>
+    </wj-flex-grid>
+</div>

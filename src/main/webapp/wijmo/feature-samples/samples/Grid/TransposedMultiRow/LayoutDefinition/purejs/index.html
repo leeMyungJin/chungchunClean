@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GrapeCity Wijmo TransposedMultiRow Layout Definition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SystemJS -->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('./src/app');
+    </script>
+</head>
+<body>
+    <div class="container-fluid">
+        <label>Layout option: <div id="ldComboBox"></div></label>
+        <p id="mainDesc"></p>
+        <label>Transposed MultiRow</label>
+        <p id="trnDesc"></p>
+        <div id="trnMultirow"></div>
+        <div>
+            <button id="btnExportToExcel" class="btn btn-default">
+              Export To Excel
+            </button>
+            <button id="btnExportToPDF" class="btn btn-default">
+              Export To PDF
+            </button>
+        </div>
+        <label>Ordinary MultiRow</label>
+        <p id="ordDesc"></p>
+        <div id="ordMultirow"></div>
+    </div>
+</body>
+</html>

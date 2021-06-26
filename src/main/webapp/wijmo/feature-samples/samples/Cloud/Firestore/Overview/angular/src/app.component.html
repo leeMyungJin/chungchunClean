@@ -1,0 +1,39 @@
+<div class="container-fluid">
+    <label>
+        Category
+        <wj-combo-box #categoryCombo
+            placeholder="(All Categories)"
+            displayMemberPath="CategoryName"
+            [isRequired]="false"
+            [itemsSource]="categories"
+            (selectedIndexChanged)="categoryChanged(categoryCombo)">
+        </wj-combo-box>
+    </label>
+    <div class="row">
+        <div class="col-sm-6">
+            <wj-flex-grid
+                selectionMode="MultiRange"
+                [showMarquee]="true"
+                [isReadOnly]="true"
+                [itemsSource]="products">
+                <wj-flex-grid-column binding="ProductName" header="Product Name" [width]="200"></wj-flex-grid-column>
+                <wj-flex-grid-column binding="UnitPrice" header="Unit Price" format="n2"></wj-flex-grid-column>
+                <wj-flex-grid-column binding="QuantityPerUnit" header="Quantity Per Unit" [width]="150"></wj-flex-grid-column>
+                <wj-flex-grid-column binding="SupplierID" header="Supplier" [dataMap]="supplierMap" [width]="200"></wj-flex-grid-column>
+                <wj-flex-grid-column binding="UnitsInStock" header="In Stock" format="n0"></wj-flex-grid-column>
+                <wj-flex-grid-column binding="UnitsOnOrder" header="On Order" format="n0"></wj-flex-grid-column>
+            </wj-flex-grid>
+        </div>
+        <div class="col-sm-6">
+            <wj-flex-chart
+                chartType="Bar"
+                bindingX="ProductName"
+                [itemsSource]="products">
+                <wj-flex-chart-legend position="Bottom"></wj-flex-chart-legend>
+                <wj-flex-chart-axis  wjProperty="axisX" [majorGrid]="true" [axisLine]="false"></wj-flex-chart-axis>
+                <wj-flex-chart-axis wjProperty="axisY" [majorGrid]="false" [axisLine]="false" [reversed]="true"></wj-flex-chart-axis>
+                <wj-flex-chart-series binding="UnitPrice" name="Product Unit Prices (US$)"></wj-flex-chart-series>
+            </wj-flex-chart>
+        </div>
+    </div>
+</div>

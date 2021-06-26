@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "setup": "node -r @grapecity/build-tools reference-sample-setup",
+    "preinstall": "Don't use npm install! Use 'npm run setup' instead.",
+    "-rb": "",
+    "-rbni": ""
+  }
+}

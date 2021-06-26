@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && lite-server",
+    "setup": "node -r @grapecity/build-tools feature-sample-setup",
+    "preinstall": "Don't use npm install! Use 'npm run setup' instead.",
+    "-rb": "",
+    "-rbni": "",
+    "-install-dev": "",
+    "-postinstall-dev": ""
+}
+}

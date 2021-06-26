@@ -1,0 +1,15 @@
+body {
+	margin-bottom: 24px;
+}
+
+label {
+	margin-right: 3px;
+	padding: 10px;
+
+}
+
+input {
+	vertical-align: top;
+	margin-left: 5px !important;
+}
+

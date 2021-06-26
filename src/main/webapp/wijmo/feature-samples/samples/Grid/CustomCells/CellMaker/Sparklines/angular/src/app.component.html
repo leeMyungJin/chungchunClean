@@ -1,0 +1,28 @@
+<div class="container-fluid">
+    <wj-flex-grid
+        [showMarquee]="true"
+        [selectionMode]="'MultiRange'"
+        [(itemsSource)]="data">
+        <wj-flex-grid-column binding="id" header="ID" [isReadOnly]="true" [width]="80"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="country" header="Country" [dataMap]="countries"></wj-flex-grid-column>
+
+        <wj-flex-grid-column
+            binding="history"
+            header="Sparklines: Line"
+            [width]="175"
+            [cellTemplate]="tplSparkLine">
+        </wj-flex-grid-column>
+        <wj-flex-grid-column
+            binding="history"
+            header="Sparklines: Column"
+            [width]="175"
+            [cellTemplate]="tplSparkColumn">
+        </wj-flex-grid-column>
+        <wj-flex-grid-column
+            binding="history"
+            header="Sparklines: WinLoss"
+            [width]="175"
+            [cellTemplate]="tplSparkWinLoss">
+        </wj-flex-grid-column>
+    </wj-flex-grid>
+</div>

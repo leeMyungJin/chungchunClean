@@ -1,0 +1,20 @@
+.wj-flexgrid:not(.changed) {
+    height: 300px;
+}
+
+.changed {
+    font-size: 90%;
+    background-color: #f0f0f0
+}
+
+.edited {
+    color: orange
+}
+
+.added {
+    color: green
+}
+
+.removed {
+    color: red
+}

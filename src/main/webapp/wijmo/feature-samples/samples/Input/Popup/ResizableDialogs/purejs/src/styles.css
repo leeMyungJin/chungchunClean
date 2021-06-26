@@ -1,0 +1,20 @@
+.modal-body {
+    min-width: 300px;
+}
+
+input:invalid {
+    border-color: red;
+}
+
+.wj-popup {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    min-height: 200px;
+}
+.wj-popup .wj-dialog-body {
+    flex-grow: 1;
+}
+.wj-popup .wj-dialog-footer {
+    margin-top: 0;
+}

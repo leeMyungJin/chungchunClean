@@ -1,0 +1,12 @@
+<div class="container-fluid">
+    <label>
+        multiRowGroupHeaders:
+        <input type="checkbox" checked (click)="cbChecked($event)"> 
+    </label>
+    <wj-multi-row #multiRow
+        [itemsSource]="data"
+        [layoutDefinition]="layout"
+        [multiRowGroupHeaders]="multiRowGroupHeaders"
+        (initialized)="initialized(multiRow)">
+    </wj-multi-row>
+</div>

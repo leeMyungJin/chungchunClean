@@ -1,0 +1,24 @@
+<div class="container-fluid">
+    <h2>
+        Default Grid
+    </h2>
+    <p>
+        Copy and paste cell ranges like in Excel.
+    </p>
+    <wj-flex-grid
+        [alternatingRowStep]="0"
+        [itemsSource]="data">
+    </wj-flex-grid>
+    <h2>
+        Read-Only Grid
+    </h2>
+    <p>
+        Copy data and column header information (pasting not allowed).
+    </p>
+    <wj-flex-grid
+        [copyHeaders]="'Column'"
+        [isReadOnly]="true"
+        [alternatingRowStep]="0"
+        [itemsSource]="data">
+    </wj-flex-grid>
+</div>

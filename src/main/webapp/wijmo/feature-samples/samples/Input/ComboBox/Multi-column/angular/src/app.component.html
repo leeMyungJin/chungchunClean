@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <p>
+        By default, the ComboBox displays one item per line in its drop-down list:
+    </p>
+    <div class="form-group">
+        <label for="theCombo">Default:</label>
+        <wj-combo-box [displayMemberPath]="'country'" [itemsSource]="data"></wj-combo-box>
+    </div>
+
+    <p>
+        If you have many short items, it may be interesting to use multiple columns in the drop-down. You can
+        accomplish this with a little CSS and the <b>dropDownCssClass</b> property:
+    </p>
+    <div class="form-group">
+        <label for="theComboCSS">Three Columns:</label>
+        <wj-combo-box [dropDownCssClass]="'cb-flex'" [displayMemberPath]="'country'" [itemsSource]="data">
+        </wj-combo-box>
+    </div>
+
+    <p>
+        If the items are complex objects, you may want to render a single item per line, 
+        but with additional detail, as in a table or grid. You can accomplish this with 
+        the <b>wjItemTemplate</b> directive and <b>headerPath</b> property:
+    </p>
+    <div class="form-group">
+        <label for="theComboTable">Table-Style:</label>
+        <wj-combo-box [headerPath]="'country'" [displayMemberPath]="'country'" [itemsSource]="data">
+            <ng-template wjItemTemplate let-item="item" let-itemIndex="itemIndex">
+                <table>
+                    <tr>
+                        <td>{{item.country}}</td> 
+                        <td class="number" title="GDP (million US$/year)">
+                            {{format('{gdpm:c0}', item)}}
+                        </td> 
+                        <td class="number" title="Population (thousands)">
+                            {{format('{popk:n0}', item)}}
+                        </td> 
+                        <td class="number" title="GDP/cap (US$/person/year)">
+                            {{format('{gdpcap:c0}', item)}}
+                        </td> 
+                    </tr>
+                </table>
+            </ng-template>
+        </wj-combo-box>
+    </div>
+</div>

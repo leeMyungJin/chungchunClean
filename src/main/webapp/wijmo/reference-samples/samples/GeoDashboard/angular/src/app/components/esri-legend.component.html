@@ -1,0 +1,18 @@
+﻿<div
+  class="legend-list"
+  [ngStyle]="{ display: source ? '' : 'none' }"
+  *ngIf="source"
+>
+  <div class="legend-item" *ngFor="let legend of source.legends">
+    <div
+      [ngStyle]="{
+        margin: '0 .75rem 0 0',
+        width: '1rem',
+        height: '1rem',
+        display: 'inline-block',
+        'background-color': legend.color
+      }"
+    ></div>
+    {{ legend.label }}
+  </div>
+</div>

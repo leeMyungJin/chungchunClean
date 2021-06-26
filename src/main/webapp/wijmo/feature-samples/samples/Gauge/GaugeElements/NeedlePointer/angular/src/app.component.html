@@ -1,0 +1,119 @@
+<div class="container-fluid">
+    <p>
+        Select one of the built-in needle shapes using the <b>needleShape</b> property:
+    </p>
+
+    <div class="row">
+        <div class="col-xs-4">
+            <label for="needle-shape">needleShape</label>
+            <wj-combo-box #cmbNeedleShape id="needle-shape"
+                [itemsSource]="needleShapes"
+                [text]="needleShape"
+                (textChanged)="needleShape = cmbNeedleShape.selectedValue">
+            </wj-combo-box>
+            <br/>
+            <label for="needle-length">needleLength</label>
+            <wj-combo-box #cmbNeedleLength id="needle-length"
+                [itemsSource]="needleLengths"
+                [text]="needleLength"
+                (textChanged)="needleLength = cmbNeedleLength.selectedValue">
+            </wj-combo-box>
+            <br/>
+            <br/>
+            <label for="start-angle">startAngle</label>
+            <wj-combo-box #cmbStartAngle id="start-angle"
+                [itemsSource]="startAngles"
+                [selectedItem]="startAngle"
+                (textChanged)="startAngle = cmbStartAngle.selectedValue">
+            </wj-combo-box>
+            <br/>
+            <label for="sweep-angle">sweepAngle</label>
+            <wj-combo-box #cmbSweepAngle id="sweep-angle"
+                [itemsSource]="sweepAngles"
+                [selectedItem]="sweepAngle"
+                (textChanged)="sweepAngle = cmbSweepAngle.selectedValue">
+            </wj-combo-box>
+            <br/>
+            <label for="tick-spacing">tickSpacing</label>
+            <wj-combo-box #cmbTickSpacing id="tick-spacing"
+                [itemsSource]="tickSpacings"
+                [selectedItem]="tickSpacing"
+                (textChanged)="tickSpacing = cmbTickSpacing.selectedValue">
+            </wj-combo-box>
+        </div>
+        <div class="col-xs-4">
+            <wj-radial-gauge
+                [min]="0"
+                [max]="500"
+                [value]="100"
+                [showText]="(needleShape == 'Outer' || needleShape == 'None') ? 'Value' : 'None'"
+                [startAngle]="startAngle"
+                [sweepAngle]="sweepAngle"
+                [tickSpacing]="tickSpacing"
+                [needleShape]="needleShape"
+                [needleLength]="needleLength"
+                [thickness]=".2"
+                [showTicks]="true"
+                [showTickText]="true"
+                [isReadOnly]="false">
+            </wj-radial-gauge>
+        </div>
+    </div>
+
+    <p>
+        Or create custom needle shapes with the <b>createNeedleElement</b> method:
+    </p>
+    <div class="row">
+        <div class="col-xs-4">
+            <wj-radial-gauge
+                [thickness]=".2"
+                [showText]="'None'"
+                [min]="0"
+                [max]="500"
+                [value]="100"
+                [startAngle]="-45"
+                [sweepAngle]="270"
+                [showTicks]="true"
+                [showTickText]="true"
+                [tickSpacing]="50"
+                [isReadOnly]="false"
+                [needleLength]="'Inner'" 
+                [needleElement]="createNeedleElement([{ x: -35, y: 0 }, { x: -35, y: 35 }, { x: -30, y: 35 }, { x: -20, y: 5 }, { x: 60, y: 5 }, { x: 100, y: 0 } ], 15)">
+            </wj-radial-gauge>
+        </div>
+        <div class="col-xs-4">
+            <wj-radial-gauge
+                [thickness]=".2"
+                [showText]="'None'"
+                [min]="0"
+                [max]="500"
+                [value]="100"
+                [startAngle]="-45"
+                [sweepAngle]="270"
+                [showTicks]="true"
+                [showTickText]="true"
+                [tickSpacing]="50"
+                [isReadOnly]="false"
+                [needleLength]="'Inner'" 
+                [needleElement]="createNeedleElement([ { x: -10, y: 0 }, { x: -10, y: 12 }, { x: 0, y: 20 }, { x: 35, y: 20 }, { x: 50, y: 12 }, { x: 10, y: 12 }, { x: 10, y: 5 }, { x: 80, y: 5 }, { x: 100, y: 0 } ])">
+            </wj-radial-gauge>
+        </div>
+        <div class="col-xs-4">
+            <wj-radial-gauge
+                [thickness]=".2"
+                [showText]="'Value'"
+                [min]="0"
+                [max]="500"
+                [value]="100"
+                [startAngle]="-45"
+                [sweepAngle]="270"
+                [showTicks]="true"
+                [showTickText]="true"
+                [tickSpacing]="50"
+                [isReadOnly]="false"
+                [needleLength]="'Inner'"
+                [needleElement]="createNeedleElement([ { x: 40, y: 15 }, { x: 90, y: 0 } ])">
+            </wj-radial-gauge>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+body {
+    margin-bottom: 36px;
+}
+
+.wj-barcode-datamatrix {
+    width: 170px;
+    height: 170px;
+}

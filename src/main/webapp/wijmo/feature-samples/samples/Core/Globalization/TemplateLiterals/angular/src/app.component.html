@@ -1,0 +1,21 @@
+<div class="container-fluid">
+    <p>
+        Click the button below to evaluate this template literal using
+        Wijmo's <b>glbz</b> tag function that formats numbers and dates using
+        Wijmo's <b>Globalize</b> class:
+    </p>
+    <pre>glbz&#96;Today is &#36;{{'{'}}new Date()}:d, and PI is &#36;{{'{'}}Math.PI}:n4.&#96;</pre>
+    <button id="btn1" class="btn btn-default" (click)="format1()">
+        Show Result
+    </button>
+    <pre id="result1">{{result1}}</pre>
+
+    <p>
+        This example shows how you can use quoted format strings for dates and times:
+    </p>
+    <pre>glbz&#96;Today is &#36;{{'{'}}new Date()}:'dddd, MMMM dd'.&#96;</pre>
+    <button id="btn2" class="btn btn-default" (click)="format2()">
+        Show Result
+    </button>
+    <pre id="result2">{{result2}}</pre>
+</div>

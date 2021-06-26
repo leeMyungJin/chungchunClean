@@ -1,0 +1,26 @@
+label {
+    display: block;
+}
+.wj-flexgrid {
+    margin: 10px 0;
+}
+
+/* highlight the main column in the group */
+.wj-flexgrid .wj-cells .wj-cell.main-column {
+    background: #e3f4ff;
+}
+
+/* some conditional formatting */
+.big-val {
+    font-weight: bold;
+    color: darkgreen;
+}
+.small-val {
+    font-style: italic;
+    color: rgb(202, 0, 0);
+}
+
+/* some animation when collapsing/expanding the groups */
+.animated .wj-flexgrid .wj-colheaders .wj-header.wj-cell.wj-colgroup {
+    transition: all .2s;
+}

@@ -1,0 +1,53 @@
+{
+    "name": "sample-ts",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "rb": "node -r @grapecity/build-tools reference-branch --dir .",
+        "rbni": "npm run rb -- --noinstall",
+        "preinstall": "npx rimraf node_modules/@grapecity"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@grapecity/wijmo.react.all": "5.20211.794-rc",
+        "@material-ui/core": "^4.9.11",
+        "@material-ui/icons": "^4.9.1",
+        "@types/classnames": "2.2.10",
+        "@types/humps": "^1.1.3",
+        "@types/react": "^16.9.34",
+        "@types/react-dom": "^16.9.6",
+        "@types/react-redux": "^7.1.7",
+        "@types/react-router-dom": "^5.1.4",
+        "classnames": "2.2.6",
+        "core-js": "^3.6.5",
+        "humps": "^2.0.1",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
+        "react-redux": "^7.2.0",
+        "react-router-dom": "^5.1.2",
+        "redux": "^4.0.5",
+        "redux-devtools-extension": "^2.13.8",
+        "redux-thunk": "^2.3.0",
+        "whatwg-fetch": "^3.0.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.7.7",
+        "@babel/plugin-proposal-class-properties": "^7.8.3",
+        "@babel/preset-env": "^7.7.7",
+        "@babel/preset-react": "^7.7.4",
+        "babel-loader": "^8.0.6",
+        "copy-webpack-plugin": "4.5.3",
+        "css-loader": "1.0.0",
+        "file-loader": "2.0.0",
+        "html-webpack-plugin": "3.2.0",
+        "source-map-loader": "0.2.4",
+        "style-loader": "0.23.0",
+        "typescript": "3.2.4",
+        "url-loader": "1.1.1",
+        "webpack": "4.29.6",
+        "webpack-cli": "3.2.3",
+        "webpack-dev-server": "3.2.1"
+    }
+}

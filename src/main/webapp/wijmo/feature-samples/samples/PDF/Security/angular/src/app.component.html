@@ -1,0 +1,94 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Security settings
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" placeholder="User password"
+                        [(ngModel)]="opts.userPassword" />
+                </div>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" placeholder="Owner password"
+                        [(ngModel)]="opts.ownerPassword" />
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-3">
+                    <wj-menu [(value)]="opts.version" header="PDF version">
+                        <wj-menu-item [value]="PdfVersionEnum.v1_3">1.3</wj-menu-item>
+                        <wj-menu-item [value]="PdfVersionEnum.v1_4">1.4</wj-menu-item>
+                        <wj-menu-item [value]="PdfVersionEnum.v1_5">1.5</wj-menu-item>
+                        <wj-menu-item [value]="PdfVersionEnum.v1_6">1.6</wj-menu-item>
+                        <wj-menu-item [value]="PdfVersionEnum.v1_7">1.7</wj-menu-item>
+                        <wj-menu-item [value]="PdfVersionEnum.v1_7Ext3">1.7 ExtensionLevel 3</wj-menu-item>
+                    </wj-menu>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col">
+                    <b>Permissions</b> (require owner password)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" [(ngModel)]="opts.permissions.annotating" />Annotating
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"
+                                [(ngModel)]="opts.permissions.contentAccessibility" />ContentAccessibility
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" [(ngModel)]="opts.permissions.copying" />Copying
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" [(ngModel)]="opts.permissions.documentAssembly" />DocumentAssembly
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" [(ngModel)]="opts.permissions.fillingForms" />FillingForms
+                        </label>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" [(ngModel)]="opts.permissions.modifying" />Modifying
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">Printing</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <label class="radio-inline">
+                        <input name="printing" [value]="PdfPrintPermissionEnum.NotAllowed" type="radio"
+                            [(ngModel)]="opts.permissions.printing" checked />NotAllowed
+                    </label>
+                    <label class="radio-inline">
+                        <input name="printing" [value]="PdfPrintPermissionEnum.AllowLowResolution" type="radio"
+                            [(ngModel)]="opts.permissions.printing" />AllowLowResolution
+                    </label>
+                    <label class="radio-inline">
+                        <input name="printing" [value]="PdfPrintPermissionEnum.AllowHighResolution" type="radio"
+                            [(ngModel)]="opts.permissions.printing" />AllowHighResolution
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-default" (click)="drawPdf()">Draw PDF</button>
+</div>

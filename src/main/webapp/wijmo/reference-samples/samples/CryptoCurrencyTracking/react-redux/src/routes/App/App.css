@@ -1,0 +1,44 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    /* position: fixed; */
+    position: relative;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    /*overflow-x: auto;*/
+}
+
+.app *::-webkit-scrollbar-track {
+    background-color: transparent;
+    position: absolute;
+}
+
+.app *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background-color: transparent;
+}
+
+.app *::-webkit-scrollbar-thumb {
+    background-color: #CCC;
+    border: 2px solid transparent;
+}
+
+.app__content {
+    background: #FAFAFA;
+    display: flex;
+    flex: 1 0 auto; /* https://stackoverflow.com/questions/32239549/flex-property-not-working-in-ie */
+    padding: 24px;
+}
+
+.app__grid {
+    width: 100%;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    background: white;
+    box-sizing: border-box;
+    box-shadow: 0 0 8px rgba(0, 0, 0, .15);
+}

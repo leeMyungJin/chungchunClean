@@ -1,0 +1,8 @@
+.wj-flexgrid {
+    max-height: 250px;
+    margin: 10px 0;
+}
+
+#theGridTallRows.wj-flexgrid .wj-cell {
+    padding: 8px;
+}

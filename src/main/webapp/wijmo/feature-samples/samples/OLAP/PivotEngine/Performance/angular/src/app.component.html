@@ -1,0 +1,19 @@
+<div class="container-fluid">
+    <div id="buttons" (click)="onButtonClick($event)">
+        <button id="10k" class="btn btn-primary">
+            10k items
+        </button>
+        <button id="100k" class="btn btn-primary" [disabled]="enable100K">
+            100k items
+        </button>
+        <button id="500k" class="btn btn-primary" [disabled]="enable500K">
+            500k items
+        </button>
+    </div>
+
+    <p id="result" [innerHtml]="result">
+    </p>
+    <div class="output">
+        <wj-pivot-grid [itemsSource]="ng"></wj-pivot-grid>
+    </div>
+</div>

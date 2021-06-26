@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GrapeCity UndoStack</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SystemJS -->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('./src/app');
+    </script>
+</head>
+
+<body>
+    <div class="container-fluid">
+
+        <!-- undo/redo toolbar -->
+        <div class="toolbar">
+            <button id="undo" class="btn btn-primary" disabled>
+                <span class="arrow">&#x21B6;</span> Undo (ctrl+Z)
+            </button>
+            <button id="redo" class="btn btn-primary" disabled>
+                <span class="arrow">&#x21B7;</span> Redo (ctrl+Y)
+            </button>
+            <button class="btn" disabled>
+                Action Count: <span id="undo-cnt">0</span>
+            </button>
+            <button id="clear" class="btn btn-default" disabled>
+                Clear Undo/Redo Stack
+            </button>
+        </div>
+
+        <!-- undo/redo form -->
+        <form id="undoable-form">
+            <div class="row">
+
+                <!-- HTML input elements -->
+                <div class="col-md-5">
+                    <h3>HTML Input Elements</h3>
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input id="firstName" class="form-control" placeholder="First Name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input id="lastName" class="form-control" placeholder="Last Name"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="select">Select</label>
+                        <select id="select" class="form-control">
+                            <option value="value1">Apples</option>
+                            <option value="value2" selected>Oranges</option>
+                            <option value="value3">Grapes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="area">TextArea</label>
+                        <textarea id="area" class="form-control" placeholder="textarea"></textarea>
+                    </div>
+                    <div class="form-group label-indent">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="inlineCheckbox1" value="option1" checked> Red
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="inlineCheckbox2" value="option2"> Green
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" id="inlineCheckbox3" value="option3"> Blue
+                        </label>
+                    </div>
+                    <div class="form-group label-indent">
+                        <label class="radio-inline">
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked>
+                            Hot
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Cold
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Medium
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Wijmo controls -->
+                <div class="col-md-7">
+                    <h3>Wijmo Controls</h3>
+                    <div class="form-group">
+                        <label for="country">Country</label>
+                        <div id="country" placeholder="Country"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <div id="amount" placeholder="Amount"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <div id="date" placeholder="Date"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="color" title="ComboBox">Color</label>
+                        <div id="color"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ac" title="AutoComplete">Color</label>
+                        <div id="ac"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="colors" title="MultiSelect">Colors</label>
+                        <div id="colors"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="mac" title="MultiAutoComplete">Colors</label>
+                        <div id="mac"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="gauge">Gauge</label>
+                        <div id="gauge"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="grid">Grid</label>
+                        <div id="grid"></div>
+                        <button id="add-row" class="btn btn-primary">
+                            Add Row in Code
+                        </button>
+                        <button id="del-row" class="btn btn-primary">
+                            Delete Row in Code
+                        </button>
+                        <label>
+                            New Row At Top
+                            <input id="nr-top" class="wj-no-undo" type="checkbox">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

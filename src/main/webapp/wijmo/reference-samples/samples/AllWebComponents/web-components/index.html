@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>All Components for WebComponents</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- WebComponents v1 polyfills -->
+    <!-- Adapter must be used with ES5 code. It's not needed for ES6 code. -->
+    <script src="node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
+    <!-- WebComponents polyfill. Chrome doesn't require it. -->
+    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-lite.js"></script>
+    
+    <!-- Load and Configure SystemJS loader -->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+
+    <!-- Wijmo - enable web components mode -->
+    <script>
+        window['wj-control-is-element'] = true;
+    </script>
+
+    <!--  Common script to be included in all Wijmo samples. -->
+    <script src=https://cdn.grapecity.com/wijmo/wijmo.sample.js></script>
+
+    <!-- Load the root application module -->
+    <script>
+        System.import('./src/index');
+    </script>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <img src="https://grapecitycontentcdn.azureedge.net/gcbrand/samples/wijmo/wijmo-logo.png" alt="Wijmo" />
+            <h1>All Wijmo WebComponents</h1>
+            <p>
+                This sample demonstrates all supported Wijmo WebComponents.
+            </p>
+        </div>
+    </div>
+    <div>
+        <!-- Introduction -->
+        <div class="content">
+            <div>
+                <h2>
+                    Input Controls
+                </h2>
+                <p>
+                    This section shows input controls.
+                </p>
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <td><label htmlFor="n">InputNumber</label></td>
+                            <td>
+                                    <wjc-input-number id="nb"
+                                                      format="c2"
+                                                      min="0" max="10" step="0.5"
+                                                      value="7"></wjc-input-number>
+
+                                <p>
+                                    <b>Value: <span id="nbStr"></span></b>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="d">InputDate/InputTime</label></td>
+                            <td>
+                                     <wjc-input-date id="dt"
+                                                    is-required="false"
+                                                    format="MMM dd, yyyy"
+                                                    placeholder="Date"></wjc-input-date>
+                                    <wjc-input-time id="tm"
+                                                    is-required="false"
+                                                    placeholder="Time"></wjc-input-time>
+
+
+                                <p>
+                                    <b>Date/Time: <span id="dtStr"></span></b>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="dt">InputDateTime</label></td>
+                            <td>
+                               <wjc-input-date-time id="dtm"
+                                                 is-required="false"
+                                                 placeholder="Date and Time"></wjc-input-date-time>
+      
+                                <p>
+                                    <b>DateTime: <span id="dtmStr"></span></b>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="cl">Calendar</label></td>
+                            <td>
+                                  <wjc-calendar id="cl"
+                                           min="2015-01-01"
+                                           max="2020-12-31"></wjc-calendar>
+   
+                                <p>
+                                    <b>Date: <span id="clStr"></span></b>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="ipm">InputMask</label></td>
+                            <td>
+                                 <wjc-input-Mask id="msk"
+                                                mask="000-00-0000"
+                                                title="Mask: 000-00-0000"></wjc-input-Mask>
+
+                                <p>
+                                    <b>Value: <span id="mskStr"></span></b>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="cmb2">ComboBox </label></td>
+                            <td>
+                                 <wjc-combo-box id="cmb2"
+                                                   placeholder="Country"></wjc-combo-box>
+
+                                <p>
+                                    <b>Country: <span id="cmb2Str"></span></b>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="lb">ListBox </label></td>
+                            <td>
+                                <wjc-list-box id="lbx"
+                                                  style="width: 250px; height: 150px">
+                                </wjc-list-box>
+   
+                                <p>
+                                    <b>selectedIndex: <span id="lbxSi"></span></b>
+                                </p>
+                                <p>
+                                    <b>selectedValue: <span id="lbxSv"></span></b>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="lb">MultiSelect </label></td>
+                            <td>
+                                 <wjc-multi-select id="mst"
+                                                      placeholder="Select Countries"
+                                                      header-format="{count} countries selected">
+                                     </wjc-multi-select>
+                                <p>
+                                    <b>Checked Items:<span id="mstStr"></span></b>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="ac2">AutoComplete </label></td>
+                            <td>
+                                    <wjc-auto-complete id="ac2"></wjc-auto-complete>
+
+                                <p>
+                                    <b>Country: <span id="ac2Str"></span></b>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="lb">MultiAutoComplete </label></td>
+                            <td>
+                                   <wjc-multi-auto-complete id="mac"                                                             
+                                                             placeholder="Countries"
+                                                             max-selected-items="4">
+                                    </wjc-multi-auto-complete>
+
+                                <p>
+                                    <b>Selected Items: <span id="macStr"></span></b>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="ac2">Menu </label></td>
+                            <td>
+                                  <wjc-menu id="menu"
+                                           header="Edit">
+                                   </wjc-menu>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="cp">ColorPicker  </label></td>
+                            <td>
+                                <div>
+                                    <wjc-color-picker id="cp"
+                                                      show-color-string="true">
+                                    </wjc-color-picker>
+                                </div>
+
+                                <p>
+                                    Color: <span id="cpStr"></span>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="ic">InputColor </label></td>
+                            <td>
+                                 <wjc-input-color id="ic"></wjc-input-color>
+
+                                <p>
+                                    Color: <span id="icStr"></span>
+                                </p>
+                            </td>
+                        </tr>
+                        <!--<tr>
+                            <td><label htmlFor="pop">Popup </label></td>
+                            <td>
+                                <p>
+                                    Click to see a popup dialog:
+                                    <button id="btn3" type="button" class="btn">
+                                        Click
+                                    </button>
+                                </p>
+                                <wjc-popup class="popover" owner="#btn3" show-trigger="Click" hide-trigger="None">
+                                    <p>
+                                        <wjc-input-number id="n"
+                                                          format="c2"
+                                                          min="0" max="10" step="0.5" />
+                                    </p>
+
+                                    <p>
+                                        <wjc-input-date is-required="false"
+                                                        format="MMM dd, yyyy"
+                                                        placeholder="Date" />
+                                    </p>
+
+                                    <p>
+                                        <wjc-auto-complete id="ac3" />
+                                    </p>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-danger wj-hide">Close</button>
+                                    </div>
+                                </wjc-popup>
+
+                            </td>
+                        </tr>-->
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div>
+                <h2>
+                    FlexGrid Control
+                </h2>
+                <p>
+                    This section shows FlexGrid control with column definitions.
+                </p>
+                <div class="seperator"></div>
+                    <wjc-group-panel id="panelRef"
+                                     placeholder="Drag columns here to create Groups"
+                                     max-groups="4"></wjc-group-panel>
+                    <wjc-flex-grid id="gridRef"></wjc-flex-grid>    
+                <div class="detail" id='gridDetail'>
+                </div>           
+            </div>
+
+            <div>
+                <h2>
+                    Olap Control
+                </h2>
+                <p>
+                    This section shows Olap Controls:PivotPanel, PivotGrid and PivotChart.
+                </p>
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <td><label htmlFor="n">PivotPanel</label></td>
+                            <td>
+                                <wjc-pivot-panel id="ppRef"></wjc-pivot-panel>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="n">PivotGrid</label></td>
+                            <td>
+                                <wjc-pivot-grid id="pgRef"
+                                                  show-selected-headers="All"></wjc-pivot-grid>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="n">PivotChart</label></td>
+                            <td>
+                                <div className="detail">
+                                    <b>Chart Type:&nbsp;&nbsp;</b>
+                                    <wjc-combo-box  id="ctcb"
+                                                    text="Column">
+                                    </wjc-combo-box>
+                                </div>
+                                <p />
+                                <wjc-pivot-chart id="pcRef"></wjc-pivot-chart>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h2>
+                    MultiRow Control
+                </h2>
+                <div>
+                    This section shows MultiRow Control. <b>Layout: </b>  &nbsp;   &nbsp;
+                    <wjc-combo-box id="olCmb"
+                                   display-member-path="name"></wjc-combo-box>
+                </div>
+                <p />
+                <div class="seperator"></div>
+                <wjc-multi-row id="mrRef"></wjc-multi-row>
+                <p />
+                <span id="descStr"></span>
+            </div>
+
+            <div>
+                <h2>
+                    FlexChart Control
+                </h2>
+                <div>
+                    This section shows FlexChart control. <b>Chart Types:</b> &nbsp;   &nbsp;
+                    <wjc-combo-box id="ctCmb"></wjc-combo-box>
+                </div>
+                <p />
+                <div class="seperator"></div>
+                <wjc-flex-chart id='chartRef'
+                                       header='Sales by Country'
+                                       footer='copyright (c) ComponentOne'
+                                       binding-x="country">
+                    <wjc-flex-chart-series name="Sales" binding="sales" />
+                    <wjc-flex-chart-series name="Downloads" binding="downloads" />
+                </wjc-flex-chart>
+
+                <br />
+                <h2>
+                    FlexPie Control
+                </h2>
+                <div>
+                    This section shows FlexPie control.
+                </div>
+                <p />
+
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <wjc-flex-pie id="pieRef"
+                                              binding="value"
+                                              binding-name="name"
+                                              inner-radius="0"
+                                              offset="0"
+                                              start-angle="0"></wjc-flex-pie>
+                            </td>
+                            <td>
+                                <label>Inner Radius</label>
+                                <div>
+                                    <wjc-input-number id="irdRef"
+                                                      min="0"
+                                                      max="1"
+                                                      step="0.1"
+                                                      format="n"></wjc-input-number>
+                                </div>
+                                <label>Offset</label>
+                                <div>
+                                    <wjc-input-number id="ofsRef"
+                                                      min="0"
+                                                      max="1"
+                                                      step="0.1"
+                                                      format="n"></wjc-input-number>
+                                </div>
+                                <label>Start Angle</label>
+                                <div>
+                                    <wjc-input-number id="sagRef"
+                                                      min="-360"
+                                                      max="360"
+                                                      step="45"></wjc-input-number>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h2>
+                    FinancialChart Control
+                </h2>
+                <div>
+                    This section shows FinancialChart Control. <b>Chart Types:</b> &nbsp;   &nbsp;
+                    <wjc-combo-box id="fcCmb"></wjc-combo-box>
+                </div>
+                <p />
+                <div class="seperator"></div>
+                <wjc-financial-chart  id="fcc"
+                                      symbol-size="4"
+                                      header="FB Inc."
+                                      binding-x="date">
+                    <wjc-financial-chart-series binding="close"></wjc-financial-chart-series>
+                 </wjc-financial-chart>
+                <p />
+            </div>
+
+            <div>
+                <h2>
+                    TreeMap Control
+                </h2>
+                <div>
+                    This section shows TreeMap Control. <b>Max Depth:</b>&nbsp;&nbsp;
+                    <wjc-input-number id="mdNum" min="0" max="4" step="1"></wjc-input-number>
+                </div>
+                <div class="seperator"></div>
+                <p></p>
+                <wjc-tree-map id="tmRef"></wjc-tree-map>
+                <p />
+                <h2>
+                    Sunburst Control
+                </h2>
+                <div>
+                    This section shows Sunburst Control.
+                </div>
+                <p />
+
+                <p />
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <wjc-sunburst  id="sbtRef"
+                                               binding="value"></wjc-sunburst>
+                            </td>
+                            <td>
+                                <label>Inner Radius</label>
+                                <div>
+                                    <wjc-input-number id="irdNum"
+                                                         min="0"
+                                                         max="1"
+                                                         step="0.1"
+                                                         format="n"></wjc-input-number>
+                                </div>
+                                <label>Offset</label>
+                                <div>
+                                    <wjc-input-number id="ofsNum"
+                                                         min="0"
+                                                         max="1"
+                                                         step="0.1"
+                                                         format="n"></wjc-input-number>
+                                </div>
+                                <label>Start Angle</label>
+                                <div>
+                                    <wjc-input-number id="stgNum"
+                                                         min="-360"
+                                                         max="360"
+                                                         step="45"></wjc-input-number>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h2>
+                    FlexRadar Control
+                </h2>
+                <p>
+                    This section shows FlexRadar Control.
+                </p>
+                <p />
+                <div>
+                    <div>
+                        <wjc-flex-radar id="frdRef"    
+                                        binding-x="country"
+                                        chart-type="Line"
+                                        total-angle="360"
+                                        start-angle="0"
+                                        stacking="None">
+                            <wjc-flex-radar-series name="Sales" binding="sales"></wjc-flex-radar-series>
+                            <wjc-flex-radar-series name="Downloads" binding="downloads"></wjc-flex-radar-series>
+                        </wjc-flex-radar>
+                    </div>
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <td><label htmlFor="n">Chart Types</label></td>
+                                <td>
+                                    <wjc-combo-box id="rdtCmb"
+                                                   text="Line"></wjc-combo-box>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label htmlFor="n">Stacking</label></td>
+                                <td>
+                                    <wjc-combo-box id="stCmb"
+                                                   text="None"></wjc-combo-box>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label htmlFor="n">Start Angle</label></td>
+                                <td>
+                                    <wjc-input-number id="staNum"
+                                                         value="0"
+                                                         min="0"
+                                                         max="360"
+                                                         step="60"></wjc-input-number>
+                                    <p />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label htmlFor="n">Total Angle</label></td>
+                                <td>
+                                    <wjc-input-number id="taNum"
+                                                         value="360"
+                                                         min="90"
+                                                         max="360"
+                                                         step="90"></wjc-input-number>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div>
+                <h2>
+                    Gauge Controls
+                </h2>
+                <p>
+                    This section shows Gauge controls: LinearGauge,RadialGauge and BulletGraph.
+                </p>
+
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <td><label htmlFor="n">LinearGauge</label></td>
+                            <td>
+                                <wjc-linear-gauge    id="lgRef"
+                                                     value="50"
+                                                     min="0"
+                                                     max="100"
+                                                     format="n0"
+                                                     is-read-only="false"
+                                                     thumb-size="30"></wjc-linear-gauge>
+                                <p />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="n">RadialGauge</label></td>
+                            <td>
+                                <wjc-radial-gauge id="rgRef"
+                                                  value="50"
+                                                  min="0"
+                                                  max="100"
+                                                  format="n0"
+                                                  is-read-only="false"></wjc-radial-gauge>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="n">BulletGraph</label></td>
+                            <td>
+                                <wjc-bullet-graph id="bgRef"
+                                                  value="50"
+                                                  min="0"
+                                                  bad="40"
+                                                  target="60"
+                                                  good="60"></wjc-bullet-graph>
+                                <p />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label htmlFor="n">Value:</label></td>
+                            <td>
+                                <div class="detail">
+                                    <wjc-input-number id="gNum"
+                                                      value="50"                                                         
+                                                      min="0"
+                                                      max="100"
+                                                      step="10"
+                                                      format="n0"></wjc-input-number>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div>
+                <h2>
+                    TreeView Control
+                </h2>
+                <p>
+                    This section shows TreeView Control.
+                </p>
+                <div class="seperator"></div>
+                <wjc-tree-view id="tvRef"
+                                display-member-path="header"
+                                child-items-path="items"
+                                is-animated="true"
+                                auto-collapse="true"></wjc-tree-view>
+                <p />
+                <div class="app-input-group">
+                    <b>Selected Item: <span id="tSetItm"></span></b>
+                </div>
+            </div>
+
+            <div>
+                <h2>
+                    ReportViewer Control
+                </h2>
+                <div>
+                    This section shows ReportViewer Control.
+
+                </div>
+                <p />
+                <div class="seperator"></div>
+                <wjc-report-viewer   file-path="ReportsRoot/Formatting/AlternateBackground.flxr"
+                                     report-name="AlternateBackground"
+                                     service-url="https://demos.componentone.com/ASPNET/c1webapi/4.0.20172.105/api/report">
+                </wjc-report-viewer>
+
+                <p />
+                <h2>
+                    PdfViewer Control
+                </h2>
+                <div>
+                    This section shows PdfViewer Control.
+
+                </div>
+                <p />
+                <div class="seperator"></div>
+                <wjc-pdf-viewer service-url="https://demos.componentone.com/ASPNET/c1webapi/4.0.20172.105/api/pdf"
+                                file-path="pdfroot/DefaultDocument.pdf">
+                </wjc-pdf-viewer>
+            </div>
+
+            <div>
+                <h2>
+                    FlexSheet Control
+                </h2>
+                <div>
+                    This section shows FlexSheet Control.
+                </div>
+
+                <p />
+                <div class="seperator"></div>
+                <wjc-flex-sheet id="fsRef">
+                    <wjc-sheet name="Date" row-count="20" column-count="8"></wjc-sheet>
+                    <wjc-sheet name="Number" row-count="20" column-count="8"></wjc-sheet>
+                </wjc-flex-sheet>
+                <p />
+            </div>
+        </div>
+    </div>
+</body>
+</html>

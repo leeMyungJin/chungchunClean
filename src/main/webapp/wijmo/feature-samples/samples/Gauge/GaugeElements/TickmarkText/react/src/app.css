@@ -1,0 +1,31 @@
+label {
+  display: block;
+  text-align: right;
+  width: 300px;
+}
+
+label .wj-combobox {
+  width: 120px;
+}
+
+.wj-gauge {
+  margin: 4em auto;
+}
+
+.wj-radialgauge {
+  width: 200px;
+}
+
+.wj-lineargauge {
+  width: 400px;
+}
+
+.vertical .wj-lineargauge {
+  height: 300px;
+  width: 2em;
+}
+
+body {
+  font-size: 16px;
+  margin-bottom: 48pt;
+}

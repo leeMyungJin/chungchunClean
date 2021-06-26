@@ -1,0 +1,6 @@
+Tracking Changings in CollectionView
+==============================
+
+The [CollectionView](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html) can help by keeping track of modified items when the [trackChanges](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html#trackchanges) property is set to __true__. When enabled, the [CollectionView](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html) updates the [itemsAdded](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html#itemsadded), [itemsRemoved](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html#itemsremoved), and [itemsEdited](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html#itemsedited) collections as content is edited. This sample displays these collections in separate grids to show how the changes are tracked.
+
+[Learn about FlexGrid](https://www.grapecity.com/wijmo/flexgrid-javascript-data-grid) | [Editing Views Documentation](https://www.grapecity.com/wijmo/docs/Topics/Wijmo/Collections/Editing-Views) | [CollectionView API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html)

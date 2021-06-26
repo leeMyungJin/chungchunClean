@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>WebGL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SystemJS -->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('./src/app');
+    </script>
+</head>
+
+<body>
+    <div class='container-fluid'>
+        <div class="row">
+            <div class="col-sm-12">
+                <select id="nPtsMenu">
+                    <option value="1000">1K</option>
+                    <option value="10000">10K</option>
+                    <option value="100000" selected="selected">100K</option>
+                    <option value="200000">200K</option>
+                    <option value="500000">500K</option>
+                </select>
+
+                <select id="nSerMenu">
+                    <option value="1" selected="selected">1</option>
+                    <option value="2">2</option>
+                    <option value="4">4</option>
+                    <option value="8">8</option>
+                </select>
+
+                <select id="symbolMenu">
+                    <option value="Dot" selected="selected">Dot</option>
+                    <option value="Box">Box</option>
+                </select>
+
+                <select id="symbolSize">
+                    <option value="3" selected="selected">3</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+
+                <label>
+                    Use WebGL
+                    <input id="webgl" type="checkbox" checked="checked">
+                </label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="theChart"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <button id="btnNew">Refresh Data</button>
+                <button id="btnReset">Reset Zoom</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

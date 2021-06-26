@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GrapeCity InputDateRange Overview</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SystemJS -->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('./src/app');
+    </script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="form-group">
+            <label for="theInputDateRange">InputDateRange: </label>
+            <input id="theInputDateRange">
+        </div>
+        <div class="params">
+            <div>
+                <label for="closeOnSelection">closeOnSelection</label>
+                <input type="checkbox" id="closeOnSelection"></input>
+            </div>
+            <div>
+                <label for="monthCount">monthCount</label>
+                <div id="monthCount"></div>
+            </div>
+            <div>
+                <label for="weeksBefore">weeksBefore</label>
+                <div id="weeksBefore"></div>
+            </div>
+            <div>
+                <label for="weeksAfter">weeksAfter</label>
+                <div id="weeksAfter"></div>
+            </div>
+        </div>
+        <p>
+            The current range is: <b><span id="dateRange"></span></b>.
+        </p>
+    </div>
+</body>
+
+</html>

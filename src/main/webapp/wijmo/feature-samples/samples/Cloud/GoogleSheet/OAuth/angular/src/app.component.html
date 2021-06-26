@@ -1,0 +1,15 @@
+<div class="container-fluid">
+    <div class="auth">
+        <div id="auth-msg"></div>
+        <button id="auth-btn" class="btn btn-primary">
+            Sign In
+        </button>
+    </div>
+    <wj-flex-grid #grid
+        selectionMode="MultiRange"
+        [showMarquee]="true"
+        [isReadOnly]="!user"
+        [itemsSource]="products"
+        (loadedRows)="loadedRows(grid)">
+    </wj-flex-grid>
+</div>

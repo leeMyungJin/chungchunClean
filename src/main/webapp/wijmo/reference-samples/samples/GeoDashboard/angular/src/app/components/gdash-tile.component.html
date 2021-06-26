@@ -1,0 +1,7 @@
+﻿<div class="tile" (click)="handleClick()">
+  <div class="tile-header">
+    <svg width="24" height="24" viewBox="0 0 24 24" [innerHtml]="path"></svg>
+    <span>{{ header }}</span>
+  </div>
+  <div class="tile-content"><ng-content></ng-content></div>
+</div>

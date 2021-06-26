@@ -1,0 +1,5 @@
+/* This stylesheet is injected into each sample loaded into the demo shell. It applies some styles to make the samples match the shell.  */
+body {
+    padding: 1em 0;
+}
+

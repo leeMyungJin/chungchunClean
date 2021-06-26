@@ -1,0 +1,26 @@
+<div class="container-fluid">
+
+    <wj-combo-box #countryCombo
+        [itemsSource]="countries"
+        (textChanged)="countryChanged(countryCombo)">
+    </wj-combo-box>
+
+    <wj-collection-view-navigator
+        [cv]="customers"
+        [byPage]="true"
+        headerFormat="Page {current:n0}">
+    </wj-collection-view-navigator>
+
+    <wj-flex-grid
+        selectionMode="MultiRange"
+        [showMarquee]="true"
+        [isReadOnly]="true"
+        [itemsSource]="customers">
+        <wj-flex-grid-column binding="CustomerID" header="Customer ID"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="CompanyName" header="Company Name" [width]="200"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="ContactName" header="Contact Name" [width]="150"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="City"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="Country"></wj-flex-grid-column>
+    </wj-flex-grid>
+
+</div>

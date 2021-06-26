@@ -1,0 +1,6 @@
+Collapsible Column Headers
+==========================
+
+By default, the [MultiRow](https://www.grapecity.com/wijmo/api/classes/wijmo_grid_multirow.multirow.html) control creates column headers that span multiple rows and shows the header for each cell defined in the [layoutDefinition](https://www.grapecity.com/wijmo/api/classes/wijmo_grid_multirow.multirow.html#layoutdefinition). In some cases, you may want to collapse the column headers to a single line, showing only the group names rather than individual cells. This saves space at the expense of having individual cell headers. To collapse the column headers, set the [collapsedHeaders](https://www.grapecity.com/wijmo/api/classes/wijmo_grid_multirow.multirow.html#collapsedheaders) property to true. In these scenarios, remember to set the **header** property on the groups in order to avoid empty column headers.
+
+[Learn about MultiRow](https://www.grapecity.com/wijmo-multirow) | [Collapsible Column Headers Documentation](https://www.grapecity.com/wijmo/docs/Topics/Grid/MultiRow/MultiRow-Collapsible-Column-Headers) | [MultiRow API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_grid_multirow.multirow.html)

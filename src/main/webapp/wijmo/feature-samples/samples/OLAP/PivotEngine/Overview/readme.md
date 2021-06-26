@@ -1,0 +1,6 @@
+PivotEngine
+===========
+
+The [PivotEngine](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotengine.html) is the main data management class for [wijmo.olap](https://www.grapecity.com/wijmo/api/modules/wijmo_olap.html). It manages the raw data and allows user to build view definitions by configuring fields and field lists. Data summaries can be viewed using the [PivotGrid](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotgrid.html) and [PivotChart](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotchart.html) controls. To start using the [PivotEngine](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotengine.html), bind your data source to the [itemsSource](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotengine.html#itemssource) property. This example shows a [FlexGrid](https://www.grapecity.com/wijmo/api/classes/wijmo_grid.flexgrid.html) with raw data and a [PivotGrid](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotgrid.html) with summarized data from the [PivotEngine](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotengine.html).
+
+[Learn about OLAP](https://www.grapecity.com/wijmo-olap) | [PivotEngine API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotengine.html)

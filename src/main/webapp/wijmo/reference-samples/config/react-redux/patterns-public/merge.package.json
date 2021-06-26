@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build": "webpack",
+    "start": "npm run build && webpack-dev-server --open",
+    "-setup": "",
+    "-preinstall": "",
+    "-rb": "",
+    "-rbni": ""
+  }
+}

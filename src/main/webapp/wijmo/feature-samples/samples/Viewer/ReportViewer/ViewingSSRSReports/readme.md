@@ -1,0 +1,6 @@
+Viewing SSRS reports
+====================
+
+This sample illustrates how to view [SSRS](https://docs.microsoft.com/en-us/sql/reporting-services/create-deploy-and-manage-mobile-and-paginated-reports?redirectedfrom=MSDN&view=sql-server-ver15) reports from C1 Web API Report Services in Wijmo [ReportViewer](https://www.grapecity.com/wijmo/api/classes/wijmo_viewer.reportviewer.html) control.
+
+[Learn about Wijmo](https://www.grapecity.com/wijmo) | [ReportViewer Documentation](https://www.grapecity.com/wijmo/docs/Topics/Viewer/Report-Viewer) | [ReportViewer API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_viewer.reportviewer.html)

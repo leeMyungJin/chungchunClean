@@ -1,0 +1,20 @@
+<div class="container-fluid">
+    <wj-flex-grid class="grid" #flexGrid [autoGenerateColumns]="false" [itemsSource]="data">
+        <wj-flex-grid-column header="ID" binding="id"></wj-flex-grid-column>
+        <wj-flex-grid-column header="Country" binding="country"></wj-flex-grid-column>
+        <wj-flex-grid-column header="Product" binding="product"></wj-flex-grid-column>
+        <wj-flex-grid-column header="Amount" binding="amount" format="c"></wj-flex-grid-column>
+        <wj-flex-grid-column header="Pending" binding="amount2" format="c2"></wj-flex-grid-column>
+        <wj-flex-grid-column header="Discount" binding="discount" format="p1"></wj-flex-grid-column>
+        <wj-flex-grid-column header="Active" binding="active"></wj-flex-grid-column>
+    </wj-flex-grid>
+
+    <div class="row ">
+        <div class="col-md-6 col-xs-12 well well-sm">
+            <wj-linear-gauge #progressBar [isReadOnly]="true" [min]="0" [max]="100" [value]="0" [showText]="'Value'">
+            </wj-linear-gauge>
+            <button class="btn btn-default" (click)="export()">Export</button>
+            <button class="btn btn-default" (click)="cancel()">Cancel</button>
+        </div>
+    </div>
+</div>

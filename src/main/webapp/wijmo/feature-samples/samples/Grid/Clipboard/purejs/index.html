@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GrapeCity Wijmo FlexGrid Clipboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SystemJS -->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('./src/app');
+    </script>
+</head>
+<body>
+    <div class="container-fluid">
+        <h2>
+            Default Grid
+        </h2>
+        <p>
+            Copy and paste cell ranges like in Excel.
+        </p>
+        <div id="theGrid"></div>
+        <h2>
+            Read-Only Grid
+        </h2>
+        <p>
+            Copy data and column header information (pasting not allowed).
+        </p>
+        <div id="theCustomGrid"></div>
+    </div>
+</body>
+</html>

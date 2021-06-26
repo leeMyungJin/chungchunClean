@@ -1,0 +1,113 @@
+body
+{
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.container-fluid th
+{
+    font-size: 90%;
+    color: #b0b0b0;
+}
+
+.container-fluid .header
+{
+    background-color: #00C1D5;
+    
+    background-position: 0% 0%;
+    background-repeat: repeat-x;
+    padding: 12px 0px;
+    margin-bottom: 14px;
+    color: #dcf3f6;
+}
+
+.container-fluid .header h1 {
+    font-size: 40px;
+    color: #fff;
+}
+.container-fluid .header a
+{
+    font-weight: bold;
+    color: #e1d3f7;
+}
+
+.container-fluid .match
+{
+    font-weight: bold;
+    background-color: yellow;
+    /*color: black;*/
+}
+
+/* remove borders and center-align table cells */
+.container-fluid .table> thead> tr> td, 
+.container-fluid .table> tbody> tr> td,
+.container-fluid  .table> tfoot> tr> td
+{
+    border: none;
+    vertical-align: middle;
+}
+
+/* clip cells with long content */
+.container-fluid .clipCell
+{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    min-width: 100px;
+}
+
+/* remove borders/padding from input cells */
+.container-fluid .inputCell  {
+    max-width: 80px;
+    padding: 2px;
+}
+.container-fluid .inputCell .wj-inputnumber 
+{
+    border: none;
+    background-color: #f8f8fa;
+    min-height: 20px;
+}
+
+/* customize appearance of the FlexGrid control */
+.container-fluid .wj-control {
+    outline: 0;
+}
+.container-fluid .wj-header {
+    background-color: #fff;
+    color: #888;
+    font-weight: normal;
+}
+.container-fluid .wj-colheaders .wj-header {
+    background: linear-gradient(to bottom, #fff, #f4f4f4);
+    border-bottom: 2px solid #e0e0e0;
+    border-right: 1px solid #e0e0e0;
+}
+.container-fluid .wj-rowheaders .wj-header {
+    background: linear-gradient(to right, #fff, #f4f4f4);
+    border-right: 2px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.container-fluid .wj-topleft .wj-header {
+    background: linear-gradient(to bottom right, #fff, #f4f4f4);
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.container-fluid .wj-cell {
+    border: none;
+}
+.container-fluid .wj-alt:not(.wj-state-selected):not(.wj-state-multi-selected) {
+    background: #fff;
+}
+.container-fluid .wj-state-selected {
+    background: #e0e0e0;
+    color: #000;
+}
+.container-fluid .wj-state-multi-selected {
+    background: #f4f4f4;
+    color: #000;
+}
+
+/* customize appearance of chart selection */
+.container-fluid .wj-flexchart .wj-state-selected {
+    stroke-width: 6px;
+}

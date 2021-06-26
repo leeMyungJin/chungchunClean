@@ -1,0 +1,66 @@
+<div class="container-fluid">
+    <p>
+        This sample shows how to use the <b>wjFlexGridCellTemplate</b> 
+        directive (part of our Angular interop) as well as the
+        <b>cellTemplate</b> property.
+    </p>
+    <wj-flex-grid #grid
+        showSelectedHeaders="All"
+        selectionMode="MultiRange"
+        headersVisibility="Column"
+        [showMarquee]="true"
+        [autoGenerateColumns]="false"
+        [itemsSource]="data">
+
+        <wj-flex-grid-column binding="id" header="ID" [isReadOnly]="true" width=".5*" ></wj-flex-grid-column>
+        <wj-flex-grid-column binding="date" header="Date" width="*" ></wj-flex-grid-column>
+        <wj-flex-grid-column binding="product" header="Product" [dataMap]="products" width="*" ></wj-flex-grid-column>
+
+        <!-- Country column with wjFlexGridCellTemplate -->
+        <wj-flex-grid-column binding="country" header="Country" [dataMap]="countryMap" width="*">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                <span class="flag-icon flag-icon-{{getCountry(cell.item).flag}}"></span>
+                {{getCountry(cell.item).name}}
+            </ng-template>
+        </wj-flex-grid-column>
+
+        <!--  Same thing with cellTemplate property -->
+        <wj-flex-grid-column binding="country" header="Country *" [dataMap]="countryMap" width="*"
+            cellTemplate="<span class=\'flag-icon flag-icon-${col.dataMap.getDataItem(value).flag}\'></span> ${text}" >
+        </wj-flex-grid-column>
+
+        <!-- Color column with wjFlexGridCellTemplate -->
+        <wj-flex-grid-column binding="color" header="Color" [dataMap]="colors" width="*">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                <span class="color-tile" [ngStyle]="{'background': cell.item.color}"></span>
+                &nbsp;
+                {{cell.item.color}}
+            </ng-template>
+        </wj-flex-grid-column>
+
+        <!-- Same thing with cellTemplate property -->
+        <wj-flex-grid-column binding="color" header="Color *" [dataMap]="colors" width="*"
+            cellTemplate="<span class='color-tile' style='background:${value}'></span> ${text}">
+        </wj-flex-grid-column>
+
+        <wj-flex-grid-column binding="value" header="Value" format="c0" width="*" ></wj-flex-grid-column>
+
+        <!-- Change column with wjFlexGridCellTemplate -->
+        <wj-flex-grid-column binding="change" header="Change" align="center" format="p0" width="*">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                <span [ngClass]="{'change-up': cell.item.change > 0, 'change-down': cell.item.change < 0}">
+                    {{cell.item.change | percent}}
+                </span>
+            </ng-template>
+        </wj-flex-grid-column>
+
+        <!-- Same thing with cellTemplate property -->
+        <wj-flex-grid-column binding="change" header="Change *" format="p0" align="center" width="*"
+            cellTemplate="<span class=${value > 0 ? 'change-up' : 'change-down'}>${text}</span">
+        </wj-flex-grid-column>
+
+    </wj-flex-grid>
+    <p>
+        <b>*</b>: Columns created with the <b>cellTemplate</b> property.
+    </p>
+</div>

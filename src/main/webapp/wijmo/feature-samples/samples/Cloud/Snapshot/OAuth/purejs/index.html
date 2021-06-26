@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GrapeCity Wijmo Snapshot OAuth2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Firestore web client libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.21.1/firebase-firestore.js"></script>
+
+    <!-- SystemJS -->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('./src/app');
+    </script>
+</head>
+<body>
+    <div class="container-fluid">
+
+        <!-- sign in/out -->
+        <div class="auth">
+            <div id="auth-msg"></div>
+            <button id="auth-btn" class="btn btn-primary">
+                Sign In
+            </button>
+        </div>
+
+        <!-- show the grid -->
+        <div id="theGrid"></div>
+    </div>
+</body>
+</html>

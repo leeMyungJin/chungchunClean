@@ -1,0 +1,102 @@
+<script type="text/javascript">
+    +function(){
+        function closeDialog(){
+            let dialog = document.querySelector(".reference-samples__dialog");
+            if (dialog) {
+                dialog.parentElement.removeChild(dialog);
+            }
+            let layer = document.querySelector(".reference-samples__shade-layer");
+            if (layer) {
+                layer.parentElement.removeChild(layer);
+            }
+            modifyURLHash("");
+        }
+        function modifyURLHash(hash){
+            if (!hash || hash === "#"){
+                var newURL = window.location.href.split("#")[0];
+
+                window.history.replaceState(window.history.state, window.document.title, newURL);
+                return;
+            }
+            if (hash[0] === "#"){
+                hash = hash.split("#")[1];
+            }
+            var newURL = [window.location.href.split("#")[0], hash].join("#");
+
+            window.history.replaceState(window.history.state, window.document.title, newURL);
+        }
+
+        for (let i = 0; i < document.querySelectorAll(".reference-samples__list__item").length; i++) {
+            document.querySelectorAll(".reference-samples__list__item")[i].addEventListener("click", function(e){
+                e.preventDefault();
+                var nameAttr = e.currentTarget.attributes["data-name"];
+                if (nameAttr && nameAttr.value){
+                    modifyURLHash(nameAttr.value);
+                }
+                openDialog(e.currentTarget.href);
+            });
+        }
+
+        if (!window.haveGlobalCloseDialogHandlerRegistered){
+            window.addEventListener("keydown", function(e){
+                if(e.which === 27){
+                    closeDialog();
+                }
+            });
+
+            window.addEventListener("popstate", function(e){
+                closeDialog();
+            });
+
+            window.haveGlobalCloseDialogHandlerRegistered = true;
+        }
+
+    for (let i = 0; i < document.querySelectorAll(".reference-sample-search-box__checkbox").length; i++) {
+        document.querySelectorAll(".reference-sample-search-box__checkbox")[i].addEventListener("change", function(e) {
+            let items = document.querySelectorAll(".reference-samples__list__item");
+            for (let j = 0; j < items.length; j++) {
+                let tags = items[j].querySelectorAll(".reference-samples__list__item__tag");
+                let isDisplay = false;
+                for (let m = 0; m < tags.length; m++) {
+                    let tagName = tags[m].dataset.tag.split(' ').join("").toLocaleLowerCase();
+                    if (document.getElementById(tagName) && document.getElementById(tagName).checked) {
+                        isDisplay = true;
+                        break;
+                    }
+                }
+                items[j].style.display = isDisplay ? "" : "none";
+            }
+        });
+
+    }
+
+    function openDialog(address) {
+        let shadeLayer = document.createElement("div");
+        shadeLayer.className = "reference-samples__shade-layer";
+        document.body.appendChild(shadeLayer);
+
+        shadeLayer.addEventListener("click", function(){
+            closeDialog();
+        });
+
+        let dialog = document.createElement("div");
+        dialog.className = "reference-samples__dialog";
+        let iframe = document.createElement("iframe");
+        iframe.className = "reference-samples__dialog__iframe";
+        iframe.src = address;
+        dialog.appendChild(iframe);
+        document.body.appendChild(dialog);
+    }
+
+    let hash = document.location.hash;
+    let sampleName = "";
+    if (hash){
+        sampleName = hash.replace("#", "").replace("/", "");
+        let openItem = document.querySelector('[data-name="' + sampleName + '"]');
+        if (openItem) {
+            openDialog(openItem.href);
+        }
+    }
+
+    }()
+</script>

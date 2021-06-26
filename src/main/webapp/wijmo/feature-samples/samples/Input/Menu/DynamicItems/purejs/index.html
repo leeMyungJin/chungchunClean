@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GrapeCity Menu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SystemJS -->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('./src/app');
+    </script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <p>
+            This Menu is bound to an array of items' data using the <b>itemsSource</b> property,
+            and customizes items content using a <b>formatItem</b> event.
+        </p>
+        <div class="form-group">
+            <div id="templateMenu"></div>
+        </div>
+        
+        <p>
+            For this Menu we generate an array of HTML strings representing items content,
+            and bind the menu to this string array using the <b>itemsSource</b> property.
+        </p>
+        <div class="form-group">
+            <div id="paletteMenu"></div>
+        </div>
+    </div>
+</body>
+
+</html>

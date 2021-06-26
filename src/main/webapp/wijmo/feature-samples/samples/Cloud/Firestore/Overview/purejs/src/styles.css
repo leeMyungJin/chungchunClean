@@ -1,0 +1,16 @@
+.wj-flexgrid,
+.wj-flexchart {
+    height: 350px;
+}
+
+.wj-axis-y .wj-label {
+    font-size: 85%;
+}
+
+label {
+    font-weight: normal;
+}
+
+label .wj-control {
+    font-weight: bold;
+}

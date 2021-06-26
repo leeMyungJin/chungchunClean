@@ -1,0 +1,19 @@
+<div class="container-fluid">
+    <label>
+        Collapse/Expand Animation
+        <input id="animated" type="checkbox" [(ngModel)]="animated"/>
+    </label>
+    <button class="btn btn-primary"
+        (click)="columnGroups = (columnGroups != colGroups1) ? colGroups1 : colGroups2">
+        Toggle Column Groups
+    </button>
+    <wj-flex-grid [ngClass]="{'animated': animated}"
+        headersVisibility="Column"
+        showSelectedHeaders="All"
+        [alternatingRowStep]="0"
+        [showMarquee]="true"
+        [autoGenerateColumns]="false"
+        [columnGroups]="columnGroups"
+        [itemsSource]="data">
+    </wj-flex-grid>
+</div>

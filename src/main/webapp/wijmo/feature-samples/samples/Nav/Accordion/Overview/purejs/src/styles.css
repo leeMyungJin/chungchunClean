@@ -1,0 +1,43 @@
+body {
+    margin-bottom: 48pt;
+}
+
+/* customize the labeled inputs */
+.wj-labeled-input {
+    width: 40%;
+}
+.wj-labeled-input > label > span {
+    display: block;
+    font-weight: normal;
+    font-size: 90%;
+    opacity: .90;
+    color: black;
+}
+
+/* customize the accordion */
+.wj-accordion .wj-content {
+    border: 12px solid transparent;
+}
+
+/* color animation */
+.wj-accordion .wj-header {
+    transition: color .4s, background .4s;
+}
+
+/* header description */
+.wj-accordion .desc {
+    font-size: 9pt;
+    font-weight: normal;
+    text-transform: lowercase;
+    color: #0085c7;
+}
+
+/* hide active header description */
+.wj-accordion .wj-header.wj-state-active .desc {
+    display: none;
+}
+
+/* give main pane a different color */
+.wj-accordion .main-pane.wj-state-active {
+    background: purple;
+}

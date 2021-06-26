@@ -1,0 +1,18 @@
+.wj-flexgrid {
+    max-height: 250px;
+    margin: 10px 0;
+}
+
+.ctx-menu {
+    background: rgb(221, 250, 255);
+    padding: 1em;
+}
+
+.ctx-menu span {
+    margin-right: 0.5em;
+    opacity: 0.5;
+}
+
+body {
+    margin-bottom: 20px;
+}

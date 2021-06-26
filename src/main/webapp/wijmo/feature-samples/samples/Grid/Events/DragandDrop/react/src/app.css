@@ -1,0 +1,15 @@
+.wj-flexgrid {
+  max-height: 200px;
+  margin-bottom: 12px;
+}
+
+body {
+  margin-bottom: 24px;
+}
+
+.theTarget {
+  height:100px;
+  background-color:#e0e0e0;
+  padding:6px;
+  border-radius:2px;
+}

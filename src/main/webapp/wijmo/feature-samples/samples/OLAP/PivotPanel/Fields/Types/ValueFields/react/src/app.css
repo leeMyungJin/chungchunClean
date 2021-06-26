@@ -1,0 +1,16 @@
+#sample-panel {
+    background: #eee;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+}
+
+#sample-panel .wj-flexgrid {
+    background: inherit;
+}
+
+#sample-panel [wj-part=d-vals] {
+    background: gold;
+}
+
+body {
+    margin-bottom: 24pt;
+}

@@ -1,0 +1,12 @@
+.wj-flexgrid .wj-cell {
+  transition: background .4s;
+}
+.wj-flexgrid .wj-marquee,
+.wj-flexgrid .wj-header {
+  transition: all .4s;
+}
+
+.wj-flexgrid {
+  max-height: 250px;
+  margin-bottom: 24px;
+}

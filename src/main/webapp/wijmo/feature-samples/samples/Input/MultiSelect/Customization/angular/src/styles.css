@@ -1,0 +1,22 @@
+body {
+    margin-bottom: 24pt;
+}
+
+.item {
+    margin: 8px;
+    font-size: 80%;
+}
+
+.item label {
+    display: inline-flex;
+}
+
+.item input[type=checkbox] {
+    margin: 0px;
+}
+
+.wj-listbox-item h1 {
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 4px -8px;
+}

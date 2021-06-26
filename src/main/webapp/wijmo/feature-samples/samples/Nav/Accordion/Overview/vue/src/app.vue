@@ -1,0 +1,242 @@
+<template>
+    <div class="container-fluid">
+        <wj-accordion
+                :showIcons="showIcons"
+                :autoSwitch="autoSwitch"
+                :isAnimated="isAnimated"
+                :allowCollapseAll="allowCollapseAll"
+                :allowExpandMany="allowExpandMany"
+        >
+            <wj-accordion-pane> <!-- pane -->
+                <div class="main-pane"> <!-- header -->
+                    Accordion
+                    <div class="desc">
+                        Change the properties of this Accordion.
+                    </div>
+                </div>
+                <div> <!-- content -->
+                    <div class="wj-labeled-input switch">
+                        <input id="showIcons" type="checkbox" v-model="showIcons" />
+                        <label for="showIcons">
+                            showIcons <span>in the pane headers</span>
+                        </label>
+                    </div>
+                    <div class="wj-labeled-input switch">
+                        <input id="autoSwitch" type="checkbox" v-model="autoSwitch" />
+                        <label for="autoSwitch">
+                            autoSwitch <span>expand panes when selecting with the keyboard</span>
+                        </label>
+                    </div>
+                    <div class="wj-labeled-input switch">
+                        <input id="isAnimated" type="checkbox" v-model="isAnimated" />
+                        <label for="isAnimated">
+                            isAnimated <span>animate pane collapse/expand</span>
+                        </label>
+                    </div>
+                    <div class="wj-labeled-input switch">
+                        <input id="allowCollapseAll" type="checkbox" v-model="allowCollapseAll" />
+                        <label for="allowCollapseAll">
+                            allowCollapseAll <span>can collapse all panes</span>
+                        </label>
+                    </div>
+                    <div class="wj-labeled-input switch">
+                        <input id="allowExpandMany" type="checkbox" v-model="allowExpandMany" />
+                        <label for="allowExpandMany">
+                            allowExpandMany <span>can expand multiple panes</span>
+                        </label>
+                    </div>
+                </div>
+            </wj-accordion-pane>
+
+            <wj-accordion-pane> <!-- pane -->
+                <div> <!-- header -->
+                    Network &amp; Internet
+                    <div class="desc">
+                        Wi-Fi, mobile, data usage, and hotspot
+                    </div>
+                </div>
+                <div> <!-- content -->
+                    <div class="wj-labeled-input switch">
+                        <input id="wifi" type="checkbox" checked />
+                        <label for="wifi">
+                            Wi-Fi <span>turn wi-fi on or off</span>
+                        </label>
+                    </div>
+                    <div class="wj-labeled-input switch">
+                        <input id="apmode" type="checkbox" />
+                        <label for="apmode">
+                            Airplane Mode <span>turn airplane mode on or off</span>
+                        </label>
+                    </div>
+                    <div class="wj-labeled-input switch">
+                        <input id="hotspot" type="checkbox" />
+                        <label for="hotspot">
+                            Hot Spot &amp; Tethering <span>hotspot on, tethering</span>
+                        </label>
+                    </div>
+                </div>
+            </wj-accordion-pane>
+
+            <wj-accordion-pane> <!-- pane -->
+                <div> <!-- header -->
+                    Connected Devices
+                    <div class="desc">
+                        Bluetooth, NFC
+                    </div>
+                </div>
+                <div> <!-- content -->
+                    <div class="wj-labeled-input switch">
+                        <input id="dev1" type="checkbox" />
+                        <label for="dev1">
+                            Gear Fit2 Pro <span>health monitor</span>
+                        </label>
+                    </div>
+                    <div class="wj-labeled-input switch">
+                        <input id="dev2" type="checkbox" />
+                        <label for="dev2">
+                            SYNC <span>car connection</span>
+                        </label>
+                    </div>
+                    <div class="wj-labeled-input switch">
+                        <input id="dev3" type="checkbox" />
+                        <label for="dev3">
+                            Samsung XT-9343 <span>TV</span>
+                        </label>
+                    </div>
+                    <button class="btn btn-primary">
+                        See all 8 devices...
+                    </button>
+                </div>
+            </wj-accordion-pane>
+
+            <wj-accordion-pane> <!-- pane -->
+                <div> <!-- header -->
+                    Apps &amp; Notifications
+                    <div class="desc">
+                        Recent apps, default apps
+                    </div>
+                </div>
+                <div> <!-- content -->
+                    <div class="wj-labeled-input switch">
+                        <input id="app-chrome" type="checkbox" />
+                        <label for="app-chrome">
+                            Chrome <span>web browser</span>
+                        </label>
+                    </div>
+                    <div class="wj-labeled-input switch">
+                        <input id="app-outlook" type="checkbox" />
+                        <label for="app-outlook">
+                            Outlook <span>mail and schedule</span>
+                        </label>
+                    </div>
+                    <div class="wj-labeled-input switch">
+                        <input id="app-fb" type="checkbox" />
+                        <label for="app-fb">
+                            Facebook <span>social media</span>
+                        </label>
+                    </div>
+                    <button class="btn btn-primary">
+                        See all 62 apps...
+                    </button>
+                </div>
+            </wj-accordion-pane>
+
+            <wj-accordion-pane> <!-- pane -->
+                <div> <!-- header -->
+                    Battery
+                    <div class="desc">
+                        67% - Should last until about 9:30 PM
+                    </div>
+                </div>
+                <div> <!-- content -->
+                    <div class="wj-labeled-input switch">
+                        <input id="bat-sav" type="checkbox" />
+                        <label for="bat-sav">
+                            Battery Saver <span>slow down to reduce battery usage</span>
+                        </label>
+                    </div>
+                    <div class="wj-labeled-input switch">
+                        <input id="bat-adapt" type="checkbox" />
+                        <label for="bat-adapt">
+                            Adaptive Battery <span>detect when apps drain battery</span>
+                        </label>
+                    </div>
+                    <div class="wj-labeled-input switch">
+                        <input id="bat-pct" type="checkbox" />
+                        <label for="bat-pct">
+                            Battery Percentage <span>show battery percentage</span>
+                        </label>
+                    </div>
+                </div>
+            </wj-accordion-pane>
+        </wj-accordion>
+    </div>
+</template>
+
+<script>
+    import '@grapecity/wijmo.styles/wijmo.css';
+    import 'bootstrap.css';
+    import Vue from "vue";
+    import '@grapecity/wijmo.vue2.nav';
+
+    let App = Vue.extend({
+        name: "app",
+        data: function() {
+            return {
+                showIcons: true,
+                autoSwitch: true,
+                isAnimated: true,
+                allowCollapseAll: false,
+                allowExpandMany: false,
+            };
+        },
+    });
+
+    new Vue({ render: h => h(App) }).$mount("#app");
+</script>
+
+<style>
+    body {
+        margin-bottom: 3em;
+    }
+
+    /* customize the labeled inputs */
+    .wj-accordion .wj-labeled-input {
+        width: 40%;
+    }
+    .wj-accordion .wj-labeled-input > label > span {
+        display: block;
+        font-weight: normal;
+        font-size: 90%;
+        opacity: .90;
+        color: black;
+    }
+
+    /* customize the accordion */
+    .wj-accordion .wj-content {
+        border: 12px solid transparent;
+    }
+
+    /* color animation */
+    .wj-accordion .wj-header {
+        transition: color .4s, background .4s;
+    }
+
+    /* header description */
+    .wj-accordion .desc {
+        font-size: 9pt;
+        font-weight: normal;
+        text-transform: lowercase;
+        color: #0085c7;
+    }
+
+    /* hide active header description */
+    .wj-accordion .wj-header.wj-state-active .desc {
+        display: none;
+    }
+
+    /* give main pane a different color */
+    .wj-accordion .main-pane.wj-state-active {
+        background: purple !important;
+    }
+</style>

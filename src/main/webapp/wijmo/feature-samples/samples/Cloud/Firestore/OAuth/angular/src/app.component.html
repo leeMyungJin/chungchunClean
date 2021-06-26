@@ -1,0 +1,22 @@
+<div class="container-fluid">
+    <div class="auth">
+        <div id="auth-msg"></div>
+        <button id="auth-btn" class="btn btn-primary">
+            Sign In
+        </button>
+    </div>
+    <wj-flex-grid
+        selectionMode="MultiRange"
+        [showMarquee]="true"
+        [isReadOnly]="!user"
+        [itemsSource]="products">
+        <wj-flex-grid-column binding="ProductID" header="ID"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="ProductName" header="Product Name" [width]="200"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="CategoryID" header="Category" [width]="150" [dataMap]="mapCat"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="SupplierID" header="Supplier" [width]="150" [dataMap]="mapSup"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="UnitPrice" header="Unit Price" format="n2"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="QuantityPerUnit" header="Qty per Unit" [width]="150"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="UnitsInStock" header="Units in Stock"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="Discontinued"></wj-flex-grid-column>
+    </wj-flex-grid>
+</div>

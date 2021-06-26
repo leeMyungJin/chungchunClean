@@ -1,0 +1,77 @@
+<div class="container-fluid">
+    <h1>
+        Contrast Checker
+    </h1>
+    <div class="row">
+        <div class="col-md-4">
+            <h3>
+                Foreground Color
+            </h3>
+            <wj-input-color #icFore [value]="fore" (valueChanged)="colorChanged(icFore)">
+            </wj-input-color>
+            <h3>
+                Background Color
+            </h3>
+            <wj-input-color #icBack [value]="back" (valueChanged)="backChanged(icBack)">
+            </wj-input-color>
+        </div>
+        <div class="col-md-4">
+            <h3>
+                Contrast Ratio
+            </h3>
+            <div id="ratio" [ngStyle]="{'border-color': ratio < 7 ? 'whitesmoke' : 'darkgreen'}">
+                <b>{{ format(ratio, 'g1') }}</b>:1
+            </div>
+            <h3>
+                Result
+            </h3>
+            <p class="sample" [ngStyle]="{'color': fore, 'background': back}">
+                Normal Text
+            </p>
+            <p>
+                WCAG AA:
+                <span id="aa-normal" class="result" [ngClass]="{'fail': ratio < 4.5 }">
+                    {{ ratio < 4.5 ? 'Fail' : 'Pass' }}
+                </span>
+                WCAG AAA:
+                <span id="aaa-normal" class="result" [ngClass]="{'fail': ratio < 7 }">
+                    {{ ratio < 7 ? 'Fail' : 'Pass' }}
+                </span>
+            </p>
+            <p class="sample large" [ngStyle]="{'color': fore, 'background': back}">
+                Large Text
+            </p>
+            <p>
+                WCAG AA:
+                <span id="aa-large" class="result" [ngClass]="{'fail': ratio < 3 }">
+                    {{ ratio < 3 ? 'Fail' : 'Pass' }}
+                </span>
+                WCAG AAA:
+                <span id="aaa-large" class="result" [ngClass]="{'fail': ratio < 4.5 }">
+                    {{ ratio < 4.5 ? 'Fail' : 'Pass' }}
+                </span>
+            </p>
+        </div>
+    </div>
+    <h3>
+        Explanation
+    </h3>
+    <p>
+        WCAG 2.0 level AA requires a contrast ratio of at least 4.5:1 for normal text and
+        3:1 for large text.
+    </p>
+    <p>
+        WCAG 2.1 requires a contrast ratio of at least 3:1 for graphics and user interface
+        components (such as form input borders).
+    </p>
+    <p>
+        WCAG Level AAA requires a contrast ratio of at least 7:1 for normal text and 4.5:1 
+        for large text.
+    </p>
+    <p>
+        For more details, please see
+        <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/Understanding_Colors_and_Luminance" target="_blank">
+            The Science of Color Contrast
+        </a>.
+    </p>
+</div>

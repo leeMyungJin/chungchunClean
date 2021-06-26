@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Radial Gauges with Needle Pointers</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SystemJS -->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('./src/app');
+    </script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <p>
+            Select one of the built-in needle shapes using the <b>needleShape</b> property:
+        </p>
+        <div class="row">
+            <div class="col-xs-4">
+                <label for="needle-shape">
+                    needleShape
+                </label>
+                <input id="needle-shape" /><br />
+                <label for="needle-length">
+                    needleLength
+                </label>
+                <input id="needle-length" /><br />
+                <br />
+                <label for="start">
+                    startAngle
+                </label>
+                <input id="start" /><br />
+                <label for="sweep">
+                    sweepAngle
+                </label>
+                <input id="sweep" /><br />
+                <label for="spacing">
+                    tickSpacing
+                </label>
+                <input id="spacing" /><br />
+            </div>
+            <div class="col-xs-4">
+                <div id="theRadialGauge"></div>
+            </div>
+        </div>
+
+        <p>
+            Or create custom needle shapes with the <b>createNeedleElement</b> method:
+        </p>
+        <div class="row">
+            <div class="col-xs-4">
+                <div id="customGauge1"></div>
+            </div>
+            <div class="col-xs-4">
+                <div id="customGauge2"></div>
+            </div>
+            <div class="col-xs-4">
+                <div id="customGauge3"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

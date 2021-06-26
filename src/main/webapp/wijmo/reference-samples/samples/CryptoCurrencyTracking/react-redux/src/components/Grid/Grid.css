@@ -1,0 +1,32 @@
+.grid {
+    display: flex;
+    flex: 1 1 auto;
+    height: 100%;
+    position: relative;
+}
+
+.grid .helper {
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    text-align: center;
+    background: white;
+    box-sizing: border-box;
+    z-index: 4;
+}
+
+.grid .helper-icon {
+    opacity: .7;
+    font-size: 3rem;
+    padding: 1rem;
+    border-radius: 50%;
+    background: #eee;
+    margin-bottom: 1rem;
+}

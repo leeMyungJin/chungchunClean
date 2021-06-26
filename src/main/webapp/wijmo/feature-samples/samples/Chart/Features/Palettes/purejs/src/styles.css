@@ -1,0 +1,20 @@
+label {
+    margin-right: 3px;
+    margin-left: 12px;
+}
+
+.row {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.col {
+    float:left;
+    width: 50%;
+}
+
+.wj-flexchart {
+    margin: 12px;
+    height: 360px;
+}
+

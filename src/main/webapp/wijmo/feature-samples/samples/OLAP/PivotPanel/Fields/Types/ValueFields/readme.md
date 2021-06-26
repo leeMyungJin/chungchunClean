@@ -1,0 +1,6 @@
+Value Fields (Measures)
+=======================
+
+The [PivotEngine](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotengine.html) has several field collections exposed as properties. [valueFields](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotengine.html#valuefields) contain fields used as "measures", typically numeric values that are summarized by the engine. Use the [PivotPanel](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotpanel.html)  to drag multiple copies of fields into the [valueFields](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotengine.html#valuefields) collection. When you do that, the panel creates clones that have their own properties. This allows you to summarize fields using different aggregates and calculations. 
+
+[Learn about OLAP](https://www.grapecity.com/wijmo-olap) | [PivotPanel Documentation](https://www.grapecity.com/wijmo/docs/Topics/OLAP/Pivot-Panel) | [PivotPanel API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotpanel.html)

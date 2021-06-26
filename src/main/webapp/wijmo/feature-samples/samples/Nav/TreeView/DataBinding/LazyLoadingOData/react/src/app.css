@@ -1,0 +1,33 @@
+/* level 0 nodes and deeper (employees...) */
+.container-fluid .wj-treeview .wj-nodelist>.wj-node {
+    font-weight: bold;
+}
+
+/* level 1 nodes and deeper (orders...) */
+.container-fluid .wj-treeview .wj-nodelist>.wj-nodelist>.wj-node {
+    font-weight: normal;
+    font-size: 95%;
+    color: darkblue;
+}
+
+/* level 2 nodes and deeper (order details...) */
+.container-fluid .wj-treeview .wj-nodelist>.wj-nodelist>.wj-nodelist>.wj-node {
+    font-size: 90%;
+    color: darkslategrey;
+}
+
+/* default trees on this sample */
+.container-fluid .wj-treeview {
+    display: block;
+    height: 350px;
+    font-size: 120%;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding: 6px;
+    background: #f0f0f0;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+body {
+    margin-bottom: 24pt;
+}

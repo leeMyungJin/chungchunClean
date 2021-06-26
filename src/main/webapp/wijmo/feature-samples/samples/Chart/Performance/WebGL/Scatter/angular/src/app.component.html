@@ -1,0 +1,61 @@
+<div class='container-fluid'>
+    <div class="row">
+        <div class="col-sm-12">
+            <wj-menu header="NumPoints" [(value)]="numberOfPoints">
+                <wj-menu-item [value]="1000">1K</wj-menu-item>
+                <wj-menu-item [value]="10000">10K</wj-menu-item>
+                <wj-menu-item [value]="100000">100K</wj-menu-item>
+                <wj-menu-item [value]="200000">200K</wj-menu-item>
+                <wj-menu-item [value]="500000">500K</wj-menu-item>
+            </wj-menu>
+
+            <wj-menu header="NumSeries" [(value)]="numberOfSeries">
+                <wj-menu-item [value]="1">1</wj-menu-item>
+                <wj-menu-item [value]="2">2</wj-menu-item>
+                <wj-menu-item [value]="4">4</wj-menu-item>
+                <wj-menu-item [value]="8">8</wj-menu-item>
+            </wj-menu>
+
+            <wj-menu header="Symbol" [(value)]="seriesSymbol">
+                <wj-menu-item [value]="'Dot'">Dot</wj-menu-item>
+                <wj-menu-item [value]="'Box'">Box</wj-menu-item>
+            </wj-menu>
+
+            <wj-menu header="Size" [(value)]="symbolSize">
+                <wj-menu-item [value]="3">3</wj-menu-item>
+                <wj-menu-item [value]="5">5</wj-menu-item>
+                <wj-menu-item [value]="10">10</wj-menu-item>
+                <wj-menu-item [value]="20">20</wj-menu-item>
+                <wj-menu-item [value]="50">50</wj-menu-item>
+            </wj-menu>
+
+            <label>
+                Use WebGL
+                <input id="webgl" type="checkbox" [(ngModel)]="useWebGL" />
+                <!--                <input id="webgl" type="checkbox" [(ngModel)]="useWebGL" (change)="renderEngineChenged()"/>-->
+            </label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <wj-flex-chart #chart [renderEngine]="renderEngine" chartType="Scatter" bindingX="x" binding="y"
+                           [symbolSize]="symbolSize" (initialized)="chartInitialized(chart)" >
+                <wj-flex-chart-axis wjProperty="axisX" [min]="-2" [max]="2"></wj-flex-chart-axis>
+                <wj-flex-chart-axis wjProperty="axisY" [min]="-2" [max]="2" [axisLine]="true" [majorGrid]="false"></wj-flex-chart-axis>
+                <wj-flex-chart-gestures #gestures interactiveAxes="XY" mouseAction="Zoom"
+                                        [scaleY]="1" [posY]="0.5" [scaleX]="1" [posX]="0.5"></wj-flex-chart-gestures>
+                <wj-flex-chart-series *ngFor="let series of data; let i = index" [itemsSource]="series"
+                                      [name]="'ser ' + (i + 1)" [symbolStyle] = "{strokeWidth: 0}"
+                                      [symbolMarker]="seriesSymbol"></wj-flex-chart-series>
+            </wj-flex-chart>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <button id="btnNew" (click)="updateData()">Refresh Data</button>
+            <button id="btnReset" (click)="gestures.reset()">Reset Zoom</button>
+        </div>
+    </div>
+</div>

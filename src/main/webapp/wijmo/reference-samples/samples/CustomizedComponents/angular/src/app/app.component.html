@@ -1,0 +1,30 @@
+<div class="container ">
+  <div class="header">
+    <div  style="position:relative">
+      <div>
+        <h1>Customized Components</h1>
+        <p>
+          Shows how to customize Wijmo components using different techniques like 
+          inheritance and aggregation.
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Navigation menu -->
+  <div >
+    <div class="row">
+      <div>
+        <div class="list-group nav">
+          <a [routerLink]="'inheritedView'" class="list-group-item">Inherit from WjFlexGrid</a>
+          <a [routerLink]="'aggregatedView'" class="list-group-item">Aggregate WjFlexGrid</a>
+        </div>
+
+        <div class="displaycontent">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>  
+  

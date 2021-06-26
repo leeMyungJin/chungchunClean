@@ -1,0 +1,8 @@
+body {
+    margin-bottom: 36px;
+}
+
+.wj-barcode-ean13 {
+    width: 280px;
+    height: 90px;
+}

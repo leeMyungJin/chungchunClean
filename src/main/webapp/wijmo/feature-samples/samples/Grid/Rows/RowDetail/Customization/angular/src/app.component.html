@@ -1,0 +1,33 @@
+<div class="container-fluid">
+    <h3>Using custom elements to show or hide details</h3>
+    <p>
+        This grid shows product categories on each row with custom show/hide elements. Expanding
+        the rows shows an HTML element with information about
+        the products in that category:
+    </p>
+    <wj-flex-grid id="customDetail" [itemsSource]="categories" [isReadOnly]="true" 
+        [headersVisibility]="'Column'" [selectionMode]="'Row'">
+        <ng-template wjFlexGridDetail #rowDetail="wjFlexGridDetail" let-item="item"
+            [detailVisibilityMode]="'Code'" [rowHasDetail]="rowHasDetailFn">
+            <div>
+                ID: <b>{{item.CategoryID}}</b><br />
+                Name: <b>{{item.CategoryName}}</b><br />
+                Description: <b>{{item.Description}}</b><br />
+                <button class="btn btn-default btn-xs" (click)="rowDetail.hideDetail(row)">Hide Detail</button>
+            </div>
+        </ng-template>
+        <wj-flex-grid-column [header]="'Name'" [binding]="'CategoryName'" [isReadOnly]="true" [width]="'*'">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-row="row" let-item="item">
+                <span *ngIf="!rowDetail.isDetailAvailable(row)" class="glyphicon"></span>
+                <span *ngIf="rowDetail.isDetailAvailable(row) && rowDetail.isDetailVisible(row)"
+                    class="glyphicon glyphicon-chevron-up"
+                    (click)="rowDetail.hideDetail(row)"></span>
+                <span *ngIf="rowDetail.isDetailAvailable(row) && !rowDetail.isDetailVisible(row)"
+                    class="glyphicon glyphicon-chevron-down"
+                    (click)="rowDetail.showDetail(row, true)"></span>
+                {{item.CategoryName}} (ID: {{item.CategoryID}})
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Description'" [binding]="'Description'" [width]="'2*'"></wj-flex-grid-column>
+    </wj-flex-grid>
+</div>

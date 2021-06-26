@@ -1,0 +1,21 @@
+<div class="container-fluid">
+    <label>
+        selectionMode <span id="selectionMode"></span>
+        <wj-combo-box #selectionMode [itemsSource]="comboBoxData" [text]="'CellRange'"
+        (textChanged)="onTextChanged()"></wj-combo-box>
+    </label>
+
+    <wj-flex-grid #flexGrid [alternatingRowStep]="0" [itemsSource]="data" (initialized)="initializeGrid(flex)"
+        (selectionChanged)="onSelectionChanged()">
+    </wj-flex-grid>
+    <p>
+        Current selection: <span id="currSel">{{currentSelection}}</span>.
+    </p>
+    <div>
+        <button class="btn btn-default" (click)="onSelectClick()">
+            Select the first four cells
+        </button> <button class="btn btn-default" (click)="onListSelectClick()">
+            Select rows 0, 2, and 4
+        </button>
+    </div>
+</div>

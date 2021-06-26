@@ -1,0 +1,10 @@
+<div class="container-fluid">
+    <wj-flex-grid #flex
+        [deferResizing]="true"
+        [(itemsSource)]="data">
+        <wj-flex-grid-column [binding]="'id'" [header]="'ID'" [width]="60" [allowSorting]="false"></wj-flex-grid-column>
+        <wj-flex-grid-column [binding]="'country'" [header]="'Country'"></wj-flex-grid-column>
+        <wj-flex-grid-column [binding]="'sales'" [header]="'Sales'"></wj-flex-grid-column>
+        <wj-flex-grid-column [binding]="'expenses'" [header]="'Expenses'"></wj-flex-grid-column>
+    </wj-flex-grid>
+</div>

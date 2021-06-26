@@ -1,0 +1,29 @@
+{
+    "themes" : [
+        {"name": "", "label": "Default"},
+        {"name": "cerulean", "label": "Cerulean"},
+        {"name": "cleandark", "label": "Clean Dark"},
+        {"name": "cleanlight", "label": "Clean Light"},
+        {"name": "cocoa", "label": "Cocoa"},
+        {"name": "coral", "label": "Coral"},
+        {"name": "cyborg", "label": "Cyborg"},
+        {"name": "dark", "label": "Dark"},
+        {"name": "flatly", "label": "Flatly"},
+        {"name": "grayscale", "label": "Grayscale"},
+        {"name": "highcontrast", "label": "High Contrast"},
+        {"name": "light", "label": "Light"},
+        {"name": "material", "label": "Material"},
+        {"name": "midnight", "label": "Midnight"},
+        {"name": "minimal", "label": "Minimal"},
+        {"name": "modern", "label": "Modern"},
+        {"name": "office", "label": "Office"},
+        {"name": "organic", "label": "Organic"},
+        {"name": "paper", "label": "Paper"},
+        {"name": "simplex", "label": "Simplex"},
+        {"name": "slate", "label": "Slate"},
+        {"name": "superhero", "label": "Superhero"},
+        {"name": "trust", "label": "Trust"},
+        {"name": "zen", "label": "Zen"}
+    ],
+    "urlPattern": "/wijmo/demos/en/lib/purejs/node_modules/@grapecity/wijmo.styles/themes/wijmo.theme.{0}.css"
+}

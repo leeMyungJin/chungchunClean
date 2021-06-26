@@ -1,0 +1,21 @@
+.wj-flexgrid {
+    height: 300px;
+}
+
+.auth {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+}
+
+.auth-tip {
+    text-align: right;
+    background: #fffacf8e;
+    border-radius: 0;
+}
+
+.auth-tip .e-mail {
+    font-size: 70%;
+    font-style: italic;
+}

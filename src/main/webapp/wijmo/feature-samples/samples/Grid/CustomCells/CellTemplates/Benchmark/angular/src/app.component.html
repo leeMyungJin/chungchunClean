@@ -1,0 +1,94 @@
+<div class="container">
+    <button class="btn btn-primary" (click)="benchmark()">
+        Benchmark
+    </button>
+
+    <h1>Angular Templates</h1>
+    <wj-flex-grid
+        class="bm-angular"
+        showSelectedHeaders="All"
+        selectionMode="MultiRange"
+        headersVisibility="Column"
+        [showMarquee]="true"
+        [autoGenerateColumns]="false"
+        [itemsSource]="data">
+        <!--
+        <wj-flex-grid-column binding="id" header="ID" [isReadOnly]="true" width=".5*" ></wj-flex-grid-column>
+        <wj-flex-grid-column binding="date" header="Date" width="*" ></wj-flex-grid-column>
+        <wj-flex-grid-column binding="product" header="Product" [dataMap]="products" width="*" ></wj-flex-grid-column>
+        -->
+        <wj-flex-grid-column binding="country" header="Country" [dataMap]="countryMap" width="*">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                <span class="flag-icon flag-icon-{{getCountry(cell.item).flag}}"></span>
+                {{getCountry(cell.item).name}}
+            </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column binding="color" header="Color" [dataMap]="colors" width="*">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                <span class="color-tile" [ngStyle]="{'background': cell.item.color}"></span>
+                &nbsp;
+                {{cell.item.color}}
+            </ng-template>
+        </wj-flex-grid-column>
+        <!--
+        <wj-flex-grid-column binding="value" header="Value" format="c0" width="*" ></wj-flex-grid-column>
+        -->
+        <wj-flex-grid-column binding="change" header="Change" align="center" format="p0" width="*">
+            <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-cell="cell">
+                <span [ngClass]="{'change-up': cell.item.change > 0, 'change-down': cell.item.change < 0}">
+                    {{cell.item.change | percent}}
+                </span>
+            </ng-template>
+        </wj-flex-grid-column>
+    </wj-flex-grid>
+
+    <h1>cellTemplate Templates</h1>
+    <wj-flex-grid #cellTemplate
+        class="bm-ct"
+        showSelectedHeaders="All"
+        selectionMode="MultiRange"
+        headersVisibility="Column"
+        [showMarquee]="true"
+        [autoGenerateColumns]="false"
+        [itemsSource]="data">
+        <!--
+        <wj-flex-grid-column binding="id" header="ID" [isReadOnly]="true" width=".5*" ></wj-flex-grid-column>
+        <wj-flex-grid-column binding="date" header="Date" width="*" ></wj-flex-grid-column>
+        <wj-flex-grid-column binding="product" header="Product" [dataMap]="products" width="*" ></wj-flex-grid-column>
+        -->
+        <wj-flex-grid-column binding="country" header="Country CT" [dataMap]="countryMap" width="*"
+            cellTemplate="<span class=\'flag-icon flag-icon-${col.dataMap.getDataItem(value).flag}\'></span> ${text}" >
+        </wj-flex-grid-column>
+        <wj-flex-grid-column binding="color" header="Color CT" [dataMap]="colors" width="*"
+            cellTemplate="<span class='color-tile' style='background:${value}'></span> ${text}">
+        </wj-flex-grid-column>
+        <!--
+        <wj-flex-grid-column binding="value" header="Value" format="c0" width="*" ></wj-flex-grid-column>
+        -->
+        <wj-flex-grid-column binding="change" header="Change CT" format="p0" align="center" width="*"
+            cellTemplate="<span class=${value > 0 ? 'change-up' : 'change-down'}>${text}</span">
+        </wj-flex-grid-column>
+    </wj-flex-grid>
+
+    <h1>No Templates</h1>
+    <wj-flex-grid
+        class="bm-none"
+        showSelectedHeaders="All"
+        selectionMode="MultiRange"
+        headersVisibility="Column"
+        [showMarquee]="true"
+        [autoGenerateColumns]="false"
+        [itemsSource]="data">
+        <!--
+        <wj-flex-grid-column binding="id" header="ID" [isReadOnly]="true" width=".5*" ></wj-flex-grid-column>
+        <wj-flex-grid-column binding="date" header="Date" width="*" ></wj-flex-grid-column>
+        <wj-flex-grid-column binding="product" header="Product" [dataMap]="products" width="*" ></wj-flex-grid-column>
+        -->
+        <wj-flex-grid-column binding="country" header="Country" [dataMap]="countryMap" width="*"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="color" header="Color" [dataMap]="colors" width="*"></wj-flex-grid-column>
+        <!--
+        <wj-flex-grid-column binding="value" header="Value" format="c0" width="*" ></wj-flex-grid-column>
+        -->
+        <wj-flex-grid-column binding="change" header="Change" align="center" format="p0" width="*"></wj-flex-grid-column>
+    </wj-flex-grid>
+</div>

@@ -1,0 +1,21 @@
+<div class="container-fluid">
+    <wj-multi-row #chMultirow 
+        [itemsSource]="orders"
+        [layoutDefinition]="threeLines"
+        [collapsedHeaders]=true
+        [showHeaderCollapseButton]=true>
+    </wj-multi-row>
+    <div>
+        <label>
+            Collapsed Headers 
+            <wj-combo-box [displayMemberPath]="'name'" [selectedValuePath]="'value'"
+                [itemsSource]="cbCollapsedHeadersSource"
+                [(selectedValue)]="chMultirow.collapsedHeaders">
+            </wj-combo-box>
+        </label> 
+        <label>
+            Show Header Collapse Button 
+            <input type="checkbox" [(ngModel)]="chMultirow.showHeaderCollapseButton">
+        </label>
+    </div>
+</div>

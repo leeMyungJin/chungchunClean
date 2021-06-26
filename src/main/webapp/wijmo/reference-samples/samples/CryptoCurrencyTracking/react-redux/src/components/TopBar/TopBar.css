@@ -1,0 +1,88 @@
+.topbar {
+    background: #3B78E7;
+    color: white;
+    height: 92px;
+    display: flex;
+    padding: 16px 24px 0;
+    box-sizing: border-box;
+}
+
+.topbar .tabs {
+    display: flex;
+    padding-top: 16px;
+}
+
+.topbar .tabs-indicator {
+    background: #FFC500;
+    height: 4px;
+}
+
+.topbar .tab {
+    letter-spacing: .05em;
+}
+
+.topbar .filter {
+    position: relative;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, .15);
+}
+
+.topbar .filter__search-icon {
+    width: 72px;
+    height: 100%;
+    display: flex;
+    position: absolute;
+    align-items: center;
+    pointer-events: none;
+    justify-content: center;
+}
+
+.topbar .filter__search-icon:hover {
+    background: rgba(255, 255, 255, .25);
+}
+
+.topbar .filter__clear-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 72px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+    opacity: .7;
+}
+
+.topbar .filter__clear-icon:hover {
+    opacity: 1;
+}
+
+.topbar .filter__input {
+    font: inherit;
+    padding: 8px 8px 8px 72px;
+    border: 0;
+    display: block;
+    vertical-align: middle;
+    white-space: normal;
+    background: none;
+    margin: 0;
+    color: inherit;
+    transition: width 300ms cubic-bezier(.4, 0, .2, 1) 0ms;
+    background: rgba(255, 255, 255, .1);
+    width: 240px;
+}
+
+.topbar .filter__input:focus {
+    outline: 0;
+    width: 300px;
+}
+
+.topbar .filter__input::placeholder {
+    color: white;
+    opacity: .8;
+}
+
+.topbar .filter__input:focus::placeholder {
+    opacity: 0;
+}

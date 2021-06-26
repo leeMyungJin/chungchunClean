@@ -1,0 +1,6 @@
+Custom Grouping
+================
+
+You can create custom groups that are not based on the the content values bound to the control's [itemsSource](https://www.grapecity.com/wijmo/api/classes/wijmo_input.combobox.html#itemssource). To group by calculated values, override the [GroupDescription's](https://www.grapecity.com/wijmo/api/classes/wijmo.groupdescription.html) [groupNameFromItem](https://www.grapecity.com/wijmo/api/classes/wijmo.groupdescription.html#groupnamefromitem) method. This sample demonstrates this by creating a [GroupDescription](https://www.grapecity.com/wijmo/api/classes/wijmo.groupdescription.html) that returns the first letter of the name. This sample groups the data by initial.
+
+[Learn about Input Controls](https://www.grapecity.com/wijmo/input-controls-javascript) | [ComboBox Grouping Documentation](https://www.grapecity.com/wijmo/docs/Topics/Input/ComboBox/ComboBox-Grouping) | [ComboBox API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_input.combobox.html)

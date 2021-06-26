@@ -1,0 +1,11 @@
+<div class="container-fluid">
+    <wj-flex-grid #grid
+        [alternatingRowStep]="0"
+        [anchorCursor]="true"
+        [showMarquee]="true"
+        [showSelectedHeaders]="'All'"
+        [itemsSource]="data"
+        (formatItem)="formatItem(grid, $event)"
+    >
+    </wj-flex-grid>
+</div>

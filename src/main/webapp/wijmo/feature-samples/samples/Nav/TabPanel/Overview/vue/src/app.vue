@@ -1,0 +1,82 @@
+<template>
+    <div class="container-fluid">
+        <wj-tab-panel :selectedIndex="1">
+            <wj-tab>
+                <a>Africa</a>
+                <div>
+                    <ul>
+                        <li>Algeria</li>
+                        <li>Angola</li>
+                        <li>Benin</li>
+                        <li>Botswana</li>
+                    </ul>
+                </div>
+            </wj-tab>
+            <wj-tab>
+                <a>America</a>
+                <div>
+                    <ul>
+                        <li>Canada</li>
+                        <li>Chile</li>
+                        <li>Mexico</li>
+                        <li>United States</li>
+                    </ul>
+                </div>
+            </wj-tab>
+            <wj-tab>
+                <a>Asia</a>
+                <div>
+                    <ul>
+                        <li>China</li>
+                        <li>Korea</li>
+                        <li>India</li>
+                        <li>Japan</li>
+                    </ul>
+                </div>
+            </wj-tab>
+            <wj-tab>
+                <a>Europe</a>
+                <div>
+                    <ul>
+                        <li>Austria</li>
+                        <li>England</li>
+                        <li>France</li>
+                        <li>Germany</li>
+                        <li>Netherlands</li>
+                        <li>Switzerland</li>
+                    </ul>
+                </div>
+            </wj-tab>
+            <wj-tab>
+                <a>Oceania</a>
+                <div>
+                    <ul>
+                        <li>Australia</li>
+                        <li>Fiji</li>
+                        <li>New Zealand</li>
+                        <li>Samoa</li>
+                    </ul>
+                </div>
+            </wj-tab>
+        </wj-tab-panel>
+    </div>
+</template>
+
+<script>
+    import '@grapecity/wijmo.styles/wijmo.css';
+    import 'bootstrap.css';
+    import Vue from "vue";
+    import '@grapecity/wijmo.vue2.nav';
+
+    let App = Vue.extend({
+        name: "app",
+    });
+
+    new Vue({ render: h => h(App) }).$mount("#app");
+</script>
+
+<style>
+    .wj-tabpanes {
+        padding: 12px 0;
+    }
+</style>

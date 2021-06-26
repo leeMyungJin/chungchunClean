@@ -1,0 +1,8 @@
+<div class="container-fluid">
+    <wj-flex-map #map header="Average Temperature By State" [tooltipContent]="tooltipContent">
+        <wj-geo-map-layer #layer url="data/US.json" (itemsSourceChanged)="zoomTo(layer)">
+            <wj-color-scale [colors]="colors" [binding]="binding" [scale]="scale" format='n0"°F"'></wj-color-scale>
+        </wj-geo-map-layer>
+        <wj-flex-chart-legend position="Left"></wj-flex-chart-legend>
+    </wj-flex-map>
+</div>

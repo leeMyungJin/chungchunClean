@@ -1,0 +1,339 @@
+@font-face {
+    font-family: "gcicons";
+    src: url('gcicons.ttf') format('truetype'), url('gcicons.eot') format('embedded-opentype'), url('gcicons.svg') format('svg'), url('gcicons.woff') format('woff');
+}
+[class^="gcicon-"], [class*=" gcicon-"] {
+  font-family: 'gcicons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.gcicon-java:before {
+  content: "\e96a";
+}
+.gcicon-java-full:before {
+  content: "\e96b";
+}
+.gcicon-azure:before {
+  content: "\e968";
+}
+.gcicon-azure-full:before {
+  content: "\e969";
+}
+.gcicon-doc-open:before {
+  content: "\e967";
+}
+.gcicon-doc-closed:before {
+  content: "\e90a";
+}
+.gcicon-knockout:before {
+  content: "\e906";
+}
+.gcicon-vue:before {
+  content: "\e907";
+}
+.gcicon-hex-dash-open:before {
+  content: "\e905";
+}
+.gcicon-hex-open:before {
+  content: "\e904";
+}
+.gcicon-gc-closed:before {
+  content: "\e903";
+}
+.gcicon-ar-closed:before {
+  content: "\e95f";
+}
+.gcicon-ar-open:before {
+  content: "\e960";
+}
+.gcicon-c1-closed:before {
+  content: "\e961";
+}
+.gcicon-c1-open:before {
+  content: "\e962";
+}
+.gcicon-sp-closed:before {
+  content: "\e963";
+}
+.gcicon-sp-open:before {
+  content: "\e964";
+}
+.gcicon-wj-closed:before {
+  content: "\e965";
+}
+.gcicon-wj-open:before {
+  content: "\e966";
+}
+.gcicon-logo-thomson-reuters:before {
+  content: "\e952";
+}
+.gcicon-logo-vertaco:before {
+  content: "\e951";
+}
+.gcicon-logo-phila:before {
+  content: "\e953";
+}
+.gcicon-logo-mydistrict:before {
+  content: "\e954";
+}
+.gcicon-logo-la-edu:before {
+  content: "\e955";
+}
+.gcicon-logo-keysoft:before {
+  content: "\e956";
+}
+.gcicon-logo-jag:before {
+  content: "\e957";
+}
+.gcicon-logo-geomentum:before {
+  content: "\e958";
+}
+.gcicon-logo-fmsinc:before {
+  content: "\e959";
+}
+.gcicon-logo-cisco:before {
+  content: "\e95a";
+}
+.gcicon-logo-cgi:before {
+  content: "\e95b";
+}
+.gcicon-logo-bloomin:before {
+  content: "\e95c";
+}
+.gcicon-logo-aoc:before {
+  content: "\e95d";
+}
+.gcicon-logo-andex:before {
+  content: "\e95e";
+}
+.gcicon-vs-logo:before {
+  content: "\e94f";
+}
+.gcicon-xamarin-logo:before {
+  content: "\e950";
+}
+.gcicon-64-bit:before {
+  content: "\e90b";
+}
+.gcicon-300controls:before {
+  content: "\e90c";
+}
+.gcicon-400controls:before {
+  content: "\e90d";
+}
+.gcicon-adaptive:before {
+  content: "\e90e";
+}
+.gcicon-angular:before {
+  content: "\e90f";
+}
+.gcicon-awardwinning:before {
+  content: "\e910";
+}
+.gcicon-browsers:before {
+  content: "\e911";
+}
+.gcicon-coding:before {
+  content: "\e912";
+}
+.gcicon-collaboratebetter:before {
+  content: "\e913";
+}
+.gcicon-com:before {
+  content: "\e914";
+}
+.gcicon-componentsource:before {
+  content: "\e915";
+}
+.gcicon-crossplatform:before {
+  content: "\e916";
+}
+.gcicon-dashboard:before {
+  content: "\e917";
+}
+.gcicon-databinding:before {
+  content: "\e918";
+}
+.gcicon-dataengine:before {
+  content: "\e919";
+}
+.gcicon-datagrids:before {
+  content: "\e91a";
+}
+.gcicon-datavalidation:before {
+  content: "\e91b";
+}
+.gcicon-datavisualization:before {
+  content: "\e91c";
+}
+.gcicon-documentation:before {
+  content: "\e91d";
+}
+.gcicon-dotnet:before {
+  content: "\e91e";
+}
+.gcicon-downloadappstore:before {
+  content: "\e91f";
+}
+.gcicon-downloadgoogleplay:before {
+  content: "\e920";
+}
+.gcicon-downloadwindowsstore:before {
+  content: "\e921";
+}
+.gcicon-dynamic:before {
+  content: "\e922";
+}
+.gcicon-excellentrendering:before {
+  content: "\e923";
+}
+.gcicon-fastandlightweight:before {
+  content: "\e924";
+}
+.gcicon-fileexplorer:before {
+  content: "\e925";
+}
+.gcicon-flexibility:before {
+  content: "\e926";
+}
+.gcicon-formula:before {
+  content: "\e927";
+}
+.gcicon-forums:before {
+  content: "\e928";
+}
+.gcicon-freeze:before {
+  content: "\e929";
+}
+.gcicon-gridsandcharts:before {
+  content: "\e92a";
+}
+.gcicon-highperformant:before {
+  content: "\e92b";
+}
+.gcicon-javascript:before {
+  content: "\e92c";
+}
+.gcicon-lightweight:before {
+  content: "\e92d";
+}
+.gcicon-modular:before {
+  content: "\e92e";
+}
+.gcicon-ms-gcp:before {
+  content: "\e92f";
+}
+.gcicon-olap:before {
+  content: "\e930";
+}
+.gcicon-pdf:before {
+  content: "\e931";
+}
+.gcicon-phonesupport:before {
+  content: "\e932";
+}
+.gcicon-platformindependent:before {
+  content: "\e933";
+}
+.gcicon-reportdesigner:before {
+  content: "\e934";
+}
+.gcicon-reporting:before {
+  content: "\e935";
+}
+.gcicon-reportserver:before {
+  content: "\e936";
+}
+.gcicon-reportviewers:before {
+  content: "\e937";
+}
+.gcicon-royaltyfree:before {
+  content: "\e938";
+}
+.gcicon-savemoney:before {
+  content: "\e939";
+}
+.gcicon-savetime:before {
+  content: "\e93a";
+}
+.gcicon-spreadsheet:before {
+  content: "\e93b";
+}
+.gcicon-spreadsheetdesign:before {
+  content: "\e93c";
+}
+.gcicon-superioranimation:before {
+  content: "\e93d";
+}
+.gcicon-teamsupport:before {
+  content: "\e93e";
+}
+.gcicon-themes:before {
+  content: "\e93f";
+}
+.gcicon-touchsupport:before {
+  content: "\e940";
+}
+.gcicon-typescript:before {
+  content: "\e941";
+}
+.gcicon-universal:before {
+  content: "\e942";
+}
+.gcicon-universalexperience:before {
+  content: "\e943";
+}
+.gcicon-views:before {
+  content: "\e944";
+}
+.gcicon-visualstudio:before {
+  content: "\e945";
+}
+.gcicon-vs2017-badge:before {
+  content: "\e946";
+}
+.gcicon-vs-partner:before {
+  content: "\e947";
+}
+.gcicon-vswin10:before {
+  content: "\e948";
+}
+.gcicon-webapi:before {
+  content: "\e949";
+}
+.gcicon-windows:before {
+  content: "\e94a";
+}
+.gcicon-word:before {
+  content: "\e94b";
+}
+.gcicon-xamarin:before {
+  content: "\e94c";
+}
+.gcicon-xapoptimizer:before {
+  content: "\e94d";
+}
+.gcicon-zero:before {
+  content: "\e94e";
+}
+.gcicon-platform-angularjs:before {
+  content: "\e908";
+}
+.gcicon-platform-reactjs:before {
+  content: "\e909";
+}
+.gcicon-logo-gc-horiz:before {
+  content: "\e900";;
+}
+.gcicon-logo-gc-ds-horiz:before {
+  content: "\e901";
+}
+.gcicon-logo-gc-ds-stack:before {
+  content: "\e902";
+}

@@ -1,0 +1,15 @@
+<div class="container-fluid">
+    <div class="form-group">
+        <label for="chartType">Chart Type: </label>
+        <wj-combo-box [(text)]="chartType" [itemsSource]="chartTypeData"></wj-combo-box><br>
+        <label for="stepPosition">Step Position: </label>
+        <wj-combo-box #cb (textChanged)="stepPositionChanged(cb)" [(text)]="stepPosition" [itemsSource]="stepPositionData"></wj-combo-box><br>
+        <wj-flex-chart #theChart [chartType]="chartType" bindingX="month" [itemsSource]="data">
+            <wj-flex-chart-legend position="Top"></wj-flex-chart-legend>
+            <wj-flex-chart-axis wjProperty="axisX" [axisLine]="false" majorTickMarks="None"></wj-flex-chart-axis>
+            <wj-flex-chart-axis wjProperty="axisY" [majorGrid]="false"></wj-flex-chart-axis>
+            <wj-flex-chart-series binding="sms" name="Total SMS"></wj-flex-chart-series>
+            <wj-flex-chart-series binding="email" name="Total Emails"></wj-flex-chart-series>
+        </wj-flex-chart>
+    </div>
+</div>

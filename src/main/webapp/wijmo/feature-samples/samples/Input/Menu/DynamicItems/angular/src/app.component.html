@@ -1,0 +1,41 @@
+<div class="container-fluid">
+        <p>
+            This Menu is bound to an array of items' data using the <b>itemsSource</b> property,
+            and customizes items content using a <b>wjItemTemplate</b> directive.
+        </p>
+        <div class="form-group">
+            <wj-menu #templateMenu
+            [header]="'Artists'"
+            (itemClicked)="menuItemClicked(templateMenu, $event)"
+            [itemsSource]="musicians">
+            <ng-template wjItemTemplate let-item="item" let-itemIndex="itemIndex">
+                <div style="min-width: 160px">
+                    {{itemIndex + 1}}. <b>{{item.name}}</b>
+                    <div *ngIf="item.photo">
+                        <img [src]="item.photo" height="50" />
+                    </div>
+                </div>
+            </ng-template>
+        </wj-menu>
+    </div>
+    
+    <p>
+        For this Menu we generate an array of <b>wj-menu-item</b> components with custom
+        item content, using Angular <b>*ngFor</b> directive iterating through an array 
+        of palette data.
+    </p>
+    <div class="form-group">
+        <wj-menu [header]="'Palette'" [(value)]="thePalette">
+            <wj-menu-item *ngFor="let palette of palettes.items" 
+                          [value]="palette.name">
+                {{palette.name}}
+                <span style="float:right">
+                    <div *ngFor="let color of palette.colors"
+                        style="display:inline;padding:2px;height:10px;width:3px"
+                        [ngStyle]="{'background-color':color}">
+                    </div>
+                </span>
+            </wj-menu-item>
+        </wj-menu>
+    </div>
+</div>

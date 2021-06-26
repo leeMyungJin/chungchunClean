@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Cell Templates</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SystemJS -->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('./src/app');
+    </script>
+</head>
+<body>
+<div class="container-fluid">
+    <p>
+        This <b>purejs</b> version of the sample uses the <b>cellTemplate</b> 
+        property to customize regular data cells.
+        (The <b>cellTemplate</b> does not apply to header cells or cells in group rows.)
+    </p>    
+
+    <div id="theGrid"></div>
+</div>
+</body>
+</html>

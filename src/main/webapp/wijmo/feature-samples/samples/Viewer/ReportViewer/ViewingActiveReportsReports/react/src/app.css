@@ -1,0 +1,28 @@
+body {
+    margin-bottom: 24px;
+}
+
+label {
+    margin-right: 3px;
+}
+
+.wj-viewer {
+    width: 100%;
+    display: block;
+}
+
+.combobox {
+    margin-left: 5px;
+    height: 25px;
+    font-weight: normal;
+}
+
+.report-names {
+    margin: 10px;
+}
+
+@media print {
+    .report-names {
+        display: none;
+    }
+}

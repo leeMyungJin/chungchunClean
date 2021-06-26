@@ -1,0 +1,8 @@
+body {
+    margin-bottom: 36px;
+}
+
+.wj-barcode-gs1databar-truncated {
+    width: 200px;
+    height: 90px;
+}

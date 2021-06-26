@@ -1,0 +1,20 @@
+<div class="container-fluid">
+    <wj-flex-grid #grid
+        [alternatingRowStep]="0"
+        [showMarquee]="true"
+        [anchorCursor]="true"
+        [selectionMode]="'MultiRange'"
+        [showSelectedHeaders]="'All'"
+        [itemsSource]="data"
+        (selectionChanged)="selectionChanged()">
+    </wj-flex-grid>
+    <pre id="mr-aggregates">Ready</pre>
+
+    <button class="btn btn-primary" (click)="exportGridToCsv(false)">
+        Export Whole Grid
+    </button>
+    &nbsp;
+    <button id="btn-csv-sel" class="btn btn-primary" (click)="exportGridToCsv(true)">
+        Export Selection
+    </button>
+</div>

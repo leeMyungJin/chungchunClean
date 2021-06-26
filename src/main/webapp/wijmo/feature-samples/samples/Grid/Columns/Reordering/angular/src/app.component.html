@@ -1,0 +1,9 @@
+<div class="container-fluid">
+    <wj-flex-grid #flex [(itemsSource)]="data">
+        <wj-flex-grid-column [header]="'ID'" [binding]="'id'" [allowDragging]="false"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Country'" [binding]="'country'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Downloads'" [binding]="'downloads'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Sales'" [binding]="'sales'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Expenses'" [binding]="'expenses'"></wj-flex-grid-column>
+    </wj-flex-grid>
+</div>

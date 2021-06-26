@@ -1,0 +1,52 @@
+.toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 12px;
+    margin-left: -12px;
+    background: #eee;
+}
+.arrow {
+    display: inline-block;
+    transform: scale(2);
+    margin-right: 8px;
+}
+.form-group label {
+    min-width: 100px;
+    text-align: right;
+    margin-right: 12px;
+}
+.label-indent {
+    margin-left: 100px;
+}
+.label-indent label {
+    min-width: 0;
+}
+.form-control {
+    display: inline-block;
+    width: auto;
+}
+.btn {
+    outline: none !important;
+}
+
+.wj-dropdown, .wj-inputnumber {
+    width: 200px;
+}
+.wj-multi-autocomplete {
+    width: 300px;
+}
+.wj-flexgrid {
+    height: 250px;
+}
+.wj-radialgauge {
+    display: inline-block;
+    width: 200px;
+}
+.wj-gauge .wj-needle {
+    fill: orangered;
+    stroke: orangered;
+}
+.wj-gauge .wj-needle .wj-inner-needle-cap {
+    fill: white;
+}

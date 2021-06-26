@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GrapeCity Labeled Input</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SystemJS -->
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('./src/app');
+    </script>
+</head>
+
+<body>
+    <div class="container-fluid wj-popup">
+        <form id="theForm" class="wj-dialog">
+            <div class="wj-dialog-header" tabindex="-1">
+                Labeled Input
+            </div>
+            <div class="wj-dialog-body">
+                <div>
+                    Styled Input Controls
+                </div>
+    
+                <!-- personal information -->
+                <div class="wj-labeled-input">
+                    <div id="name" autocomplete="name" required></div>
+                    <label for="name">Name</label>
+                    <div class="wj-error" tabindex="-1">We do need your name...</div>
+                </div>
+                <div class="wj-labeled-input wide">
+                    <div id="email" autocomplete="email" required pattern="\S+@\S+\.\S+"></div>
+                    <label for="email">E-mail</label>
+                    <div class="wj-error" tabindex="-1">We need a valid e-mail...</div>
+                </div>
+                <div class="wj-labeled-input">
+                    <div id="country" items-source="countries"></div>
+                    <label for="country">Country</label>
+                </div>
+                <div class="wj-labeled-input">
+                    <div id="card" autocomplete="cc-number" pattern="[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}">
+                    </div>
+                    <label for="card">Credit Card #</label>
+                    <div class="wj-error" tabindex="-1">Four groups of four digits...</div>
+                </div>
+
+                <!-- transaction information -->
+                <br/>
+                <div class="wj-labeled-input">
+                    <div id="date"></div>
+                    <label for="date">Date</label>
+                </div>
+                <div class="wj-labeled-input">
+                    <div id="time"></div>
+                    <label for="time">Time</label>
+                </div>
+                <div class="wj-labeled-input">
+                    <div id="qty"></div>
+                    <label for="quantity">Quantity</label>
+                </div>
+                <div class="wj-labeled-input">
+                    <div id="discount"></div>
+                    <label for="discount">Discount</label>
+                </div>
+                <div class="wj-labeled-input">
+                    <div id="colors"></div>
+                    <label for="colors">Favorite Colors</label>
+                </div>
+
+                <div>
+                    Styled Checkboxes, Radio Buttons, and Switches
+                </div>
+                <div class="wj-labeled-input">
+                    <input id="theCheckboxForm" type="checkbox" checked />
+                    <label for="theCheckboxForm">Checkbox</label>
+                </div>
+                <div class="wj-labeled-input switch">
+                    <input id="theSwitchForm" type="checkbox" />
+                    <label for="theSwitchForm">Switch</label>
+                </div>
+                <br/>
+                <div class="wj-labeled-input">
+                    <input id="btnRed" type="radio" name="color" checked />
+                    <label for="btnRed">Red</label>
+                </div>
+                <div class="wj-labeled-input">
+                    <input id="btnGreen" type="radio" name="color" />
+                    <label for="btnGreen">Green</label>
+                </div>
+                <div class="wj-labeled-input">
+                    <input id="btnBlue" type="radio" name="color" />
+                    <label for="btnBlue">Blue</label>
+                </div>
+            </div>
+            <div class="wj-dialog-footer">
+                <button class="btn btn-primary" type="submit">OK</button>
+                <button class="btn btn-default wj-hide-cancel" type="reset">Cancel</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>

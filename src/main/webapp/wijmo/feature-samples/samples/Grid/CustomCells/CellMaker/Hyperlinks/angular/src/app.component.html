@@ -1,0 +1,21 @@
+<div class="container-fluid">
+    <wj-flex-grid
+        [showMarquee]="true"
+        [selectionMode]="'MultiRange'"
+        [(itemsSource)]="data">
+        <wj-flex-grid-column binding="id" header="ID" [isReadOnly]="true" [width]="80"></wj-flex-grid-column>
+        <wj-flex-grid-column binding="country" header="Country" [dataMap]="countries"></wj-flex-grid-column>
+        <wj-flex-grid-column
+            binding="country"
+            header="Simple Link"
+            [width]="150"
+            [cellTemplate]="tplSimpleLink">
+        </wj-flex-grid-column>
+        <wj-flex-grid-column
+            binding="country"
+            header="Real Link"
+            [width]="150"
+            [cellTemplate]="tplRealLink">
+        </wj-flex-grid-column>
+    </wj-flex-grid>
+</div>

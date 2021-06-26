@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <p>
+        This MultiSelect uses a <b>wjItemTemplate</b> directive to customize the display 
+        of the items in the drop-down list.
+    </p>
+    <div class="row">
+        <div class="col-xs-5">
+            <div class="form-group">
+                <wj-multi-select
+                    #theMultiSelect
+                    [placeholder]="'Companies'"
+                    [headerFormat]="'{count:n0} companies'"
+                    [displayMemberPath]="'name'"
+                    [headerPath]="'name'"
+                    [itemsSource]="data">
+                    <ng-template wjItemTemplate let-item="item" let-itemIndex="itemIndex">
+                        <div class="item">
+                            <label><input type="checkbox"/> {{item.name}}</label><br/>
+                            <b>{{item.city}}</b> ({{item.state}})<br/>
+                            {{item.address}}<br/>
+                            Phone: <b>{{item.phone}}</b><br/>
+                            Fax: <b>{{item.fax}}</b><br/>
+                            Website: <a href="{{item.site}}" target="_blank">{{item.site}}</a><br/>
+                        </div>
+                    </ng-template>
+                </wj-multi-select>
+            </div>
+            <div class="form-group">
+                <label>
+                    Show "Select All" box
+                    <input id="selectAll" type="checkbox" [(ngModel)]="theMultiSelect.showSelectAllCheckbox">
+                </label>
+            </div>
+        </div>
+        <div class="col-xs-7">
+            <p>
+                <b>Checked Items:</b>
+            </p>
+            <ul>
+                <li *ngFor="let item of theMultiSelect.checkedItems">
+                    {{ item.name }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

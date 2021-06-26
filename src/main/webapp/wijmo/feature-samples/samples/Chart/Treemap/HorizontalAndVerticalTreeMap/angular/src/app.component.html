@@ -1,0 +1,11 @@
+<div class="container-fluid">
+    <div class="form-group">
+        <wj-menu #typeMenu header="Type" [(value)]="type">
+            <wj-menu-item value="Squarified">Squarified</wj-menu-item>
+            <wj-menu-item value="Horizontal">Horizontal</wj-menu-item>
+            <wj-menu-item value="Vertical">Vertical</wj-menu-item>
+        </wj-menu>
+        <wj-tree-map binding="sales" [bindingName]="bindingName" [itemsSource]="data" [type]="type" labelContent="{name}" [palette]="palette">
+        </wj-tree-map>
+    </div>
+</div>

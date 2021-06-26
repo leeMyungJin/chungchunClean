@@ -1,0 +1,17 @@
+<div class="reference-samples__list">
+    {{#each data}}
+    <a class="reference-samples__list__item" href="{{completePath}}" data-name="{{origin.name}}">
+        <div class="reference-samples__list__item__info">
+            <div class="reference-samples__list__item__title">{{origin.title}}</div>
+            <div class="reference-samples__list__item__short-description">{{origin.description}}</div>
+        </div>
+        <img src="{{completeImagePath}}" class="reference-samples__list__item__image">
+        <div class="reference-samples__list__item__tags">
+            {{#each origin.framework}}
+            <div class="reference-samples__list__item__tag" data-tag="{{this}}">{{this}}</div>
+            {{/each}}
+        </div>
+    </a>
+    {{/each}}
+</div>
+   

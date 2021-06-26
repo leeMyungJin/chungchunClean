@@ -1,0 +1,20 @@
+.wj-flexgrid {
+    max-height: 300px;
+}
+.wj-flexgrid .wj-cell {
+    padding: 6px 10px;
+}
+
+/* images (applying formats to the cell, not to the inner IMG element */
+.wj-flexgrid .wj-cell.cell-img {
+    padding: 0;
+    text-align: center;
+}
+.wj-flexgrid .wj-cell.cell-img:hover {
+    z-index: 1;
+    overflow: visible;
+}
+.wj-flexgrid .wj-cell.cell-img:hover img {
+    transform: scale(3);
+    transition: all 600ms;
+}

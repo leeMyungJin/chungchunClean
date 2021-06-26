@@ -1,0 +1,21 @@
+.wj-flexgrid {
+    max-height: 300px;
+}
+
+.wj-cell.spill {
+    overflow: visible;
+    z-index: 1; /* render over empty cells */
+}
+
+.wj-flexgrid .wj-marquee,
+.wj-flexgrid .wj-colheaders,
+.wj-flexgrid .wj-rowheaders,
+.wj-flexgrid .wj-topleft {
+    z-index: 2; /* render over spill cells */
+}
+
+.wj-flexgrid .wj-cell.wj-state-selected,
+.wj-flexgrid .wj-cell.wj-state-multi-selected {
+    background: rgba(0, 0, 0, 0.1);
+    color: #000;
+}

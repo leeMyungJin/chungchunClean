@@ -1,0 +1,18 @@
+.wj-flexchart {
+    height: 300px;
+}
+
+label {
+    width: 150px;
+    text-align: right;
+    margin-right: 3px;
+}
+
+.wj-control {
+    margin-bottom: 3px;
+}
+
+.wj-flexchart .wj-legend .wj-label {
+    opacity: .9;
+    font-size: 80%;
+}

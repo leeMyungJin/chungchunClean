@@ -1,0 +1,10 @@
+Sorting
+======================
+
+The [FlexChart](https://www.grapecity.com/wijmo/api/classes/wijmo_chart.flexchart.html) allows you to visualize tabular data as business charts. It provides a variety of options about how to present and interact with the data, including [selection](https://www.grapecity.com/wijmo/docs/Topics/Chart/Advanced/Selection), [zooming](https://www.grapecity.com/wijmo/docs/Topics/Chart/Advanced/Zooming), [drill-down](https://www.grapecity.com/wijmo/docs/Topics/Chart/Advanced/Grouping-Drilldown), [formatting](https://www.grapecity.com/wijmo/docs/Topics/Chart/Advanced/Conditional-Format), etc.
+
+Like all Wijmo controls, the chart delegates all data-related tasks to the [CollectionView](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html) class, so if you want to filter, sort, or group the data, you can do it using the [CollectionView](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html). It may be useful to think of the [FlexChart](https://www.grapecity.com/wijmo/api/classes/wijmo_chart.flexchart.html) as a special type of data grid, where columns are represented by series and rows are data points on the chart.
+
+When you set the chart's [itemsSource](https://www.grapecity.com/wijmo/api/classes/wijmo_chart.flexchart.html#itemssource) property to an array, or **ObservableArray**, the chart automatically creates a CollectionView instance to wrap the original array. This CollectionView is exposed by the [collectionView](https://www.grapecity.com/wijmo/api/classes/wijmo_chart.flexchart.html#collectionview) property in case you want to access it.
+
+[Learn about FlexChart](https://www.grapecity.com/wijmo-flexchart) | [Sorting Documentation](https://www.grapecity.com/wijmo/docs/Topics/Chart/Advanced/Sorting-Filtering) | [FlexChart API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_chart.flexchart.html)

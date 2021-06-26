@@ -1,0 +1,11 @@
+.wj-calendar {
+    display: inline-block;
+}
+
+.wj-calendar td {
+    padding: 4px 6px 3px 6px;
+}
+
+body {
+    margin-bottom: 24px;
+}

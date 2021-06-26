@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>GrapeCity Globalization/Template Literals</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="node_modules/systemjs/dist/system.src.js"></script>
+    <script src="systemjs.config.js"></script>
+    <script>
+        System.import('./src/app');
+    </script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <p>
+            Click the button below to evaluate this template literal using
+            Wijmo's <b>glbz</b> tag function that formats numbers and dates using 
+            Wijmo's <b>Globalize</b> class:
+        </p>
+        <pre>glbz`Today is $‌&zwnj;{new Date()}:d, and PI is $‌&zwnj;{Math.PI}:n4.`</pre>
+        <button id="btn1" class="btn btn-default">
+            Show Result
+        </button>
+        <pre id="result1"></pre>
+
+        <p>
+            This example shows how you can use quoted format strings for dates and times:
+        </p>
+        <pre>glbz`Today is $&zwnj;{new Date()}:'dddd, MMMM dd'.`</pre>
+        <button id="btn2" class="btn btn-default">
+            Show Result
+        </button>
+        <pre id="result2"></pre>
+
+    </div>
+</body>
+
+</html>

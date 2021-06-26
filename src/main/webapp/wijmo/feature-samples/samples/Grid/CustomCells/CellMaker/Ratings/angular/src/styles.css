@@ -1,0 +1,17 @@
+.wj-flexgrid {
+    max-height: 300px;
+}
+.wj-flexgrid .wj-cell {
+    padding: 6px 10px;
+}
+
+/* customize the rating symbol/color/size */
+.wj-flexgrid .wj-cell.wj-cell-maker.wj-radio-map.custom-rating label {
+    width: .25em;
+    color: green;
+}
+.wj-flexgrid .wj-cell.wj-cell-maker.wj-radio-map.custom-rating label:after {
+    transform: scale(12);
+    content: '\2b24';
+}
+

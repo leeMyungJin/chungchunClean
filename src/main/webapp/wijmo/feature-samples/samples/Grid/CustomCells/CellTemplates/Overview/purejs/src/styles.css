@@ -1,0 +1,14 @@
+.wj-flexgrid {
+    max-height: 350px;
+    max-width: 600px;
+    margin: 10px 0px;
+}
+
+.high-val {
+    color: darkgreen;
+    font-weight: bold;
+}
+.low-val {
+    color: darkred;
+    font-weight: bold;
+}

@@ -1,0 +1,48 @@
+<div class="container-fluid">
+    <h2>
+        Default Grid
+    </h2>
+    <p>
+        Products are rendered as rows.
+    </p>
+    <wj-flex-grid class="product-grid" #grid
+        [autoGenerateColumns]="false"
+        [alternatingRowStep]="0"
+        [showSelectedHeaders]="'Row'"
+        [headersVisibility]="'Row'"
+        [isReadOnly]="true"
+        [copyHeaders]="'Row'"
+        (formatItem)="formatItem(grid, $event)"
+        [itemsSource]="data">
+        <wj-flex-grid-column *ngFor="let c of columns"
+            [binding]="c.binding"
+            [header]="c.header"
+            [align]="c.align"
+            [format]="c.format"
+            [wordWrap]="c.wordWrap">
+        </wj-flex-grid-column>
+    </wj-flex-grid>
+    <h2>
+        Transposed Grid
+    </h2>
+    <p>
+        Products are rendered as columns.
+    </p>
+    <wj-transposed-grid class="product-grid" #tgrid
+        [alternatingRowStep]="0"
+        [showSelectedHeaders]="'Row'"
+        [headersVisibility]="'Row'"
+        [isReadOnly]="true"
+        [copyHeaders]="'Row'"
+        (formatItem)="formatItem(tgrid, $event)"
+        (loadedRows)="loadedRows(tgrid)"
+        [itemsSource]="data">
+        <wj-transposed-grid-row *ngFor="let c of columns"
+            [binding]="c.binding"
+            [header]="c.header"
+            [align]="c.align"
+            [format]="c.format"
+            [wordWrap]="c.wordWrap">
+        </wj-transposed-grid-row>
+    </wj-transposed-grid>
+</div>

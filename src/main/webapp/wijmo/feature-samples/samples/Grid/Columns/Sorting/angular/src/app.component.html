@@ -1,0 +1,14 @@
+<div class="container-fluid">
+    <label>
+        allowSorting:
+        <wj-combo-box #cmb
+            [itemsSource]="allowSortingOptions"
+            [selectedIndex]="allowSorting"
+            (selectedIndexChanged)="setAllowSorting(cmb.selectedIndex)">
+        </wj-combo-box>
+    </label>
+    <wj-flex-grid #flex
+        [itemsSource]="view"
+        [allowSorting]="allowSorting">
+    </wj-flex-grid>
+</div>

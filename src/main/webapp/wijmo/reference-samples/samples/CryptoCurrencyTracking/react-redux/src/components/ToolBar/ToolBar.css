@@ -1,0 +1,24 @@
+.toolbar {
+    flex: 0 0 auto;
+    box-sizing: border-box;
+    display: flex;
+    padding: 12px 24px;
+    height: 80px;
+    color: #4285F4;
+}
+
+.toolbar .caption {
+    font-size: 1rem;
+    margin-right: 1rem;
+}
+
+.toolbar .button-label {
+    letter-spacing: .05em;
+    margin-left: .3em;
+    font-size: .8rem;
+}
+
+.g_menu-inner {
+    padding: 0 1rem;
+    outline: none;
+}

@@ -1,0 +1,18 @@
+<div class="container-fluid">
+    <wj-flex-chart
+        [itemsSource]="data"
+        chartType="Bar"
+        bindingX="index"
+        plotMargin="auto auto auto 180"
+        [tooltipContent]="getTooltipContent">
+        <wj-flex-chart-series 
+            binding="start,end">
+        </wj-flex-chart-series>
+        <wj-flex-chart-axis wjProperty="axisY"
+            [majorGrid]="false"
+            [minorGrid]="true"
+            [reversed]="true"
+            [itemFormatter]="formatter">
+        </wj-flex-chart-axis>
+    </wj-flex-chart>
+</div>

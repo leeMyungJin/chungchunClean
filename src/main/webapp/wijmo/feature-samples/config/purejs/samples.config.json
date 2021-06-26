@@ -1,0 +1,4 @@
+{
+    "exclude": ["src/*.ts", "src/*.js.map"],
+    "fastBuild": "typescript"
+}

@@ -1,0 +1,174 @@
+<div class="container-fluid">
+
+    <!-- undo/redo toolbar -->
+    <div class="toolbar">
+        <button id="undo" class="btn btn-primary"
+            [disabled]="!canUndo"
+            (click)="undoStack.undo()">
+            <span class="arrow">&#x21B6;</span> Undo (ctrl+Z)
+        </button>
+        <button id="redo" class="btn btn-primary" 
+            [disabled]="!canRedo"
+            (click)="undoStack.redo()">
+            <span class="arrow">&#x21B7;</span> Redo (ctrl+Y)
+        </button>
+        <button class="btn" disabled>
+            Action Count: {{actionCount}}
+        </button>
+        <button id="clear" class="btn btn-default"
+            [disabled]="!actionCount"
+            (click)="undoStack.clear()">
+            Clear Undo/Redo Stack
+        </button>
+    </div>
+
+    <!-- undo/redo form -->
+    <form id="undoable-form">
+        <div class="row">
+
+            <!-- HTML input elements -->
+            <div class="col-md-5">
+                <h3>HTML Input Elements</h3>
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input id="firstName" class="form-control" placeholder="First Name" />
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input id="lastName" class="form-control" placeholder="Last Name"/>
+                </div>
+                <div class="form-group">
+                    <label for="select">Select</label>
+                    <select id="select" class="form-control">
+                        <option value="value1">Apples</option>
+                        <option value="value2" selected>Oranges</option>
+                        <option value="value3">Grapes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="area">TextArea</label>
+                    <textarea id="area" class="form-control" placeholder="textarea"></textarea>
+                </div>
+                <div class="form-group label-indent">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="inlineCheckbox1" value="option1" checked> Red
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="inlineCheckbox2" value="option2"> Green
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" id="inlineCheckbox3" value="option3"> Blue
+                    </label>
+                </div>
+                <div class="form-group label-indent">
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked>
+                        Hot
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Cold
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> Medium
+                    </label>
+                </div>
+            </div>
+
+            <!-- Wijmo controls -->
+            <div class="col-md-7">
+                <h3>Wijmo Controls</h3>
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <wj-combo-box id="country" placeholder="Country"
+                        [itemsSource]="countries"
+                        [isRequired]="false"
+                        [selectedIndex]="-1">
+                    </wj-combo-box>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <wj-input-number id="amount" placeholder="Amount"
+                        [format]="'c2'"
+                        [min]="0"
+                        [step]="10"
+                        [isRequired]="false"
+                        [value]="null">
+                    </wj-input-number>
+                </div>
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <wj-input-date id="date" placeholder="Date"
+                        [isRequired]="false"
+                        [value]="null">
+                    </wj-input-date>
+                </div>
+                <div class="form-group">
+                    <label for="color" title="ComboBox">Color</label>
+                    <wj-combo-box id="color"
+                        [itemsSource]="colors"
+                        [isRequired]="false"
+                        [selectedIndex]="-1">
+                    </wj-combo-box>
+                </div>
+                <div class="form-group">
+                    <label for="ac" title="AutoComplete">Color</label>
+                    <wj-auto-complete id="ac"
+                        [itemsSource]="colors"
+                        [selectedIndex]="-1">
+                    </wj-auto-complete>
+                </div>
+                <div class="form-group">
+                    <label for="colors" title="MultiSelect">Colors</label>
+                    <wj-multi-select id="colors"
+                        [itemsSource]="colors">
+                    </wj-multi-select>
+                </div>
+                <div class="form-group">
+                    <label for="mac" title="MultiAutoComplete">Colors</label>
+                    <wj-multi-auto-complete id="mac"
+                        [itemsSource]="colors"
+                        [selectedIndex]="-1">
+                    </wj-multi-auto-complete>
+                </div>
+                <div class="form-group">
+                    <label for="gauge">Gauge</label>
+                    <wj-radial-gauge 
+                        [thickness]=".2"
+                        [min]="0"
+                        [max]="100"
+                        [value]="50"
+                        [isReadOnly]="false"
+                        [tickSpacing]="10"
+                        [showTicks]="true"
+                        [showText]="'Value'"
+                        [needleShape]="'Outer'"
+                        [needleLength]="'Inner'">
+                    </wj-radial-gauge>
+                </div>
+                <div class="form-group">
+                    <label for="grid">Grid</label>
+                    <wj-flex-grid div id="grid" #theGrid
+                        [anchorCursor]="true"
+                        [frozenColumns]="2"
+                        [allowAddNew]="true"
+                        [allowDelete]="true"
+                        [itemsSource]="data"
+                        (initialized)="initGrid(theGrid)">
+                    </wj-flex-grid>
+                    <button id="add-row" class="btn btn-primary" (click)="addRow($event)">
+                        Add Row in Code
+                    </button>
+                    <button id="del-row" class="btn btn-primary" (click)="deleteRow($event)">
+                        Delete Row in Code
+                    </button>
+                    <label>
+                        New Row At Top
+                        <input id="nr-top" class="wj-no-undo" type="checkbox" 
+                            [checked]="grid && grid.newRowAtTop"
+                            (change)="grid.newRowAtTop = !grid.newRowAtTop">
+                    </label>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

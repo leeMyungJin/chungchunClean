@@ -1,0 +1,36 @@
+body {
+    margin-bottom: 24px;
+}
+
+label {
+    margin-right: 3px;
+}
+.form-group .wj-flexchart {
+    margin: 0px;
+    padding: 0px;
+    border-bottom: 0px;
+    touch-action: none;
+    -ms-touch-action: none;
+    padding-bottom: 40px;
+}
+
+/****  Axis Scrollbar Css *****/
+.form-group .wj-flexchart .wj-axis-scrollbar-container {
+    position: relative;
+}
+
+.form-group .wj-flexchart .wj-axis-scrollbar-container .wj-chart-rangeslider {
+    border: 1px solid #EAEAEA;    
+    background-color: #EAEAEA;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+.form-group .wj-flexchart .wj-axis-scrollbar-container .wj-chart-hrangeslider {
+    height: 20px;
+}
+
+.form-group .wj-flexchart .wj-axis-scrollbar-container .wj-chart-vrangeslider {
+    width: 20px;
+}

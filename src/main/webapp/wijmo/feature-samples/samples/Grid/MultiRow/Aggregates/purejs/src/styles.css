@@ -1,0 +1,15 @@
+.wj-multirow {
+  height: 400px;
+  margin: 6px 0;
+}
+
+.wj-cell.sales {
+  color: darkgreen;
+  font-weight: bold;
+  font-style: italic;
+}
+.wj-cell.expenses {
+  color: darkred;
+  font-weight: bold;
+  font-style: italic;
+}

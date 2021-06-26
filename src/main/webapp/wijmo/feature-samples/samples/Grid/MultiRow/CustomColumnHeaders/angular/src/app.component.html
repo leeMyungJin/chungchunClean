@@ -1,0 +1,11 @@
+<div class="container-fluid">
+    <label>
+        Cusotom Headers:
+        <input type="checkbox" checked (click)="cbChecked($event)"> 
+    </label>
+    <wj-multi-row #multiRow
+        [itemsSource]="data"
+        [layoutDefinition]="layout"
+        [headerLayoutDefinition]="headerLayout">
+    </wj-multi-row>
+</div>

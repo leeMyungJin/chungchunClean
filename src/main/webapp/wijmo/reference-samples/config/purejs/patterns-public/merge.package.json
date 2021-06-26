@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build": "webpack",
+    "-setup": "",
+    "-preinstall": "",
+    "-rb": "",
+    "-rbni": ""
+  }
+}

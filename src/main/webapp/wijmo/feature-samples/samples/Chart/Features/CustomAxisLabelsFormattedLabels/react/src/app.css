@@ -1,0 +1,12 @@
+body {
+	margin-bottom: 24px;
+}
+
+.high-value {
+	fill: darkgreen;
+	font-weight: bold;
+}
+
+.low-value {
+	fill: darkred;
+}

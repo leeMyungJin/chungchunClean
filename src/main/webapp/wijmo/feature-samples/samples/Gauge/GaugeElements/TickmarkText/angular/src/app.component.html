@@ -1,0 +1,67 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-6">
+            <wj-radial-gauge
+                #theRadialGauge
+                [min]="0"
+                [max]="500"
+                [value]="100"
+                [startAngle]="-45"
+                [sweepAngle]="270"
+                [showTicks]="true"
+                [showTickText]="true"
+                [tickSpacing]="50"
+                [showText]="'Value'"
+                [isReadOnly]="false">
+            </wj-radial-gauge>
+        </div>
+        <div class="col-xs-6">
+            <label>
+                startAngle
+                <wj-combo-box
+                    [itemsSource]="[-90, -45, 0, 45, 90]"
+                    [(selectedValue)]="theRadialGauge.startAngle">
+                </wj-combo-box>
+            </label>
+            <label>
+                sweepAngle
+                <wj-combo-box
+                    [itemsSource]="[-360, -270, -180, -90, 90, 180, 270, 360]"
+                    [(selectedValue)]="theRadialGauge.sweepAngle">
+                </wj-combo-box>
+            </label>
+            <label>
+                tickSpacing
+                <wj-combo-box
+                    [itemsSource]="[25, 50, 100, 200, 250]"
+                    [(selectedValue)]="theRadialGauge.tickSpacing">
+                </wj-combo-box>
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6">
+            <wj-linear-gauge
+                #theLinearGauge
+                [min]="0"
+                [max]="500"
+                [value]="100"
+                [showTicks]="true"
+                [showTickText]="true"
+                [tickSpacing]="theRadialGauge.tickSpacing"
+                [isReadOnly]="false">
+            </wj-linear-gauge>
+        </div>
+        <div class="col-xs-6">
+            <label>
+                direction
+                <wj-combo-box
+                    #cmbDirection
+                    [itemsSource]="['Left', 'Right', 'Up', 'Down']"
+                    [selectedItem]="'Right'"
+                    (selectedIndexChanged)="directionChanged(theLinearGauge, cmbDirection)">
+                </wj-combo-box>
+            </label>
+        </div>
+    </div>
+</div>

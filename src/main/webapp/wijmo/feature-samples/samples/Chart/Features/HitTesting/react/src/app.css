@@ -1,0 +1,21 @@
+.container .wj-flexchart {
+	height: 300px;
+}
+
+.container .wj-data-label {
+	font-size: 75%;
+	opacity: .9;
+}
+
+.container label {
+	width: 150px;
+	text-align: right;
+}
+
+.container .wj-control {
+	margin-bottom: 3px;
+}
+
+body {
+	margin-bottom: 24pt;
+}

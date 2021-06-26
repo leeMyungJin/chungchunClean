@@ -1,0 +1,33 @@
+@import 'https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.1.0/css/flag-icon.css';
+
+.wj-flexgrid {
+  max-height: 400px;
+}
+.wj-flexgrid .wj-cell {
+    padding: 6px 12px;
+}
+.wj-flexgrid .wj-cell:not(.wj-header) {
+    border-right: none;
+}
+
+.color-tile {
+    display: inline-block;
+    position: relative;
+    width: 1.33333333em;
+    height: 1em;
+    vertical-align: middle;
+    border: 1px solid grey;
+}
+
+.change-up {
+    color: darkgreen;
+}
+.change-up:before {
+    content: '\25b2\00a0';
+}
+.change-down {
+    color: darkred;
+}
+.change-down:before {
+    content: '\25bc\00a0';
+}

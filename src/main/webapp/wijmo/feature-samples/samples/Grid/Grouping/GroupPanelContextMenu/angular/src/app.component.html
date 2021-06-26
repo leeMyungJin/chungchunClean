@@ -1,0 +1,38 @@
+<div class="container-fluid">
+    
+    <wj-group-panel #panel style="display: block;"
+        [grid]="grid"
+        [placeholder]="'Drag columns here to create groups'"
+        (contextmenu)="contextMenu($event)">
+    </wj-group-panel>
+    
+    <wj-flex-grid #grid 
+        [(itemsSource)]="data">
+    </wj-flex-grid>
+
+    <wj-menu #menu
+        style="display: none"
+        dropDownCssClass="ctx-menu"
+        (itemClicked)="itemClicked(menu)">
+        <wj-menu-item>
+            <span class='wj-glyph-down-right'></span> Expand All
+        </wj-menu-item>
+        <wj-menu-item>
+            <span class='wj-glyph-right'></span> Collapse All
+        </wj-menu-item>
+        <wj-menu-separator></wj-menu-separator>
+        <wj-menu-item>
+            <span class='wj-glyph-up'></span> Sort Ascending
+        </wj-menu-item>
+        <wj-menu-item>
+            <span class='wj-glyph-down'></span> Sort Descending
+        </wj-menu-item>
+        <wj-menu-item>
+            <span class='wj-glyph-circle'></span> Remove Sort
+        </wj-menu-item>
+        <wj-menu-separator></wj-menu-separator>
+        <wj-menu-item>
+            <span>&times;</span> Remove Group
+        </wj-menu-item>
+    </wj-menu>
+</div>

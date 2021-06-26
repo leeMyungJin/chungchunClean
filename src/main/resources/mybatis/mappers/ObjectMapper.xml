@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chungchunClean.Mappers.ObjectMapper">
+
+	<select id="getStaffList" parameterType="hashMap" resultType="StaffVo">
+		select staff_id
+			   , staff_pass
+			   , staff_name
+			   , staff_pnum
+			   , staff_email
+			   , memo
+			   , active_yn
+			   , admin_yn
+			   , cret_dt
+			   , cret_id
+			   , updt_dt
+			   , updt_id
+			   , lateass_dt
+		from web.staff 
+		where 1=1
+		<if test="inq != null">
+			AND 
+			<choose>
+				<when test="con == 'name'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						staff_name LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<when test="con == 'id'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						staff_id LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<when test="con == 'mail'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						staff_email LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<otherwise>
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						staff_name LIKE '%' || #{item} || '%'
+						or staff_id LIKE '%' || #{item} || '%'
+						or staff_email LIKE '%' || #{item} || '%'
+					</foreach>
+				</otherwise>
+			</choose>
+		</if>
+	</select>	
+	
+	<select id="dupCheckId" parameterType="hashMap" resultType="String">
+		select staff_id
+		from web.staff
+		where staff_id=#{id}
+	</select>
+
+	<insert id="saveNewStaff" parameterType="hashMap">
+	INSERT INTO web.staff
+		(staff_id
+		   , staff_pass
+		   , staff_name
+		   , staff_pnum
+		   , staff_email
+		   , memo
+		   , password_key
+		   , cret_dt
+		   , cret_id
+		   , updt_dt
+		   , updt_id
+		)VALUES(
+			#{staff_id}
+		   , #{staff_pass}
+		   , #{staff_name}
+		   , #{staff_pnum}
+		   , #{staff_email}
+		   , #{memo}
+		   , #{password_key}
+		   , NOW()
+		   , #{cret_id}
+		   , NOW()
+		   , #{cret_id}
+		)
+	</insert>
+
+
+</mapper>

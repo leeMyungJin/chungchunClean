@@ -1,0 +1,13 @@
+<div class="container-fluid">
+    <wj-collection-view-navigator
+        [byPage]="true"
+        [headerFormat]="'Page {currentPage:n0} of {pageCount:n0}'"
+        [cv]="data">
+    </wj-collection-view-navigator>
+    <wj-flex-grid #flex
+        [isReadOnly]="true"
+        [alternatingRowStep]="0"
+        [headersVisibility]="'Column'"
+        [itemsSource]="data">
+    </wj-flex-grid>
+</div>

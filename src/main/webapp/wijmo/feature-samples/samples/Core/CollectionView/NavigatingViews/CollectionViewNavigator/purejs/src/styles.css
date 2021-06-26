@@ -1,0 +1,10 @@
+label {
+    width: 150px;
+    text-align: right;
+    margin-right: 6px;
+    margin-bottom: 12px;
+}
+
+.wj-flexgrid {
+    max-height: 350px;
+}

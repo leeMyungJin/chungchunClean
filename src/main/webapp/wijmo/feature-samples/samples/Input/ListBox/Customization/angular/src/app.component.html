@@ -1,0 +1,24 @@
+<div class="container-fluid">
+        <div class="row">
+            <p>
+                This ListBox uses a <b>wjItemTemplate</b> directive 
+                to customize the display of the items in the list.
+            </p>
+        </div>
+        <div class="row">
+        <div class="col-xs-4">
+            <wj-list-box #theListBox [itemsSource]="glyphs">
+                <ng-template wjItemTemplate let-item="item" let-itemIndex="itemIndex">
+                    <div class="wj-glyph">
+                        <span class="wj-glyph-{{item}}"></span>
+                    </div>{{item}}
+                </ng-template>
+            </wj-list-box>
+        </div>
+        <div class="col-xs-8">
+            <h1>
+                <span class="wj-glyph-{{theListBox.selectedItem}}"></span>
+            </h1>
+        </div>
+    </div>
+</div>

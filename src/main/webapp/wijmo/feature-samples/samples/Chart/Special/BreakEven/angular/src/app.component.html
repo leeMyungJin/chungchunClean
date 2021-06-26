@@ -1,0 +1,44 @@
+<div class="container-fluid">
+    <div class="row">
+        <label for="safetyMargin">Safety Margin:</label>
+        <input id="safetyMargin" type="checkbox"
+            [checked]="safetyMargin" (click)="onClick($event)">
+
+        <label for="salesRevenue">Sales Revenue:</label>
+        <input id="salesRevenue" type="checkbox"
+            [checked]="salesRevenue" (click)="onClick($event)">
+    </div>
+
+    <div class="row">
+        <label for="totalCost">Total Cost:</label>
+        <input id="totalCost" type="checkbox"
+            [checked]="totalCost" (click)="onClick($event)">
+
+        <label for="fixedCost">Fixed Cost:</label>
+        <input id="fixedCost" type="checkbox"
+            [checked]="fixedCost" (click)="onClick($event)">
+
+        <label for="variableCost">Variable Cost:</label>
+        <input id="variableCost" type="checkbox"
+            [checked]="variableCost" (click)="onClick($event)">
+    </div>
+
+    <div class="row">
+        <label for="marginalProfit">Marginal Profit:</label>
+        <input id="marginalProfit" type="checkbox"
+            [checked]="marginalProfit" (click)="onClick($event)">
+
+        <label for="breakEven">Break Even:</label>
+        <input id="breakEven" type="checkbox"
+            [checked]="breakEven" (click)="onClick($event)">
+    </div>
+
+    <wj-flex-chart>
+        <wj-flex-chart-break-even [salesPrice]="120"
+            [variableCost]="20" [fixedCost]="1000000"
+            [style]="{fill: 'rgba(127,42,250,0.5)', strokeWidth: 0}"
+            [altStyle]="{fill: 'rgba(255,0,0,0.5)', strokeWidth: 0}"
+            [styles]="appliedStyles"
+        ></wj-flex-chart-break-even>
+    </wj-flex-chart>
+</div>
