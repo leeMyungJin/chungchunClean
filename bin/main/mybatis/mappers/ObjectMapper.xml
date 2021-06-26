@@ -3,6 +3,14 @@
 
 <mapper namespace="com.chungchunClean.Mappers.ObjectMapper">
 
+	<select id="getTotalStaff" resultType="Integer">
+		select count(*) from web.staff where active_yn = 'Y'
+	</select>
+	
+	<select id="getTotalAdmin" resultType="Integer">
+		select count(*) from web.staff where admin_yn = 'Y'
+	</select>	
+
 	<select id="getStaffList" parameterType="hashMap" resultType="StaffVo">
 		select staff_id
 			   , staff_pass
@@ -59,32 +67,52 @@
 	</select>
 
 	<insert id="saveNewStaff" parameterType="hashMap">
-	INSERT INTO web.staff
-		(staff_id
-		   , staff_pass
-		   , staff_name
-		   , staff_pnum
-		   , staff_email
-		   , memo
-		   , password_key
-		   , cret_dt
-		   , cret_id
-		   , updt_dt
-		   , updt_id
-		)VALUES(
-			#{staff_id}
-		   , #{staff_pass}
-		   , #{staff_name}
-		   , #{staff_pnum}
-		   , #{staff_email}
-		   , #{memo}
-		   , #{password_key}
-		   , NOW()
-		   , #{cret_id}
-		   , NOW()
-		   , #{cret_id}
-		)
+		INSERT INTO web.staff
+			(staff_id
+			   , staff_pass
+			   , staff_name
+			   , staff_pnum
+			   , staff_email
+			   , memo
+			   , password_key
+			   , cret_dt
+			   , cret_id
+			   , updt_dt
+			   , updt_id
+			)VALUES(
+				#{staff_id}
+			   , #{staff_pass}
+			   , #{staff_name}
+			   , #{staff_pnum}
+			   , #{staff_email}
+			   , #{memo}
+			   , #{password_key}
+			   , NOW()
+			   , #{cret_id}
+			   , NOW()
+			   , #{cret_id}
+			)
 	</insert>
-
-
+	
+	<delete id="deleteStaff" parameterType="hashMap">
+		delete from web.staff
+		where staff_id=#{id}
+	</delete>
+	
+	<update id="updateStaff" parameterType="hashMap">
+		UPDATE web.staff SET 
+	   		<if test="password != null and password != ''">
+	   	   		staff_pass=#{password},
+			</if>
+	       staff_name=#{name},
+		   staff_pnum=#{telPhone}, 
+		   staff_email=#{mail}, 
+		   memo=#{memo}, 
+		   active_yn=#{active}, 
+		   admin_yn=#{admin}, 
+		   updt_dt=NOW(),
+		   updt_id='test'
+		WHERE staff_id=#{id}
+	</update>
+	
 </mapper>

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +33,11 @@ public class ObjectController {
     }
     
     @RequestMapping(value = "/staff", method = {RequestMethod.POST , RequestMethod.GET})
-    public String moveStaff() {
+    public String moveStaff(HttpServletRequest req, HttpServletResponse res) {
+    	
+    	req.setAttribute("totalStaff", objectService.getTotalStaff());
+    	req.setAttribute("totalAdmin", objectService.getTotalAdmin());
+    	
         return "object/staff";
     }
     
@@ -79,6 +84,20 @@ public class ObjectController {
             e.toString();
         }
     }
+    
+    /* 직원 삭제 */
+    @RequestMapping(value = "/deleteStaff")  
+    @ResponseBody
+    public void deleteStaff(@RequestParam HashMap<String,String> params){
+    	objectService.deleteStaff(params);
+    }
+    
+    /* 직원 수정 */
+    @RequestMapping(value = "/updateStaff")
+    @ResponseBody
+    public void updateStaff(@RequestParam HashMap<String,String> params){
+    	objectService.updateStaff(params);
+    }    
     
   
 }

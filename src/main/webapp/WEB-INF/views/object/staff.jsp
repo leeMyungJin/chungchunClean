@@ -56,7 +56,9 @@ function loadGridStaffList(type, result){
 			      { binding: 'edit', header: '정보수정', width: 100, 
 			    	  cellTemplate: wijmo.grid.cellmaker.CellMaker.makeButton({
 			              text: '<b>수정</b>',
-			              click: (e, ctx) => alert('Clicked Button 수정')
+			              click: (e, ctx) => {
+			            	  showPop('modify_staff');
+			              }
 			              
 			    	  })
 			      }
@@ -107,15 +109,27 @@ function showPop(pop){
 	if(pop == "new_staff"){
 		dupCheckIdFlag = false;
 		
-		$("#id").val("");
-		$("#password").val("");
-		$("#name").val("");
-		$("#telPhone").val("");
-		$("#mail").val("");
-		$("#memo").val("");
+		newStaffForm.id.value = "";
+		newStaffForm.password.value = "";
+		newStaffForm.name.value = "";
+		newStaffForm.telPhone.value = "";
+		newStaffForm.mail.value = "";
+		newStaffForm.memo.value = "";
 		
-		$('#'+pop).addClass('is-visible');
+	}else if(pop == "modify_staff"){
+		
+		updateStaffForm.active.checked = (staffGrid.collectionView.currentItem["activeYn"] == 'Y' ? true : false );
+		updateStaffForm.admin.checked = (staffGrid.collectionView.currentItem["adminYn"] == 'Y' ? true : false );
+		updateStaffForm.id.value = staffGrid.collectionView.currentItem["staffId"];
+		updateStaffForm.password.value = "";
+		updateStaffForm.name.value = staffGrid.collectionView.currentItem["staffName"];
+		updateStaffForm.telPhone.value = staffGrid.collectionView.currentItem["staffPnum"];
+		updateStaffForm.mail.value = staffGrid.collectionView.currentItem["staffEmail"];
+		updateStaffForm.memo.value = staffGrid.collectionView.currentItem["memo"];
+		
 	}
+	
+	$('#'+pop).addClass('is-visible');
 }
 
 //팝업 종료
@@ -180,15 +194,13 @@ function saveNewStaff(){
     	
     }else{
     	var params = {
-    		id 		:	$("#id").val()
-    		,password:	$("#password").val()
-    		,name	:	$("#name").val()
-    		,telPhone:	$("#telPhone").val()
-    		,mail	:	$("#mail").val()
-    		,memo	:	$("#memo").val()
+    		id 		:	newStaffForm.id.value
+    		,password:	newStaffForm.password.value
+    		,name	:	newStaffForm.name.value
+    		,telPhone:	newStaffForm.telPhone.value
+    		,mail	:	newStaffForm.mail.value
+    		,memo	:	newStaffForm.memo.value
     	}
-    	
-    	alert("??");
     	
     	$.ajax({
             url : "/object/saveNewStaff",
@@ -244,6 +256,114 @@ function dupCheckId(){
       });
 }
 
+function deleteStaff(){
+	if(confirm("삭제하시겠습니까?")){
+		var params = {
+          	id : updateStaffForm.id.value
+      	};
+		
+		$.ajax({
+            url : '/object/deleteStaff',
+            async : false, // 비동기모드 : true, 동기식모드 : false
+            type : 'POST',
+            cache : false,
+            dataType : null,
+            data : params,
+            success : function(data) {
+            	alert('정상적으로 삭제되었습니다.');
+            	closePop();
+            	getStaffList();
+            },
+            error : function(request,status,error) {
+              alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+      });
+	}
+}
+
+function updateStaff(){
+	//필수값 체크
+	if(updateStaffForm.name.value == ""){
+    	alert("이름을 입력해주세요.");
+    	updateStaffForm.name.focus();
+        return false;
+        
+    }else if(updateStaffForm.telPhone.value == ""){
+    	alert("전화번호를 입력해주세요.");
+    	updateStaffForm.telPhone.focus();
+        return false;
+        
+    }
+	
+	//벨리데이션 체크 
+	var pwdRule1  = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{10,}$/;
+    var pwdRule2  = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{10,}$/;
+    var pwdRule3  = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/;
+    var emailRule = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+    var telRule   = /^[0-9]{11}$/;
+    
+    if(updateStaffForm.password.value != '' && !pwdRule1.test(updateStaffForm.password.value) && !pwdRule2.test(updateStaffForm.password.value) && !pwdRule3.test(updateStaffForm.password.value)){
+    	alert("비밀번호를 확인하시기 바랍니다.\n비밀번호는 영문자(대,소문자), 숫자를 포함하여 최소 10자 이상이어야 합니다.");
+    	updateStaffForm.password.focus();
+    	return false;
+    }else if(!emailRule.test(updateStaffForm.mail.value)){ //이메일
+    	alert("이메일을 확인하시기 바랍니다.");
+    	updateStaffForm.mail.focus();
+        return false;
+    }else if(!telRule.test(updateStaffForm.telPhone.value)){  // 전화번호
+    	alert("전화번호를 올바르게 입력하시기 바랍니다. \n전화번호는 '-'없이 숫자 11자리이어야 합니다.' \n예)01012341234");
+    	updateStaffForm.telPhone.focus();
+        return false;
+    }
+    
+    var params = {
+   		active 		: (updateStaffForm.active.checked ? 'Y' : 'N' )
+       	, admin 	: (updateStaffForm.admin.checked ? 'Y' : 'N' )
+       	, id 		: updateStaffForm.id.value
+       	, password 	: updateStaffForm.password.value
+       	, name 		: updateStaffForm.name.value
+       	, telPhone 	: updateStaffForm.telPhone.value	
+       	, mail 		: updateStaffForm.mail.value	
+       	, memo 		: updateStaffForm.memo.value	
+    }
+    
+    $.ajax({
+        url : "/object/updateStaff",
+        async : false, // 비동기모드 : true, 동기식모드 : false
+        type : 'POST',
+        cache : false,
+        dataType : 'text',
+        data : params,
+        success : function(data) {
+        	alert('정상적으로 수정되었습니다.');
+        	closePop();
+        	getStaffList();
+        },
+        error : function(request,status,error) {
+         alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+      });
+}
+
+function exportExcel(){
+	
+	var gridView = staffGrid.collectionView;
+	var oldPgSize = gridView.pageSize;
+	var oldPgIndex = gridView.pageIndex;
+
+    //전체 데이터를 엑셀다운받기 위해서는 페이징 제거 > 엑셀 다운 > 페이징 재적용 하여야 함.
+    staffGrid.beginUpdate();
+    staffView.pageSize = 0;
+
+    wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(staffGrid, {includeCellStyles: true, includeColumnHeaders: true}, 'StaffList.xlsx',
+	      saved => {
+	    	gridView.pageSize = oldPgSize;
+	    	gridView.moveToPage(oldPgIndex);
+	    	staffGrid.endUpdate();
+	      }, null
+	 );
+}
+
 </script>
 
 <body onload="pageLoad();">
@@ -257,18 +377,18 @@ function dupCheckId(){
                 <div class="admin_summary">
                     <dl>
                         <dt>전체 직원수</dt>
-                        <dd>00명</dd>
+                        <dd id="totalStaff"><%=request.getAttribute("totalStaff")%>명</dd>
                     </dl>
                     <dl>
                         <dt>관리자 수</dt>
-                        <dd>00명</dd>
+                        <dd id="totalAdmin"><%=request.getAttribute("totalAdmin")%>명</dd>
                     </dl>
                     <!-- 클릭시 직원추가 팝업창 띄움 -->
                     <a href="javascript:void(0);" onclick="showPop('new_staff');">직원추가</a>
                 </div>
                 <div class="admin_utility">
                     <div class="admin_btn">
-                        <button class="btn">엑셀 다운로드</button>
+                        <button class="btn" onClick="exportExcel();">엑셀 다운로드</button>
                     </div>
                 </div>
                 <div class="admin_content">
@@ -356,22 +476,22 @@ function dupCheckId(){
         <div class="popup_container">
             <div class="popup_head">
                 <p class="popup_title">정보수정</p>
-                <button type="button" class="popup_close">x</button>
+                <button type="button" class="popup_close" onClick="closePop()">x</button>
             </div>
             <div class="popup_inner">
                 <dfn>필수항목 *</dfn>
-                <form action="#" method="post">
+                <form id="updateStaffForm">
                     <div class="row">
                         <label for="active">활성화</label>
-                        <input type="checkbox" id="active" name="active" checked>체크 시, 활성화
+                        <input type="checkbox" id="active" name="active">체크 시, 활성화
                     </div>
                     <div class="row">
                         <label for="admin">관리자</label>
-                        <input type="checkbox" id="admin" name="admin" checked>체크 시, 관리자모드 접속 가능
+                        <input type="checkbox" id="admin" name="admin">체크 시, 관리자모드 접속 가능
                     </div>
                     <div class="row">
                         <label for="id">ID</label>
-                        <input type="text" id="id" name="id" required>
+                        <input type="text" id="id" name="id" readonly/>
                     </div>
                     <div class="row">
                         <label for="password">PW<i>*</i></label>
@@ -395,8 +515,8 @@ function dupCheckId(){
                     </div>
                 </form>
                 <div class="popup_btn_area">
-                    <button type="button" class="popup_btn stroke">수정</button>
-                    <button type="button" class="popup_btn fill">삭제</button>
+                    <button type="button" class="popup_btn stroke" onClick="updateStaff();">수정</button>
+                    <button type="button" class="popup_btn fill" onClick="deleteStaff();">삭제</button>
                 </div>
             </div>
         </div>
