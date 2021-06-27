@@ -25,21 +25,16 @@ function pageLoad(){
 //그리드 초기 셋팅
 function loadGridStaffList(type, result){
 	  if(type == "init"){
-		    //페이지당 6개의 데이터 항목이 포함된 CollectionView 페이지 생성
 		   staffView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
 		   });
 		    
-		// 페이지 이동
 		   staffGridPager = new wijmo.input.CollectionViewNavigator('#staffGridPager', {
 		        byPage: true,
 		        headerFormat: '{currentPage:n0} / {pageCount:n0}',
 		        cv: staffView
 		    });
 		  
-		// hostElement에 Wijmo의 FlexGird 생성
-			  // itemsSource: data - CollectionView로 데이터를 그리드에 바인딩
-			  // autoGenerateColumns: false >> 컬럼 사용자 정의 
 		   staffGrid = new wijmo.grid.FlexGrid('#staffGrid', {
 			    autoGenerateColumns: false,
 			    alternatingRowStep: 0,
@@ -65,6 +60,9 @@ function loadGridStaffList(type, result){
 			    ],
 			    itemsSource: staffView
 			  });
+			  
+		   	localStorage.setItem('staffInitLayout', staffGrid.columnLayout);
+		   	setUserGridLayout();
 			  
 	  }else{
 		  
@@ -365,6 +363,27 @@ function exportExcel(){
 	 );
 }
 
+function getUserGridLayout(){
+	localStorage.setItem('staffLayout', staffGrid.columnLayout);
+}
+
+function setUserGridLayout(){
+	var layout = localStorage.getItem('staffLayout');
+    if (layout) {
+    	staffGrid.columnLayout = layout;
+    }
+}
+
+function resetUserGridLayout(){
+	var layout = localStorage.getItem('staffInitLayout');
+    if (layout) {
+    	staffGrid.columnLayout = layout;
+    }
+    
+    localStorage.setItem('staffLayout', staffGrid.columnLayout);
+}
+
+
 </script>
 
 <body onload="pageLoad();">
@@ -411,8 +430,8 @@ function exportExcel(){
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
                         <div class="btn_wrap">
-                            <button type="button" class="stroke">칼럼위치저장</button>
-                            <button type="button" class="stroke">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="getUserGridLayout();">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="resetUserGridLayout();">칼럼초기화</button>
                         </div>
                         <div class="grid_wrap" style="position:relative;">
                         <!--Grid 영역 -->
@@ -420,8 +439,8 @@ function exportExcel(){
                         	<div id="staffGridPager"></div>
                         </div>
                         <div class="btn_wrap">
-                            <button type="button" class="stroke">칼럼위치저장</button>
-                            <button type="button" class="stroke">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="getUserGridLayout();">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="resetUserGridLayout();">칼럼초기화</button>
                         </div>
                     </div>
                 </div>

@@ -70,6 +70,7 @@ function pageLoad(){
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
+                    	<button type="button" class="stroke left">+ 이력추가</button>
                         <div class="btn_wrap">
                             <button type="button" class="stroke">칼럼위치저장</button>
                             <button type="button" class="stroke">칼럼초기화</button>
