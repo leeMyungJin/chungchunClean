@@ -95,7 +95,7 @@ function pageLoad(){
                                 <button type="button" class="stroke">칼럼초기화</button>
                                 <button type="button">문구수정</button>
                                 <button type="button">문자발송</button>
-                                <button type="button">삭제</button>
+                                <button type="button">저장</button>
                             </div>
                             <div class="grid_wrap">Grid 영역입니다</div>
                             <div class="btn_wrap">
@@ -103,7 +103,7 @@ function pageLoad(){
                                 <button type="button" class="stroke">칼럼초기화</button>
                                 <button type="button">문구수정</button>
                                 <button type="button">문자발송</button>
-                                <button type="button">삭제</button>
+                                <button type="button">저장</button>
                             </div>
                         </div>
                     </div>

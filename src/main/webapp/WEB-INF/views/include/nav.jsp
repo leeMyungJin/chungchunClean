@@ -15,9 +15,9 @@
         <li>
             <a id="stock" href="/stock/code" class="dept1 stuck">재고관리</a>
             <ul class="dept2">
-                <li><a id="stock_code" href="/stock/code">코드관리</a></li>
-                <li><a id="stock_stock" href="/stock/stock">재고관리</a></li>
-                <li><a id="stock_current" href="/stock/current">입출현황</a></li>
+                <li><a id="stock_code" href="/stock/code">물품관리</a></li>
+                <li><a id="stock_stock" href="/stock/stock">재고현황</a></li>
+                <li><a id="stock_current" href="/stock/current">입출이력</a></li>
             </ul>
         </li>
         <li>
