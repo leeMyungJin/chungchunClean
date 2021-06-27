@@ -47,7 +47,7 @@ function loadGridStockList(type, result){
 			      { binding: 'm_categy_nm', header: '중카테고리명', isReadOnly: true, width: 230, align:"center"  },
 			      { binding: 'item_cd', header: '물품코드', isReadOnly: false, width: 230, align:"center"  },
 			      { binding: 'item_nm', header: '물품명', isReadOnly: false, width: 230, align:"center"  },
-			      { binding: 'cost', header: '원가', isReadOnly: false, width: 202, align:"center"  , format: 'n2' }
+			      { binding: 'cost', header: '원가', isReadOnly: false, width: 202, align:"center" }
 			    ],
 			    itemsSource: stockView
 			  });
