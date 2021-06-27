@@ -44,16 +44,16 @@ function loadGridStaffList(type, result){
 			    autoGenerateColumns: false,
 			    alternatingRowStep: 0,
 			    columns: [
-			      { binding: 'staffName', header: '이름', isReadOnly: false, width: 100 },
-			      { binding: 'staffId', header: 'ID', isReadOnly: false, width: 100  },
-			      { binding: 'adminYn', header: '관리자여부', isReadOnly: false, width: 100 },
-			      { binding: 'activeYn', header: '활성화', isReadOnly: false, width: 100  },
-			      { binding: 'staffPnum', header: '전화번호', isReadOnly: false, width: 100  },
-			      { binding: 'staffEmail', header: '이메일', isReadOnly: false, width: 100  },
-			      { binding: 'memo', header: '메모', isReadOnly: false, width: 100  },
-			      { binding: 'lateassDt', header: '최근접속일', isReadOnly: false, width: 100  },
-			      { binding: 'cretDt', header: '계정생성일', isReadOnly: false, width: 100  },
-			      { binding: 'edit', header: '정보수정', width: 100, 
+			      { binding: 'staffName', header: '이름', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'staffId', header: 'ID', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'adminYn', header: '관리자', isReadOnly: true, width: 60, align:"center" },
+			      { binding: 'activeYn', header: '활성화', isReadOnly: true, width: 60, align:"center"  },
+			      { binding: 'staffPnum', header: '전화번호', isReadOnly: true, width: 120, align:"center"  },
+			      { binding: 'staffEmail', header: '이메일', isReadOnly: true, width: 200, align:"center"  },
+			      { binding: 'memo', header: '메모', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'lateassDt', header: '최근접속일', isReadOnly: true, width: 100 , align:"center" },
+			      { binding: 'cretDt', header: '계정생성일', isReadOnly: true, width: 100 , align:"center" },
+			      { binding: 'edit', header: '정보수정', width: 100, align:"center",
 			    	  cellTemplate: wijmo.grid.cellmaker.CellMaker.makeButton({
 			              text: '<b>수정</b>',
 			              click: (e, ctx) => {
@@ -212,6 +212,7 @@ function saveNewStaff(){
             success : function(data) {
                 alert("직원 생성이 완료되었습니다.");
                 closePop();
+                getStaffList();
             },
             error : function(request,status,error) {
              	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -495,7 +496,7 @@ function exportExcel(){
                     </div>
                     <div class="row">
                         <label for="password">PW<i>*</i></label>
-                        <input type="text" id="password" name="password" required>
+                        <input type="password" id="password" name="password" required>
                     </div>
                     <div class="row">
                         <label for="name">이름<i>*</i></label>

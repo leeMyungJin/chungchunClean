@@ -60,6 +60,25 @@
 		</if>
 	</select>	
 	
+	<select id="getStaffInfo" parameterType="StaffVo" resultType="StaffVo">
+		select staff_id
+			   , staff_pass
+			   , staff_name
+			   , staff_pnum
+			   , staff_email
+			   , memo
+			   , active_yn
+			   , admin_yn
+			   , cret_dt
+			   , cret_id
+			   , updt_dt
+			   , updt_id
+			   , lateass_dt
+		from web.staff 
+		where 1=1
+		and staff_id = #{staffId}
+	</select>	
+	
 	<select id="dupCheckId" parameterType="hashMap" resultType="String">
 		select staff_id
 		from web.staff
@@ -80,17 +99,17 @@
 			   , updt_dt
 			   , updt_id
 			)VALUES(
-				#{staff_id}
-			   , #{staff_pass}
-			   , #{staff_name}
-			   , #{staff_pnum}
-			   , #{staff_email}
+				#{staffId}
+			   , #{staffPass}
+			   , #{staffName}
+			   , #{staffPnum}
+			   , #{staffEmail}
 			   , #{memo}
-			   , #{password_key}
+			   , #{passwordKey}
 			   , NOW()
-			   , #{cret_id}
+			   , #{cretId}
 			   , NOW()
-			   , #{cret_id}
+			   , #{cretId}
 			)
 	</insert>
 	
