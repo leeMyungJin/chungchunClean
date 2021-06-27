@@ -8,9 +8,81 @@
 </head>
 
 <script type="text/javascript">
+var stockView;
+var stockGridPager;
+var stockGrid;
+var dupCheckIdFlag = false;
+
 function pageLoad(){
 	$('#stock').addClass("current");
 	$('#stock_code').addClass("current");
+    loadGridStockList('init');
+}
+
+//그리드 초기 셋팅
+function loadGridStockList(type, result){
+	  if(type == "init"){
+		    //페이지당 6개의 데이터 항목이 포함된 CollectionView 페이지 생성
+		   stockView = new wijmo.collections.CollectionView(result, {
+		       pageSize: 100
+		   });
+		    
+		// 페이지 이동
+	        stockGridPager = new wijmo.input.CollectionViewNavigator('#stockGridPager', {
+		        byPage: true,
+		        headerFormat: '{currentPage:n0} / {pageCount:n0}',
+		        cv: stockView
+		    });
+		  
+		// hostElement에 Wijmo의 FlexGird 생성
+			  // itemsSource: data - CollectionView로 데이터를 그리드에 바인딩
+			  // autoGenerateColumns: false >> 컬럼 사용자 정의 
+		   stockGrid = new wijmo.grid.FlexGrid('#stockGrid', {
+			    autoGenerateColumns: false,
+			    alternatingRowStep: 0,
+			    columns: [
+			      { binding: 'l_categy_cd', header: '대카테고리코드', isReadOnly: true, width: 230, align:"center"},
+			      { binding: 'l_categy_nm', header: '대카테고리명', isReadOnly: true, width: 230, align:"center"},
+			      { binding: 'm_categy_cd', header: '중카테고리코드', isReadOnly: true, width: 230, align:"center" },
+			      { binding: 'm_categy_nm', header: '중카테고리명', isReadOnly: true, width: 230, align:"center"  },
+			      { binding: 'item_cd', header: '물품코드', isReadOnly: false, width: 230, align:"center"  },
+			      { binding: 'item_nm', header: '물품명', isReadOnly: false, width: 230, align:"center"  },
+			      { binding: 'cost', header: '원가', isReadOnly: false, width: 202, align:"center"  , format: 'n2' }
+			    ],
+			    itemsSource: stockView
+			  });
+	  }else{
+		  
+		  console.log(result);
+		   stockView = new wijmo.collections.CollectionView(result, {
+		       pageSize: 100
+		   });
+		  stockGridPager.cv = stockView;
+		  stockGrid.itemsSource = stockView;
+	  }
+	  
+}
+
+
+//코드 검색
+function search(){
+    var params = {
+            inq : $("#inq").val(),
+            con : $("#con").val()
+    	}
+    	$.ajax({
+            url : "/stock/getStockList",
+            async : false, // 비동기모드 : true, 동기식모드 : false
+            type : 'POST',
+            data : params,
+            success : function(result) {
+                console.log("getStockList success");
+        	loadGridStockList('search', result);
+            },
+            error : function(request,status,error) {
+             	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+          });
 }
 </script>
 
@@ -48,7 +120,7 @@ function pageLoad(){
                             </select>
                             <label for="inq"></label>
                             <input type="text" id="inq" placeholder=",로 다중검색 가능">
-                            <button type="button">조회</button>
+                            <button type="button" onClick="search();">조회</button>
                         </form>
                         <div class="summary">
                             <dl>
@@ -74,7 +146,10 @@ function pageLoad(){
                             <button type="button">저장</button>
                             <button type="button">삭제</button>
                         </div>
-                        <div class="grid_wrap">Grid 영역입니다</div>
+                        <div class="grid_wrap" style="position:relative;">
+                        	<div id="stockGrid"  style="height:500px;"></div>
+                        	<div id="stockGridPager"></div>
+                            </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke">칼럼위치저장</button>
                             <button type="button" class="stroke">칼럼초기화</button>
@@ -104,7 +179,7 @@ function pageLoad(){
                 </div>
                 <div class="popup_grid_area">
                     <a href="#" class="btn">+ 행 추가</a>
-                    <div class="popup_grid">Grid영역입니다</div>
+                    <div class="popup_grid">`역입니다</div>
                     <a href="#" class="btn">+ 행 추가</a>
                 </div>
                 <div class="popup_btn_area">
