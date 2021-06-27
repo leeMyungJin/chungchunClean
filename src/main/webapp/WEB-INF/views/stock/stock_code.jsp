@@ -12,6 +12,7 @@ var stockView;
 var stockGridPager;
 var stockGrid;
 var dupCheckIdFlag = false;
+var selector;
 
 function pageLoad(){
 	$('#stock').addClass("current");
@@ -51,6 +52,11 @@ function loadGridStockList(type, result){
 			    ],
 			    itemsSource: stockView
 			  });
+              // 체크박스 생성
+              selector = new wijmo.grid.selector.Selector(stockGrid, {
+                itemChecked: () => {
+                }
+            });
 	  }else{
 		  
 		  console.log(result);
