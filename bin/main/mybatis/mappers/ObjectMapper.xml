@@ -80,17 +80,17 @@
 			   , updt_dt
 			   , updt_id
 			)VALUES(
-				#{staff_id}
-			   , #{staff_pass}
-			   , #{staff_name}
-			   , #{staff_pnum}
-			   , #{staff_email}
+				#{staffId}
+			   , #{staffPass}
+			   , #{staffName}
+			   , #{staffPnum}
+			   , #{staffEmail}
 			   , #{memo}
-			   , #{password_key}
+			   , #{passwordKey}
 			   , NOW()
-			   , #{cret_id}
+			   , #{cretId}
 			   , NOW()
-			   , #{cret_id}
+			   , #{cretId}
 			)
 	</insert>
 	
