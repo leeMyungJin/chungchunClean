@@ -25,35 +25,30 @@ function pageLoad(){
 //그리드 초기 셋팅
 function loadGridStaffList(type, result){
 	  if(type == "init"){
-		    //페이지당 6개의 데이터 항목이 포함된 CollectionView 페이지 생성
 		   staffView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
 		   });
 		    
-		// 페이지 이동
 		   staffGridPager = new wijmo.input.CollectionViewNavigator('#staffGridPager', {
 		        byPage: true,
 		        headerFormat: '{currentPage:n0} / {pageCount:n0}',
 		        cv: staffView
 		    });
 		  
-		// hostElement에 Wijmo의 FlexGird 생성
-			  // itemsSource: data - CollectionView로 데이터를 그리드에 바인딩
-			  // autoGenerateColumns: false >> 컬럼 사용자 정의 
 		   staffGrid = new wijmo.grid.FlexGrid('#staffGrid', {
 			    autoGenerateColumns: false,
 			    alternatingRowStep: 0,
 			    columns: [
-			      { binding: 'staffName', header: '이름', isReadOnly: false, width: 100 },
-			      { binding: 'staffId', header: 'ID', isReadOnly: false, width: 100  },
-			      { binding: 'adminYn', header: '관리자여부', isReadOnly: false, width: 100 },
-			      { binding: 'activeYn', header: '활성화', isReadOnly: false, width: 100  },
-			      { binding: 'staffPnum', header: '전화번호', isReadOnly: false, width: 100  },
-			      { binding: 'staffEmail', header: '이메일', isReadOnly: false, width: 100  },
-			      { binding: 'memo', header: '메모', isReadOnly: false, width: 100  },
-			      { binding: 'lateassDt', header: '최근접속일', isReadOnly: false, width: 100  },
-			      { binding: 'cretDt', header: '계정생성일', isReadOnly: false, width: 100  },
-			      { binding: 'edit', header: '정보수정', width: 100, 
+			      { binding: 'staffName', header: '이름', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'staffId', header: 'ID', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'adminYn', header: '관리자', isReadOnly: true, width: 60, align:"center" },
+			      { binding: 'activeYn', header: '활성화', isReadOnly: true, width: 60, align:"center"  },
+			      { binding: 'staffPnum', header: '전화번호', isReadOnly: true, width: 120, align:"center"  },
+			      { binding: 'staffEmail', header: '이메일', isReadOnly: true, width: 200, align:"center"  },
+			      { binding: 'memo', header: '메모', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'lateassDt', header: '최근접속일', isReadOnly: true, width: 100 , align:"center" },
+			      { binding: 'cretDt', header: '계정생성일', isReadOnly: true, width: 100 , align:"center" },
+			      { binding: 'edit', header: '정보수정', width: 100, align:"center",
 			    	  cellTemplate: wijmo.grid.cellmaker.CellMaker.makeButton({
 			              text: '<b>수정</b>',
 			              click: (e, ctx) => {
@@ -65,6 +60,9 @@ function loadGridStaffList(type, result){
 			    ],
 			    itemsSource: staffView
 			  });
+			  
+		   	localStorage.setItem('staffInitLayout', staffGrid.columnLayout);
+		   	setUserGridLayout();
 			  
 	  }else{
 		  
@@ -212,6 +210,7 @@ function saveNewStaff(){
             success : function(data) {
                 alert("직원 생성이 완료되었습니다.");
                 closePop();
+                getStaffList();
             },
             error : function(request,status,error) {
              	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -364,6 +363,27 @@ function exportExcel(){
 	 );
 }
 
+function getUserGridLayout(){
+	localStorage.setItem('staffLayout', staffGrid.columnLayout);
+}
+
+function setUserGridLayout(){
+	var layout = localStorage.getItem('staffLayout');
+    if (layout) {
+    	staffGrid.columnLayout = layout;
+    }
+}
+
+function resetUserGridLayout(){
+	var layout = localStorage.getItem('staffInitLayout');
+    if (layout) {
+    	staffGrid.columnLayout = layout;
+    }
+    
+    localStorage.setItem('staffLayout', staffGrid.columnLayout);
+}
+
+
 </script>
 
 <body onload="pageLoad();">
@@ -410,8 +430,8 @@ function exportExcel(){
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
                         <div class="btn_wrap">
-                            <button type="button" class="stroke">칼럼위치저장</button>
-                            <button type="button" class="stroke">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="getUserGridLayout();">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="resetUserGridLayout();">칼럼초기화</button>
                         </div>
                         <div class="grid_wrap" style="position:relative;">
                         <!--Grid 영역 -->
@@ -419,8 +439,8 @@ function exportExcel(){
                         	<div id="staffGridPager"></div>
                         </div>
                         <div class="btn_wrap">
-                            <button type="button" class="stroke">칼럼위치저장</button>
-                            <button type="button" class="stroke">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="getUserGridLayout();">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="resetUserGridLayout();">칼럼초기화</button>
                         </div>
                     </div>
                 </div>
@@ -495,7 +515,7 @@ function exportExcel(){
                     </div>
                     <div class="row">
                         <label for="password">PW<i>*</i></label>
-                        <input type="text" id="password" name="password" required>
+                        <input type="password" id="password" name="password" required>
                     </div>
                     <div class="row">
                         <label for="name">이름<i>*</i></label>

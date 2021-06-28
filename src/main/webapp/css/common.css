@@ -714,3 +714,10 @@
   visibility: visible;
   transition: opacity 0.3s 0s, visibility 0s 0s;
 }
+
+.wj-flexgrid .wj-cell .wj-cell-maker {
+	width:80%;
+	height:85%; 
+	padding:0px;
+	margin-top:2px;
+}

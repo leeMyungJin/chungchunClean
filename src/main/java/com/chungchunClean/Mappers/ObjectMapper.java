@@ -22,4 +22,6 @@ public interface ObjectMapper  {
 	public void deleteStaff(HashMap<String,String>params);
 	
 	public void updateStaff(HashMap<String,String> params);
+	
+	public StaffVo getStaffInfo(StaffVo vo);
 }

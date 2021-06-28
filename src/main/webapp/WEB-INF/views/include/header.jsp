@@ -11,8 +11,6 @@
 <meta property="og:description" content="청춘클린">
 <title>청춘클린</title>
 <link rel="shortcut icon" type="image/x-icon" href="image/favico.ico">
-<link rel="stylesheet" href="../css/reset.css">
-<link rel="stylesheet" href="../css/common.css">
 
 <script src="../js/include/common.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -49,3 +47,6 @@
 <!-- <script>
   wijmo.setLicenseKey(**'your license key goes here...'**);
 </script> -->
+
+<link rel="stylesheet" href="../css/reset.css">
+<link rel="stylesheet" href="../css/common.css">
