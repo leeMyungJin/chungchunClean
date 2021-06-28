@@ -5,19 +5,19 @@
 
 <select id="getStockList" parameterType="hashMap" resultType="hashMap">
 	select
-		A.l_categy_cd ,
-		A.l_categy_nm ,
-		A.m_categy_cd ,
-		A.m_categy_nm ,
-		B.item_cd ,
-		B.item_nm,
-		B.qr_url,
-		B.cost
+		ctg_bas.l_categy_cd ,
+		ctg_bas.l_categy_nm ,
+		ctg_bas.m_categy_cd ,
+		ctg_bas.m_categy_nm ,
+		ctg_dtl.item_cd ,
+		ctg_dtl.item_nm,
+		ctg_dtl.qr_url,
+		ctg_dtl.cost
 	from
-		web.category_bas A
-	left outer join WEB.category_dtl B on
-		a.l_categy_cd = b.l_categy_cd
-		and a.m_categy_cd = b.m_categy_cd
+		web.category_bas ctg_bas
+	left outer join WEB.category_dtl ctg_dtl on
+		ctg_bas.l_categy_cd = ctg_dtl.l_categy_cd
+		and ctg_bas.m_categy_cd = ctg_dtl.m_categy_cd
 	where
 		1 = 1
 	<if test="inq != null">
@@ -50,4 +50,22 @@
 		</choose>
 	</if>
 </select>
+
+<select id="getCategoryList" resultType="hashMap">
+	SELECT 
+		ctg_bas.l_categy_cd ,
+		ctg_bas.l_categy_nm ,
+		ctg_bas.m_categy_cd ,
+		ctg_bas.m_categy_nm,
+		to_char(coalesce(updt_dt, cret_dt),'yyyy-mm-dd HH24:MI:SS') as reg_date
+	FROM web.category_bas ctg_bas
+</select>
+
+<delete id="deleteCategory" parameterType="com.chungchunClean.vo.StockVo">
+DELETE 
+  FROM WEB.CATEGORY_BAS 
+  WHERE 1=1
+  AND l_categy_cd = #{l_categy_cd} 
+  AND m_categy_cd = #{m_categy_cd}
+</delete>
 </mapper>

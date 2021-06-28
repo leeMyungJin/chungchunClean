@@ -34,11 +34,37 @@ public class StockController {
     public String moveStock() {
         return "stock/stock_stock";
     }
-
+    /**
+     * 코드 리스트 가져오기
+     * @param params
+     * @return
+     */
     @RequestMapping(value="/getStockList", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
     public List<StockVo> getStockList(@RequestParam HashMap<String,Object> params){
         return stockService.getStockList(params);
     }
 
+    /**
+     * 카테고리 리스트 가져오기
+     * 
+     * @return
+     */
+    @RequestMapping(value="/getCategoryList", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public List<StockVo> getCategoryList(){
+        return stockService.getCategoryList();
+    }
+
+     /**
+     * 카테고리 삭제하기
+     * 
+     * @return
+     */
+    @RequestMapping(value="/deleteCategory", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void deleteCategory(@RequestParam List<String> params){
+        	System.out.println("params  : " +params.toString());
+        // stockService.deleteCategory(params);
+    }
 }

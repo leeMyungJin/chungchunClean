@@ -6,10 +6,11 @@ public class StockVo {
 	private String l_categy_nm;
 	private String m_categy_cd;
 	private String m_categy_nm;
-	private String cost;
+	private Double cost;
 	private String item_cd;
 	private String item_nm;
 	private String qr_url;
+    private String reg_date;
 	
 	/**
      * @return String return the l_categy_cd
@@ -70,14 +71,14 @@ public class StockVo {
     /**
      * @return String return the cost
      */
-    public String getCost() {
+    public Double getCost() {
         return cost;
     }
 
     /**
      * @param cost the cost to set
      */
-    public void setCost(String cost) {
+    public void setCost(Double cost) {
         this.cost = cost;
     }
 
@@ -122,11 +123,25 @@ public class StockVo {
     public void setQr_url(String qr_url) {
         this.qr_url = qr_url;
     }
-	
-	@Override
-	public String toString() {
-		return "StockVo [cost=" + cost + ", item_cd=" + item_cd + ", item_nm=" + item_nm + ", l_categy_cd="
-				+ l_categy_cd + ", l_categy_nm=" + l_categy_nm + ", m_categy_cd=" + m_categy_cd + ", m_categy_nm="
-				+ m_categy_nm + ", qr_url=" + qr_url + "]";
-	}
+    /**
+     * @return String return the reg_date
+     */
+    public String getReg_date() {
+        return reg_date;
+    }
+
+    /**
+     * @param reg_date the reg_date to set
+     */
+    public void setReg_date(String reg_date) {
+        this.reg_date = reg_date;
+    }
+
+    @Override
+    public String toString() {
+        return "StockVo [cost=" + cost + ", item_cd=" + item_cd + ", item_nm=" + item_nm + ", l_categy_cd="
+                + l_categy_cd + ", l_categy_nm=" + l_categy_nm + ", m_categy_cd=" + m_categy_cd + ", m_categy_nm="
+                + m_categy_nm + ", qr_url=" + qr_url + ", reg_date=" + reg_date + "]";
+    }
+
 }

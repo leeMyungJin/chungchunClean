@@ -23,5 +23,15 @@ public class StockServiceImpl implements StockService {
 			params.replace("inq", Util.makeForeach((String)params.get("inq"), ","));
 		return stockMapper.getStockList(params);
 	}
+
+	@Override
+	public List<StockVo> getCategoryList() {
+		return stockMapper.getCategoryList();
+	}
+
+	@Override
+	public void deleteCategory(HashMap<String,String> params) {
+		stockMapper.deleteCategory(params);
+	}
 	
 }
