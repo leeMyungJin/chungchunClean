@@ -11,5 +11,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface StockMapper  {
 	public List<StockVo> getStockList(HashMap<String, Object> params);
 	public List<StockVo> getCategoryList();
-	public void deleteCategory(HashMap<String,String> params);
+	public void deleteCategory(StockVo params); 
+	public void saveCategory(StockVo params); 
+	public List<StockVo> getLCategoryList();
+	public List<StockVo> getMCategoryList();
 }

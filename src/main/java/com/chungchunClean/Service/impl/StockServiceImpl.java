@@ -30,8 +30,28 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public void deleteCategory(HashMap<String,String> params) {
-		stockMapper.deleteCategory(params);
+	public void deleteCategory(List<StockVo> params) {
+		for(StockVo vo : params)
+		stockMapper.deleteCategory(vo);
 	}
+
+	@Override
+	public void saveCategory(List<StockVo> params) {
+		for(StockVo vo : params){
+			// 임시로 testid로 셋팅. 추후 session에서 가져오도록 변경
+			vo.setCret_id("testid");
+			vo.setUpdt_id("testid");
+			stockMapper.saveCategory(vo);
+		}
+	}
+
+	@Override
+	public List<StockVo> getLCategoryList() {
+		return stockMapper.getLCategoryList();
+	}	
+	@Override
+	public List<StockVo> getMCategoryList() {
+		return stockMapper.getMCategoryList();
+	}	
 	
 }

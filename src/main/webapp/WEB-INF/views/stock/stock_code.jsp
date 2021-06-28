@@ -80,20 +80,54 @@ function loadGridStockList(type, result){
                   { binding: 'reg_date', header: '등록일시', isReadOnly: true, width: 230, align:"center"  }
 
 			    ],
-			    itemsSource: categoryView
-			  });
+                beginningEdit: function (s, e) {
+                    var col = s.columns[e.col];
+                    var item = s.rows[e.row].dataItem;
+                    if(item.reg_date != undefined){
+                        if (col.binding == 'l_categy_cd') {
+                            e.cancel = true;
+                            alert("대카테고리코드는 신규 행일때만 입력이 가능합니다.");
+                        }else if(col.binding == 'm_categy_cd'){
+                             e.cancel = true;
+                            alert("중카테고리코드는 신규 행일때만 입력이 가능합니다.");
+                        }
+                    }
+                },
+                cellEditEnding: function (s, e) {
+                    var col = s.columns[e.col];
+                    if (col.binding == 'l_categy_cd') {
+                        var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.String, col.format);
+                        if (value.length != 2) {
+                            e.cancel = true;
+                            e.stayInEditMode = true;
+                            alert('대카테고리코드는 2자리 입니다.');
+                        }
+                        value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
+                        if( !wijmo.isNumber(value) || value < 0){
+                            e.cancel = true;
+                            e.stayInEditMode = true;
+                            alert('대카테고리코드는 숫자로만 입력 가능합니다.');
+                        }
+
+                    }
+                },
+			    itemsSource: categoryView,
+            });
             categorySelector = new wijmo.grid.selector.Selector(categoryGrid, {
                 itemChecked: () => {
-                    categorySelectCnt++;
                 }
             });
     }else if(type == "category"){
-           categoryView = new wijmo.collections.CollectionView(result, {
+         categoryView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
 		   });
 		  categoryGridPager.cv = categoryView;
 		  categoryGrid.itemsSource = categoryView;
-	}else{
+	}else if(type == "product"){
+        
+        
+    }else{
+
 		  console.log(result);
 		   stockView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
@@ -138,8 +172,18 @@ function showPop(pop){
              	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
           });
-		
 	}else if(pop == "add_product"){
+         $.ajax({
+            url : "/stock/getLCategoryList",
+            async : false, // 비동기모드 : true, 동기식모드 : false
+            type : 'POST',
+            success : function(result) {
+        	    loadGridStockList('product', result);
+            },
+            error : function(request,status,error) {
+             	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+          });
 		
 	}
 	
@@ -166,27 +210,63 @@ function deleteRows(type){
     if(type == 'category'){
         var item = categoryGrid.rows.filter(r => r.isSelected);
         var rows = [];
-        for(var i =0; i< item.length ; i++){
-            rows.push(item[i]._data);
-        }
-        var test = {
-            params : rows
-        }
-
-        $.ajax({
-            url : "/stock/deleteCategory",
-            async : false, // 비동기모드 : true, 동기식모드 : false
-            type : 'POST',
-            dataType : 'json',
-            data: test,
-            success : function(result) {
-        	    loadGridStockList('category', result);
-            },
-            error : function(request,status,error) {
-             	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        var params;
+         if(item.length == 0){
+            alert("선택된 행이 없습니다.");
+            return false;
+        }else{
+            for(var i =0; i< item.length ; i++){
+                rows.push(item[i].dataItem);
             }
-          });
-        
+            if(confirm("선택한 행들을 삭제 하시겠습니까??")){
+                $.ajax({
+                    url : "/stock/deleteCategory",
+                    async : false, // 비동기모드 : true, 동기식모드 : false
+                    type : 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(rows),
+                    success : function(result) {
+                        loadGridStockList('category', result);
+                    },
+                    error : function(request,status,error) {
+                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+            }
+        }
+    }   
+}
+//데이터 저장
+function saveRows(type){
+
+    if(type == "category"){
+        var item = categoryGrid.rows.filter(r => r.isSelected);
+        var rows = [];
+        var params;
+        if(item.length == 0){
+            alert("선택된 행이 없습니다.");
+            return false;
+        }else{
+            for(var i =0; i< item.length ; i++){
+                rows.push(item[i].dataItem);
+            }
+            if(confirm("선택한 행들을 저장 하시겠습니까??")){
+                $.ajax({
+                    url : "/stock/saveCategory",
+                    async : false, // 비동기모드 : true, 동기식모드 : false
+                    type : 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(rows),
+                    success : function(result) {
+                        alert("저장되었습니다.");
+                        loadGridStockList('category', result);
+                    },
+                    error : function(request,status,error) {
+                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+            }
+        }
     }
 }
 </script>
@@ -291,7 +371,7 @@ function deleteRows(type){
                 <div class="popup_btn_area">
                     <div class="right">
                         <button type="button" class="popup_btn" onclick="deleteRows('category');">삭제</button>
-                        <button type="button" class="popup_btn">저장</button>
+                        <button type="button" class="popup_btn" onclick="saveRows('category');">저장</button>
                     </div>
                 </div>
             </div>
@@ -310,15 +390,21 @@ function deleteRows(type){
                 <form action="#" method="post">
                     <div class="row">
                         <label for="category1">대카테고리<i>*</i></label>
-                        <select name="category1" id="category1">
+                            <select name="category1" id="category1">
                             <option value="all" selected="selected">전체</option>
-                            <option value="">청소류</option>
-                            <option value="">소독류</option>
-                        </select>
+                            <c:forEach var ="LCategory" items="${LCategoryList}" >
+                                <option value="${LCategory.l_categy_cd}">${LCategory.l_categy_nm}</option>
+                            </c:forEach>
+                            </select>
                     </div>
                     <div class="row">
                         <label for="category2">중카테고리<i>*</i></label>
-                        <input type="text" id="category2" name="category2" required>
+                        <select name="category2" id="category2">
+                            <option value="all" selected="selected">전체</option>
+                            <c:forEach var ="MCategory" items="${MCategoryList}">
+                                <option value="${MCategory.m_categy_cd}">${MCategory.m_categy_nm}</option>
+                            </c:forEach>
+                            </select>
                     </div>
                     <div class="row">
                         <label for="product">상품명<i>*</i></label>

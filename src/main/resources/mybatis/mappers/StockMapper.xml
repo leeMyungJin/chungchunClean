@@ -26,29 +26,31 @@
 			<when test="con == 'all'">
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					A.l_categy_nm LIKE '%' || #{item} || '%'
+					ctg_bas.l_categy_nm LIKE '%' || #{item} || '%'
 					or
-					A.m_categy_nm LIKE '%' || #{item} || '%'
+					ctg_bas.m_categy_nm LIKE '%' || #{item} || '%'
 					or
-					B.item_nm LIKE '%' || #{item} || '%'
+					ctg_dtl.item_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'category'">
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					A.l_categy_nm LIKE '%' || #{item} || '%'
+					ctg_bas.l_categy_nm LIKE '%' || #{item} || '%'
 					or
-					A.m_categy_nm LIKE '%' || #{item} || '%'
+					ctg_bas.m_categy_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'product'">
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					B.item_nm LIKE '%' || #{item} || '%'
+					ctg_dtl.item_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 		</choose>
 	</if>
+	AND ctg_dtl.item_cd is not null
+	ORDER BY l_categy_cd, m_categy_cd, item_cd
 </select>
 
 <select id="getCategoryList" resultType="hashMap">
@@ -59,6 +61,7 @@
 		ctg_bas.m_categy_nm,
 		to_char(coalesce(updt_dt, cret_dt),'yyyy-mm-dd HH24:MI:SS') as reg_date
 	FROM web.category_bas ctg_bas
+	ORDER BY l_categy_cd, m_categy_cd
 </select>
 
 <delete id="deleteCategory" parameterType="com.chungchunClean.vo.StockVo">
@@ -68,4 +71,25 @@ DELETE
   AND l_categy_cd = #{l_categy_cd} 
   AND m_categy_cd = #{m_categy_cd}
 </delete>
+<insert id="saveCategory" parameterType="com.chungchunClean.vo.StockVo">
+INSERT INTO WEB.CATEGORY_BAS 
+  (l_categy_cd, l_categy_nm, m_categy_cd, m_categy_nm , cret_dt, cret_id, updt_dt, updt_id)
+  VALUES (#{l_categy_cd} , #{l_categy_nm}, #{m_categy_cd}, #{m_categy_nm}, now(), #{cret_id}, now(), #{updt_id})
+ON CONFLICT( l_categy_cd, m_categy_cd) DO
+UPDATE
+	SET l_categy_cd = #{l_categy_cd},
+		l_categy_nm = #{l_categy_nm},
+		m_categy_cd = #{m_categy_cd},
+		m_categy_nm = #{m_categy_nm},
+		updt_dt		= now(),
+		updt_id		= #{updt_id}
+</insert>
+<select id="getLCategoryList" resultType="hashMap">
+SELECT DISTINCT l_categy_cd, l_categy_nm
+FROM WEB.CATEGORY_BAS
+</select>
+<select id="getMCategoryList" resultType="hashMap">
+SELECT DISTINCT m_categy_cd, m_categy_nm
+FROM WEB.CATEGORY_BAS
+</select>
 </mapper>

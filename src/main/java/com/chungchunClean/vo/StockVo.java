@@ -2,15 +2,19 @@ package com.chungchunClean.vo;
 
 public class StockVo {
 
-	private String l_categy_cd;
-	private String l_categy_nm;
-	private String m_categy_cd;
-	private String m_categy_nm;
-	private Double cost;
-	private String item_cd;
-	private String item_nm;
-	private String qr_url;
-    private String reg_date;
+	private String l_categy_cd;     //대카테고리코드
+	private String l_categy_nm;     //대카테고리명
+	private String m_categy_cd;     //중카테고리코드
+	private String m_categy_nm;     //중카테고리명
+	private Double cost;            //원가
+	private String item_cd;         //물품코드
+	private String item_nm;         //물품명
+	private String qr_url;          //QR코드 URL
+    private String reg_date;        //등록일시 coalesce(updt_dt, cret_dt)
+    private String cret_dt;         //등록일
+    private String cret_id;         //등록자
+    private String updt_dt;         //수정일
+    private String updt_id;         //수정자
 	
 	/**
      * @return String return the l_categy_cd
@@ -137,11 +141,68 @@ public class StockVo {
         this.reg_date = reg_date;
     }
 
+    /**
+     * @return String return the cret_dt
+     */
+    public String getCret_dt() {
+        return cret_dt;
+    }
+
+    /**
+     * @param cret_dt the cret_dt to set
+     */
+    public void setCret_dt(String cret_dt) {
+        this.cret_dt = cret_dt;
+    }
+
+    /**
+     * @return String return the cret_id
+     */
+    public String getCret_id() {
+        return cret_id;
+    }
+
+    /**
+     * @param cret_id the cret_id to set
+     */
+    public void setCret_id(String cret_id) {
+        this.cret_id = cret_id;
+    }
+
+    /**
+     * @return String return the updt_dt
+     */
+    public String getUpdt_dt() {
+        return updt_dt;
+    }
+
+    /**
+     * @param updt_dt the updt_dt to set
+     */
+    public void setUpdt_dt(String updt_dt) {
+        this.updt_dt = updt_dt;
+    }
+
+    /**
+     * @return String return the updt_id
+     */
+    public String getUpdt_id() {
+        return updt_id;
+    }
+
+    /**
+     * @param updt_id the updt_id to set
+     */
+    public void setUpdt_id(String updt_id) {
+        this.updt_id = updt_id;
+    }
+
     @Override
     public String toString() {
-        return "StockVo [cost=" + cost + ", item_cd=" + item_cd + ", item_nm=" + item_nm + ", l_categy_cd="
-                + l_categy_cd + ", l_categy_nm=" + l_categy_nm + ", m_categy_cd=" + m_categy_cd + ", m_categy_nm="
-                + m_categy_nm + ", qr_url=" + qr_url + ", reg_date=" + reg_date + "]";
+        return "StockVo [cost=" + cost + ", cret_dt=" + cret_dt + ", cret_id=" + cret_id + ", item_cd=" + item_cd
+                + ", item_nm=" + item_nm + ", l_categy_cd=" + l_categy_cd + ", l_categy_nm=" + l_categy_nm
+                + ", m_categy_cd=" + m_categy_cd + ", m_categy_nm=" + m_categy_nm + ", qr_url=" + qr_url + ", reg_date="
+                + reg_date + ", updt_dt=" + updt_dt + ", updt_id=" + updt_id + "]";
     }
 
 }
