@@ -62,7 +62,7 @@ function loadGridStaffList(type, result){
 			  });
 			  
 		   	localStorage.setItem('staffInitLayout', staffGrid.columnLayout);
-		   	setUserGridLayout();
+		   	_setUserGridLayout('staffLayout');
 			  
 	  }else{
 		  
@@ -363,27 +363,6 @@ function exportExcel(){
 	 );
 }
 
-function getUserGridLayout(){
-	localStorage.setItem('staffLayout', staffGrid.columnLayout);
-}
-
-function setUserGridLayout(){
-	var layout = localStorage.getItem('staffLayout');
-    if (layout) {
-    	staffGrid.columnLayout = layout;
-    }
-}
-
-function resetUserGridLayout(){
-	var layout = localStorage.getItem('staffInitLayout');
-    if (layout) {
-    	staffGrid.columnLayout = layout;
-    }
-    
-    localStorage.setItem('staffLayout', staffGrid.columnLayout);
-}
-
-
 </script>
 
 <body onload="pageLoad();">
@@ -430,8 +409,8 @@ function resetUserGridLayout(){
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
                         <div class="btn_wrap">
-                            <button type="button" class="stroke" onClick="getUserGridLayout();">칼럼위치저장</button>
-                            <button type="button" class="stroke" onClick="resetUserGridLayout();">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="_getUserGridLayout('staffLayout');">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('staffInitLayout', 'staffLayout');">칼럼초기화</button>
                         </div>
                         <div class="grid_wrap" style="position:relative;">
                         <!--Grid 영역 -->
@@ -439,8 +418,8 @@ function resetUserGridLayout(){
                         	<div id="staffGridPager"></div>
                         </div>
                         <div class="btn_wrap">
-                            <button type="button" class="stroke" onClick="getUserGridLayout();">칼럼위치저장</button>
-                            <button type="button" class="stroke" onClick="resetUserGridLayout();">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="_getUserGridLayout('staffLayout');">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('staffInitLayout', 'staffLayout');">칼럼초기화</button>
                         </div>
                     </div>
                 </div>
