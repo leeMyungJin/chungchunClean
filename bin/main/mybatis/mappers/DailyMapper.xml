@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chungchunClean.Mappers.DailyMapper">
+
+	<select id="getDailyList" parameterType="hashMap" resultType="DailyVo">
+		select 	dm.daily_mntr_cd
+				, bb.area_cd
+				, bb.area_nm 
+				, bb.bldg_nm 
+				, dm.bldg_cd
+				, bb.client_nm
+				, dm.on_work_dt
+				, dm.off_work_dt
+				, dm.officer_nm 
+				, dm.site_mntr_url 
+				, dm.visit_dt 
+				, dm.garbg_cnt 
+				, dm.food_chip_cnt 
+				, dm.memo
+				, dm.cret_dt 
+				, dm.cret_id 
+				, dm.updt_dt 
+				, dm.updt_id
+		from web.daily_mntr dm left join web.bldg_bas bb on dm.bldg_cd = bb.bldg_cd 
+		where 1=1
+		<if test="inq != null">
+			AND 
+			<choose>
+				<when test="con == 'area'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						bb.area_nm LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<when test="con == 'client'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						bb.client_nm LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<when test="con == 'building'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						bb.bldg_nm LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<when test="con == 'officer'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						dm.officer_nm LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<otherwise>
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						bb.area_nm LIKE '%' || #{item} || '%'
+						or bb.client_nm LIKE '%' || #{item} || '%'
+						or bb.bldg_nm LIKE '%' || #{item} || '%'
+						or dm.officer_nm LIKE '%' || #{item} || '%'
+					</foreach>
+				</otherwise>
+			</choose>
+		</if>
+		<if test="fromDate != null and toDate != null">
+			and dm.cret_dt between #{fromDate}::timestamp and #{toDate}::timestamp 
+		</if>
+		order by dm.daily_mntr_cd
+	</select>	
+	
+</mapper>

@@ -35,5 +35,5 @@
         <a href="#">이용약관</a>
         <a href="#">개인정보수집약관</a>
     </div>
-    <a href="javascript:logOut()" class="admin_out">로그아웃</a>
+    <a href="javascript:_logOut()" class="admin_out">로그아웃</a>
 </aside>
