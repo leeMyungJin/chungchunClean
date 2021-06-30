@@ -18,6 +18,7 @@ var add = false;
 var stockSelector;
 var categorySelector;
 var categorySelectCnt = 0;
+var dupCheckItemFlag = false;
 
 function pageLoad(){
 	$('#stock').addClass("current");
@@ -30,7 +31,7 @@ function loadGridStockList(type, result){
     if(type == "init"){
 		    //페이지당 6개의 데이터 항목이 포함된 CollectionView 페이지 생성
 		   stockView = new wijmo.collections.CollectionView(result, {
-		       pageSize: 100
+               pageSize: 100
 		   });
 		    
 		// 페이지 이동
@@ -47,6 +48,7 @@ function loadGridStockList(type, result){
 			    autoGenerateColumns: false,
 			    alternatingRowStep: 0,
 			    columns: [
+                  { isReadOnly: true, width: 35, align:"center"},
 			      { binding: 'l_categy_cd', header: '대카테고리코드', isReadOnly: true, width: 230, align:"center"},
 			      { binding: 'l_categy_nm', header: '대카테고리명', isReadOnly: true, width: 230, align:"center"},
 			      { binding: 'm_categy_cd', header: '중카테고리코드', isReadOnly: true, width: 230, align:"center" },
@@ -57,11 +59,21 @@ function loadGridStockList(type, result){
 			    ],
 			    itemsSource: stockView
 			  });
-              // 체크박스 생성
+
+                  //행번호 표시하기
+            stockGrid.itemFormatter = function (panel, r, c, cell) { 
+                if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+                    cell.textContent = (r + 1).toString();
+                }
+            };
+
+            // 체크박스 생성
             stockSelector = new wijmo.grid.selector.Selector(stockGrid, {
                 itemChecked: () => {
                 }
             });
+
+             stockSelector.column = stockGrid.columns[0];
 
             //카테고리 추가용 그리드 설정
             categoryGridPager = new wijmo.input.CollectionViewNavigator('#categoryGridPager', {
@@ -127,11 +139,12 @@ function loadGridStockList(type, result){
         
         
     }else{
-
 		  console.log(result);
 		   stockView = new wijmo.collections.CollectionView(result, {
-		       pageSize: 100
+		       pageSize: 100,
+                groupDescriptions: ['l_categy_cd', 'm_categy_cd']
 		   });
+           stockGrid.columns[0].width = 50;
 		  stockGridPager.cv = stockView;
 		  stockGrid.itemsSource = stockView;
 	  }
@@ -173,6 +186,11 @@ function showPop(pop){
             }
           });
 	}else if(pop == "add_product"){
+        $("#category1").val("all");
+        $("#category2").val("all");
+        $("#product").val("");
+        $("#cost").val("");
+        $("#code").val("");
          $.ajax({
             url : "/stock/getLCategoryList",
             async : false, // 비동기모드 : true, 동기식모드 : false
@@ -207,7 +225,35 @@ function addRow(type){
 
 //행 삭제
 function deleteRows(type){
-    if(type == 'category'){
+    if(type == 'stock'){
+        var item = stockGrid.rows.filter(r => r.isSelected); 
+        var rows = [];
+        var params;
+         if(item.length == 0){
+            alert("선택된 행이 없습니다.");
+            return false;
+        }else{
+            for(var i =0; i< item.length ; i++){
+                rows.push(item[i].dataItem);
+            }
+            if(confirm("선택한 행들을 삭제 하시겠습니까??")){
+                $.ajax({
+                    url : "/stock/deleteItem",
+                    async : false, // 비동기모드 : true, 동기식모드 : false
+                    type : 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(rows),
+                    success : function(result) {
+                        alert("삭제되었습니다.");
+                        search();
+                    },
+                    error : function(request,status,error) {
+                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+            }
+        }
+    }else if(type == 'category'){
         var item = categoryGrid.rows.filter(r => r.isSelected);
         var rows = [];
         var params;
@@ -237,8 +283,7 @@ function deleteRows(type){
     }   
 }
 //데이터 저장
-function saveRows(type){
-
+function saveGrid(type){
     if(type == "category"){
         var item = categoryGrid.rows.filter(r => r.isSelected);
         var rows = [];
@@ -267,8 +312,91 @@ function saveRows(type){
                 });
             }
         }
+    }else if(type == 'stock'){
+        var item = stockGrid.rows.filter(r => r.isSelected);
     }
 }
+
+// 물품 중복 체크
+function dupCheckItem() {
+    if($("#category1").val() == "all"){
+        alert("대카테고리를 선택하시기 바랍니다.");
+        return false;
+    }else if($("#category2").val() == "all"){
+        alert("중카테고리를 선택하시기 바랍니다.");
+        return false;
+    }else if($("#product").val().trim().length == 0){
+        alert("상품명을 입력하시기 바랍니다.");
+        return false;
+    }else if($("#code").val().length < 5){
+        alert("코드는 3자리 입니다.ex)001");
+        return false;
+    }else if($("#cost").val().length < 1){
+        alert("원가를 입력하시기 바랍니다.");
+        return false;
+    }
+    
+    var params = {
+        l_categy_cd : $("#category1").val(),
+        m_categy_cd : $("#category2").val(),
+        item_cd : $("#category1").val() + $("#category2").val() + $("#code").val(),
+        item_nm : $("#product").val(),
+        cost : $("#cost").val()
+    };
+    $.ajax({
+        url : "/stock/dupCheckItem",
+        async : false, // 비동기모드 : true, 동기식모드 : false
+        type : 'POST',
+        data: params,
+        success : function(result) {
+            if(result != "" ){
+                alert("이미 등록된 물품코드 입니다.");
+                dupCheckItemFlag = false;
+            }else{
+                alert("등록 가능한 물품코드 입니다.");
+                dupCheckItemFlag = true;
+
+            }
+        },
+        error : function(request,status,error) {
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+    });
+}
+
+function addItem(){
+    if(!dupCheckItemFlag){
+        alert("중복확인을 먼저 하시기 바랍니다.");
+        return false;
+    }else{
+        var params = {
+            l_categy_cd : $("#category1").val(),
+            m_categy_cd : $("#category2").val(),
+            item_cd : $("#category1").val() + $("#category2").val().substr(2,2) + $("#code").val(),
+            item_nm : $("#product").val(),
+            cost : $("#cost").val()
+        };
+        $.ajax({
+            url : "/stock/addItem",
+            async : false, // 비동기모드 : true, 동기식모드 : false
+            type : 'POST',
+            data: params,
+            success : function(result) {
+                    alert("등록 되었습니다.");
+                    dupCheckItemFlag = false;
+                    closePop();
+            },
+            error : function(request,status,error) {
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
+}
+//0으로 채우기
+function fillZero(width, str){
+    return str.length >= width ? str:new Array(width-str.length+1).join('0')+str;//남는 길이만큼 0으로 채움
+}
+
 </script>
 
 <body onload="pageLoad()">
@@ -326,8 +454,8 @@ function saveRows(type){
                             <button type="button" class="stroke">칼럼위치저장</button>
                             <button type="button" class="stroke">칼럼초기화</button>
                             <button type="button">QR출력</button>
-                            <button type="button">저장</button>
-                            <button type="button">삭제</button>
+                            <button type="button" onclick="saveGrid('stock')">저장</button>
+                            <button type="button" onclick="deleteRows('stock')">삭제</button>
                         </div>
                         <div class="grid_wrap" style="position:relative;">
                         	<div id="stockGrid"  style="height:500px;"></div>
@@ -338,7 +466,7 @@ function saveRows(type){
                             <button type="button" class="stroke">칼럼초기화</button>
                             <button type="button">QR출력</button>
                             <button type="button">저장</button>
-                            <button type="button">삭제</button>
+                            <button type="button" onclick="deleteRows('stock')">삭제</button>
                         </div>
                     </div>
                 </div>
@@ -371,7 +499,7 @@ function saveRows(type){
                 <div class="popup_btn_area">
                     <div class="right">
                         <button type="button" class="popup_btn" onclick="deleteRows('category');">삭제</button>
-                        <button type="button" class="popup_btn" onclick="saveRows('category');">저장</button>
+                        <button type="button" class="popup_btn" onclick="saveGrid('category');">저장</button>
                     </div>
                 </div>
             </div>
@@ -412,16 +540,16 @@ function saveRows(type){
                     </div>
                     <div class="row">
                         <label for="code">코드<i>*</i></label>
-                        <input type="text" id="code" name="code" required>
+                        <input type="text" id="code" name="code"  maxlength = "5"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
                     </div>
                     <div class="row">
                         <label for="cost">원가<i>*</i></label>
-                        <input type="text" id="cost" name="cost" required>
+                        <input type="text" id="cost" name="cost" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
                     </div>
                 </form>
                 <div class="popup_btn_area">
-                    <button type="button" class="popup_btn stroke">중복확인</button>
-                    <button type="button" class="popup_btn fill">추가</button>
+                    <button type="button" class="popup_btn fill" onclick = "dupCheckItem();">중복확인</button>
+                    <button type="button" class="popup_btn fill" onclick = "addItem();">추가</button>
                 </div>
             </div>
         </div>

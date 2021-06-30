@@ -92,4 +92,29 @@ FROM WEB.CATEGORY_BAS
 SELECT DISTINCT m_categy_cd, m_categy_nm
 FROM WEB.CATEGORY_BAS
 </select>
+
+<select id="dupCheckItem" resultType="String" parameterType="hashMap">
+SELECT
+	item_cd
+FROM
+	WEB.CATEGORY_DTL
+WHERE 1 = 1
+AND l_categy_cd = #{l_categy_cd}
+AND m_categy_cd = #{m_categy_cd}
+AND item_cd = #{item_cd}
+</select>
+
+<insert id="addItem" parameterType="hashMap">
+INSERT INTO WEB.CATEGORY_DTL
+(l_categy_cd,  m_categy_cd,  item_cd, item_nm, cost, cret_dt, cret_id, updt_dt ,updt_id)
+VALUES(#{l_categy_cd},  #{m_categy_cd}, #{item_cd}, #{item_nm}, #{cost}::numeric, now(), #{cret_id}, now(), #{updt_id})	
+</insert>
+
+<delete id="deleteItem" parameterType="com.chungchunClean.vo.StockVo">
+DELETE FROM WEB.CATEGORY_DTL
+WHERE 1=1
+AND l_categy_cd = #{l_categy_cd}
+AND m_categy_cd = #{m_categy_cd}
+AND item_cd = #{item_cd}
+</delete>
 </mapper>

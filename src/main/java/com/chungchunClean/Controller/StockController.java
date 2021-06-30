@@ -91,4 +91,33 @@ public class StockController {
     public List<StockVo> getLCategoryList(){
         return stockService.getLCategoryList(); // 카테고리 저장 후 다시 조회
     }
+
+    /**
+     * 물품 중복 확인
+     */
+    @RequestMapping(value="/dupCheckItem", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public String dupCheckItem(@RequestParam HashMap<String,String> params){
+        return stockService.dupCheckItem(params); // 카테고리 저장 후 다시 조회
+    }
+
+    /**
+     * 물품 등록 
+     */
+    @RequestMapping(value="/addItem", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void addItem(@RequestParam HashMap<String,String> params){
+        stockService.addItem(params); // 카테고리 저장 후 다시 조회
+    }
+
+    /**
+     * 물품 삭제하기
+     * 
+     * @return
+     */
+    @RequestMapping(value="/deleteItem", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void deleteItem(@RequestBody List<StockVo> params){
+        stockService.deleteItem(params);
+    }
 }

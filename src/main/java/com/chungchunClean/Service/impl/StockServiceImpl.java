@@ -32,7 +32,7 @@ public class StockServiceImpl implements StockService {
 	@Override
 	public void deleteCategory(List<StockVo> params) {
 		for(StockVo vo : params)
-		stockMapper.deleteCategory(vo);
+			stockMapper.deleteCategory(vo);
 	}
 
 	@Override
@@ -52,6 +52,23 @@ public class StockServiceImpl implements StockService {
 	@Override
 	public List<StockVo> getMCategoryList() {
 		return stockMapper.getMCategoryList();
+	}
+
+	@Override
+	public String dupCheckItem(HashMap<String, String> params) {
+		return stockMapper.dupCheckItem(params);
+	}
+
+	@Override
+	public void addItem(HashMap<String, String> params) {
+		stockMapper.addItem(params);
+	}
+
+	@Override
+	public void deleteItem(List<StockVo> params) {
+		for(StockVo vo : params)
+			stockMapper.deleteItem(vo);
+		
 	}	
 	
 }
