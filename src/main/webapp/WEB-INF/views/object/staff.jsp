@@ -62,7 +62,7 @@ function loadGridStaffList(type, result){
 			  });
 			  
 		   	localStorage.setItem('staffInitLayout', staffGrid.columnLayout);
-		   	_setUserGridLayout('staffLayout');
+		   	_setUserGridLayout('staffLayout', staffGrid);
 			  
 	  }else{
 		  
@@ -409,8 +409,8 @@ function exportExcel(){
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
                         <div class="btn_wrap">
-                            <button type="button" class="stroke" onClick="_getUserGridLayout('staffLayout');">칼럼위치저장</button>
-                            <button type="button" class="stroke" onClick="_resetUserGridLayout('staffInitLayout', 'staffLayout');">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="_getUserGridLayout('staffLayout', staffGrid);">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('staffInitLayout', 'staffLayout',staffGrid);">칼럼초기화</button>
                         </div>
                         <div class="grid_wrap" style="position:relative;">
                         <!--Grid 영역 -->
@@ -418,8 +418,8 @@ function exportExcel(){
                         	<div id="staffGridPager"></div>
                         </div>
                         <div class="btn_wrap">
-                            <button type="button" class="stroke" onClick="_getUserGridLayout('staffLayout');">칼럼위치저장</button>
-                            <button type="button" class="stroke" onClick="_resetUserGridLayout('staffInitLayout', 'staffLayout');">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="_getUserGridLayout('staffLayout',staffGrid);">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('staffInitLayout', 'staffLayout',staffGrid);">칼럼초기화</button>
                         </div>
                     </div>
                 </div>

@@ -54,7 +54,7 @@ function loadGridDailyList(type, result){
 			  });
 			  
 		   	localStorage.setItem('dailyInitLayout', dailyGrid.columnLayout);
-		   	_setUserGridLayout('dailyLayout');
+		   	_setUserGridLayout('dailyLayout',dailyGrid);
 			  
 	  }else{		  
 		   dailyView = new wijmo.collections.CollectionView(result, {

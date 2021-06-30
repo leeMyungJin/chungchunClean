@@ -60,6 +60,9 @@ function loadGridStockList(type, result){
 			    itemsSource: stockView
 			  });
 
+            localStorage.setItem('stockInitLayout', stockGrid.columnLayout);
+            _setUserGridLayout('stockLayout', stockGrid);
+
                   //행번호 표시하기
             stockGrid.itemFormatter = function (panel, r, c, cell) { 
                 if (panel.cellType == wijmo.grid.CellType.RowHeader) {
@@ -451,8 +454,8 @@ function fillZero(width, str){
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
                         <div class="btn_wrap">
-                            <button type="button" class="stroke">칼럼위치저장</button>
-                            <button type="button" class="stroke">칼럼초기화</button>
+                            <button type="button" class="stroke" onclick="_getUserGridLayout('stockLayout', stockGrid);">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('stockInitLayout', 'stockLayout', stockGrid);">칼럼초기화</button>
                             <button type="button">QR출력</button>
                             <button type="button" onclick="saveGrid('stock')">저장</button>
                             <button type="button" onclick="deleteRows('stock')">삭제</button>
@@ -462,8 +465,8 @@ function fillZero(width, str){
                         	<div id="stockGridPager" style="align:center"></div>
                             </div>
                         <div class="btn_wrap">
-                            <button type="button" class="stroke">칼럼위치저장</button>
-                            <button type="button" class="stroke">칼럼초기화</button>
+                            <button type="button" class="stroke" onclick="_getUserGridLayout('stockLayout', stockGrid);">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('stockInitLayout', 'stockLayout', stockGrid);" >칼럼초기화</button>
                             <button type="button">QR출력</button>
                             <button type="button">저장</button>
                             <button type="button" onclick="deleteRows('stock')">삭제</button>
