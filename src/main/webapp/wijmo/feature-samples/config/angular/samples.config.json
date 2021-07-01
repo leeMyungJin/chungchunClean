@@ -1,5 +1,0 @@
-{
-    "//skipBuild": true,
-    "//exclude": ["src/*.js", "src/*.js.map"],
-    "fastBuild": "typescript"
-}

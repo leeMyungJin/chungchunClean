@@ -1,6 +1,0 @@
-Expenses Report
-===============
-
-This sample shows how to create an expense report and save it to a PDF file using the [FlexGridPdfConverter](https://www.grapecity.com/wijmo/api/classes/wijmo_grid_pdf.flexgridpdfconverter.html) and [PdfDocument](https://www.grapecity.com/wijmo/api/classes/wijmo_pdf.pdfdocument.html) API. The sample creates two FlexGrid instances (data & footer) internally and exports them to a document using the [FlexGridPdfConverter.draw](https://www.grapecity.com/wijmo/api/classes/wijmo_grid_pdf.flexgridpdfconverter.html#draw) method in order to display an expense table. [drawText](https://www.grapecity.com/wijmo/api/classes/wijmo_pdf.pdfdocument.html#drawtext) and other vector graphics methods of [PdfDocument](https://www.grapecity.com/wijmo/api/classes/wijmo_pdf.pdfdocument.html) are used to draw captions and expected handwritten entries.
-
-[Learn about FlexGrid](https://www.grapecity.com/wijmo/flexgrid-javascript-data-grid) | [FlexGrid API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_grid.flexgrid.html)

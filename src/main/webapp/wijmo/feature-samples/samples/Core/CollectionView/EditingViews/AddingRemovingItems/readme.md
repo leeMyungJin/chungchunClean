@@ -1,6 +1,0 @@
-Adding & Removing Items
-========================
-
-The [CollectionView](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html) adding and removing items from the collection with methods like [addNew](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html#addnew) and [remove](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html#remove). This sample sets the [FlexGrid.allowAddNew](https://www.grapecity.com/wijmo/api/classes/wijmo_grid.flexgrid.html#allowaddnew) property to true which adds an empty row at the bottom of the [FlexGrid](https://www.grapecity.com/wijmo/api/classes/wijmo_grid.flexgrid.html). When a new row is added to the grid, the [CollectionView](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html) updates the source collection automatically.
-
-[Learn about FlexGrid](https://www.grapecity.com/wijmo/flexgrid-javascript-data-grid) | [Editing Views Documentation](https://www.grapecity.com/wijmo/docs/Topics/Wijmo/Collections/Editing-Views) | [CollectionView API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo.collectionview.html)

@@ -1,6 +1,0 @@
-Row Details
-===========
-
-Sometimes rows are bound to data objects that contain more information than would fit easily on FlexGrid. In these scenarios, you may want to use the [FlexGridDetailProvider](https://www.grapecity.com/wijmo/api/classes/wijmo_grid_detail.flexgriddetailprovider.html) class that is included with the [wijmo.grid.detail](https://www.grapecity.com/wijmo/api/modules/wijmo_grid_detail.html) module. The [FlexGridDetailProvider](https://www.grapecity.com/wijmo/api/classes/wijmo_grid_detail.flexgriddetailprovider.html) extends the FlexGrid by adding collapse/expand buttons to row headers, and a [createDetailCell](https://www.grapecity.com/wijmo/api/classes/wijmo_grid_detail.flexgriddetailprovider.html#createdetailcell) method you can use to provide additional details about an item.
-
-[Learn about FlexGrid](https://www.grapecity.com/wijmo/flexgrid-javascript-data-grid) | [Nested Grids Documentation](https://www.grapecity.com/wijmo/docs/Topics/Grid/MasterDetail/Nested-Grids-Using-RowDetail) | [FlexGrid API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_grid.flexgrid.html)
