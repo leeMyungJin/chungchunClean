@@ -62,6 +62,18 @@
 				</otherwise>
 			</choose>
 		</if>
+		<if test="subcon != null">
+			<choose>
+				<when test="subcon == 'work'">
+					and (dm.on_work_dt is not null
+						or
+						dm.off_work_dt is not null)
+				</when>
+				<when test="subcon == 'mntr'">
+					and dm.site_mntr_url is not null
+				</when>
+			</choose>
+		</if>
 		<if test="fromDate != null and toDate != null">
 			and dm.cret_dt between #{fromDate}::timestamp and #{toDate}::timestamp 
 		</if>
