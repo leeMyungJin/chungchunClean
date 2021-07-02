@@ -31,13 +31,11 @@
 <script src="../wijmo/Dist/controls/wijmo.input.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.grid.cellmaker.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.chart.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.input.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.gauge.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.grid.xlsx.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.xlsx.min.js"></script>
-<script src="../wijmo/Dist/controls/wijmo.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.grid.selector.min.js"></script>
-<script src="../wijmo/Dist/controls/wijmo.grid.filter.min.js"></script>
-<script src="../wijmo/Dist/controls/wijmo.grid.sheet.min.js"></script>
 <script src="../wijmo/Dist/jszip.min.js"></script>
 
 <!-- Wijmo custom culture (옵션, 원하는 문화권을 추가) -->
@@ -50,3 +48,4 @@
 
 <link rel="stylesheet" href="../css/reset.css">
 <link rel="stylesheet" href="../css/common.css">
+<link rel="stylesheet" href="../css/gridCall.css">
