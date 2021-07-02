@@ -13,6 +13,7 @@ var staffView;
 var staffGridPager;
 var staffGrid;
 var dupCheckIdFlag = false;
+var staffColumns;
 
 //onload
 function pageLoad(){
@@ -41,35 +42,38 @@ function loadGridStaffList(type, result){
 		        headerFormat: '{currentPage:n0} / {pageCount:n0}',
 		        cv: staffView
 		    });
+		   
+		   staffColumns = [
+		      { binding: 'staffName', header: '이름', isReadOnly: true, width: 100, align:"center" },
+		      { binding: 'staffId', header: 'ID', isReadOnly: true, width: 100, align:"center"  },
+		      { binding: 'adminYn', header: '관리자', isReadOnly: true, width: 60, align:"center" },
+		      { binding: 'activeYn', header: '활성화', isReadOnly: true, width: 60, align:"center"  },
+		      { binding: 'staffPnum', header: '전화번호', isReadOnly: true, width: 120, align:"center"  },
+		      { binding: 'staffEmail', header: '이메일', isReadOnly: true, width: 200, align:"center"  },
+		      { binding: 'memo', header: '메모', isReadOnly: true, width: '*', align:"center" },
+		      { binding: 'lateassDt', header: '최근접속일', isReadOnly: true, width: 100 , align:"center" },
+		      { binding: 'cretDt', header: '계정생성일', isReadOnly: true, width: 100 , align:"center" },
+		      { binding: 'edit', header: '정보수정', width: 100, align:"center",
+		    	  cellTemplate: wijmo.grid.cellmaker.CellMaker.makeButton({
+		              text: '<b>수정</b>',
+		              click: (e, ctx) => {
+		            	  showPop('modify_staff');
+		              }
+		              
+		    	  })
+		      }
+		    ];
 		  
 		   staffGrid = new wijmo.grid.FlexGrid('#staffGrid', {
 			    autoGenerateColumns: false,
 			    alternatingRowStep: 0,
-			    columns: [
-			      { binding: 'staffName', header: '이름', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'staffId', header: 'ID', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'adminYn', header: '관리자', isReadOnly: true, width: 60, align:"center" },
-			      { binding: 'activeYn', header: '활성화', isReadOnly: true, width: 60, align:"center"  },
-			      { binding: 'staffPnum', header: '전화번호', isReadOnly: true, width: 120, align:"center"  },
-			      { binding: 'staffEmail', header: '이메일', isReadOnly: true, width: 200, align:"center"  },
-			      { binding: 'memo', header: '메모', isReadOnly: true, width: '*', align:"center" },
-			      { binding: 'lateassDt', header: '최근접속일', isReadOnly: true, width: 100 , align:"center" },
-			      { binding: 'cretDt', header: '계정생성일', isReadOnly: true, width: 100 , align:"center" },
-			      { binding: 'edit', header: '정보수정', width: 100, align:"center",
-			    	  cellTemplate: wijmo.grid.cellmaker.CellMaker.makeButton({
-			              text: '<b>수정</b>',
-			              click: (e, ctx) => {
-			            	  showPop('modify_staff');
-			              }
-			              
-			    	  })
-			      }
-			    ],
+			    columns: staffColumns,
 			    itemsSource: staffView
 			  });
 			  
-		   	localStorage.setItem('staffInitLayout', staffGrid.columnLayout);
-		   	_setUserGridLayout('staffLayout', staffGrid);
+		   //localStorage.setItem('staffInitLayout', staffGrid.columnLayout);
+		   	//window.localStorage['staffInitLayout'] = staffGrid.columnLayout;
+		   	_setUserGridLayout('staffLayout', staffGrid, staffColumns);
 			  
 	  }else{
 		  
@@ -417,7 +421,7 @@ function exportExcel(){
                     <div class="admin_dashboard">
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('staffLayout', staffGrid);">칼럼위치저장</button>
-                            <button type="button" class="stroke" onClick="_resetUserGridLayout('staffInitLayout', 'staffLayout', staffGrid);">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('staffLayout', staffGrid, staffColumns);">칼럼초기화</button>
                         </div>
                         <div class="grid_wrap" style="position:relative;">
                         <!--Grid 영역 -->
@@ -426,7 +430,7 @@ function exportExcel(){
                         </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('staffLayout', staffGrid);">칼럼위치저장</button>
-                            <button type="button" class="stroke" onClick="_resetUserGridLayout('staffInitLayout', 'staffLayout', staffGrid);">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('staffLayout', staffGrid, staffColumns);">칼럼초기화</button>
                         </div>
                     </div>
                 </div>

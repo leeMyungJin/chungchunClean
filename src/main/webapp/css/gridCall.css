@@ -1,0 +1,9 @@
+/* grid call class */
+.url_call {
+  text-decoration: underline;
+  color: #00458d;
+}
+
+.url_call:visited {
+  color: #656565;
+}

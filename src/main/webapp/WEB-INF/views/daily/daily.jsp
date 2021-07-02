@@ -12,6 +12,7 @@
 var dailyView;
 var dailyGridPager;
 var dailyGrid;
+var dailyColumns;
 
 function pageLoad(){
 	$('#daily').addClass("current");
@@ -44,11 +45,8 @@ function loadGridDailyList(type, result){
 		        headerFormat: '{currentPage:n0} / {pageCount:n0}',
 		        cv: dailyView
 		    });
-		  
-		   dailyGrid = new wijmo.grid.FlexGrid('#dailyGrid', {
-			    autoGenerateColumns: false,
-			    alternatingRowStep: 0,
-			    columns: [
+		   
+		   dailyColumns = [
 			      { binding: 'onWorkDt', header: '출근시각', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'offWorkDt', header: '퇴근시각', isReadOnly: true, width: 100, align:"center"  },
 			      { binding: 'officerNm', header: '담당자', isReadOnly: true, width: 60, align:"center" },
@@ -57,12 +55,16 @@ function loadGridDailyList(type, result){
 			      { binding: 'cretDt', header: '업로드일자', isReadOnly: true, width: 100, align:"center"  },
 			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" },
 			      { binding: 'siteMntrUrl', header: '현장점검 URL', isReadOnly: true, width: 200, align:"center" }
-			    ],
+			];
+		  
+		   dailyGrid = new wijmo.grid.FlexGrid('#dailyGrid', {
+			    autoGenerateColumns: false,
+			    alternatingRowStep: 0,
+			    columns: dailyColumns,
 			    itemsSource: dailyView
 			  });
 			  
-		   	localStorage.setItem('dailyInitLayout', dailyGrid.columnLayout);
-		   	_setUserGridLayout('dailyLayout', dailyGrid);
+		   	_setUserGridLayout('dailyLayout', dailyGrid, dailyColumns);
 			  
 	  }else{		  
 		   dailyView = new wijmo.collections.CollectionView(result, {
@@ -183,10 +185,10 @@ function copyUrl(){
                             <option value="work">근태</option>
                             <option value="mntr">점검</option>
                         </select>
-                        <button type="button" class="stroke left" onClick="getDailyList();">보기</button>
+                        <button type="button" class="att left" onClick="getDailyList();">보기</button>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('dailyLayout', dailyGrid);">칼럼위치저장</button>
-                            <button type="button" class="stroke" onClick="_resetUserGridLayout('dailyInitLayout', 'dailyLayout', dailyGrid);">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('dailyLayout', dailyGrid, dailyColumns);">칼럼초기화</button>
                             <button type="button" onClick="copyUrl();">URL복사</button>
                         </div>
                         <div class="grid_wrap" style="position:relative;">
@@ -196,7 +198,7 @@ function copyUrl(){
                         </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('dailyLayout', dailyGrid);">칼럼위치저장</button>
-                            <button type="button" class="stroke" onClick="_resetUserGridLayout('dailyInitLayout', 'dailyLayout', dailyGrid);">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('dailyLayout', dailyGrid, dailyColumns);">칼럼초기화</button>
                             <button type="button">URL복사</button>
                         </div>
                     </div>

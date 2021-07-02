@@ -15,19 +15,35 @@ function _getUserGridLayout(layoutId, grid){
 }
 
 //그리드 레이아웃 복원
-function _setUserGridLayout(layoutId, grid){
+function _setUserGridLayout(layoutId, grid, initColumns){
+/*  // 주석 소스처럼 진행하여도 컬럼위치는 복원되나, cellTemplate 설정이 저장되지않음. 
 	var layout = localStorage.getItem(layoutId);
     if (layout) {
     	grid.columnLayout = layout;
     }
+*/    
+	
+    if (window.localStorage[layoutId]) {
+        let columnsArr = JSON.parse(window.localStorage[layoutId]).columns;
+        
+        grid.columns.clear();
+        columnsArr.forEach((col) => {
+        	initColumns.forEach((col2) => {
+        		if(col.binding == col2.binding){
+        			grid.columns.push(new wijmo.grid.Column(col2));
+        		}
+            });
+        });
+    }
 }
 
 //그리드 초기 레이아웃 복원
-function _resetUserGridLayout(initLayoutId, layoutId, grid){
-	var layout = localStorage.getItem(initLayoutId);
-    if (layout) {
-    	grid.columnLayout = layout;
-    }
+function _resetUserGridLayout(layoutId, grid, initColumns){
+    
+	grid.columns.clear();
+    initColumns.forEach((col) => {
+    	grid.columns.push(new wijmo.grid.Column(col));
+    });
     
     localStorage.setItem(layoutId, grid.columnLayout);
     alert("컬컴위치를 초기화하였습니다.");
