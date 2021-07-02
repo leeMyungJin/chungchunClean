@@ -728,7 +728,12 @@
 }
 /*# sourceMappingURL=common.css.map */
 
-/* 추가 */
+
+
+
+
+
+/* 이명진 추가 */
 .popup.is-visible {
   opacity: 1;
   visibility: visible;
@@ -741,3 +746,19 @@
 	padding:0px;
 	margin-top:2px;
 }
+
+.pager {
+  height:30px;
+  text-align: center;
+  margin-top:5px;
+}
+
+.pager span{
+  padding:7px;
+}
+
+.pager .selectPage {
+  font-weight:bold;
+  background-color: #ffc962;
+  border-radius: 5px;
+} 
