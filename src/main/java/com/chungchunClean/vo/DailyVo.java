@@ -6,11 +6,10 @@ public class DailyVo {
 	private String areaNm; 		//지역명
 	private String bldgCd; 		//건물코드 
 	private String bldgNm; 		//건물명
-	private String dtlAddr; 	//상세주소 
 	private String clientNm; 	//사업주명(고객명)
 	private String onWorkDt;	//출근일시  
 	private String offWorkDt;	//퇴근일시  
-	private String officerNm; 	//담당자명 
+	private String managerNm; 	//담당자명 
 	private String visitDt;		//방문일시
 	private Integer garbgCnt;	//종량제  
 	private Integer foodChipCnt;//음식물칩 
@@ -20,6 +19,7 @@ public class DailyVo {
 	private String cretId;		//등록자 
 	private String updtDt;		//수정일자 
 	private String updtId;		//수정자 
+	
 	public String getDailyMntrCd() {
 		return dailyMntrCd;
 	}
@@ -68,11 +68,11 @@ public class DailyVo {
 	public void setOffWorkDt(String offWorkDt) {
 		this.offWorkDt = offWorkDt;
 	}
-	public String getOfficerNm() {
-		return officerNm;
+	public String getManagerNm() {
+		return managerNm;
 	}
-	public void setOfficerNm(String officerNm) {
-		this.officerNm = officerNm;
+	public void setManagerNm(String managerNm) {
+		this.managerNm = managerNm;
 	}
 	public String getVisitDt() {
 		return visitDt;
@@ -91,18 +91,6 @@ public class DailyVo {
 	}
 	public void setFoodChipCnt(Integer foodChipCnt) {
 		this.foodChipCnt = foodChipCnt;
-	}
-	public String getSiteMntrUrl() {
-		return siteMntrUrl;
-	}
-	public void setSiteMntrUrl(String siteMntrUrl) {
-		this.siteMntrUrl = siteMntrUrl;
-	}
-	public String getMemo() {
-		return memo;
-	}
-	public void setMemo(String memo) {
-		this.memo = memo;
 	}
 	public String getCretDt() {
 		return cretDt;
@@ -128,23 +116,33 @@ public class DailyVo {
 	public void setUpdtId(String updtId) {
 		this.updtId = updtId;
 	}
-	public String getDtlAddr() {
-		return dtlAddr;
+	public String getMemo() {
+		return memo;
 	}
-	public void setDtlAddr(String dtlAddr) {
-		this.dtlAddr = dtlAddr;
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+	
+	public String getSiteMntrUrl() {
+		return siteMntrUrl;
+	}
+	public void setSiteMntrUrl(String siteMntrUrl) {
+		this.siteMntrUrl = siteMntrUrl;
 	}
 	@Override
 	public String toString() {
 		return "DailyVo [dailyMntrCd=" + dailyMntrCd + ", areaCd=" + areaCd + ", areaNm=" + areaNm + ", bldgCd="
-				+ bldgCd + ", bldgNm=" + bldgNm + ", dtlAddr=" + dtlAddr + ", clientNm=" + clientNm + ", onWorkDt="
-				+ onWorkDt + ", offWorkDt=" + offWorkDt + ", officerNm=" + officerNm + ", visitDt=" + visitDt
-				+ ", garbgCnt=" + garbgCnt + ", foodChipCnt=" + foodChipCnt + ", siteMntrUrl=" + siteMntrUrl + ", memo="
-				+ memo + ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt=" + updtDt + ", updtId=" + updtId
-				+ "]";
+				+ bldgCd + ", bldgNm=" + bldgNm + ", clientNm=" + clientNm + ", onWorkDt=" + onWorkDt + ", offWorkDt="
+				+ offWorkDt + ", managerNm=" + managerNm + ", visitDt=" + visitDt + ", garbgCnt=" + garbgCnt
+				+ ", foodChipCnt=" + foodChipCnt + ", siteMntrUrl=" + siteMntrUrl + ", memo=" + memo + ", cretDt="
+				+ cretDt + ", cretId=" + cretId + ", updtDt=" + updtDt + ", updtId=" + updtId + "]";
 	}
 	
+	
+	
+	
 
+	
 	
 	
 }
