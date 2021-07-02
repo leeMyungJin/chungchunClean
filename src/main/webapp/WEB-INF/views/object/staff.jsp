@@ -71,8 +71,6 @@ function loadGridStaffList(type, result){
 			    itemsSource: staffView
 			  });
 			  
-		   //localStorage.setItem('staffInitLayout', staffGrid.columnLayout);
-		   	//window.localStorage['staffInitLayout'] = staffGrid.columnLayout;
 		   	_setUserGridLayout('staffLayout', staffGrid, staffColumns);
 			  
 	  }else{
