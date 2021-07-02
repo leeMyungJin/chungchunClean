@@ -1,6 +1,0 @@
-HTML Report Viewer
-==================
-
-The [ReportViewer](https://www.grapecity.com/wijmo/api/classes/wijmo_viewer.reportviewer.html) allows your users to display generated reports in web or hybrid mobile apps. The [ReportViewer](https://www.grapecity.com/wijmo/api/classes/wijmo_viewer.reportviewer.html) control can display FlexReports, SSRS reports or ActiveReports.  The example below allows you to change some properties like [fullScreen](https://www.grapecity.com/wijmo/api/classes/wijmo_viewer.reportviewer.html#fullscreen), [mouseMode](https://www.grapecity.com/wijmo/api/classes/wijmo_viewer.reportviewer.html#mousemode), [viewMode](https://www.grapecity.com/wijmo/api/classes/wijmo_viewer.reportviewer.html#viewmode) and [zoomFactor](https://www.grapecity.com/wijmo/api/classes/wijmo_viewer.reportviewer.html#zoomfactor).
-
-[Learn about Wijmo](https://www.grapecity.com/wijmo) | [ReportViewer Documentation](https://www.grapecity.com/wijmo/docs/Topics/Viewer/Report-Viewer) | [ReportViewer API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_viewer.reportviewer.html)

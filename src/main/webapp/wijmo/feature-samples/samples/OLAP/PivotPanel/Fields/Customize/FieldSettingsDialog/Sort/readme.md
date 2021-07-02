@@ -1,6 +1,0 @@
-PivotEngine Sort Control
-========================
-
-The [PivotEngine](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotengine.html) automatically sorts Dimension fields when it generates data summaries. It does not sort Measure fields by default. You can change the sort direction on row and column fields by setting the field's **sort** property in code. Measure fields are not sorted by default. You can set their sort direction by changing the [sortDescriptions](https://www.grapecity.com/wijmo/api/interfaces/wijmo.icollectionview.html#sortdescriptions) property of the engine's [pivotView](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotengine.html#pivotview) collection. This example shows how you can apply sorts to dimension and measure fields.
-
-[Learn about OLAP](https://www.grapecity.com/wijmo-olap) | [PivotPanel Documentation](https://www.grapecity.com/wijmo/docs/Topics/OLAP/Pivot-Panel) | [PivotPanel API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotpanel.html)

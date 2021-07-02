@@ -1,6 +1,0 @@
-Edit Fields from the PivotPanel
-===============================
-
-The [PivotPanel](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotpanel.html) control provides a drag-drop UI for editing a [PivotEngine's](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotengine.html) fields and field lists. You can edit fields from the [PivotPanel's](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotpanel.html) context menu. To do so, right-click a field on the panel and select the "Field Settings..." option. This will bring up a dialog where you can edit the field's properties, including the filter (you can also do this from the [PivotGrid](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotgrid.html) on the right).
-
-[Learn about OLAP](https://www.grapecity.com/wijmo-olap) | [PivotPanel Documentation](https://www.grapecity.com/wijmo/docs/Topics/OLAP/Pivot-Panel) | [PivotPanel API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotpanel.html)

@@ -1,8 +1,0 @@
-<div class="container-fluid">
-                <wj-flex-map header="Airport Map" tooltipContent="&#9992; <b>{iata_code}</b><br>{name}">
-                    <wj-geo-map-layer url="data/land.json" [style]="{fill:'rgba(200,200,200,1)'}"></wj-geo-map-layer>
-                    <wj-scatter-map-layer #layer1 url="data/airports.json" [style]="{fill:'rgba(10,10,10,1)'}"
-                                          binding="coordinates" (itemsSourceChanged)="zoomTo(layer1)"></wj-scatter-map-layer>
-                    <wj-geo-grid-layer></wj-geo-grid-layer>
-                </wj-flex-map>
-</div>

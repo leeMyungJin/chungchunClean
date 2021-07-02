@@ -9,5 +9,7 @@ import com.chungchunClean.vo.DailyVo;
 public interface DailyService {
 	
 	public List<DailyVo> getDailyList(HashMap<String,Object> params);
+	
+	public DailyVo getDailyInfo(HashMap<String,String> params);
     
 }

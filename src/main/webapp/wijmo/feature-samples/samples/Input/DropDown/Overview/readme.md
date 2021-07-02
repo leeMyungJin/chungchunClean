@@ -1,6 +1,0 @@
-DropDown Control
-========
-
-The [DropDown](https://www.grapecity.com/wijmo/api/classes/wijmo_input.dropdown.html) control is an abstract class, used as a base for several controls, including [ComboBox](https://www.grapecity.com/wijmo/api/classes/wijmo_input.combobox.html), [AutoComplete](https://www.grapecity.com/wijmo/api/classes/wijmo_input.autocomplete.html), and [MultiSelect](https://www.grapecity.com/wijmo/api/classes/wijmo_input.multiselect.html). The drop-down element is shown when the dropdown button is clicked or user input changes in the control. This sample demonstrates the behavior with the [ComboBox](https://www.grapecity.com/wijmo/api/classes/wijmo_input.combobox.html) and [InputDate](https://www.grapecity.com/wijmo/api/classes/wijmo_input.inputdate.html) controls. There are also options to set some common properties on the [DropDown](https://www.grapecity.com/wijmo/api/classes/wijmo_input.dropdown.html) as well.
-
-[Learn about Input Controls](https://www.grapecity.com/wijmo/input-controls-javascript) | [Dropdown API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_input.dropdown.html)

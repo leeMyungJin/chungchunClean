@@ -1,6 +1,0 @@
-Arrays and CollectionViews
-==========================
-
-When you set the grid's [itemsSource](https://www.grapecity.com/wijmo/api/classes/wijmo_grid.flexgrid.html#itemssource) property to a regular JavaScript array, it automatically creates an internal [CollectionView](https://www.grapecity.com/wijmo/api/interfaces/wijmo.icollectionview.html) and uses that as a data source so it can provide sorting and editing features without forcing you to create a [CollectionView](https://www.grapecity.com/wijmo/api/interfaces/wijmo.icollectionview.html) yourself. This internal view is exposed by the grid's [CollectionView](https://www.grapecity.com/wijmo/api/interfaces/wijmo.icollectionview.html) property, and you can use it to in case you need the extra functionality yourself. For example, the grid below is bound to a regular array, and the grid's [collectionView](https://www.grapecity.com/wijmo/api/interfaces/wijmo.icollectionview.html) property is used to show the currently selected item.
-
-[Learn about FlexGrid](https://www.grapecity.com/wijmo/flexgrid-javascript-data-grid) | [Arrays and CollectionViews Documentation](https://www.grapecity.com/wijmo/docs/Topics/Grid/DataBinding/Client-Side-Data-Binding) | [FlexGrid API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_grid.flexgrid.html)

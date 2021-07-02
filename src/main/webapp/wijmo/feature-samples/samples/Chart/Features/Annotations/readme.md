@@ -1,8 +1,0 @@
-Annotations
-========================
-
-The sample shows basic usage of the [AnnotationLayer](https://www.grapecity.com/wijmo/api/classes/wijmo_chart_annotation.annotationlayer.html) class and various built-in types of Annotations, including: [Circle](https://www.grapecity.com/wijmo/api/classes/wijmo_chart_annotation.circle.html), [Ellipse](https://www.grapecity.com/wijmo/api/classes/wijmo_chart_annotation.ellipse.html), [Image](https://www.grapecity.com/wijmo/api/classes/wijmo_chart_annotation.image.html), [Line](https://www.grapecity.com/wijmo/api/classes/wijmo_chart_annotation.line.html), [Polygon](https://www.grapecity.com/wijmo/api/classes/wijmo_chart_annotation.polygon.html), [Rectangle](https://www.grapecity.com/wijmo/api/classes/wijmo_chart_annotation.rectangle.html), [Square](https://www.grapecity.com/wijmo/api/classes/wijmo_chart_annotation.square.html) and [Text](https://www.grapecity.com/wijmo/api/classes/wijmo_chart_annotation.text.html).
-
-You can use [attachment](https://www.grapecity.com/wijmo/api/classes/wijmo_chart_annotation.circle.html#attachment) property to set different attach types of annotation.
-
-[Learn about FlexChart](https://www.grapecity.com/wijmo-flexchart) | [Annotation Documentation](https://www.grapecity.com/wijmo/docs/Topics/Chart/Advanced/Annotations) | [FlexChart API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_chart.flexchart.html)

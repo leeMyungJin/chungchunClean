@@ -26,4 +26,12 @@ public class DailyServiceImpl implements DailyService {
 		return dailyList;
 	}
 	
+	@Override
+	public DailyVo getDailyInfo(HashMap<String,String> params) {
+		
+		DailyVo dailyInfo = dailyMapper.getDailyInfo(params);
+		
+		return dailyInfo;
+	}
+	
 }

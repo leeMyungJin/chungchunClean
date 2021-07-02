@@ -1,6 +1,0 @@
-Sorting in the PivotGrid
-========================
-
-The [PivotEngine](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotengine.html) automatically sorts Dimension fields when it generates data summaries. It does not sort Measure fields by default. Users may switch the sort direction by clicking the headers on any [PivotGrid](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotgrid.html) control attached to the engine, when the grid's [allowSorting](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotgrid.html#allowsorting) property is set to true. The [PivotGrid](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotgrid.html) control does not show dimension field sort setting by default, but you can set the [showRowFieldSort](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotgrid.html#showrowfieldsort) property to true if you want that feature.
-
-[Learn about OLAP](https://www.grapecity.com/wijmo-olap) | [PivotGrid Sorting Documentation](https://www.grapecity.com/wijmo/docs/Topics/OLAP/Sort-Fields) | [PivotGrid API Reference](https://www.grapecity.com/wijmo/api/classes/wijmo_olap.pivotgrid.html)

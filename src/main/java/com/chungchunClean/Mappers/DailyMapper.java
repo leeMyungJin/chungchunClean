@@ -13,4 +13,6 @@ public interface DailyMapper  {
 	
 	public List<DailyVo> getDailyList(HashMap<String,Object> params);
 	
+	public DailyVo getDailyInfo(HashMap<String,String> params);
+	
 }
