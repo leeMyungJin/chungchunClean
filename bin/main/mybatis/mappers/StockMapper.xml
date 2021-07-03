@@ -5,19 +5,19 @@
 
 <select id="getStockList" parameterType="hashMap" resultType="hashMap">
 	select
-		A.l_categy_cd ,
-		A.l_categy_nm ,
-		A.m_categy_cd ,
-		A.m_categy_nm ,
-		B.item_cd ,
-		B.item_nm,
-		B.qr_url,
-		B.cost
+		ctg_bas.l_categy_cd ,
+		ctg_bas.l_categy_nm ,
+		ctg_bas.m_categy_cd ,
+		ctg_bas.m_categy_nm ,
+		ctg_dtl.item_cd ,
+		ctg_dtl.item_nm,
+		ctg_dtl.qr_url,
+		ctg_dtl.cost
 	from
-		web.category_bas A
-	left outer join WEB.category_dtl B on
-		a.l_categy_cd = b.l_categy_cd
-		and a.m_categy_cd = b.m_categy_cd
+		web.category_bas ctg_bas
+	left outer join WEB.category_dtl ctg_dtl on
+		ctg_bas.l_categy_cd = ctg_dtl.l_categy_cd
+		and ctg_bas.m_categy_cd = ctg_dtl.m_categy_cd
 	where
 		1 = 1
 	<if test="inq != null">
@@ -26,28 +26,95 @@
 			<when test="con == 'all'">
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					A.l_categy_nm LIKE '%' || #{item} || '%'
+					ctg_bas.l_categy_nm LIKE '%' || #{item} || '%'
 					or
-					A.m_categy_nm LIKE '%' || #{item} || '%'
+					ctg_bas.m_categy_nm LIKE '%' || #{item} || '%'
 					or
-					B.item_nm LIKE '%' || #{item} || '%'
+					ctg_dtl.item_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'category'">
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					A.l_categy_nm LIKE '%' || #{item} || '%'
+					ctg_bas.l_categy_nm LIKE '%' || #{item} || '%'
 					or
-					A.m_categy_nm LIKE '%' || #{item} || '%'
+					ctg_bas.m_categy_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'product'">
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					B.item_nm LIKE '%' || #{item} || '%'
+					ctg_dtl.item_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 		</choose>
 	</if>
+	AND ctg_dtl.item_cd is not null
+	ORDER BY l_categy_cd, m_categy_cd, item_cd
 </select>
+
+<select id="getCategoryList" resultType="hashMap">
+	SELECT 
+		ctg_bas.l_categy_cd ,
+		ctg_bas.l_categy_nm ,
+		ctg_bas.m_categy_cd ,
+		ctg_bas.m_categy_nm,
+		to_char(coalesce(updt_dt, cret_dt),'yyyy-mm-dd HH24:MI:SS') as reg_date
+	FROM web.category_bas ctg_bas
+	ORDER BY l_categy_cd, m_categy_cd
+</select>
+
+<delete id="deleteCategory" parameterType="com.chungchunClean.vo.StockVo">
+DELETE 
+  FROM WEB.CATEGORY_BAS 
+  WHERE 1=1
+  AND l_categy_cd = #{l_categy_cd} 
+  AND m_categy_cd = #{m_categy_cd}
+</delete>
+<insert id="saveCategory" parameterType="com.chungchunClean.vo.StockVo">
+INSERT INTO WEB.CATEGORY_BAS 
+  (l_categy_cd, l_categy_nm, m_categy_cd, m_categy_nm , cret_dt, cret_id, updt_dt, updt_id)
+  VALUES (#{l_categy_cd} , #{l_categy_nm}, #{m_categy_cd}, #{m_categy_nm}, now(), #{cret_id}, now(), #{updt_id})
+ON CONFLICT( l_categy_cd, m_categy_cd) DO
+UPDATE
+	SET l_categy_cd = #{l_categy_cd},
+		l_categy_nm = #{l_categy_nm},
+		m_categy_cd = #{m_categy_cd},
+		m_categy_nm = #{m_categy_nm},
+		updt_dt		= now(),
+		updt_id		= #{updt_id}
+</insert>
+<select id="getLCategoryList" resultType="hashMap">
+SELECT DISTINCT l_categy_cd, l_categy_nm
+FROM WEB.CATEGORY_BAS
+</select>
+<select id="getMCategoryList" resultType="hashMap">
+SELECT DISTINCT m_categy_cd, m_categy_nm
+FROM WEB.CATEGORY_BAS
+</select>
+
+<select id="dupCheckItem" resultType="String" parameterType="hashMap">
+SELECT
+	item_cd
+FROM
+	WEB.CATEGORY_DTL
+WHERE 1 = 1
+AND l_categy_cd = #{l_categy_cd}
+AND m_categy_cd = #{m_categy_cd}
+AND item_cd = #{item_cd}
+</select>
+
+<insert id="addItem" parameterType="hashMap">
+INSERT INTO WEB.CATEGORY_DTL
+(l_categy_cd,  m_categy_cd,  item_cd, item_nm, cost, cret_dt, cret_id, updt_dt ,updt_id)
+VALUES(#{l_categy_cd},  #{m_categy_cd}, #{item_cd}, #{item_nm}, #{cost}::numeric, now(), #{cret_id}, now(), #{updt_id})	
+</insert>
+
+<delete id="deleteItem" parameterType="com.chungchunClean.vo.StockVo">
+DELETE FROM WEB.CATEGORY_DTL
+WHERE 1=1
+AND l_categy_cd = #{l_categy_cd}
+AND m_categy_cd = #{m_categy_cd}
+AND item_cd = #{item_cd}
+</delete>
 </mapper>

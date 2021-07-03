@@ -15,6 +15,7 @@
 }
 
 .logo.logo_s {
+  width: 80px;
   height: 72px;
 }
 
@@ -40,6 +41,7 @@
   height: 100vh;
   min-width: 1300px;
   overflow: hidden auto;
+  background-color: #f5f5f5;
 }
 
 .admin_sidebar {
@@ -50,7 +52,7 @@
   height: 100%;
   min-height: 720px;
   color: #fff;
-  background-color: #989a9c;
+  background-color: #35374D;
 }
 
 .admin_sidebar .terms_area {
@@ -99,7 +101,7 @@
 
 .admin_nav .dept1.current {
   padding-right: 40px;
-  color: #989a9c;
+  color: #35374D;
   font-weight: bold;
   background-color: #fff;
 }
@@ -141,7 +143,7 @@
 }
 
 .admin_nav .dept2 a.current {
-  color: #f5e25e;
+  color: #ffc962;
 }
 
 .admin_out {
@@ -151,7 +153,8 @@
   width: 100%;
   padding: 18px 0;
   text-align: center;
-  background-color: #f5e25e;
+  font-weight: 900;
+  background-color: #ffc962;
 }
 
 .admin_container {
@@ -159,17 +162,18 @@
   padding: 25px;
   height: 100vh;
   max-height: 100vh;
-  font-weight: 700;
 }
 
 .admin_container h2 {
   margin-bottom: 30px;
   font-size: 1.333em;
+  font-weight: 900;
 }
 
 .admin_container h3 {
   margin-bottom: 20px;
   font-size: 1.1555em;
+  font-weight: 700;
 }
 
 .admin_container select, .admin_container input {
@@ -183,6 +187,7 @@
 .admin_container .tabpanel {
   border: 2px solid #efefef;
   padding: 15px;
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 .admin_tab {
@@ -198,10 +203,11 @@
   height: 50px;
   line-height: 50px;
   text-align: center;
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
 .admin_tab a.on {
-  background-color: #f5e25e;
+  background-color: #ffc962;
   border-color: transparent;
 }
 
@@ -231,16 +237,16 @@
 .admin_summary dt {
   margin-bottom: 24px;
   font-size: 1.114em;
-  color: #989a9c;
+  font-weight: 900;
 }
 
 .admin_summary a {
   display: inline-block;
   margin: 0 auto;
-  border: 2px solid #989a9c;
+  border: 2px solid #35374D;
   border-radius: 30px;
   padding: 12px 30px 12px 50px;
-  color: #989a9c;
+  color: #35374D;
   vertical-align: middle;
   transition: all 0.3s;
 }
@@ -256,12 +262,12 @@
   line-height: 20px;
   color: #fff;
   vertical-align: middle;
-  background-color: #989a9c;
+  background-color: #35374D;
   content: "+";
 }
 
 .admin_summary a:hover {
-  background-color: #989a9c;
+  background-color: #35374D;
   color: #fff;
 }
 
@@ -285,7 +291,7 @@
   border-radius: 8px;
   padding: 8px 20px;
   color: #fff;
-  background-color: #989a9c;
+  background-color: #35374D;
 }
 
 .admin_btn {
@@ -316,6 +322,7 @@
   border: 2px solid #ececec;
   border-radius: 10px;
   padding: 30px 20px;
+  background-color: #fff;
 }
 
 .admin_box section:nth-of-type(2n) {
@@ -330,6 +337,7 @@
   border: 2px solid #efefef;
   border-radius: 10px;
   padding: 10px 10px 5px;
+  background-color: #fff;
 }
 
 .admin_filter {
@@ -389,17 +397,21 @@
 }
 
 .admin_filter dt {
-  color: #989a9c;
+  color: #35374D;
+  font-weight: 700;
 }
 
 .admin_dashboard {
-  margin: 8px 0;
   overflow: hidden;
+  margin: 10px 0;
 }
 
 .admin_dashboard .btn_wrap {
   float: right;
-  margin: 10px 0;
+}
+
+.admin_dashboard select, .admin_dashboard input {
+  padding: 10px 30px 10px 12px;
 }
 
 .admin_dashboard button {
@@ -407,18 +419,25 @@
   border-radius: 3px;
   padding: 9px 12px;
   min-width: 80px;
-  background-color: #f5e25e;
+  background-color: #ffc962;
 }
 
 .admin_dashboard button.stroke {
-  border: 3px solid #f5e25e;
+  border: 3px solid #ffc962;
   padding: 6px 12px;
   background-color: #fff;
 }
 
 .admin_dashboard button.left {
-  margin: 10px 0;
   border-color: #efefef;
+}
+
+.admin_dashboard button.att {
+  margin-left: 3px;
+  border-radius: 8px;
+  min-width: 70px;
+  color: #fff;
+  background-color: #35374D;
 }
 
 .admin_dashboard .mark {
@@ -439,7 +458,7 @@
   border-radius: 50%;
   width: 20px;
   height: 20px;
-  background-color: #76d376;
+  background-color: #4674f3;
 }
 
 .admin_dashboard .mark_short:before, .admin_dashboard .mark_short:after {
@@ -462,7 +481,10 @@
 }
 
 .admin_dashboard .grid_wrap {
-  clear: both;
+  float: left;
+  width: 100%;
+  height: auto;
+  margin: 10px 0;
   background-color: #efefef;
 }
 
@@ -472,7 +494,7 @@
   align-items: center;
   height: 100vh;
   color: #666;
-  background-color: #989a9c;
+  background: url(../image/bg_y.png) center/cover no-repeat;
 }
 
 .login_wrap p {
@@ -519,13 +541,13 @@
   height: 50px;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  background-color: #f5e25e;
+  background-color: #ffc962;
   transition: all 0.5s;
+  color: #fff;
 }
 
 .login_btn:hover {
-  box-shadow: 390px 0 0 0 #f1d824 inset;
-  color: #fff;
+  box-shadow: 390px 0 0 0 #ffb425 inset;
 }
 
 .popup {
@@ -561,7 +583,7 @@
   font-size: 1.5em;
   font-weight: bold;
   line-height: 60px;
-  background-color: #989a9c;
+  background-color: #35374D;
 }
 
 .popup_head .popup_close {
@@ -597,7 +619,7 @@
 .popup_inner dfn {
   display: block;
   padding: 8px 0;
-  color: #989a9c;
+  color: #35374D;
   text-align: right;
 }
 
@@ -619,7 +641,7 @@
 
 .popup_inner label i {
   font-size: 20px;
-  color: #989a9c;
+  color: #35374D;
 }
 
 .popup_inner select, .popup_inner input {
@@ -663,7 +685,7 @@
   text-align: center;
   font-size: 0.888em;
   color: #fff;
-  background-color: #989a9c;
+  background-color: #35374D;
 }
 
 .popup_btn.att {
@@ -708,7 +730,10 @@
 
 
 
-/* 추가 */
+
+
+
+/* 이명진 추가 */
 .popup.is-visible {
   opacity: 1;
   visibility: visible;
@@ -721,3 +746,19 @@
 	padding:0px;
 	margin-top:2px;
 }
+
+.pager {
+  height:30px;
+  text-align: center;
+  margin-top:5px;
+}
+
+.pager span{
+  padding:7px;
+}
+
+.pager .selectPage {
+  font-weight:bold;
+  background-color: #ffc962;
+  border-radius: 5px;
+} 

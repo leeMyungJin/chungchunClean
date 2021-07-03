@@ -74,9 +74,6 @@ function loadGridStaffList(type, result){
 		   	_setUserGridLayout('staffLayout', staffGrid, staffColumns);
 			  
 	  }else{
-		  
-		  console.log(result);
-		  
 		   staffView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
 		   });
@@ -86,7 +83,10 @@ function loadGridStaffList(type, result){
 	//	  wijmo.input.CollectionViewNavigator('#staffGridPager').itemsSource.refresh(true);
 	  }
 	  
+	  refreshPaging(staffGrid.collectionView.totalItemCount, 1, staffGrid, 'staffGrid');  // 페이징 초기 셋팅
+	  
 }
+
 
 //스테프 리스트 조회
 function getStaffList(){
@@ -424,7 +424,7 @@ function exportExcel(){
                         <div class="grid_wrap" style="position:relative;">
                         <!--Grid 영역 -->
                         	<div id="staffGrid"  style="height:500px;"></div>
-                        	<div id="staffGridPager"></div>
+                        	<div id="staffGridPager" class="pager"></div>
                         </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('staffLayout', staffGrid);">칼럼위치저장</button>

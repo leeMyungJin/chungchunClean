@@ -74,6 +74,8 @@ function loadGridDailyList(type, result){
 		  dailyGrid.itemsSource = dailyView;
 	  }
 	  
+	  refreshPaging(dailyGrid.collectionView.totalItemCount, 1, dailyGrid, 'dailyGrid');  // 페이징 초기 셋팅
+	  
 }
 
 function getDailyList(){
@@ -194,7 +196,7 @@ function copyUrl(){
                         <div class="grid_wrap" style="position:relative;">
                         <!--Grid 영역 -->
                         	<div id="dailyGrid"  style="height:500px;"></div>
-                        	<div id="dailyGridPager"></div>
+                        	<div id="dailyGridPager" class="pager"></div>
                         </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('dailyLayout', dailyGrid);">칼럼위치저장</button>
