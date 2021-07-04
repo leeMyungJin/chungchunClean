@@ -702,7 +702,7 @@ function importExcel(){
 // event Listener 선언
 $(document).ready(function(){
     $("#totalItemCnt").text(_fillZero(5,'${totalItemCnt}') + "개");
-    $("#importExcel").on('change', function (params) {
+    $("#importFile").on('change', function (params) {
         importExcel();
     });
 
