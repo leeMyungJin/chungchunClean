@@ -427,7 +427,7 @@ function dupCheckItem() {
         alert("상품명을 입력하시기 바랍니다.");
         return false;
     }else if($("#code").val().length < 5){
-        alert("코드는 3자리 입니다.ex)001");
+        alert("코드는 5자리 입니다.ex)00001");
         return false;
     }else if($("#cost").val().length < 1){
         alert("원가를 입력하시기 바랍니다.");
