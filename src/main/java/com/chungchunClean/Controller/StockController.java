@@ -24,8 +24,7 @@ public class StockController {
     
     @RequestMapping(value = "/code", method = {RequestMethod.POST , RequestMethod.GET})
     public String moveCode( Model model) {
-        model.addAttribute("LCategoryList", stockService.getLCategoryList());
-        model.addAttribute("MCategoryList", stockService.getMCategoryList());
+        model.addAttribute("totalItemCnt", stockService.getTotalItemCnt());
         return "stock/stock_code";
     }
     
@@ -71,7 +70,7 @@ public class StockController {
         stockService.deleteCategory(params);
     }
 
-         /**
+    /**
      * 카테고리 저장하기
      * 
      * @return
@@ -91,6 +90,15 @@ public class StockController {
     public List<StockVo> getLCategoryList(){
         return stockService.getLCategoryList(); // 카테고리 저장 후 다시 조회
     }
+
+    /**
+     * 중카테고리 리스트 가져오기
+     */
+    @RequestMapping(value="/getMCategoryList", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public List<StockVo> getMCategoryList(){
+        return stockService.getMCategoryList(); // 카테고리 저장 후 다시 조회
+    }    
 
     /**
      * 물품 중복 확인
@@ -120,4 +128,17 @@ public class StockController {
     public void deleteItem(@RequestBody List<StockVo> params){
         stockService.deleteItem(params);
     }
+
+    /**
+     * 물품 저장하기
+     * 
+     * @return
+     */
+    @RequestMapping(value="/saveStock", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void saveStock(@RequestBody List<StockVo> params){
+        stockService.saveStock(params);
+        // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
+    }
+
 }

@@ -69,6 +69,21 @@ public class StockServiceImpl implements StockService {
 		for(StockVo vo : params)
 			stockMapper.deleteItem(vo);
 		
+	}
+
+	@Override
+	public String getTotalItemCnt() {
+		return stockMapper.getTotalItemCnt();
+	}
+
+	@Override
+	public void saveStock(List<StockVo> params) {
+		for(StockVo vo : params){
+			vo.setUpdt_id("testId");
+			vo.setCret_id("testId");
+			stockMapper.saveStock(vo);
+		}
+		
 	}	
 	
 }

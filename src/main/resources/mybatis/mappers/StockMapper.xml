@@ -87,10 +87,12 @@ UPDATE
 <select id="getLCategoryList" resultType="hashMap">
 SELECT DISTINCT l_categy_cd, l_categy_nm
 FROM WEB.CATEGORY_BAS
+ORDER BY l_categy_cd
 </select>
 <select id="getMCategoryList" resultType="hashMap">
 SELECT DISTINCT m_categy_cd, m_categy_nm
 FROM WEB.CATEGORY_BAS
+ORDER BY m_categy_cd
 </select>
 
 <select id="dupCheckItem" resultType="String" parameterType="hashMap">
@@ -117,4 +119,23 @@ AND l_categy_cd = #{l_categy_cd}
 AND m_categy_cd = #{m_categy_cd}
 AND item_cd = #{item_cd}
 </delete>
+<select id="getTotalItemCnt" resultType="String">
+SELECT DISTINCT COUNT(ITEM_CD) AS ITEM_CD
+FROM WEB.CATEGORY_DTL
+</select>
+
+<insert id="saveStock" parameterType="com.chungchunClean.vo.StockVo">
+INSERT INTO WEB.CATEGORY_DTL 
+  (l_categy_cd,  m_categy_cd, item_cd, item_nm, cost, cret_dt, cret_id, updt_dt, updt_id)
+  VALUES (#{l_categy_cd}, #{m_categy_cd}, #{item_cd}, #{item_nm}, #{cost}::numeric, now(), #{cret_id}, now(), #{updt_id})
+ON CONFLICT( l_categy_cd, m_categy_cd, item_cd) DO
+UPDATE
+	SET l_categy_cd = #{l_categy_cd},
+		m_categy_cd = #{m_categy_cd},
+		item_cd 	= #{item_cd},
+		item_nm		= #{item_nm},
+		cost		=  #{cost}::numeric,
+		updt_dt		= now(),
+		updt_id		= #{updt_id}
+</insert>
 </mapper>
