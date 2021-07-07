@@ -3,6 +3,7 @@ package com.chungchunClean.Service;
 import java.util.HashMap;
 import java.util.List;
 
+import com.chungchunClean.vo.StockCurrentVo;
 import com.chungchunClean.vo.StockVo;
 
 
@@ -18,5 +19,7 @@ public interface StockService {
     public void deleteItem(List<StockVo> params);
     public String getTotalItemCnt();
     public void saveStock(List<StockVo> params);
+    
+    // 재고관리 - 입출관리 화면
+    public List<StockCurrentVo> getStockCurrentList(HashMap<String,Object> params);
 }
-

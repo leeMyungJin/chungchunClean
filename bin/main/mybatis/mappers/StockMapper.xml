@@ -87,10 +87,12 @@ UPDATE
 <select id="getLCategoryList" resultType="hashMap">
 SELECT DISTINCT l_categy_cd, l_categy_nm
 FROM WEB.CATEGORY_BAS
+ORDER BY l_categy_cd
 </select>
 <select id="getMCategoryList" resultType="hashMap">
 SELECT DISTINCT m_categy_cd, m_categy_nm
 FROM WEB.CATEGORY_BAS
+ORDER BY m_categy_cd
 </select>
 
 <select id="dupCheckItem" resultType="String" parameterType="hashMap">
@@ -117,4 +119,90 @@ AND l_categy_cd = #{l_categy_cd}
 AND m_categy_cd = #{m_categy_cd}
 AND item_cd = #{item_cd}
 </delete>
+<select id="getTotalItemCnt" resultType="String">
+SELECT DISTINCT COUNT(ITEM_CD) AS ITEM_CD
+FROM WEB.CATEGORY_DTL
+</select>
+
+<insert id="saveStock" parameterType="com.chungchunClean.vo.StockVo">
+INSERT INTO WEB.CATEGORY_DTL 
+  (l_categy_cd,  m_categy_cd, item_cd, item_nm, cost, cret_dt, cret_id, updt_dt, updt_id)
+  VALUES (#{l_categy_cd}, #{m_categy_cd}, #{item_cd}, #{item_nm}, #{cost}::numeric, now(), #{cret_id}, now(), #{updt_id})
+ON CONFLICT( l_categy_cd, m_categy_cd, item_cd) DO
+UPDATE
+	SET l_categy_cd = #{l_categy_cd},
+		m_categy_cd = #{m_categy_cd},
+		item_cd 	= #{item_cd},
+		item_nm		= #{item_nm},
+		cost		=  #{cost}::numeric,
+		updt_dt		= now(),
+		updt_id		= #{updt_id}
+</insert>
+
+
+
+
+<!-- 재고관리 - 입출내역 화면 -->
+<select id="getStockCurrentList" parameterType="hashMap" resultType="StockMapperVo">
+	select sar_seq
+			,l_categy_cd 
+			, l_categy_nm 
+			, m_categy_cd 
+			, m_categy_nm 
+			, item_cd 
+			, item_nm 
+			, "cost" 
+			, quantity 
+			, classifi_cd 
+			, classifi_nm 
+			, sar_quantity 
+			, return_quantity 
+			, to_char(cret_dt, 'YYYY-MM-DD') as cret_dt 
+			, cret_id 
+			, cret_nm
+			, to_char(updt_dt, 'YYYY-MM-DD') as updt_dt 
+			, updt_id 
+	from web.category_dtl_sar								 
+	where 1 = 1
+	<if test="inq != null">
+	AND 
+		<choose>
+			<when test="con == 'all'">
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					l_categy_nm LIKE '%' || #{item} || '%'
+					or
+					m_categy_nm LIKE '%' || #{item} || '%'
+					or
+					item_nm LIKE '%' || #{item} || '%'
+					or
+					cret_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'category'">
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					l_categy_nm LIKE '%' || #{item} || '%'
+					or
+					m_categy_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'product'">
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					item_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'person'">
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					cret_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+		</choose>
+	</if>
+	ORDER BY cret_dt, l_categy_cd, m_categy_cd, item_cd
+</select>
+
+
 </mapper>
