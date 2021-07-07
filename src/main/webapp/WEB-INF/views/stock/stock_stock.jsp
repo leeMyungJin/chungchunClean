@@ -46,7 +46,7 @@ function loadGridStockList(type, result){
         });
 
         stockColumns =  [
-                { binding: 'status', header: '상태', isReadOnly: true, width: 50, align:"center"},
+                { binding: 'status', header: '상태', isReadOnly: true, width: 60, align:"center"},
                 { binding: 'l_categy_cd', header: '대카테고리코드', isReadOnly: true, visible: false, width: 200, align:"center"},
                 { binding: 'l_categy_nm', header: '대카테고리명', isReadOnly: true, width: 230, align:"center"},
                 { binding: 'm_categy_cd', header: '중카테고리코드', isReadOnly: true,  visible: false,width: 200, align:"center" },
@@ -77,6 +77,29 @@ function loadGridStockList(type, result){
                 cell.textContent = (r + 1).toString();
             }
         };
+
+        stockGrid.formatItem.addHandler(function (s, e) {
+            // 열 헤더에 대한 중앙 정렬 
+            if (e.panel == s.columnHeaders) {
+            e.cell.innerHTML = '<div class="v-center">' +
+                e.cell.innerHTML + '</div>';
+            }
+            //  "status" 열에 대한 커스텀 렌더링
+            if (e.panel == s.cells) {
+            var col = s.columns[e.col];
+            var status = s.getCellData(e.row, e.col);
+                if (e.row > 0 && col.binding == 'status') {
+                    //셀 서식
+                    var html = '<div class="mark_{status}"/>';
+                    if(status == 'O') {
+                        html = html.replace('{status}', 'enough');
+                    }else if(status == 'X') {
+                        html = html.replace('{status}', 'short');
+                    }
+                    e.cell.innerHTML = html;                    
+                }
+            }
+        });
 
         //엑셀 업로드용 그리드 
             excelGridPager = new wijmo.input.CollectionViewNavigator('#excelGridPager', {
@@ -112,13 +135,14 @@ function loadGridStockList(type, result){
     }else{
         stockView = new wijmo.collections.CollectionView(result, {
             pageSize: 100,
-            groupDescriptions: ['l_categy_nm', 'l_categy_cd','m_categy_nm','m_categy_cd']
+            groupDescriptions: ['l_categy_nm','m_categy_nm']
         });
         stockGrid.columns[0].width = 50;
         stockGridPager.cv = stockView;
         stockGrid.itemsSource = stockView;
 	  }
       refreshPaging(stockGrid.collectionView.totalItemCount, 1, stockGrid, 'stockGrid');
+      $(".wj-cell").css("padding-left","0px");
 }
 
 
@@ -144,6 +168,27 @@ function getStockList(){
             }
           });
 }
+
+//엑셀 다운로드
+function exportExcel(){
+	
+	var gridView = stockGrid.collectionView;
+	var oldPgSize = gridView.pageSize;
+	var oldPgIndex = gridView.pageIndex;
+
+    //전체 데이터를 엑셀다운받기 위해서는 페이징 제거 > 엑셀 다운 > 페이징 재적용 하여야 함.
+    stockGrid.beginUpdate();
+    stockView.pageSize = 0;
+
+    wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(stockGrid, {includeCellStyles: true, includeColumnHeaders: true}, 'stockList.xlsx',
+	      saved => {
+	    	gridView.pageSize = oldPgSize;
+	    	gridView.moveToPage(oldPgIndex);
+	    	staffGrid.endUpdate();
+	      }, null
+	 );
+}
+
 
 </script>
 
@@ -172,7 +217,7 @@ function getStockList(){
                 <div class="admin_utility">
                     <div class="admin_btn">
                         <button class="btn">엑셀 업로드</button>
-                        <button class="btn">엑셀 다운로드</button>
+                        <button class="btn" onclick="exportExcel();">엑셀 다운로드</button>
                     </div>
                 </div>
                 <div class="admin_content">
@@ -205,6 +250,10 @@ function getStockList(){
                         <div class="grid_wrap">
                             <div id="stockGrid"  style="height:500px;"></div>
                         	<div id="stockGridPager" class="pager"></div>
+                        </div>
+                        <div class="grid_wrap" id="excelDiv" style="position:relative;">
+                        	<div id="excelGrid"  style="height:500px;"></div>
+                        	<div id="excelGridPager" class="pager"></div>
                         </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke">칼럼위치저장</button>

@@ -12,7 +12,10 @@
 		ctg_dtl.item_cd ,
 		ctg_dtl.item_nm,
 		ctg_dtl.qr_url,
-		ctg_dtl.cost
+		ctg_dtl.cost,
+		ctg_dtl.quantity,
+		case when ctg_dtl.quantity > 10 then 'O'
+		     else 'X' end as status
 	from
 		web.category_bas ctg_bas
 	left outer join WEB.category_dtl ctg_dtl on
@@ -48,6 +51,9 @@
 				</foreach>
 			</when>
 		</choose>
+	</if>
+	<if test="esn == 'true'">
+		AND ctg_dtl.quantity <![CDATA[<=]]> 10
 	</if>
 	AND ctg_dtl.item_cd is not null
 	ORDER BY l_categy_cd, m_categy_cd, item_cd
@@ -143,7 +149,7 @@ UPDATE
 
 
 <!-- 재고관리 - 입출내역 화면 -->
-<select id="getStockCurrentList" parameterType="hashMap" resultType="StockMapperVo">
+<select id="getStockCurrentList" parameterType="hashMap" resultType="StockCurrentVo">
 	select sar_seq
 			,l_categy_cd 
 			, l_categy_nm 

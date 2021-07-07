@@ -142,11 +142,6 @@ public class StockController {
         // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
     }
     
-    
-    
-    
-    
-    
     // 재고관리 - 입출관리 화면
     /**
      * 입출 리스트 가져오기

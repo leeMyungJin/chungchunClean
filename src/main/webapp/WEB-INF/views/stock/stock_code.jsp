@@ -196,7 +196,7 @@ function loadGridStockList(type, result){
 	}else{
         stockView = new wijmo.collections.CollectionView(result, {
             pageSize: 100,
-            groupDescriptions: ['l_categy_nm', 'l_categy_cd','m_categy_nm','m_categy_cd']
+            groupDescriptions: ['l_categy_nm','m_categy_nm']
         });
         stockGrid.columns[0].width = 50;
         stockGridPager.cv = stockView;
@@ -509,9 +509,7 @@ function addItem(){
 function exportExcel(){
 	
 	var gridView = stockGrid.collectionView;
-	var oldPgSize = gridView.pag
-    
-    eSize;
+	var oldPgSize = gridView.pageSize;
 	var oldPgIndex = gridView.pageIndex;
 
     //전체 데이터를 엑셀다운받기 위해서는 페이징 제거 > 엑셀 다운 > 페이징 재적용 하여야 함.

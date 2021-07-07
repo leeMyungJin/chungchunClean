@@ -15,8 +15,11 @@ public class StockVo {
     private String cret_id;         //등록자
     private String updt_dt;         //수정일
     private String updt_id;         //수정자
+    private Integer quantity;       // 재고
+    private String status;          // 재고 상태
 	
-	/**
+
+    /**
      * @return String return the l_categy_cd
      */
     public String getL_categy_cd() {
@@ -197,12 +200,37 @@ public class StockVo {
         this.updt_id = updt_id;
     }
 
+    /**
+     * @return Integter return the quantity
+     */
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    /**
+     * @param quantity the quantity to set
+     */
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "StockVo [cost=" + cost + ", cret_dt=" + cret_dt + ", cret_id=" + cret_id + ", item_cd=" + item_cd
                 + ", item_nm=" + item_nm + ", l_categy_cd=" + l_categy_cd + ", l_categy_nm=" + l_categy_nm
-                + ", m_categy_cd=" + m_categy_cd + ", m_categy_nm=" + m_categy_nm + ", qr_url=" + qr_url + ", reg_date="
-                + reg_date + ", updt_dt=" + updt_dt + ", updt_id=" + updt_id + "]";
+                + ", m_categy_cd=" + m_categy_cd + ", m_categy_nm=" + m_categy_nm + ", qr_url=" + qr_url + ", quantity="
+                + quantity + ", reg_date=" + reg_date + ", status=" + status + ", updt_dt=" + updt_dt + ", updt_id="
+                + updt_id + "]";
     }
+
 
 }
