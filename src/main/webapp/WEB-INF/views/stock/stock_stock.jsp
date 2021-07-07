@@ -8,13 +8,146 @@
 </head>
 
 <script type="text/javascript">
+var stockView;
+var stockGridPager;
+var stockGrid; 
+var excelGrid;
+var excelView;
+var excelGridPager;
+
 function pageLoad(){
 	$('#stock').addClass("current");
 	$('#stock_stock').addClass("current");
+    $("#essesntail").attr("checked",true);
+    loadGridStockList('init');
 }
+
+function enterkey() {
+    if (window.event.keyCode == 13) {
+    	getStockList();
+    }
+}
+
+
+
+//그리드 초기 셋팅
+function loadGridStockList(type, result){
+    if(type == "init"){
+        $("#excelDiv").hide();
+        stockView = new wijmo.collections.CollectionView(result, {
+            pageSize: 100,
+            groupDescriptions: ['l_categy_nm', 'm_categy_nm']
+        });
+		// 페이지 이동
+        stockGridPager = new wijmo.input.CollectionViewNavigator('#stockGridPager', {
+            byPage: true,
+            headerFormat: '{currentPage:n0} / {pageCount:n0}',
+            cv: stockView
+        });
+
+        stockColumns =  [
+                { binding: 'status', header: '상태', isReadOnly: true, width: 50, align:"center"},
+                { binding: 'l_categy_cd', header: '대카테고리코드', isReadOnly: true, visible: false, width: 200, align:"center"},
+                { binding: 'l_categy_nm', header: '대카테고리명', isReadOnly: true, width: 230, align:"center"},
+                { binding: 'm_categy_cd', header: '중카테고리코드', isReadOnly: true,  visible: false,width: 200, align:"center" },
+                { binding: 'm_categy_nm', header: '중카테고리명', isReadOnly: true, width: 230, align:"center"  },
+                { binding: 'item_nm', header: '물품명', isReadOnly: true, width: 230, align:"center"  },
+                { binding: 'item_cd', header: '코드번호', isReadOnly: true, width: 200, align:"center"},
+                { binding: 'cost', header: '원가', isReadOnly: true, width: 200, align:"center"},
+                { binding: 'quantity', header: '재고수량', isReadOnly: true, width: 200, align:"center"},
+                { binding: 'add', header: '추가입고', isReadOnly: false, width: 200, align:"center"}
+            ]
+		  
+		// hostElement에 Wijmo의 FlexGird 생성
+        // itemsSource: data - CollectionView로 데이터를 그리드에 바인딩
+        // autoGenerateColumns: false >> 컬럼 사용자 정의 
+        stockGrid = new wijmo.grid.FlexGrid('#stockGrid', {
+            autoGenerateColumns: false,
+            alternatingRowStep: 0,
+            columns : stockColumns,
+            itemsSource: stockView
+        });
+
+        localStorage.setItem('stockMngInitLayout', stockGrid.columnLayout);
+        _setUserGridLayout('stockMngLayout', stockGrid, stockColumns );
+
+        //행번호 표시하기
+        stockGrid.itemFormatter = function (panel, r, c, cell) { 
+            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+                cell.textContent = (r + 1).toString();
+            }
+        };
+
+        //엑셀 업로드용 그리드 
+            excelGridPager = new wijmo.input.CollectionViewNavigator('#excelGridPager', {
+            byPage: true,
+            headerFormat: '{currentPage:n0} / {pageCount:n0}',
+            cv: excelView
+        });
+
+		// hostElement에 Wijmo의 FlexGird 생성
+        // itemsSource: data - CollectionView로 데이터를 그리드에 바인딩
+        // autoGenerateColumns: false >> 컬럼 사용자 정의 
+        excelGrid = new wijmo.grid.FlexGrid('#excelGrid', {
+            autoGenerateColumns: false,
+            alternatingRowStep: 0,
+            columns : stockColumns,
+            itemsSource: excelView
+        });
+
+        //행번호 표시하기
+        excelGrid.itemFormatter = function (panel, r, c, cell) { 
+            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+                cell.textContent = (r + 1).toString();
+            }
+        };
+
+        // 체크박스 생성
+        excelSelector = new wijmo.grid.selector.Selector(excelGrid, {
+            itemChecked: () => {
+            }
+        });
+
+        excelSelector.column = excelGrid.columns[0];
+    }else{
+        stockView = new wijmo.collections.CollectionView(result, {
+            pageSize: 100,
+            groupDescriptions: ['l_categy_nm', 'l_categy_cd','m_categy_nm','m_categy_cd']
+        });
+        stockGrid.columns[0].width = 50;
+        stockGridPager.cv = stockView;
+        stockGrid.itemsSource = stockView;
+	  }
+      refreshPaging(stockGrid.collectionView.totalItemCount, 1, stockGrid, 'stockGrid');
+}
+
+
+//재고 검색
+function getStockList(){
+    $("#excelDiv").hide();
+    $("#stockDiv").show();
+    var params = {
+            inq : $("#inq").val(),
+            con : $("#con").val(),
+            esn : $("#essential").is(":checked").toString() 
+    	}
+    	$.ajax({
+            url : "/stock/getStockList",
+            async : false, // 비동기모드 : true, 동기식모드 : false
+            type : 'POST',
+            data : params,
+            success : function(result) {
+        	    loadGridStockList('search', result);
+            },
+            error : function(request,status,error) {
+             	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+          });
+}
+
 </script>
 
-<body onload="pageLoad()"><body>
+<body onload="pageLoad()">
     <div class="admin_wrap">
         <%@ include file="../include/nav.jsp" %>
         
@@ -49,13 +182,12 @@ function pageLoad(){
                             <label for="con">검색조건</label>
                             <select name="con" id="con">
                                 <option value="all" selected="selected">전체</option>
-                                <option value="site">지역</option>
-                                <option value="building">건물명</option>
-                                <option value="depositor">입금자명</option>
+                                <option value="category">카테고리명</option>
+                                <option value="item">물품명</option>
                             </select>
                             <label for="inq"></label>
-                            <input type="text" id="inq" placeholder=",로 다중검색 가능">
-                            <button type="button">조회</button>
+                            <input type="text" id="inq" placeholder=",로 다중검색 가능" onclick="enterkey()">
+                            <button type="button" onclick ="getStockList();">조회</button>
                             <input type="checkbox" id="essential" name="essential">
                             <label for="essential">추가입고 필요항목만 보기</label>
                         </form>
@@ -70,7 +202,10 @@ function pageLoad(){
                             <button type="button" class="stroke">칼럼위치저장</button>
                             <button type="button" class="stroke">칼럼초기화</button>
                         </div>
-                        <div class="grid_wrap">Grid 영역입니다</div>
+                        <div class="grid_wrap">
+                            <div id="stockGrid"  style="height:500px;"></div>
+                        	<div id="stockGridPager" class="pager"></div>
+                        </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke">칼럼위치저장</button>
                             <button type="button" class="stroke">칼럼초기화</button>

@@ -28,7 +28,20 @@ function pageLoad(){
 	$('#stock').addClass("current");
 	$('#stock_code').addClass("current");
     loadGridStockList('init');
+    $("#totalItemCnt").text(_fillZero(5,'${totalItemCnt}') + "개");
+    
+    //엑셀 업로드
+    $("#importFile").on('change', function (params) {
+        importExcel();
+    });
 }
+
+function enterkey() {
+    if (window.event.keyCode == 13) {
+    	getStockList();
+    }
+}
+
 
 //그리드 초기 셋팅
 function loadGridStockList(type, result){
@@ -194,7 +207,7 @@ function loadGridStockList(type, result){
 }
 
 //코드 검색
-function search(){
+function getStockList(){
     $("#excelDiv").hide();
     $("#stockDiv").show();
     var params = {
@@ -284,7 +297,7 @@ function deleteRows(type){
                     data: JSON.stringify(rows),
                     success : function(result) {
                         alert("삭제되었습니다.");
-                        search();
+                        getStockList();
                     },
                     error : function(request,status,error) {
                         alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -404,7 +417,7 @@ function saveGrid(type){
                     data: JSON.stringify(rows),
                     success : function(result) {
                         alert("저장되었습니다.");
-                        search();
+                        getStockList();
                     },
                     error : function(request,status,error) {
                         alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -563,11 +576,11 @@ function importExcel(){
                             <select name="con" id="con">
                                 <option value="all" selected="selected">전체</option>
                                 <option value="category">카테고리명</option>
-                                <option value="product">물품명</option>
+                                <option value="item">물품명</option>
                             </select>
                             <label for="inq"></label>
-                            <input type="text" id="inq" placeholder=",로 다중검색 가능">
-                            <button type="button" onClick="search();">조회</button>
+                            <input type="text" id="inq" placeholder=",로 다중검색 가능" onkeyup="enterkey();">
+                            <button type="button" onClick="getStockList();">조회</button>
                         </form>
                         <div class="summary">
                             <dl>
@@ -659,19 +672,11 @@ function importExcel(){
                     <div class="row">
                         <label for="category1">대카테고리<i>*</i></label>
                             <select name="category1" id="category1">
-                            <%-- <option value="all" selected="selected">전체</option>
-                            <c:forEach var ="LCategory" items="${LCategoryList}" >
-                                <option value="${LCategory.l_categy_cd}">${LCategory.l_categy_nm}</option>
-                            </c:forEach> --%>
                             </select>
                     </div>
                     <div class="row">
                         <label for="category2">중카테고리<i>*</i></label>
                         <select name="category2" id="category2">
-                            <%-- <option value="all" selected="selected">전체</option>
-                             <c:forEach var ="MCategory" items="${MCategoryList}">
-                                <option value="${MCategory.m_categy_cd}">${MCategory.m_categy_nm}</option>
-                            </c:forEach> --%>
                             </select>
                     </div>
                     <div class="row">
@@ -696,16 +701,4 @@ function importExcel(){
     </div>
     <!--물품추가 팝업 영역 끝-->
 </body>
-
-
- <script type="text/javascript">
-// event Listener 선언
-$(document).ready(function(){
-    $("#totalItemCnt").text(_fillZero(5,'${totalItemCnt}') + "개");
-    $("#importFile").on('change', function (params) {
-        importExcel();
-    });
-
-});
-</script>
 </html>
