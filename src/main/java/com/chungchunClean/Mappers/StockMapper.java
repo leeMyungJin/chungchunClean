@@ -3,6 +3,7 @@ package com.chungchunClean.Mappers;
 import java.util.HashMap;
 import java.util.List;
 
+import com.chungchunClean.vo.StockCurrentVo;
 import com.chungchunClean.vo.StockVo;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -20,4 +21,7 @@ public interface StockMapper  {
     public void deleteItem(StockVo vo);
     public String getTotalItemCnt();
     public void saveStock(StockVo params);
+    
+ // 재고관리 - 입출관리 화면
+    public List<StockCurrentVo> getStockCurrentList(HashMap<String,Object> params);
 }

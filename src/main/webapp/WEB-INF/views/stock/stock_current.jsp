@@ -8,9 +8,74 @@
 </head>
 
 <script type="text/javascript">
+
+var currentView;
+var currentGridPager;
+var currentGrid;
+var currentColumns;
+
 function pageLoad(){
 	$('#stock').addClass("current");
 	$('#stock_current').addClass("current");
+	
+	var today = _getFormatDate(new Date());
+	$('#fromDate').val(today);
+	$('#toDate').val(today);
+	$('#fromDate').attr('max',today);
+	$('#toDate').attr('max',today);
+	
+	loadGridCurrentList('init');
+}
+
+function enterkey() {
+    if (window.event.keyCode == 13) {
+    	getCurrentList();
+    }
+}
+
+//그리드 초기 셋팅
+function loadGridCurrentList(type, result){
+	  if(type == "init"){
+		   currentView = new wijmo.collections.CollectionView(result, {
+		       pageSize: 100
+		   });
+		    
+		   currentGridPager = new wijmo.input.CollectionViewNavigator('#currentGridPager', {
+		        byPage: true,
+		        headerFormat: '{currentPage:n0} / {pageCount:n0}',
+		        cv: currentView
+		    });
+		   
+		   currentColumns = [
+			      { binding: 'onWorkDt', header: '출근시각', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'offWorkDt', header: '퇴근시각', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'officerNm', header: '담당자', isReadOnly: true, width: 60, align:"center" },
+			      { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 60, align:"center"  },
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 120, align:"center"  },
+			      { binding: 'cretDt', header: '업로드일자', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'siteMntrUrl', header: '현장점검 URL', isReadOnly: true, width: 200, align:"center" }
+			];
+		  
+		   currentGrid = new wijmo.grid.FlexGrid('#currentGrid', {
+			    autoGenerateColumns: false,
+			    alternatingRowStep: 0,
+			    columns: currentColumns,
+			    itemsSource: currentView
+			  });
+			  
+		   	_setUserGridLayout('currentLayout', currentGrid, currentColumns);
+			  
+	  }else{		  
+		   currentView = new wijmo.collections.CollectionView(result, {
+		       pageSize: 100
+		   });
+		  currentGridPager.cv = currentView;
+		  currentGrid.itemsSource = currentView;
+	  }
+	  
+	  refreshPaging(currentGrid.collectionView.totalItemCount, 1, currentGrid, 'currentGrid');  // 페이징 초기 셋팅
+	  
 }
 </script>
 
@@ -71,7 +136,7 @@ function pageLoad(){
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
                     	<button type="button" class="stroke left">+ 이력추가</button>
-                        <div class="btn_wrap">
+                        <div class="btn_wrap">w
                             <button type="button" class="stroke">칼럼위치저장</button>
                             <button type="button" class="stroke">칼럼초기화</button>
                         </div>
