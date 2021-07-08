@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.chungchunClean.Service.StockService;
-import com.chungchunClean.vo.StockCurrentVo;
 import com.chungchunClean.vo.StockVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,9 +149,35 @@ public class StockController {
      */
     @RequestMapping(value="/getStockCurrentList", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public List<StockCurrentVo> getStockCurrentList(@RequestParam HashMap<String,Object> params){
+    public List<StockVo> getStockCurrentList(@RequestParam HashMap<String,Object> params){
         return stockService.getStockCurrentList(params);
     }
+    
+
+    /**
+     * 입출 삭제
+     * 
+     * @return
+     */
+    @RequestMapping(value="/deleteStockCurrent", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void deleteStockCurrent(@RequestBody List<StockVo> params){
+        stockService.deleteStockCurrent(params);
+    }
+
+    /**
+     * 입출 저장
+     * 
+     * @return
+     */
+    @RequestMapping(value="/saveStockCurrent", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void saveStockCurrent(@RequestBody List<StockVo> params){
+        stockService.saveStockCurrent(params);
+        // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
+    }
+    
+
 
 
 }

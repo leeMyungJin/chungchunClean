@@ -6,7 +6,6 @@ import java.util.List;
 import com.chungchunClean.Mappers.StockMapper;
 import com.chungchunClean.Service.StockService;
 import com.chungchunClean.Util.Util;
-import com.chungchunClean.vo.StockCurrentVo;
 import com.chungchunClean.vo.StockVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,11 +89,29 @@ public class StockServiceImpl implements StockService {
 	
     // 재고관리 - 입출관리 화면
 	@Override
-	public List<StockCurrentVo> getStockCurrentList(HashMap<String, Object> params) {
+	public List<StockVo> getStockCurrentList(HashMap<String, Object> params) {
 		if(params.get("inq") != null)
 			params.replace("inq", Util.makeForeach((String)params.get("inq"), ","));
 		return stockMapper.getStockCurrentList(params);
 	}
+	
+	@Override
+	public void deleteStockCurrent(List<StockVo> params) {
+		for(StockVo vo : params)
+			stockMapper.deleteStockCurrent(vo);
+		
+	}
+	
+	@Override
+	public void saveStockCurrent(List<StockVo> params) {
+		for(StockVo vo : params){
+			vo.setUpdt_id("testId");
+			vo.setCret_id("testId");
+			stockMapper.saveStockCurrent(vo);
+		}
+		
+	}	
+	
 
 	
 }

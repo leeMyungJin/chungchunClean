@@ -149,7 +149,7 @@ UPDATE
 
 
 <!-- 재고관리 - 입출내역 화면 -->
-<select id="getStockCurrentList" parameterType="hashMap" resultType="StockCurrentVo">
+<select id="getStockCurrentList" parameterType="hashMap" resultType="StockVo">
 	select sar_seq
 			,l_categy_cd 
 			, l_categy_nm 
@@ -210,5 +210,50 @@ UPDATE
 	ORDER BY cret_dt, l_categy_cd, m_categy_cd, item_cd
 </select>
 
+<delete id="deleteStockCurrent" parameterType="StockVo">
+	delete from web.category_dtl_sar 
+	where sar_seq = #{sar_seq}
+</delete>
+
+<insert id="saveStockCurrent" parameterType="StockVo">
+insert into web.category_dtl_sar (
+		l_categy_cd -- 대카테고리코드
+		, l_categy_nm -- 대카테고리명
+		, m_categy_cd -- 중카테고리코드
+		, m_categy_nm -- 중카테고리명
+		, item_cd-- 물품코드
+		, item_nm -- 물품명
+		, "cost" -- 물품원가
+		, quantity -- 물품재고
+		, classifi_cd -- 분류코드
+		, classifi_nm -- 분류명
+		, sar_quantity -- 입출고수량
+		, return_quantity -- 반품입출고수량
+		, cret_dt -- 등록일자
+		, cret_id -- 등록자
+		, updt_dt -- 수정일자
+		, updt_id -- 수정자
+		, cret_nm -- 등록자명
+)
+values(
+		#{l_categy_cd} -- 대카테고리코드
+		, #{l_categy_nm} -- 대카테고리명
+		, #{m_categy_cd} -- 중카테고리코드
+		, #{m_categy_nm} -- 중카테고리명
+		, #{item_cd}-- 물품코드
+		, #{item_nm} -- 물품명
+		, #{cost} -- 물품원가
+		, #{quantity}-- 물품재고
+		, #{classifi_cd} -- 분류코드
+		, #{classifi_nm} -- 분류명
+		, #{sar_quantity} -- 입출고수량
+		, #{return_quantity} -- 반품입출고수량
+		, #{cret_dt} -- 등록일자
+		, #{cret_id} -- 등록자
+		, #{updt_dt} -- 수정일자
+		, #{updt_id} -- 수정자
+		, #{cret_nm} -- 등록자명
+)
+</insert>
 
 </mapper>
