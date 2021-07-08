@@ -49,7 +49,7 @@ function loadGridStockList(type, result){
         $("#excelDiv").hide();
         stockView = new wijmo.collections.CollectionView(result, {
             pageSize: 100,
-            groupDescriptions: ['lCategyNm', 'mCategyNm']
+            groupDescriptions: ['lCategyNm']
         });
 		// 페이지 이동
         stockGridPager = new wijmo.input.CollectionViewNavigator('#stockGridPager', {
@@ -60,11 +60,11 @@ function loadGridStockList(type, result){
 
         stockColumns =  [
                 { isReadOnly: true, width: 35, align:"center"},
-                { binding: 'lCategyCd', header: '대카테고리코드', isReadOnly: true, width: 200, align:"center"},
-                { binding: 'lCategyNm', header: '대카테고리명', isReadOnly: true, width: 230, align:"center"},
-                { binding: 'itemCd', header: '물품코드', isReadOnly: false, width: 200, align:"center"  },
-                { binding: 'itemNm', header: '물품명', isReadOnly: false, width: 230, align:"center"  },
-                { binding: 'cost', header: '원가', isReadOnly: false, width: 200, align:"center"}
+                { binding: 'lCategyCd', header: '대카테고리코드', isReadOnly: true, width: 300, align:"center"},
+                { binding: 'lCategyNm', header: '대카테고리명', isReadOnly: true, width: 300, align:"center"},
+                { binding: 'itemCd', header: '물품코드', isReadOnly: false, width: 300, align:"center"  },
+                { binding: 'itemNm', header: '물품명', isReadOnly: false, width: 300, align:"center"  },
+                { binding: 'cost', header: '원가', isReadOnly: false, width: 300, align:"center"}
             ]
 		  
 		// hostElement에 Wijmo의 FlexGird 생성
@@ -107,12 +107,11 @@ function loadGridStockList(type, result){
         });
         categoryGrid = new wijmo.grid.FlexGrid('#categoryGrid', {
             autoGenerateColumns: false,
-            alternatingRowStep: 0,
+            //alternatingRowStep: 0,
             columns: [
                 { binding: 'lCategyCd', header: '대카테고리코드', isReadOnly: false, width: 230, align:"center"},
                 { binding: 'lCategyNm', header: '대카테고리명', isReadOnly: false,  width: 230, align:"center"},
                 { binding: 'regDate', header: '등록일시', isReadOnly: true, width: 230, align:"center"  }
-
             ],
             beginningEdit: function (s, e) {
                 var col = s.columns[e.col];
@@ -132,22 +131,21 @@ function loadGridStockList(type, result){
                         e.cancel = true;
                         e.stayInEditMode = true;
                         alert('대카테고리코드는 2자리 입니다.');
+                        return false;
                     }
                     value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
                     if( !wijmo.isNumber(value) || value < 0){
                         e.cancel = true;
                         e.stayInEditMode = true;
                         alert('대카테고리코드는 숫자로만 입력 가능합니다.');
+                        return false;
                     }
 
                 }
             },
             itemsSource: categoryView,
         });
-        categorySelector = new wijmo.grid.selector.Selector(categoryGrid, {
-            itemChecked: () => {
-            }
-        });
+        categorySelector = new wijmo.grid.selector.Selector(categoryGrid);
 
         //엑셀 업로드용 그리드 
             excelGridPager = new wijmo.input.CollectionViewNavigator('#excelGridPager', {
@@ -189,7 +187,7 @@ function loadGridStockList(type, result){
 	}else{
         stockView = new wijmo.collections.CollectionView(result, {
             pageSize: 100,
-            groupDescriptions: ['lCategyNm','mCategyNm']
+            groupDescriptions: ['lCategyNm']
         });
         stockGrid.columns[0].width = 50;
         stockGridPager.cv = stockView;
