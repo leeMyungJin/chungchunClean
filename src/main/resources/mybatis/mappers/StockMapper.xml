@@ -180,6 +180,9 @@ UPDATE
 			</when>
 		</choose>
 	</if>
+	<if test="fromDate != null and toDate != null">
+		and cret_dt between #{fromDate}::timestamp and #{toDate}::timestamp 
+	</if>
 	ORDER BY cret_dt, l_categy_cd, item_cd
 </select>
 
