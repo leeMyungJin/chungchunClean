@@ -29,7 +29,7 @@ function pageLoad(){
 	$('#stock_code').addClass("current");
     loadGridStockList('init');
     $("#totalItemCnt").text(_fillZero(5,'${totalItemCnt}') + "개");
-    
+
     //엑셀 업로드
     $("#importFile").on('change', function (params) {
         importExcel();
@@ -94,7 +94,6 @@ function loadGridStockList(type, result){
         });
 
         stockSelector.column = stockGrid.columns[0];
-        //popup = new wijmo.input.Popup('#add_category');
 
         categoryView = new wijmo.collections.CollectionView(result, {
             pageSize: 100
@@ -107,7 +106,7 @@ function loadGridStockList(type, result){
         });
         categoryGrid = new wijmo.grid.FlexGrid('#categoryGrid', {
             autoGenerateColumns: false,
-            //alternatingRowStep: 0,
+            alternatingRowStep: 0,
             columns: [
                 { binding: 'lCategyCd', header: '대카테고리코드', isReadOnly: false, width: 230, align:"center"},
                 { binding: 'lCategyNm', header: '대카테고리명', isReadOnly: false,  width: 230, align:"center"},
@@ -228,6 +227,7 @@ function showPop(pop){
             type : 'POST',
             success : function(result) {
         	    loadGridStockList('category', result);
+
             },
             error : function(request,status,error) {
              	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -247,8 +247,8 @@ function showPop(pop){
         $("#cost").val("");
         $("#code").val("");
 	}
-	
-	$('#'+pop).addClass('is-visible');
+	 $('#'+pop).addClass('is-visible');
+    
 }
 
 //팝업 종료
@@ -336,20 +336,6 @@ function getCategoryDtl() {
                 if(result.length > 0){
                     for(var i =0; i<result.length; i++)
                         $("#category1").append("<option value='" + result[i].lCategyCd + "'>" + result[i].lCategyNm + "</option>");
-                }       
-            },
-            error : function(request,status,error) {
-                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-            }
-    });
-    $.ajax({
-            url : "/stock/getMCategoryList",
-            async : false, // 비동기모드 : true, 동기식모드 : false
-            type : 'POST',
-            success : function(result) {
-                if(result.length > 0){
-                    for(var i =0; i<result.length; i++)
-                        $("#category2").append("<option value='" + result[i].mCategyCd + "'>" + result[i].mCategyNm + "</option>");
                 }       
             },
             error : function(request,status,error) {
@@ -543,6 +529,7 @@ function importExcel(){
                         <dd id ="totalItemCnt">0000개</dd>
                         <input type="hidden" id = "totItemCnt" value="${totalItemCnt}">
                     </dl>
+                    
                     <a href="javascript:void(0);" onclick="showPop('add_category');">카테고리 추가</a>
                     <a href="javascript:void(0);" onclick="showPop('add_product');">물품 추가</a>
                 </div>
@@ -620,7 +607,7 @@ function importExcel(){
                 <p class="popup_title">카테고리추가</p>
                 <button type="button" class="popup_close" onClick="closePop();">x</button>
             </div>
-            <div class="popup_inner">
+            <div class="popup_grid">
                 <div class="popup_btn_area">
                     <div class="right">
                         <button type="button" class="popup_btn">삭제</button>
