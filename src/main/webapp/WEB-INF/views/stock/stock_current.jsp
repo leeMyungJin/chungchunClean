@@ -47,19 +47,19 @@ function loadGridCurrentList(type, result){
 		    });
 		   
 		   currentColumns = [
-			      { binding: 'sar_seq', header: 'seq', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'cret_dt', header: '일자', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'cret_nm', header: '담당자', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'classifi_cd', header: '분류', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'l_categy_cd', header: '대카테고리', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'm_categy_cd', header: '중카테고리', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'item_cd', header: '물품코드', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'item_nm', header: '물품명', isReadOnly: true, width: '*'', align:"center" },
+			      { binding: 'sarSeq', header: 'seq', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'cretDt', header: '일자', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'cretNm', header: '담당자', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'classifiCd', header: '분류', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'lCategyCd', header: '대카테고리', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'mCategyCd', header: '중카테고리', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'itemCd', header: '물품코드', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'itemNm', header: '물품명', isReadOnly: true, width: '*'', align:"center" },
 			      { binding: 'cost', header: '원가', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'sar_quantity', header: '입출고수량', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'return_quantity', header: '반품수량', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'sarQuantity', header: '입출고수량', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'returnQuantity', header: '반품수량', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'quantity', header: '재고수량', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'updt_dt', header: '수정일자', isReadOnly: true, width: 100, align:"center" }
+			      { binding: 'updtDt', header: '수정일자', isReadOnly: true, width: 100, align:"center" }
 			];
 		  
 		   currentGrid = new wijmo.grid.FlexGrid('#currentGrid', {

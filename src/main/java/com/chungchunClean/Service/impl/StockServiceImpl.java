@@ -39,8 +39,8 @@ public class StockServiceImpl implements StockService {
 	public void saveCategory(List<StockVo> params) {
 		for(StockVo vo : params){
 			// 임시로 testid로 셋팅. 추후 session에서 가져오도록 변경
-			vo.setCret_id("testid");
-			vo.setUpdt_id("testid");
+			vo.setCretId("testid");
+			vo.setUpdtId("testid");
 			stockMapper.saveCategory(vo);
 		}
 	}
@@ -79,8 +79,8 @@ public class StockServiceImpl implements StockService {
 	@Override
 	public void saveStock(List<StockVo> params) {
 		for(StockVo vo : params){
-			vo.setUpdt_id("testId");
-			vo.setCret_id("testId");
+			vo.setUpdtId("testId");
+			vo.setCretId("testId");
 			stockMapper.saveStock(vo);
 		}
 		
@@ -105,8 +105,8 @@ public class StockServiceImpl implements StockService {
 	@Override
 	public void saveStockCurrent(List<StockVo> params) {
 		for(StockVo vo : params){
-			vo.setUpdt_id("testId");
-			vo.setCret_id("testId");
+			vo.setUpdtId("testId");
+			vo.setCretId("testId");
 			stockMapper.saveStockCurrent(vo);
 		}
 		

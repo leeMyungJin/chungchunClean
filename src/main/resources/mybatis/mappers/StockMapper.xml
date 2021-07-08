@@ -3,7 +3,7 @@
 
 <mapper namespace="com.chungchunClean.Mappers.StockMapper">
 
-<select id="getStockList" parameterType="hashMap" resultType="hashMap">
+<select id="getStockList" parameterType="hashMap" resultType="com.chungchunClean.vo.StockVo">
 	select
 		ctg_bas.l_categy_cd ,
 		ctg_bas.l_categy_nm ,
@@ -59,7 +59,7 @@
 	ORDER BY l_categy_cd, m_categy_cd, item_cd
 </select>
 
-<select id="getCategoryList" resultType="hashMap">
+<select id="getCategoryList" resultType="com.chungchunClean.vo.StockVo">
 	SELECT 
 		ctg_bas.l_categy_cd ,
 		ctg_bas.l_categy_nm ,
@@ -70,14 +70,14 @@
 	ORDER BY l_categy_cd, m_categy_cd
 </select>
 
-<delete id="deleteCategory" parameterType="com.chungchunClean.vo.StockVo">
+<delete id="deleteCategory" parameterType="StockVo">
 DELETE 
   FROM WEB.CATEGORY_BAS 
   WHERE 1=1
   AND l_categy_cd = #{l_categy_cd} 
   AND m_categy_cd = #{m_categy_cd}
 </delete>
-<insert id="saveCategory" parameterType="com.chungchunClean.vo.StockVo">
+<insert id="saveCategory" parameterType="StockVo">
 INSERT INTO WEB.CATEGORY_BAS 
   (l_categy_cd, l_categy_nm, m_categy_cd, m_categy_nm , cret_dt, cret_id, updt_dt, updt_id)
   VALUES (#{l_categy_cd} , #{l_categy_nm}, #{m_categy_cd}, #{m_categy_nm}, now(), #{cret_id}, now(), #{updt_id})
@@ -90,18 +90,18 @@ UPDATE
 		updt_dt		= now(),
 		updt_id		= #{updt_id}
 </insert>
-<select id="getLCategoryList" resultType="hashMap">
+<select id="getLCategoryList" resultType="StockVo">
 SELECT DISTINCT l_categy_cd, l_categy_nm
 FROM WEB.CATEGORY_BAS
 ORDER BY l_categy_cd
 </select>
-<select id="getMCategoryList" resultType="hashMap">
+<select id="getMCategoryList" resultType="StockVo">
 SELECT DISTINCT m_categy_cd, m_categy_nm
 FROM WEB.CATEGORY_BAS
 ORDER BY m_categy_cd
 </select>
 
-<select id="dupCheckItem" resultType="String" parameterType="hashMap">
+<select id="dupCheckItem" resultType="String" parameterType="StockVo">
 SELECT
 	item_cd
 FROM
@@ -112,13 +112,13 @@ AND m_categy_cd = #{m_categy_cd}
 AND item_cd = #{item_cd}
 </select>
 
-<insert id="addItem" parameterType="hashMap">
+<insert id="addItem" parameterType="StockVo">
 INSERT INTO WEB.CATEGORY_DTL
 (l_categy_cd,  m_categy_cd,  item_cd, item_nm, cost, cret_dt, cret_id, updt_dt ,updt_id)
 VALUES(#{l_categy_cd},  #{m_categy_cd}, #{item_cd}, #{item_nm}, #{cost}::numeric, now(), #{cret_id}, now(), #{updt_id})	
 </insert>
 
-<delete id="deleteItem" parameterType="com.chungchunClean.vo.StockVo">
+<delete id="deleteItem" parameterType="StockVo">
 DELETE FROM WEB.CATEGORY_DTL
 WHERE 1=1
 AND l_categy_cd = #{l_categy_cd}
@@ -130,7 +130,7 @@ SELECT DISTINCT COUNT(ITEM_CD) AS ITEM_CD
 FROM WEB.CATEGORY_DTL
 </select>
 
-<insert id="saveStock" parameterType="com.chungchunClean.vo.StockVo">
+<insert id="saveStock" parameterType="StockVo">
 INSERT INTO WEB.CATEGORY_DTL 
   (l_categy_cd,  m_categy_cd, item_cd, item_nm, cost, cret_dt, cret_id, updt_dt, updt_id)
   VALUES (#{l_categy_cd}, #{m_categy_cd}, #{item_cd}, #{item_nm}, #{cost}::numeric, now(), #{cret_id}, now(), #{updt_id})
