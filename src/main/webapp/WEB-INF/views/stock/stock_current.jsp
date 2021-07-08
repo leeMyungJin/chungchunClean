@@ -51,10 +51,9 @@ function loadGridCurrentList(type, result){
 			      { binding: 'cretDt', header: '일자', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'cretNm', header: '담당자', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'classifiCd', header: '분류', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'lCategyCd', header: '대카테고리', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'mCategyCd', header: '중카테고리', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'lCategyCd', header: '카테고리', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'itemCd', header: '물품코드', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'itemNm', header: '물품명', isReadOnly: true, width: '*'', align:"center" },
+			      { binding: 'itemNm', header: '물품명', isReadOnly: true, width: '*', align:"center" },
 			      { binding: 'cost', header: '원가', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'sarQuantity', header: '입출고수량', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'returnQuantity', header: '반품수량', isReadOnly: true, width: 100, align:"center" },
@@ -68,8 +67,15 @@ function loadGridCurrentList(type, result){
 			    columns: currentColumns,
 			    itemsSource: currentView
 			  });
-			  
-		   	_setUserGridLayout('currentLayout', currentGrid, currentColumns);
+		   	
+		   	//행번호
+		   	currentGrid.itemFormatter = function (panel, r, c, cell) { 
+	            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+	                cell.textContent = (r + 1).toString();
+	            }
+	        };
+	        
+	        _setUserGridLayout('currentLayout', currentGrid, currentColumns);
 			  
 	  }else{		  
 		   currentView = new wijmo.collections.CollectionView(result, {
@@ -82,6 +88,59 @@ function loadGridCurrentList(type, result){
 	  refreshPaging(currentGrid.collectionView.totalItemCount, 1, currentGrid, 'currentGrid');  // 페이징 초기 셋팅
 	  
 }
+
+
+function getCurrentList(){
+	var param = {
+		con 	: $('#con').val()
+		, inq 	: $('#inq').val()
+		, fromDate : $('#fromDate').val()
+		, toDate : $('#toDate').val()
+	};
+	
+	$.ajax({
+        type : 'POST',
+        url : '/stock/getStockCurrentList',
+        dataType : null,
+        data : param,
+        success : function(result) {
+        	console.log("getCurrentList success");
+        	loadGridCurrentList('search', result);
+        },
+        error: function(request, status, error) {
+        	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+        }
+    });
+}
+
+function exportExcel(){
+	var gridView = currentGrid.collectionView;
+	var oldPgSize = gridView.pageSize;
+	var oldPgIndex = gridView.pageIndex;
+
+    //전체 데이터를 엑셀다운받기 위해서는 페이징 제거 > 엑셀 다운 > 페이징 재적용 하여야 함.
+    currentGrid.beginUpdate();
+    currentView.pageSize = 0;
+
+    wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(currentGrid, {includeCellStyles: true, includeColumnHeaders: true}, 'stockCurrentList.xlsx',
+	      saved => {
+	    	gridView.pageSize = oldPgSize;
+	    	gridView.moveToPage(oldPgIndex);
+	    	currentGrid.endUpdate();
+	      }, null
+	 );
+}
+
+//행추가
+function addRow(){
+	currentGrid.allowAddNew = true;
+}
+
+function deleteRows(type){
+	
+}
+
 </script>
 
 <body onload="pageLoad()">
@@ -91,7 +150,7 @@ function loadGridCurrentList(type, result){
 
         <div class="admin_container">
             <section class="admin_section">
-                <h2 class="admin_title">입출현황</h2>
+                <h2 class="admin_title">입출이력</h2>
                 <div class="admin_summary">
                     <dl>
                         <dt>금일 입고수량</dt>
@@ -113,13 +172,13 @@ function loadGridCurrentList(type, result){
                 <div class="admin_utility">
                     <form action="#" method="post">
                         <label for>조회일</label>
-                        <input type="date" id="fromDate" value="2021-06-02">
+                         <input type="date" id="fromDate" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey();">
                         -
-                        <input type="date" id="toDate" value="2021-06-02">
-                        <button type="button" class="admin_utility_btn">조회</button>
+                        <input type="date" id="toDate" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey();">
+                        <button type="button" class="admin_utility_btn" onClick="getCurrentList();">조회</button>
                     </form>
                     <div class="admin_btn">
-                        <button class="btn">엑셀 다운로드</button>
+                        <button class="btn" onClick="exportExcel();">엑셀 다운로드</button>
                     </div>
                 </div>
                 <div class="admin_content">
@@ -133,22 +192,27 @@ function loadGridCurrentList(type, result){
                                 <option value="product">물품명</option>
                                 <option value="person">담당자</option>
                             </select>
-                            <label for="inq"></label>
+                            <label for="inq" onkeyup="enterkey();"></label>
                             <input type="text" id="inq" placeholder=",로 다중검색 가능">
-                            <button type="button">조회</button>
+                            <button type="button" onClick="getCurrentList();">조회</button>
                         </form>
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
-                    	<button type="button" class="stroke left">+ 이력추가</button>
-                        <div class="btn_wrap">w
-                            <button type="button" class="stroke">칼럼위치저장</button>
-                            <button type="button" class="stroke">칼럼초기화</button>
-                        </div>
-                        <div class="grid_wrap">Grid 영역입니다</div>
+                    	<button type="button" class="stroke left" onClick="addRow()">+ 추가</button>
+                    	<button type="button" class="stroke left">저장</button>
+                    	<button type="button" class="stroke left" onClick="deleteRows()">삭제</button>
                         <div class="btn_wrap">
-                            <button type="button" class="stroke">칼럼위치저장</button>
-                            <button type="button" class="stroke">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="_getUserGridLayout('currentLayout', currentGrid);">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('currentLayout', currentGrid, currentColumns);">칼럼초기화</button>
+                        </div>
+                        <div class="grid_wrap">
+                        	<div id="currentGrid"  style="height:500px;"></div>
+                        	<div id="currentGridPager" class="pager"></div>
+                        </div>
+                        <div class="btn_wrap">
+                            <button type="button" class="stroke" onClick="_getUserGridLayout('currentLayout', currentGrid);">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('currentLayout', currentGrid, currentColumns);">칼럼초기화</button>
                         </div>
                     </div>
                 </div>
