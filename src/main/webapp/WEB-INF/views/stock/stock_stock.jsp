@@ -36,7 +36,7 @@ function loadGridStockList(type, result){
         $("#excelDiv").hide();
         stockView = new wijmo.collections.CollectionView(result, {
             pageSize: 100,
-            groupDescriptions: ['lCategyNm', 'mCategyNm']
+            groupDescriptions: ['lCategyNm']
         });
 		// 페이지 이동
         stockGridPager = new wijmo.input.CollectionViewNavigator('#stockGridPager', {
@@ -49,8 +49,6 @@ function loadGridStockList(type, result){
                 { binding: 'status', header: '상태', isReadOnly: true, width: 60, align:"center"},
                 { binding: 'lCategyCd', header: '대카테고리코드', isReadOnly: true, visible: false, width: 200, align:"center"},
                 { binding: 'lCategyNm', header: '대카테고리명', isReadOnly: true, width: 230, align:"center"},
-                { binding: 'mCategyCd', header: '중카테고리코드', isReadOnly: true,  visible: false,width: 200, align:"center" },
-                { binding: 'mCategyNm', header: '중카테고리명', isReadOnly: true, width: 230, align:"center"  },
                 { binding: 'itemNm', header: '물품명', isReadOnly: true, width: 230, align:"center"  },
                 { binding: 'itemCd', header: '코드번호', isReadOnly: true, width: 200, align:"center"},
                 { binding: 'cost', header: '원가', isReadOnly: true, width: 200, align:"center"},
@@ -135,7 +133,7 @@ function loadGridStockList(type, result){
     }else{
         stockView = new wijmo.collections.CollectionView(result, {
             pageSize: 100,
-            groupDescriptions: ['lCategyNm','mCategyNm']
+            groupDescriptions: ['lCategyNm']
         });
         stockGrid.columns[0].width = 50;
         stockGridPager.cv = stockView;

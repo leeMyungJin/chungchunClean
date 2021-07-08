@@ -7,8 +7,6 @@
 	select
 		ctg_bas.l_categy_cd ,
 		ctg_bas.l_categy_nm ,
-		ctg_bas.m_categy_cd ,
-		ctg_bas.m_categy_nm ,
 		ctg_dtl.item_cd ,
 		ctg_dtl.item_nm,
 		ctg_dtl.qr_url,
@@ -20,7 +18,6 @@
 		web.category_bas ctg_bas
 	left outer join WEB.category_dtl ctg_dtl on
 		ctg_bas.l_categy_cd = ctg_dtl.l_categy_cd
-		and ctg_bas.m_categy_cd = ctg_dtl.m_categy_cd
 	where
 		1 = 1
 	<if test="inq != null">
@@ -31,8 +28,6 @@
 					index="index" open="(" close=")" separator="or">
 					ctg_bas.l_categy_nm LIKE '%' || #{item} || '%'
 					or
-					ctg_bas.m_categy_nm LIKE '%' || #{item} || '%'
-					or
 					ctg_dtl.item_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
@@ -40,8 +35,6 @@
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
 					ctg_bas.l_categy_nm LIKE '%' || #{item} || '%'
-					or
-					ctg_bas.m_categy_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'product'">
@@ -56,74 +49,61 @@
 		AND ctg_dtl.quantity <![CDATA[<=]]> 10
 	</if>
 	AND ctg_dtl.item_cd is not null
-	ORDER BY l_categy_cd, m_categy_cd, item_cd
+	ORDER BY l_categy_cd, item_cd
 </select>
 
 <select id="getCategoryList" resultType="com.chungchunClean.vo.StockVo">
 	SELECT 
 		ctg_bas.l_categy_cd ,
 		ctg_bas.l_categy_nm ,
-		ctg_bas.m_categy_cd ,
-		ctg_bas.m_categy_nm,
 		to_char(coalesce(updt_dt, cret_dt),'yyyy-mm-dd HH24:MI:SS') as reg_date
 	FROM web.category_bas ctg_bas
-	ORDER BY l_categy_cd, m_categy_cd
+	ORDER BY l_categy_cd
 </select>
 
 <delete id="deleteCategory" parameterType="StockVo">
 DELETE 
   FROM WEB.CATEGORY_BAS 
   WHERE 1=1
-  AND l_categy_cd = #{l_categy_cd} 
-  AND m_categy_cd = #{m_categy_cd}
+  AND l_categy_cd = #{lCategyCd} 
 </delete>
 <insert id="saveCategory" parameterType="StockVo">
 INSERT INTO WEB.CATEGORY_BAS 
-  (l_categy_cd, l_categy_nm, m_categy_cd, m_categy_nm , cret_dt, cret_id, updt_dt, updt_id)
-  VALUES (#{l_categy_cd} , #{l_categy_nm}, #{m_categy_cd}, #{m_categy_nm}, now(), #{cret_id}, now(), #{updt_id})
-ON CONFLICT( l_categy_cd, m_categy_cd) DO
+  (l_categy_cd, l_categy_nm, cret_dt, cret_id, updt_dt, updt_id)
+  VALUES (#{lCategyCd} , #{lCategyNm}, now(), #{cretId}, now(), #{updtId})
+ON CONFLICT( l_categy_cd) DO
 UPDATE
-	SET l_categy_cd = #{l_categy_cd},
-		l_categy_nm = #{l_categy_nm},
-		m_categy_cd = #{m_categy_cd},
-		m_categy_nm = #{m_categy_nm},
+	SET l_categy_cd = #{lCategyCd},
+		l_categy_nm = #{lCategyNm},
 		updt_dt		= now(),
-		updt_id		= #{updt_id}
+		updt_id		= #{updtId}
 </insert>
 <select id="getLCategoryList" resultType="StockVo">
 SELECT DISTINCT l_categy_cd, l_categy_nm
 FROM WEB.CATEGORY_BAS
 ORDER BY l_categy_cd
 </select>
-<select id="getMCategoryList" resultType="StockVo">
-SELECT DISTINCT m_categy_cd, m_categy_nm
-FROM WEB.CATEGORY_BAS
-ORDER BY m_categy_cd
-</select>
-
 <select id="dupCheckItem" resultType="String" parameterType="StockVo">
 SELECT
 	item_cd
 FROM
 	WEB.CATEGORY_DTL
 WHERE 1 = 1
-AND l_categy_cd = #{l_categy_cd}
-AND m_categy_cd = #{m_categy_cd}
-AND item_cd = #{item_cd}
+AND l_categy_cd = #{lCategyCd}
+AND item_cd = #{itemCd}
 </select>
 
 <insert id="addItem" parameterType="StockVo">
 INSERT INTO WEB.CATEGORY_DTL
-(l_categy_cd,  m_categy_cd,  item_cd, item_nm, cost, cret_dt, cret_id, updt_dt ,updt_id)
-VALUES(#{l_categy_cd},  #{m_categy_cd}, #{item_cd}, #{item_nm}, #{cost}::numeric, now(), #{cret_id}, now(), #{updt_id})	
+(l_categy_cd,  item_cd, item_nm, cost, cret_dt, cret_id, updt_dt ,updt_id)
+VALUES(#{lCategyCd}, #{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId})	
 </insert>
 
 <delete id="deleteItem" parameterType="StockVo">
 DELETE FROM WEB.CATEGORY_DTL
 WHERE 1=1
-AND l_categy_cd = #{l_categy_cd}
-AND m_categy_cd = #{m_categy_cd}
-AND item_cd = #{item_cd}
+AND l_categy_cd = #{lCategyCd}
+AND item_cd = #{itemCd}
 </delete>
 <select id="getTotalItemCnt" resultType="String">
 SELECT DISTINCT COUNT(ITEM_CD) AS ITEM_CD
@@ -132,17 +112,16 @@ FROM WEB.CATEGORY_DTL
 
 <insert id="saveStock" parameterType="StockVo">
 INSERT INTO WEB.CATEGORY_DTL 
-  (l_categy_cd,  m_categy_cd, item_cd, item_nm, cost, cret_dt, cret_id, updt_dt, updt_id)
-  VALUES (#{l_categy_cd}, #{m_categy_cd}, #{item_cd}, #{item_nm}, #{cost}::numeric, now(), #{cret_id}, now(), #{updt_id})
-ON CONFLICT( l_categy_cd, m_categy_cd, item_cd) DO
+  (l_categy_cd,   item_cd, item_nm, cost, cret_dt, cret_id, updt_dt, updt_id)
+  VALUES (#{lCategyCd},#{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId})
+ON CONFLICT( l_categy_cd, item_cd) DO
 UPDATE
-	SET l_categy_cd = #{l_categy_cd},
-		m_categy_cd = #{m_categy_cd},
-		item_cd 	= #{item_cd},
-		item_nm		= #{item_nm},
+	SET l_categy_cd = #{lCategyCd},
+		item_cd 	= #{itemCd},
+		item_nm		= #{itemNm},
 		cost		=  #{cost}::numeric,
 		updt_dt		= now(),
-		updt_id		= #{updt_id}
+		updt_id		= #{updtId}
 </insert>
 
 
@@ -153,8 +132,6 @@ UPDATE
 	select sar_seq
 			,l_categy_cd 
 			, l_categy_nm 
-			, m_categy_cd 
-			, m_categy_nm 
 			, item_cd 
 			, item_nm 
 			, "cost" 
@@ -178,8 +155,6 @@ UPDATE
 					index="index" open="(" close=")" separator="or">
 					l_categy_nm LIKE '%' || #{item} || '%'
 					or
-					m_categy_nm LIKE '%' || #{item} || '%'
-					or
 					item_nm LIKE '%' || #{item} || '%'
 					or
 					cret_nm LIKE '%' || #{item} || '%'
@@ -189,8 +164,6 @@ UPDATE
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
 					l_categy_nm LIKE '%' || #{item} || '%'
-					or
-					m_categy_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'product'">
@@ -207,20 +180,18 @@ UPDATE
 			</when>
 		</choose>
 	</if>
-	ORDER BY cret_dt, l_categy_cd, m_categy_cd, item_cd
+	ORDER BY cret_dt, l_categy_cd, item_cd
 </select>
 
 <delete id="deleteStockCurrent" parameterType="StockVo">
 	delete from web.category_dtl_sar 
-	where sar_seq = #{sar_seq}
+	where sar_seq = #{sarSeq}
 </delete>
 
 <insert id="saveStockCurrent" parameterType="StockVo">
 insert into web.category_dtl_sar (
 		l_categy_cd -- 대카테고리코드
 		, l_categy_nm -- 대카테고리명
-		, m_categy_cd -- 중카테고리코드
-		, m_categy_nm -- 중카테고리명
 		, item_cd-- 물품코드
 		, item_nm -- 물품명
 		, "cost" -- 물품원가
@@ -236,23 +207,21 @@ insert into web.category_dtl_sar (
 		, cret_nm -- 등록자명
 )
 values(
-		#{l_categy_cd} -- 대카테고리코드
-		, #{l_categy_nm} -- 대카테고리명
-		, #{m_categy_cd} -- 중카테고리코드
-		, #{m_categy_nm} -- 중카테고리명
-		, #{item_cd}-- 물품코드
-		, #{item_nm} -- 물품명
+		#{lCategyCd} -- 대카테고리코드
+		, #{lCategyNm} -- 대카테고리명
+		, #{itemCd}-- 물품코드
+		, #{itemNm} -- 물품명
 		, #{cost} -- 물품원가
 		, #{quantity}-- 물품재고
-		, #{classifi_cd} -- 분류코드
-		, #{classifi_nm} -- 분류명
-		, #{sar_quantity} -- 입출고수량
-		, #{return_quantity} -- 반품입출고수량
-		, #{cret_dt} -- 등록일자
-		, #{cret_id} -- 등록자
-		, #{updt_dt} -- 수정일자
-		, #{updt_id} -- 수정자
-		, #{cret_nm} -- 등록자명
+		, #{classifiCd} -- 분류코드
+		, #{classifiNm} -- 분류명
+		, #{sarQuantity} -- 입출고수량
+		, #{returnQuantity} -- 반품입출고수량
+		, #{cretDt} -- 등록일자
+		, #{cretId} -- 등록자
+		, #{updtDt} -- 수정일자
+		, #{updtId} -- 수정자
+		, #{cretNm} -- 등록자명
 )
 </insert>
 

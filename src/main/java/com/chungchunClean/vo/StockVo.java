@@ -4,8 +4,6 @@ public class StockVo {
 
 	private String lCategyCd;     	//대카테고리코드
 	private String lCategyNm;    	 //대카테고리명
-	private String mCategyCd;     //중카테고리코드
-	private String mCategyNm;    //중카테고리명
 	private Double cost;           		//원가
 	private String itemCd;     		    //물품코드
 	private String itemNm;    		    //물품명
@@ -44,27 +42,6 @@ public class StockVo {
     public void setlCategyNm(String lCategyNm) {
         this.lCategyNm = lCategyNm;
     }
-
-
-    public String getmCategyCd() {
-        return mCategyCd;
-    }
-
-
-    public void setmCategyCd(String mCategyCd) {
-        this.mCategyCd = mCategyCd;
-    }
-
-
-    public String getmCategyNm() {
-        return mCategyNm;
-    }
-
-
-    public void setmCategyNm(String mCategyNm) {
-        this.mCategyNm = mCategyNm;
-    }
-
 
     public Double getCost() {
         return cost;
@@ -238,8 +215,7 @@ public class StockVo {
 
     @Override
 	public String toString() {
-		return "StockVo [lCategyCd=" + lCategyCd + ", lCategyNm=" + lCategyNm + ", mCategyCd=" + mCategyCd
-				+ ", mCategyNm=" + mCategyNm + ", cost=" + cost + ", itemCd=" + itemCd + ", itemNm=" + itemNm
+		return "StockVo [lCategyCd=" + lCategyCd + ", lCategyNm=" + lCategyNm + ", cost=" + cost + ", itemCd=" + itemCd + ", itemNm=" + itemNm
 				+ ", qrUrl=" + qrUrl + ", quantity=" + quantity + ", status=" + status + ", regDate=" + regDate
 				+ ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt=" + updtDt + ", updtId=" + updtId
 				+ ", sarSeq=" + sarSeq + ", classifiCd=" + classifiCd + ", classifiNm=" + classifiNm

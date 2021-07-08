@@ -62,8 +62,6 @@ function loadGridStockList(type, result){
                 { isReadOnly: true, width: 35, align:"center"},
                 { binding: 'lCategyCd', header: '대카테고리코드', isReadOnly: true, width: 200, align:"center"},
                 { binding: 'lCategyNm', header: '대카테고리명', isReadOnly: true, width: 230, align:"center"},
-                { binding: 'mCategyCd', header: '중카테고리코드', isReadOnly: true, width: 200, align:"center" },
-                { binding: 'mCategyNm', header: '중카테고리명', isReadOnly: true, width: 230, align:"center"  },
                 { binding: 'itemCd', header: '물품코드', isReadOnly: false, width: 200, align:"center"  },
                 { binding: 'itemNm', header: '물품명', isReadOnly: false, width: 230, align:"center"  },
                 { binding: 'cost', header: '원가', isReadOnly: false, width: 200, align:"center"}
@@ -113,8 +111,6 @@ function loadGridStockList(type, result){
             columns: [
                 { binding: 'lCategyCd', header: '대카테고리코드', isReadOnly: false, width: 230, align:"center"},
                 { binding: 'lCategyNm', header: '대카테고리명', isReadOnly: false,  width: 230, align:"center"},
-                { binding: 'mCategyCd', header: '중카테고리코드', isReadOnly: false, width: 230, align:"center" },
-                { binding: 'mCategyNm', header: '중카테고리명', isReadOnly: false, width: 230, align:"center"  },
                 { binding: 'regDate', header: '등록일시', isReadOnly: true, width: 230, align:"center"  }
 
             ],
@@ -125,9 +121,6 @@ function loadGridStockList(type, result){
                     if (col.binding == 'lCategyCd') {
                         e.cancel = true;
                         alert("대카테고리코드는 신규 행일때만 입력이 가능합니다.");
-                    }else if(col.binding == 'mCategyCd'){
-                            e.cancel = true;
-                        alert("중카테고리코드는 신규 행일때만 입력이 가능합니다.");
                     }
                 }
             },
@@ -433,9 +426,6 @@ function dupCheckItem() {
     if($("#category1").val() == "all"){
         alert("대카테고리를 선택하시기 바랍니다.");
         return false;
-    }else if($("#category2").val() == "all"){
-        alert("중카테고리를 선택하시기 바랍니다.");
-        return false;
     }else if($("#product").val().trim().length == 0){
         alert("상품명을 입력하시기 바랍니다.");
         return false;
@@ -670,11 +660,6 @@ function importExcel(){
                     <div class="row">
                         <label for="category1">대카테고리<i>*</i></label>
                             <select name="category1" id="category1">
-                            </select>
-                    </div>
-                    <div class="row">
-                        <label for="category2">중카테고리<i>*</i></label>
-                        <select name="category2" id="category2">
                             </select>
                     </div>
                     <div class="row">
