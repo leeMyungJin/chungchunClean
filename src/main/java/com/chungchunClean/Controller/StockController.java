@@ -3,6 +3,9 @@ package com.chungchunClean.Controller;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.chungchunClean.Service.StockService;
 import com.chungchunClean.vo.StockVo;
 
@@ -29,7 +32,13 @@ public class StockController {
     }
     
     @RequestMapping(value = "/current", method = {RequestMethod.POST , RequestMethod.GET})
-    public String moveCurrent() {
+    public String moveCurrent(HttpServletRequest req, HttpServletResponse res) {
+    	//stored and released
+    	req.setAttribute("todayStore", stockService.getTodayStore());
+    	req.setAttribute("todayRelease", stockService.getTodayRelease());
+    	req.setAttribute("todayReturnStore", stockService.getTodayReturnStore());
+    	req.setAttribute("todayReturnRelease", stockService.getTodayReturnRelease());
+    	
         return "stock/stock_current";
     }
     

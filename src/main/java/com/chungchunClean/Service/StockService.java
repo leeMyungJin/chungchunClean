@@ -23,4 +23,8 @@ public interface StockService {
     public List<StockVo> getStockCurrentList(HashMap<String,Object> params);
     public void deleteStockCurrent(List<StockVo> params);
     public void saveStockCurrent(List<StockVo> params);
+    public int getTodayStore();
+	public int getTodayRelease();
+    public int getTodayReturnStore();
+	public int getTodayReturnRelease();
 }
