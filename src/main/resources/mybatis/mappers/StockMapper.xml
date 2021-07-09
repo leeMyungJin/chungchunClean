@@ -228,4 +228,32 @@ values(
 )
 </insert>
 
+<select id="getTodayStore" resultType="Integer">
+	select sum(sar_quantity) 
+	from web.category_dtl_sar 
+	where to_char(cret_dt, 'YYYY-MM-DD') = to_char(NOW(), 'YYYY-MM-DD')
+	and classifi_cd = 'S'
+</select>
+	
+<select id="getTodayRelease" resultType="Integer">
+	select sum(sar_quantity) 
+	from web.category_dtl_sar 
+	where to_char(cret_dt, 'YYYY-MM-DD') = to_char(NOW(), 'YYYY-MM-DD')
+	and classifi_cd = 'R'
+</select>	
+
+<select id="getTodayReturnStore" resultType="Integer">
+	select sum(return_quantity) 
+	from web.category_dtl_sar 
+	where to_char(cret_dt, 'YYYY-MM-DD') = to_char(NOW(), 'YYYY-MM-DD')
+	and classifi_cd = 'RS'
+</select>
+	
+<select id="getTodayReturnRelease" resultType="Integer">
+	select sum(return_quantity) 
+	from web.category_dtl_sar 
+	where to_char(cret_dt, 'YYYY-MM-DD') = to_char(NOW(), 'YYYY-MM-DD')
+	and classifi_cd = 'RR'
+</select>	
+
 </mapper>

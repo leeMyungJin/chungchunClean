@@ -112,6 +112,27 @@ public class StockServiceImpl implements StockService {
 		
 	}	
 	
+	@Override
+	public int getTodayStore() {
+		return stockMapper.getTodayStore();
+	}
+
+	@Override
+	public int getTodayRelease() {
+		return stockMapper.getTodayRelease();
+	}
+
+	@Override
+	public int getTodayReturnStore() {
+		return stockMapper.getTodayReturnStore();
+	}
+
+	@Override
+	public int getTodayReturnRelease() {
+		return stockMapper.getTodayReturnRelease();
+	}
+
+	
 
 	
 }
