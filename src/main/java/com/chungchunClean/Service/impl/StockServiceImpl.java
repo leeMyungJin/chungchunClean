@@ -60,7 +60,7 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public void addItem(HashMap<String, String> params) {
+	public void addItem(StockVo  params) {
 		stockMapper.addItem(params);
 	}
 

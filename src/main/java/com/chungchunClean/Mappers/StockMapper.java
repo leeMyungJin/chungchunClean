@@ -16,7 +16,7 @@ public interface StockMapper  {
 	public List<StockVo> getLCategoryList();
 	public List<StockVo> getMCategoryList();
     public String dupCheckItem(HashMap<String, String> params);
-    public void addItem(HashMap<String, String> params);
+    public void addItem(StockVo params);
     public void deleteItem(StockVo vo);
     public String getTotalItemCnt();
     public void saveStock(StockVo params);

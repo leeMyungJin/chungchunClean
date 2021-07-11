@@ -123,8 +123,7 @@ public class StockController {
      */
     @RequestMapping(value="/addItem", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void addItem(@RequestParam HashMap<String,String> params){
-        
+    public void addItem(@RequestBody StockVo params){
         stockService.addItem(params); // 카테고리 저장 후 다시 조회
     }
 

@@ -499,13 +499,15 @@ function addItem(){
             url : "/stock/addItem",
             async : false, // 비동기모드 : true, 동기식모드 : false
             type : 'POST',
-            data: params,
+            contentType: 'application/json',
+            data: JSON.stringify(params),
             success : function(result) {
                     alert("등록 되었습니다.");
                     dupCheckItemFlag = false;
                     $("#totItemCnt").val(parseInt($("#totItemCnt").val()) + 1);
                     $("#totalItemCnt").text(_fillZero(5,$("#totItemCnt").val()) + "개");
                     closePop();
+                    getStockList();
             },
             error : function(request,status,error) {
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
