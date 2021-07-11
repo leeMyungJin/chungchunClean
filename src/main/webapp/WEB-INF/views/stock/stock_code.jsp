@@ -23,6 +23,10 @@ var dupCheckItemFlag = false;
 var excelGrid;
 var excelView;
 var excelGridPager;
+var excelSelector;
+var addGrid;
+var editGrid;
+var editGridView;
 
 function pageLoad(){
 	$('#stock').addClass("current");
@@ -145,6 +149,10 @@ function loadGridStockList(type, result){
             itemsSource: categoryView,
         });
         categorySelector = new wijmo.grid.selector.Selector(categoryGrid);
+        editGrid = new wijmo.grid.FlexGrid('#editGrid', {
+            itemsSource: categoryView.itemsEdited,
+            isReadOnly: true
+        });
 
         //엑셀 업로드용 그리드 
             excelGridPager = new wijmo.input.CollectionViewNavigator('#excelGridPager', {
@@ -169,23 +177,17 @@ function loadGridStockList(type, result){
                 cell.textContent = (r + 1).toString();
             }
         };
-
-        // 체크박스 생성
-        excelSelector = new wijmo.grid.selector.Selector(excelGrid, {
-            itemChecked: () => {
-            }
-        });
-
-        excelSelector.column = excelGrid.columns[0];
     }else if(type == "category"){
         categoryView = new wijmo.collections.CollectionView(result, {
-            pageSize: 100
+            pageSize: 100,
+            trackChanges: true
         });
         categoryGridPager.cv = categoryView;
         categoryGrid.itemsSource = categoryView;
 	}else{
         stockView = new wijmo.collections.CollectionView(result, {
             pageSize: 100,
+            trackChanges: true,
             groupDescriptions: ['lCategyNm']
         });
         stockGrid.columns[0].width = 50;
@@ -347,45 +349,45 @@ function getCategoryDtl() {
 //데이터 저장
 function saveGrid(type){
     if(type == "category"){
-        var item = categoryGrid.rows.filter(r => r.isSelected);
+        var editItem = categoryView.itemsEdited;
+        var addItem  = categoryView.itemsAdded;
         var rows = [];
-        var params;
-        if(item.length == 0){
-            alert("선택된 행이 없습니다.");
-            return false;
-        }else{
-            for(var i =0; i< item.length ; i++){
-                rows.push(item[i].dataItem);
-            }
-            if(confirm("선택한 행들을 저장 하시겠습니까??")){
-                $.ajax({
-                    url : "/stock/saveCategory",
-                    async : false, // 비동기모드 : true, 동기식모드 : false
-                    type : 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(rows),
-                    success : function(result) {
-                        alert("저장되었습니다.");
-                        loadGridStockList('category', result);
-                    },
-                    error : function(request,status,error) {
-                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                    }
-                });
-            }
+        for(var i =0; i< editItem.length ; i++){
+                rows.push(editItem[i]);
+        }
+        for(var i=0; i< addItem.length; i++){
+            rows.push(addItem[i]);
+        }
+
+        wijmo.Control.getControl("#editGrid").refresh(true);
+        if(confirm("변경한 내용을 저장 하시겠습니까??")){
+            $.ajax({
+                url : "/stock/saveCategory",
+                async : false, // 비동기모드 : true, 동기식모드 : false
+                type : 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(rows),
+                success : function(result) {
+                    alert("저장되었습니다.");
+                    loadGridStockList('category', result);
+                },
+                error : function(request,status,error) {
+                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                }
+            });
         }
     }else if(type == 'stock'){
-        var item = stockGrid.rows.filter(r => r.isSelected);
-        var rows = [];
-        var params;
-        if(item.length == 0){
-            alert("선택된 행이 없습니다.");
-            return false;
-        }else{
-            for(var i =0; i< item.length ; i++){
-                rows.push(item[i].dataItem);
+        if(stockView.itemCount > 0){
+            var editItem = stockView.itemsEdited;
+            var addItem  = stockView.itemsAdded;
+            var rows = [];
+            for(var i =0; i< editItem.length ; i++){
+                    rows.push(editItem[i]);
             }
-            if(confirm("선택한 행들을 저장 하시겠습니까??")){
+            for(var i=0; i< addItem.length; i++){
+                rows.push(addItem[i]);
+            }
+            if(confirm("저장 하시겠습니까??")){
                 $.ajax({
                     url : "/stock/saveStock",
                     async : false, // 비동기모드 : true, 동기식모드 : false
@@ -401,7 +403,30 @@ function saveGrid(type){
                     }
                 });
             }
+        }else{ // 엑셀 업로드 저장하기
+            var item  = excelGrid.rows;
+            var rows = [];
+            for(var i=0; i< item.length; i++){
+                rows.push(item[i]);
+            }
+            if(confirm("저장 하시겠습니까??")){
+                $.ajax({
+                    url : "/stock/saveExcelStock",
+                    async : false, // 비동기모드 : true, 동기식모드 : false
+                    type : 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(rows),
+                    success : function(result) {
+                        alert("저장되었습니다.");
+                        getStockList();
+                    },
+                    error : function(request,status,error) {
+                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+            }
         }
+        
     }
 }
 
@@ -513,6 +538,19 @@ function importExcel(){
         if (inputEle.files[0]) {
             wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(excelGrid, inputEle.files[0]);
         }
+         // 체크박스 생성
+        excelSelector = new wijmo.grid.selector.Selector(excelGrid, {
+            itemChecked: () => {
+            }
+        });
+        excelSelector.column = excelGrid.columns[0];
+}
+
+//엑셀 양식 다운로드
+function downTemplate(){
+    window.location.assign("<%=request.getContextPath()%>" + "/template/excelTemplate.xlsx");
+    // var url = "<%=request.getContextPath()%>/" + "template/excelTemplate.xlsx";
+    //   location.href=url;
 }
 
 </script>
@@ -536,6 +574,7 @@ function importExcel(){
                 <div class="admin_utility">
                     <div class="admin_btn">
                         <input type="file" class="form-control" style="display:none" id="importFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12" />
+                        <button class="btn" id="excelTemplate" name = "excelTemplate" onclick="downTemplate();">엑셀 템플릿</button>
                         <button class="btn" id="importExcel" name = "importExcel" onclick="findFile();">엑셀 업로드</button>
                         <!--<button class="btn" id="importExcel2" name = "importExcel2" onclick="importExcel();">엑셀 업로드2</button> -->
                         <button class="btn" id="exportExcel" name = "exportExcel" onclick="exportExcel();">엑셀 다운로드</button>
@@ -668,5 +707,12 @@ function importExcel(){
         </div>
     </div>
     <!--물품추가 팝업 영역 끝-->
+    <!-- 추가된 행 / 수정된 행 처리용 그리드 -->
+    <div class="grid_wrap" id="addDiv" style="display:none;">
+        <div id="addGrid"  style="height:500px;"></div>
+    </div>
+    <div class="grid_wrap" id="editDiv" style="display:none;">
+        <div id="editGrid"  style="height:500px;"></div>
+    </div>
 </body>
 </html>
