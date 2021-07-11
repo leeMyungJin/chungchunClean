@@ -32,7 +32,7 @@ function pageLoad(){
 	$('#stock').addClass("current");
 	$('#stock_code').addClass("current");
     loadGridStockList('init');
-    $("#totalItemCnt").text(_fillZero(5,'${totalItemCnt}') + "개");
+    $("#totalItemCnt").text("${totalItemCnt}".toLocaleString('ko-KR') + "개");
 
     //엑셀 업로드
     $("#importFile").on('change', function (params) {
@@ -505,7 +505,7 @@ function addItem(){
                     alert("등록 되었습니다.");
                     dupCheckItemFlag = false;
                     $("#totItemCnt").val(parseInt($("#totItemCnt").val()) + 1);
-                    $("#totalItemCnt").text(_fillZero(5,$("#totItemCnt").val()) + "개");
+                    $("#totalItemCnt").text($("#totItemCnt").val().toLocaleString('ko-KR') + "개");
                     closePop();
                     getStockList();
             },
