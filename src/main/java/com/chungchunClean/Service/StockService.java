@@ -19,6 +19,7 @@ public interface StockService {
     public String getTotalItemCnt();
     public void saveStock(List<StockVo> params);
     public void saveQuantity(StockVo params);
+    public HashMap<String, Object> getQuantityInfo();
     
     // 재고관리 - 입출관리 화면
     public List<StockVo> getStockCurrentList(HashMap<String,Object> params);

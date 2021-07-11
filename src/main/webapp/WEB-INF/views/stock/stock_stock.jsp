@@ -96,6 +96,7 @@ function loadGridStockList(type, result){
                             contentType: 'application/json',
                             data: JSON.stringify(params),
                             success : function(result) {
+                                getQuantityInfo();
                             },
                             error : function(request,status,error) {
                                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -199,6 +200,7 @@ function getStockList(){
             data : params,
             success : function(result) {
         	    loadGridStockList('search', result);
+                getQuantityInfo();
             },
             error : function(request,status,error) {
              	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -253,6 +255,24 @@ function downTemplate(){
     window.location.assign("<%=request.getContextPath()%>" + "/template/재고현황양식.xlsx");
 }
 
+// 상단 정보 표기
+function getQuantityInfo(){
+    $.ajax({
+        url : "/stock/getQuantityInfo",
+        async : false, // 비동기모드 : true, 동기식모드 : false
+        type : 'POST',
+        success : function(result) {
+            $("#tot_quantity").text(result.tot_quantity.toLocaleString('ko-KR') + "개");
+            $("#add_warehousing").text(result.add_warehousing.toLocaleString('ko-KR') + "개");
+            $("#tot_asset").text(result.tot_asset.toLocaleString('ko-KR') + "원");
+           
+        },
+        error : function(request,status,error) {
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        });
+    
+}
 
 </script>
 
@@ -267,15 +287,15 @@ function downTemplate(){
                 <div class="admin_summary">
                     <dl>
                         <dt>총 재고수량</dt>
-                        <dd>00개</dd>
+                        <dd id="tot_quantity">00개</dd>
                     </dl>
                     <dl>
                         <dt>추가입고 필요항목</dt>
-                        <dd>00개</dd>
+                        <dd id="add_warehousing">00개</dd>
                     </dl>
                     <dl>
                         <dt>총 재고자산</dt>
-                        <dd>0000원</dd>
+                        <dd id="tot_asset">0000원</dd>
                     </dl>
                 </div>
                 <div class="admin_utility">

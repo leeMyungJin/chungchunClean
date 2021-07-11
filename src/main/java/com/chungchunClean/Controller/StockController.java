@@ -159,7 +159,17 @@ public class StockController {
     @ResponseBody
     public void saveQuantity(@RequestBody StockVo params){
         stockService.saveQuantity(params);
-        // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
+    }
+
+    /**
+     * 재고관리 정보 조회
+     * @param params
+     * @return
+     */
+    @RequestMapping(value="/getQuantityInfo", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public HashMap<String,Object> getQuantityInfo(){
+        return stockService.getQuantityInfo();
     }
     // 재고관리 - 입출관리 화면
     /**

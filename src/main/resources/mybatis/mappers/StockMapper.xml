@@ -135,6 +135,21 @@ WHERE 1=1
   AND item_cd		= #{itemCd}
 </update>
 
+<select id="getQuantityInfo" resultType="HashMap">
+SELECT
+	sum(quantity) as tot_quantity ,
+	(
+	select
+		count(*)
+	from
+		web.category_dtl
+	where
+		quantity <![CDATA[<]]> 10 ) as add_warehousing,
+	sum(cost*quantity) as tot_asset
+FROM
+	web.category_dtl
+</select>
+
 
 <!-- 재고관리 - 입출내역 화면 -->
 <select id="getStockCurrentList" parameterType="hashMap" resultType="StockVo">
