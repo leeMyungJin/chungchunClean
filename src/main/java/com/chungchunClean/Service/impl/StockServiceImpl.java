@@ -85,6 +85,12 @@ public class StockServiceImpl implements StockService {
 		}
 		
 	}	
+
+	@Override
+	public void saveQuantity(StockVo params) {
+		stockMapper.saveQuantity(params);
+		
+	}
 	
 	
     // 재고관리 - 입출관리 화면
@@ -132,7 +138,6 @@ public class StockServiceImpl implements StockService {
 		return stockMapper.getTodayReturnRelease();
 	}
 
-	
 
 	
 }

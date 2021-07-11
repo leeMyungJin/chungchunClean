@@ -18,6 +18,7 @@ public interface StockService {
     public void deleteItem(List<StockVo> params);
     public String getTotalItemCnt();
     public void saveStock(List<StockVo> params);
+    public void saveQuantity(StockVo params);
     
     // 재고관리 - 입출관리 화면
     public List<StockVo> getStockCurrentList(HashMap<String,Object> params);
@@ -27,4 +28,5 @@ public interface StockService {
 	public int getTodayRelease();
     public int getTodayReturnStore();
 	public int getTodayReturnRelease();
+    
 }

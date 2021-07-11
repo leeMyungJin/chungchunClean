@@ -47,6 +47,7 @@ function _resetUserGridLayout(layoutId, grid, initColumns) {
 
     localStorage.setItem(layoutId, grid.columnLayout);
     alert("컬컴위치를 초기화하였습니다.");
+    _setUserGridLayout(layoutId, grid, initColumns);
 }
 
 

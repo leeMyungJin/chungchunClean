@@ -124,6 +124,7 @@ public class StockController {
     @RequestMapping(value="/addItem", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
     public void addItem(@RequestParam HashMap<String,String> params){
+        
         stockService.addItem(params); // 카테고리 저장 후 다시 조회
     }
 
@@ -149,7 +150,18 @@ public class StockController {
         stockService.saveStock(params);
         // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
     }
-    
+
+    /**
+     * 재고수량 저장하기
+     * @param params
+     * @return
+     */
+    @RequestMapping(value="/saveQuantity", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void saveQuantity(@RequestBody StockVo params){
+        stockService.saveQuantity(params);
+        // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
+    }
     // 재고관리 - 입출관리 화면
     /**
      * 입출 리스트 가져오기
