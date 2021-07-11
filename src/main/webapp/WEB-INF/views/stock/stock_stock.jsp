@@ -78,6 +78,11 @@ function loadGridStockList(type, result){
                         return false;
                     }else{
                         e.getRow().dataItem.quantity += value;// 입력값 재고수량에 계산
+                        if(e.getRow().dataItem.quantity > 10){
+                            e.getRow().dataItem.status = 'O';
+                        }else{
+                            e.getRow().dataItem.status = 'X';
+                        }
                     //    stockMngView.items[e.row -1].quantity += value ; 
                        var params = {
                             lCategyCd   : e.getRow().dataItem.lCategyCd,
