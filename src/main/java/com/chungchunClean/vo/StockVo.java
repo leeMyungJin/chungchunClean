@@ -16,214 +16,134 @@ public class StockVo {
     private String updtDt;         		//수정일
     private String updtId;         		//수정자
     
-    private String sarSeq; 				//입출이력 시퀀스
+    private String cateSarSeq; 				//입출이력 시퀀스
     private String classifiCd; 			//분류코드
 	private String classifiNm; 			//분류명
 	private String sarQuantity; 		//입출고수량
 	private String returnQuantity; 	//반품입출고수량
 	private String cretNm; 				//등록자명
-	
-	
 	public String getlCategyCd() {
-        return lCategyCd;
-    }
-
-
-    public void setlCategyCd(String lCategyCd) {
-        this.lCategyCd = lCategyCd;
-    }
-
-
-    public String getlCategyNm() {
-        return lCategyNm;
-    }
-
-
-    public void setlCategyNm(String lCategyNm) {
-        this.lCategyNm = lCategyNm;
-    }
-
-    public Double getCost() {
-        return cost;
-    }
-
-
-    public void setCost(Double cost) {
-        this.cost = cost;
-    }
-
-
-    public String getItemCd() {
-        return itemCd;
-    }
-
-
-    public void setItemCd(String itemCd) {
-        this.itemCd = itemCd;
-    }
-
-
-    public String getItemNm() {
-        return itemNm;
-    }
-
-
-    public void setItemNm(String itemNm) {
-        this.itemNm = itemNm;
-    }
-
-
-    public String getQrUrl() {
-        return qrUrl;
-    }
-
-
-    public void setQrUrl(String qrUrl) {
-        this.qrUrl = qrUrl;
-    }
-
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-
-    public String getStatus() {
-        return status;
-    }
-
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-
-    public String getRegDate() {
-        return regDate;
-    }
-
-
-    public void setRegDate(String regDate) {
-        this.regDate = regDate;
-    }
-
-
-    public String getCretDt() {
-        return cretDt;
-    }
-
-
-    public void setCretDt(String cretDt) {
-        this.cretDt = cretDt;
-    }
-
-
-    public String getCretId() {
-        return cretId;
-    }
-
-
-    public void setCretId(String cretId) {
-        this.cretId = cretId;
-    }
-
-
-    public String getUpdtDt() {
-        return updtDt;
-    }
-
-
-    public void setUpdtDt(String updtDt) {
-        this.updtDt = updtDt;
-    }
-
-
-    public String getUpdtId() {
-        return updtId;
-    }
-
-
-    public void setUpdtId(String updtId) {
-        this.updtId = updtId;
-    }
-
-
-    public String getSarSeq() {
-        return sarSeq;
-    }
-
-
-    public void setSarSeq(String sarSeq) {
-        this.sarSeq = sarSeq;
-    }
-
-
-    public String getClassifiCd() {
-        return classifiCd;
-    }
-
-
-    public void setClassifiCd(String classifiCd) {
-        this.classifiCd = classifiCd;
-    }
-
-
-    public String getClassifiNm() {
-        return classifiNm;
-    }
-
-
-    public void setClassifiNm(String classifiNm) {
-        this.classifiNm = classifiNm;
-    }
-
-
-    public String getSarQuantity() {
-        return sarQuantity;
-    }
-
-
-    public void setSarQuantity(String sarQuantity) {
-        this.sarQuantity = sarQuantity;
-    }
-
-
-    public String getReturnQuantity() {
-        return returnQuantity;
-    }
-
-
-    public void setReturnQuantity(String returnQuantity) {
-        this.returnQuantity = returnQuantity;
-    }
-
-
-    public String getCretNm() {
-        return cretNm;
-    }
-
-
-    public void setCretNm(String cretNm) {
-        this.cretNm = cretNm;
-    }
-
-
-    @Override
-	public String toString() {
-		return "StockVo [lCategyCd=" + lCategyCd + ", lCategyNm=" + lCategyNm + ", cost=" + cost + ", itemCd=" + itemCd + ", itemNm=" + itemNm
-				+ ", qrUrl=" + qrUrl + ", quantity=" + quantity + ", status=" + status + ", regDate=" + regDate
-				+ ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt=" + updtDt + ", updtId=" + updtId
-				+ ", sarSeq=" + sarSeq + ", classifiCd=" + classifiCd + ", classifiNm=" + classifiNm
-				+ ", sarQuantity=" + sarQuantity + ", returnQuantity=" + returnQuantity + ", cretNm=" + cretNm
-				+ "]";
+		return lCategyCd;
 	}
-
-    
-
-
+	public void setlCategyCd(String lCategyCd) {
+		this.lCategyCd = lCategyCd;
+	}
+	public String getlCategyNm() {
+		return lCategyNm;
+	}
+	public void setlCategyNm(String lCategyNm) {
+		this.lCategyNm = lCategyNm;
+	}
+	public Double getCost() {
+		return cost;
+	}
+	public void setCost(Double cost) {
+		this.cost = cost;
+	}
+	public String getItemCd() {
+		return itemCd;
+	}
+	public void setItemCd(String itemCd) {
+		this.itemCd = itemCd;
+	}
+	public String getItemNm() {
+		return itemNm;
+	}
+	public void setItemNm(String itemNm) {
+		this.itemNm = itemNm;
+	}
+	public String getQrUrl() {
+		return qrUrl;
+	}
+	public void setQrUrl(String qrUrl) {
+		this.qrUrl = qrUrl;
+	}
+	public Integer getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getRegDate() {
+		return regDate;
+	}
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
+	public String getCretDt() {
+		return cretDt;
+	}
+	public void setCretDt(String cretDt) {
+		this.cretDt = cretDt;
+	}
+	public String getCretId() {
+		return cretId;
+	}
+	public void setCretId(String cretId) {
+		this.cretId = cretId;
+	}
+	public String getUpdtDt() {
+		return updtDt;
+	}
+	public void setUpdtDt(String updtDt) {
+		this.updtDt = updtDt;
+	}
+	public String getUpdtId() {
+		return updtId;
+	}
+	public void setUpdtId(String updtId) {
+		this.updtId = updtId;
+	}
+	public String getCateSarSeq() {
+		return cateSarSeq;
+	}
+	public void setCateSarSeq(String cateSarSeq) {
+		this.cateSarSeq = cateSarSeq;
+	}
+	public String getClassifiCd() {
+		return classifiCd;
+	}
+	public void setClassifiCd(String classifiCd) {
+		this.classifiCd = classifiCd;
+	}
+	public String getClassifiNm() {
+		return classifiNm;
+	}
+	public void setClassifiNm(String classifiNm) {
+		this.classifiNm = classifiNm;
+	}
+	public String getSarQuantity() {
+		return sarQuantity;
+	}
+	public void setSarQuantity(String sarQuantity) {
+		this.sarQuantity = sarQuantity;
+	}
+	public String getReturnQuantity() {
+		return returnQuantity;
+	}
+	public void setReturnQuantity(String returnQuantity) {
+		this.returnQuantity = returnQuantity;
+	}
+	public String getCretNm() {
+		return cretNm;
+	}
+	public void setCretNm(String cretNm) {
+		this.cretNm = cretNm;
+	}
+	@Override
+	public String toString() {
+		return "StockVo [lCategyCd=" + lCategyCd + ", lCategyNm=" + lCategyNm + ", cost=" + cost + ", itemCd=" + itemCd
+				+ ", itemNm=" + itemNm + ", qrUrl=" + qrUrl + ", quantity=" + quantity + ", status=" + status
+				+ ", regDate=" + regDate + ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt=" + updtDt
+				+ ", updtId=" + updtId + ", cateSarSeq=" + cateSarSeq + ", classifiCd=" + classifiCd + ", classifiNm="
+				+ classifiNm + ", sarQuantity=" + sarQuantity + ", returnQuantity=" + returnQuantity + ", cretNm="
+				+ cretNm + "]";
+	}
+	
 }

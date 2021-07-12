@@ -3,6 +3,7 @@ package com.chungchunClean.Service;
 import java.util.HashMap;
 import java.util.List;
 
+import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.StockVo;
 
 
@@ -29,5 +30,6 @@ public interface StockService {
 	public int getTodayRelease();
     public int getTodayReturnStore();
 	public int getTodayReturnRelease();
-    
+	public List<StockVo> getItemList();
+	public List<CodeVo> getClassifiList();
 }

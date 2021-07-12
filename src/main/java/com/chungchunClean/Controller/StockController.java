@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.chungchunClean.Service.StockService;
+import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.StockVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,7 +220,25 @@ public class StockController {
         // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
     }
     
-
+ 
+    /**
+     *물품 리스트 가져오기
+     */
+    @RequestMapping(value="/getItemList", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public List<StockVo> getItemList(){
+        return stockService.getItemList(); // 카테고리 저장 후 다시 조회
+    }
+    
+    
+    /**
+     분류 리스트 가져오기
+     */
+    @RequestMapping(value="/getClassifiList", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public List<CodeVo> getClassifiList(){
+        return stockService.getClassifiList(); // 카테고리 저장 후 다시 조회
+    }
 
 
 }

@@ -3,6 +3,7 @@ package com.chungchunClean.Mappers;
 import java.util.HashMap;
 import java.util.List;
 
+import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.StockVo;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -30,6 +31,7 @@ public interface StockMapper  {
 	public int getTodayRelease();
     public int getTodayReturnStore();
 	public int getTodayReturnRelease();
-    
-    
+	public List<StockVo> getItemList();
+	public List<CodeVo> getClassifiList();
+
 }

@@ -21,9 +21,9 @@
 	where
 		1 = 1
 	<if test="inq != null">
-	AND 
 		<choose>
 			<when test="con == 'all'">
+			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
 					ctg_bas.l_categy_nm LIKE '%' || #{item} || '%'
@@ -32,12 +32,14 @@
 				</foreach>
 			</when>
 			<when test="con == 'category'">
+			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
 					ctg_bas.l_categy_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'product'">
+			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
 					ctg_dtl.item_nm LIKE '%' || #{item} || '%'
@@ -95,8 +97,8 @@ AND item_cd = #{itemCd}
 
 <insert id="addItem" parameterType="StockVo">
 INSERT INTO WEB.CATEGORY_DTL
-(l_categy_cd,  item_cd, item_nm, cost, cret_dt, cret_id, updt_dt ,updt_id)
-VALUES(#{lCategyCd}, #{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId})	
+(l_categy_cd,  item_cd, item_nm, cost, cret_dt, cret_id, updt_dt ,updt_id, quantity)
+VALUES(#{lCategyCd}, #{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId},0)	
 </insert>
 
 <delete id="deleteItem" parameterType="StockVo">
@@ -124,12 +126,34 @@ UPDATE
 		updt_id		= #{updtId}
 </insert>
 
+<update id="saveQuantity" parameterType="StockVo">
 
+UPDATE WEB.CATEGORY_DTL 
+	SET quantity = #{quantity}
+WHERE 1=1
+  AND l_categy_cd  	= #{lCategyCd}
+  AND item_cd		= #{itemCd}
+</update>
+
+<select id="getQuantityInfo" resultType="HashMap">
+SELECT
+	sum(quantity) as tot_quantity ,
+	(
+	select
+		count(*)
+	from
+		web.category_dtl
+	where
+		quantity <![CDATA[<]]> 10 ) as add_warehousing,
+	sum(cost*quantity) as tot_asset
+FROM
+	web.category_dtl
+</select>
 
 
 <!-- 재고관리 - 입출내역 화면 -->
 <select id="getStockCurrentList" parameterType="hashMap" resultType="StockVo">
-	select sar_seq
+	select cate_sar_seq
 			,l_categy_cd 
 			, l_categy_nm 
 			, item_cd 
@@ -188,7 +212,7 @@ UPDATE
 
 <delete id="deleteStockCurrent" parameterType="StockVo">
 	delete from web.category_dtl_sar 
-	where sar_seq = #{sarSeq}
+	where cate_sar_seq = #{cateSarSeq}::integer
 </delete>
 
 <insert id="saveStockCurrent" parameterType="StockVo">
@@ -229,31 +253,44 @@ values(
 </insert>
 
 <select id="getTodayStore" resultType="Integer">
-	select sum(sar_quantity) 
+	select COALESCE(sum(sar_quantity), 0)
 	from web.category_dtl_sar 
 	where to_char(cret_dt, 'YYYY-MM-DD') = to_char(NOW(), 'YYYY-MM-DD')
 	and classifi_cd = 'S'
 </select>
 	
 <select id="getTodayRelease" resultType="Integer">
-	select sum(sar_quantity) 
+	select COALESCE(sum(sar_quantity), 0)
 	from web.category_dtl_sar 
 	where to_char(cret_dt, 'YYYY-MM-DD') = to_char(NOW(), 'YYYY-MM-DD')
 	and classifi_cd = 'R'
 </select>	
 
 <select id="getTodayReturnStore" resultType="Integer">
-	select sum(return_quantity) 
+	select COALESCE(sum(return_quantity), 0)
 	from web.category_dtl_sar 
 	where to_char(cret_dt, 'YYYY-MM-DD') = to_char(NOW(), 'YYYY-MM-DD')
 	and classifi_cd = 'RS'
 </select>
 	
 <select id="getTodayReturnRelease" resultType="Integer">
-	select sum(return_quantity) 
+	select COALESCE(sum(return_quantity), 0)
 	from web.category_dtl_sar 
 	where to_char(cret_dt, 'YYYY-MM-DD') = to_char(NOW(), 'YYYY-MM-DD')
 	and classifi_cd = 'RR'
 </select>	
+
+<select id="getItemList" resultType="StockVo">
+	select distinct l_categy_cd, item_cd, item_nm
+	from WEB.CATEGORY_dtl
+	ORDER BY l_categy_cd, item_cd
+</select>
+
+<select id="getClassifiList" resultType="CodeVo">
+	SELECT code_dtl_cd as cd, code_dtl_nm as nm
+	FROM WEB.code
+	where code_cd = 'classifi'
+	ORDER BY code_dtl_nm
+</select>
 
 </mapper>

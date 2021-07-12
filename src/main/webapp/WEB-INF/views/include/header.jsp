@@ -24,18 +24,23 @@
     wijmo.min.css 대신에 아래와 같이 사용자 정의 테마 사용가능
     <link href="styles/themes/wijmo.theme.modern.min.css" rel="stylesheet"/>
 -->
-<script src="../wijmo/Dist/controls/wijmo.min.js"></script>
 
 <!-- Wijmo 컨트롤 (옵션, 필요한 컨트롤 만 추가) -->
-<script src="../wijmo/Dist/controls/wijmo.grid.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.input.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.grid.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.grid.filter.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.grid.sheet.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.xlsx.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.grid.xlsx.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.grid.cellmaker.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.chart.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.input.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.gauge.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.grid.xlsx.min.js"></script>
-<script src="../wijmo/Dist/controls/wijmo.xlsx.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.grid.selector.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.grid.search.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.grid.grouppanel.min.js"></script>
 <script src="../wijmo/Dist/jszip.min.js"></script>
 
 <!-- Wijmo custom culture (옵션, 원하는 문화권을 추가) -->
