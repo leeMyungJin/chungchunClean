@@ -162,6 +162,18 @@ public class StockController {
     }
 
     /**
+     * 엑셀 업로드 재고수량 저장하기
+     * @param params
+     * @return
+     */
+    @RequestMapping(value="/saveQuantityList", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void saveQuantityList(@RequestBody List<StockVo> params){
+        for(StockVo vo : params)
+            stockService.saveQuantity(vo);
+    }
+
+    /**
      * 재고관리 정보 조회
      * @param params
      * @return

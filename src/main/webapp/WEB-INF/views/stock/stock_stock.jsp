@@ -36,6 +36,7 @@ function enterkey() {
 function loadGridStockList(type, result){
     if(type == "init"){
         $("#excelDiv").hide();
+        $("#saveBtn").hide();
         stockMngView = new wijmo.collections.CollectionView(result, {
             pageSize: 100,
             groupDescriptions: ['lCategyNm']
@@ -187,6 +188,7 @@ function loadGridStockList(type, result){
 //재고 검색
 function getStockList(){
     $("#excelDiv").hide();
+    $("#saveBtn").hide();
     $("#stockDiv").show();
     var params = {
             inq : $("#inq").val(),
@@ -236,19 +238,68 @@ function findFile(){
 
 //엑셀 업로드
 function importExcel(){
-    // $("#stockDiv").hide();
+    $("#stockDiv").hide();
+    $("#saveBtn").show();
     stockMngView = new wijmo.collections.CollectionView(null, {
             pageSize: 100,
             groupDescriptions: ['lCategyNm']
     });
-    // $("#excelDiv").show();
+    $("#excelDiv").show();
         var inputEle =  document.querySelector('#importFile');
         if (inputEle.files[0]) {
-            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(stockMngGrid, inputEle.files[0]);
+            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(excelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
+                // 데이터 바인딩할 함수 호출
+                bindImportedDataIntoModel()
+                excelGrid.columns.forEach(col => {
+                col.width = 300,
+                col.align = "center"
+                })
+            });
         }
          // 체크박스 생성
-        excelSelector = new wijmo.grid.selector.Selector(stockMngGrid);
+        excelSelector = new wijmo.grid.selector.Selector(excelGrid);
         excelSelector.column = excelGrid.columns[0];
+}
+
+function bindImportedDataIntoModel() {
+    const newData = (getImportedCVData());
+    excelGrid.columns.clear();
+    data = new wijmo.collections.CollectionView(newData);
+    excelGrid.autoGenerateColumns = true;
+    excelGrid.itemsSource = data;
+}
+
+function getImportedCVData() {
+    const arr = [];
+    let nullRow = true;
+    for (let row = 0; row < excelGrid.rows.length; row++) {
+        const item = {};
+        for (let column = 0; column < excelGrid.columns.length; column++) {
+            const cellValue = excelGrid.getCellData(row, column, false);
+            //병합된 헤더 처리 
+            // let header = grid.columns[column].header ? grid.columns[column].header : grid.columns[column - 1].header + '-2';
+        // 만약 열 헤더가 있으면
+            if (excelGrid.columns[column].header){
+            var header =  excelGrid.columns[column].header
+            } else{
+    //           만약 열 헤더가 없으면 본래 병합된 값으로 판단
+                for(var i = column-1; i >= 0; i--){
+                    if (excelGrid.columns[i].header){
+                        var header =  excelGrid.columns[i].header + " - "+column+" index"
+                        break;
+                    }
+                }
+            }
+        var binding = _convertHeaderToBinding(header);
+        item[binding] = cellValue;
+        }
+      arr.push(item);
+    }
+    return arr;
+}
+
+function _convertHeaderToBinding(header) {
+    return header.replace(/\s/, '').toLowerCase();
 }
 //엑셀 양식 다운로드
 function downTemplate(){
@@ -272,6 +323,42 @@ function getQuantityInfo(){
         }
         });
     
+}
+
+//엑셀 업로드 저장
+function saveGrid(){
+    if(confirm("저장 하시겠습니까?")){
+        var item  = excelGrid.rows;
+            var rows = [];
+            var params;
+            for(var i=0; i< item.length; i++){
+                var value = wijmo.changeType(excelGrid.collectionView.items[i].재고수량, wijmo.DataType.Number, null);
+                if(!wijmo.isNumber(value)){
+                    alert("재고수량은 숫자만 가능합니다.");
+                    return false;
+                }
+                params={
+                    lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,3),
+                    itemCd : excelGrid.collectionView.items[i].물품코드,
+                    quantity : excelGrid.collectionView.items[i].재고수량
+                }
+                rows.push(params);
+            }
+        $.ajax({
+            url : "/stock/saveQuantityList",
+            async : false, // 비동기모드 : true, 동기식모드 : false
+            type : 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(rows),
+            success : function(result) {
+                alert("저장되었습니다.");
+                getStockList();
+            },
+            error : function(request,status,error) {
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+            });
+    }
 }
 
 </script>
@@ -332,6 +419,7 @@ function getQuantityInfo(){
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('stockMngLayout', stockMngGrid);">칼럼위치저장</button>
                             <button type="button" class="stroke" onClick="_resetUserGridLayout('stockMngLayout', stockMngGrid, stockMngColumns);">칼럼초기화</button>
+                            <button type="button" id="saveBtn" onclick="saveGrid()">저장</button>
                         </div>
                         <div class="grid_wrap" id = "stockDiv" style="position:relative;">
                             <div id="stockMngGrid"  style="height:500px;"></div>

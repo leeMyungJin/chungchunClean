@@ -131,14 +131,12 @@ function loadGridStockList(type, result){
                     var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.String, col.format);
                     if (value.length != 3) {
                         e.cancel = true;
-                        e.stayInEditMode = true;
                         alert('카테고리코드는 3자리 입니다.');
                         return false;
                     }
                     value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
                     if( !wijmo.isNumber(value) || value < 0){
                         e.cancel = true;
-                        e.stayInEditMode = true;
                         alert('카테고리코드는 숫자로만 입력 가능합니다.');
                         return false;
                     }
@@ -412,11 +410,16 @@ function saveGrid(type){
             var rows = [];
             var params;
             for(var i=0; i< item.length; i++){
+                var value = wijmo.changeType(excelGrid.collectionView.items[i].원가, wijmo.DataType.Number, null);
+                if(!wijmo.isNumber(value)){
+                    alert("원가는 숫자만 입력 가능합니다.");
+                    return false;
+                }
                 params={
-                    lCategyCd :  item[i]._ubv.k.substring(0,2),
-                    itemCd : item[i]._ubv.k.substring(2),
-                    itemNm : item[i]._ubv.l,
-                    cost : item[i]._ubv.m
+                    lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,2),
+                    itemCd : excelGrid.collectionView.items[i].물품코드.substring(2),
+                    itemNm : excelGrid.collectionView.items[i].물품명,
+                    cost : excelGrid.collectionView.items[i].원가
                 }
                 rows.push(params);
             }
@@ -551,11 +554,59 @@ function importExcel(){
     $("#excelDiv").show();
         var inputEle =  document.querySelector('#importFile');
         if (inputEle.files[0]) {
-            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(excelGrid, inputEle.files[0]);
-        }
+            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(excelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
+        // 데이터 바인딩할 함수 호출
+        bindImportedDataIntoModel()
+        excelGrid.columns.forEach(col => {
+          col.width = 300,
+          col.align = "center"
+        })
+      });
+    }
          // 체크박스 생성
         excelSelector = new wijmo.grid.selector.Selector(excelGrid);
         excelSelector.column = excelGrid.columns[0];
+}
+
+function bindImportedDataIntoModel() {
+    const newData = (getImportedCVData());
+    excelGrid.columns.clear();
+    data = new wijmo.collections.CollectionView(newData);
+    excelGrid.autoGenerateColumns = true;
+    excelGrid.itemsSource = data;
+}
+
+function getImportedCVData() {
+    const arr = [];
+    let nullRow = true;
+    for (let row = 0; row < excelGrid.rows.length; row++) {
+        const item = {};
+        for (let column = 0; column < excelGrid.columns.length; column++) {
+            const cellValue = excelGrid.getCellData(row, column, false);
+            //병합된 헤더 처리 
+            // let header = grid.columns[column].header ? grid.columns[column].header : grid.columns[column - 1].header + '-2';
+        // 만약 열 헤더가 있으면
+            if (excelGrid.columns[column].header){
+            var header =  excelGrid.columns[column].header
+            } else{
+    //           만약 열 헤더가 없으면 본래 병합된 값으로 판단
+                for(var i = column-1; i >= 0; i--){
+                    if (excelGrid.columns[i].header){
+                        var header =  excelGrid.columns[i].header + " - "+column+" index"
+                        break;
+                    }
+                }
+            }
+        var binding = _convertHeaderToBinding(header);
+        item[binding] = cellValue;
+        }
+      arr.push(item);
+    }
+    return arr;
+}
+
+function _convertHeaderToBinding(header) {
+    return header.replace(/\s/, '').toLowerCase();
 }
 
 //엑셀 양식 다운로드
