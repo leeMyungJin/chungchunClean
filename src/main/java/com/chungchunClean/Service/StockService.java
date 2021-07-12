@@ -3,6 +3,7 @@ package com.chungchunClean.Service;
 import java.util.HashMap;
 import java.util.List;
 
+import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.StockVo;
 
 
@@ -14,10 +15,12 @@ public interface StockService {
     public List<StockVo> getLCategoryList();
     public List<StockVo> getMCategoryList();
     public String dupCheckItem(HashMap<String, String> params);
-    public void addItem(HashMap<String, String> params);
+    public void addItem(StockVo params);
     public void deleteItem(List<StockVo> params);
     public String getTotalItemCnt();
     public void saveStock(List<StockVo> params);
+    public void saveQuantity(StockVo params);
+    public HashMap<String, Object> getQuantityInfo();
     
     // 재고관리 - 입출관리 화면
     public List<StockVo> getStockCurrentList(HashMap<String,Object> params);
@@ -27,4 +30,6 @@ public interface StockService {
 	public int getTodayRelease();
     public int getTodayReturnStore();
 	public int getTodayReturnRelease();
+	public List<StockVo> getItemList();
+	public List<CodeVo> getClassifiList();
 }

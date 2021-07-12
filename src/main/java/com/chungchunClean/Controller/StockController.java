@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.chungchunClean.Service.StockService;
+import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.StockVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +124,7 @@ public class StockController {
      */
     @RequestMapping(value="/addItem", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void addItem(@RequestParam HashMap<String,String> params){
+    public void addItem(@RequestBody StockVo params){
         stockService.addItem(params); // 카테고리 저장 후 다시 조회
     }
 
@@ -149,7 +150,40 @@ public class StockController {
         stockService.saveStock(params);
         // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
     }
-    
+
+    /**
+     * 재고수량 저장하기
+     * @param params
+     * @return
+     */
+    @RequestMapping(value="/saveQuantity", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void saveQuantity(@RequestBody StockVo params){
+        stockService.saveQuantity(params);
+    }
+
+    /**
+     * 엑셀 업로드 재고수량 저장하기
+     * @param params
+     * @return
+     */
+    @RequestMapping(value="/saveQuantityList", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void saveQuantityList(@RequestBody List<StockVo> params){
+        for(StockVo vo : params)
+            stockService.saveQuantity(vo);
+    }
+
+    /**
+     * 재고관리 정보 조회
+     * @param params
+     * @return
+     */
+    @RequestMapping(value="/getQuantityInfo", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public HashMap<String,Object> getQuantityInfo(){
+        return stockService.getQuantityInfo();
+    }
     // 재고관리 - 입출관리 화면
     /**
      * 입출 리스트 가져오기
@@ -186,7 +220,25 @@ public class StockController {
         // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
     }
     
-
+ 
+    /**
+     *물품 리스트 가져오기
+     */
+    @RequestMapping(value="/getItemList", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public List<StockVo> getItemList(){
+        return stockService.getItemList(); // 카테고리 저장 후 다시 조회
+    }
+    
+    
+    /**
+     분류 리스트 가져오기
+     */
+    @RequestMapping(value="/getClassifiList", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public List<CodeVo> getClassifiList(){
+        return stockService.getClassifiList(); // 카테고리 저장 후 다시 조회
+    }
 
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import com.chungchunClean.Mappers.StockMapper;
 import com.chungchunClean.Service.StockService;
 import com.chungchunClean.Util.Util;
+import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.StockVo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public void addItem(HashMap<String, String> params) {
+	public void addItem(StockVo  params) {
 		stockMapper.addItem(params);
 	}
 
@@ -85,6 +86,19 @@ public class StockServiceImpl implements StockService {
 		}
 		
 	}	
+
+	@Override
+	public void saveQuantity(StockVo params) {
+		stockMapper.saveQuantity(params);
+		
+	}
+	
+	@Override
+	public HashMap<String, Object> getQuantityInfo() {
+		return stockMapper.getQuantityInfo();
+	}
+	
+	
 	
 	
     // 재고관리 - 입출관리 화면
@@ -131,8 +145,15 @@ public class StockServiceImpl implements StockService {
 	public int getTodayReturnRelease() {
 		return stockMapper.getTodayReturnRelease();
 	}
-
 	
-
+	@Override
+	public List<StockVo> getItemList() {
+		return stockMapper.getItemList();
+	}	
+	
+	@Override
+	public List<CodeVo> getClassifiList() {
+		return stockMapper.getClassifiList();
+	}	
 	
 }
