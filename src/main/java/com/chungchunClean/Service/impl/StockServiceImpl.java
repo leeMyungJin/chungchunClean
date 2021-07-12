@@ -97,9 +97,7 @@ public class StockServiceImpl implements StockService {
 	public HashMap<String, Object> getQuantityInfo() {
 		return stockMapper.getQuantityInfo();
 	}
-	
-	
-	
+
 	
     // 재고관리 - 입출관리 화면
 	@Override
@@ -155,5 +153,5 @@ public class StockServiceImpl implements StockService {
 	public List<CodeVo> getClassifiList() {
 		return stockMapper.getClassifiList();
 	}	
-	
+
 }

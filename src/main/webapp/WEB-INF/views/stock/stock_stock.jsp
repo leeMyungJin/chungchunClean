@@ -8,9 +8,10 @@
 </head>
 
 <script type="text/javascript">
-var stockView;
-var stockGridPager;
-var stockGrid; 
+var stockMngView;
+var stockMngGridPager;
+var stockMngGrid;
+var stockMngColumns;
 var excelGrid;
 var excelView;
 var excelGridPager;
@@ -20,6 +21,10 @@ function pageLoad(){
 	$('#stock_stock').addClass("current");
     $("#essesntail").attr("checked",true);
     loadGridStockList('init');
+    //엑셀 업로드
+    $("#importFile").on('change', function (params) {
+        importExcel();
+    });
 }
 
 function enterkey() {
@@ -27,56 +32,95 @@ function enterkey() {
     	getStockList();
     }
 }
-
-
-
 //그리드 초기 셋팅
 function loadGridStockList(type, result){
     if(type == "init"){
         $("#excelDiv").hide();
-        stockView = new wijmo.collections.CollectionView(result, {
+        $("#saveBtn").hide();
+        stockMngView = new wijmo.collections.CollectionView(result, {
             pageSize: 100,
             groupDescriptions: ['lCategyNm']
         });
 		// 페이지 이동
-        stockGridPager = new wijmo.input.CollectionViewNavigator('#stockGridPager', {
+        stockMngGridPager = new wijmo.input.CollectionViewNavigator('#stockMngGridPager', {
             byPage: true,
             headerFormat: '{currentPage:n0} / {pageCount:n0}',
-            cv: stockView
+            cv: stockMngView
         });
 
-        stockColumns =  [
+        stockMngColumns =  [
                 { binding: 'status', header: '상태', isReadOnly: true, width: 60, align:"center"},
-                { binding: 'lCategyCd', header: '대카테고리코드', isReadOnly: true, visible: false, width: 200, align:"center"},
-                { binding: 'lCategyNm', header: '대카테고리명', isReadOnly: true, width: 230, align:"center"},
+                { binding: 'lCategyCd', header: '카테고리코드', isReadOnly: true, visible: false, width: 200, align:"center"},
+                { binding: 'lCategyNm', header: '카테고리명', isReadOnly: true, width: 230, align:"center"},
                 { binding: 'itemNm', header: '물품명', isReadOnly: true, width: 230, align:"center"  },
                 { binding: 'itemCd', header: '코드번호', isReadOnly: true, width: 200, align:"center"},
                 { binding: 'cost', header: '원가', isReadOnly: true, width: 200, align:"center"},
                 { binding: 'quantity', header: '재고수량', isReadOnly: true, width: 200, align:"center"},
-                { binding: 'add', header: '추가입고', isReadOnly: false, width: 200, align:"center"}
+                { binding: 'add', header: '추가입고', isReadOnly: false, format: 'c0', width: 200, align:"center"}
             ]
 		  
 		// hostElement에 Wijmo의 FlexGird 생성
         // itemsSource: data - CollectionView로 데이터를 그리드에 바인딩
         // autoGenerateColumns: false >> 컬럼 사용자 정의 
-        stockGrid = new wijmo.grid.FlexGrid('#stockGrid', {
+        stockMngGrid = new wijmo.grid.FlexGrid('#stockMngGrid', {
             autoGenerateColumns: false,
             alternatingRowStep: 0,
-            columns : stockColumns,
-            itemsSource: stockView
+            columns : stockMngColumns,
+            itemsSource: stockMngView,
+            cellEditEnding: function (s, e) {
+                var col = s.columns[e.col];
+                var inven = s.columns[e.col - 1];
+                if (col.binding == 'add') {
+                    var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
+                    if( !wijmo.isNumber(value)){
+                        e.cancel = true;
+                        e.stayInEditMode = false;
+                        alert('숫자로만 입력 가능합니다.');
+                        return false;
+                    }else{
+                        e.getRow().dataItem.quantity += value;// 입력값 재고수량에 계산
+                        if(e.getRow().dataItem.quantity > 10){
+                            e.getRow().dataItem.status = 'O';
+                        }else{
+                            e.getRow().dataItem.status = 'X';
+                        }
+                    //    stockMngView.items[e.row -1].quantity += value ; 
+                       var params = {
+                            lCategyCd   : e.getRow().dataItem.lCategyCd,
+                            itemCd      : e.getRow().dataItem.itemCd,
+                            quantity    : e.getRow().dataItem.quantity ,
+                        }
+                         $.ajax({
+                            url : "/stock/saveQuantity",
+                            async : false, // 비동기모드 : true, 동기식모드 : false
+                            type : 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(params),
+                            success : function(result) {
+                                getQuantityInfo();
+                            },
+                            error : function(request,status,error) {
+                                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                            }
+                        });
+                       s.activeEditor.value = 0; // 입력값 0으로 초기화
+
+                    }
+
+                }
+            }
         });
 
-        localStorage.setItem('stockMngInitLayout', stockGrid.columnLayout);
-        _setUserGridLayout('stockMngLayout', stockGrid, stockColumns );
+        _setUserGridLayout('stockMngLayout', stockMngGrid, stockMngColumns );
 
         //행번호 표시하기
-        stockGrid.itemFormatter = function (panel, r, c, cell) { 
+        stockMngGrid.itemFormatter = function (panel, r, c, cell) { 
             if (panel.cellType == wijmo.grid.CellType.RowHeader) {
                 cell.textContent = (r + 1).toString();
             }
         };
 
-        stockGrid.formatItem.addHandler(function (s, e) {
+        stockMngGrid.formatItem.addHandler(function (s, e) {
             // 열 헤더에 대한 중앙 정렬 
             if (e.panel == s.columnHeaders) {
             e.cell.innerHTML = '<div class="v-center">' +
@@ -86,7 +130,7 @@ function loadGridStockList(type, result){
             if (e.panel == s.cells) {
             var col = s.columns[e.col];
             var status = s.getCellData(e.row, e.col);
-                if (e.row > 0 && col.binding == 'status') {
+                if (col.binding == 'status' && (status == 'O' || status == 'X')) {
                     //셀 서식
                     var html = '<div class="mark_{status}"/>';
                     if(status == 'O') {
@@ -112,7 +156,7 @@ function loadGridStockList(type, result){
         excelGrid = new wijmo.grid.FlexGrid('#excelGrid', {
             autoGenerateColumns: false,
             alternatingRowStep: 0,
-            columns : stockColumns,
+            columns : stockMngColumns,
             itemsSource: excelView
         });
 
@@ -122,31 +166,29 @@ function loadGridStockList(type, result){
                 cell.textContent = (r + 1).toString();
             }
         };
-
         // 체크박스 생성
         excelSelector = new wijmo.grid.selector.Selector(excelGrid, {
             itemChecked: () => {
             }
         });
-
         excelSelector.column = excelGrid.columns[0];
     }else{
-        stockView = new wijmo.collections.CollectionView(result, {
+        stockMngView = new wijmo.collections.CollectionView(result, {
             pageSize: 100,
             groupDescriptions: ['lCategyNm']
         });
-        stockGrid.columns[0].width = 50;
-        stockGridPager.cv = stockView;
-        stockGrid.itemsSource = stockView;
+        stockMngGrid.columns[0].width = 50;
+        stockMngGridPager.cv = stockMngView;
+        stockMngGrid.itemsSource = stockMngView;
 	  }
-      refreshPaging(stockGrid.collectionView.totalItemCount, 1, stockGrid, 'stockGrid');
-      $(".wj-cell").css("padding-left"," ");
+      refreshPaging(stockMngGrid.collectionView.totalItemCount, 1, stockMngGrid, 'stockMngGrid');
 }
 
 
 //재고 검색
 function getStockList(){
     $("#excelDiv").hide();
+    $("#saveBtn").hide();
     $("#stockDiv").show();
     var params = {
             inq : $("#inq").val(),
@@ -160,6 +202,7 @@ function getStockList(){
             data : params,
             success : function(result) {
         	    loadGridStockList('search', result);
+                getQuantityInfo();
             },
             error : function(request,status,error) {
              	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -170,15 +213,15 @@ function getStockList(){
 //엑셀 다운로드
 function exportExcel(){
 	
-	var gridView = stockGrid.collectionView;
+	var gridView = stockMngGrid.collectionView;
 	var oldPgSize = gridView.pageSize;
 	var oldPgIndex = gridView.pageIndex;
 
     //전체 데이터를 엑셀다운받기 위해서는 페이징 제거 > 엑셀 다운 > 페이징 재적용 하여야 함.
-    stockGrid.beginUpdate();
-    stockView.pageSize = 0;
+    stockMngGrid.beginUpdate();
+    stockMngView.pageSize = 0;
 
-    wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(stockGrid, {includeCellStyles: true, includeColumnHeaders: true}, 'stockList.xlsx',
+    wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(stockMngGrid, {includeCellStyles: true, includeColumnHeaders: true}, '재고현황.xlsx',
 	      saved => {
 	    	gridView.pageSize = oldPgSize;
 	    	gridView.moveToPage(oldPgIndex);
@@ -187,6 +230,136 @@ function exportExcel(){
 	 );
 }
 
+//업로드 파일 찾기
+function findFile(){
+    $("#importFile").val("");
+    document.all.importFile.click();
+}
+
+//엑셀 업로드
+function importExcel(){
+    $("#stockDiv").hide();
+    $("#saveBtn").show();
+    stockMngView = new wijmo.collections.CollectionView(null, {
+            pageSize: 100,
+            groupDescriptions: ['lCategyNm']
+    });
+    $("#excelDiv").show();
+        var inputEle =  document.querySelector('#importFile');
+        if (inputEle.files[0]) {
+            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(excelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
+                // 데이터 바인딩할 함수 호출
+                bindImportedDataIntoModel()
+                excelGrid.columns.forEach(col => {
+                col.width = 300,
+                col.align = "center"
+                })
+            });
+        }
+         // 체크박스 생성
+        excelSelector = new wijmo.grid.selector.Selector(excelGrid);
+        excelSelector.column = excelGrid.columns[0];
+}
+
+function bindImportedDataIntoModel() {
+    const newData = (getImportedCVData());
+    excelGrid.columns.clear();
+    data = new wijmo.collections.CollectionView(newData);
+    excelGrid.autoGenerateColumns = true;
+    excelGrid.itemsSource = data;
+}
+
+function getImportedCVData() {
+    const arr = [];
+    let nullRow = true;
+    for (let row = 0; row < excelGrid.rows.length; row++) {
+        const item = {};
+        for (let column = 0; column < excelGrid.columns.length; column++) {
+            const cellValue = excelGrid.getCellData(row, column, false);
+            //병합된 헤더 처리 
+            // let header = grid.columns[column].header ? grid.columns[column].header : grid.columns[column - 1].header + '-2';
+        // 만약 열 헤더가 있으면
+            if (excelGrid.columns[column].header){
+            var header =  excelGrid.columns[column].header
+            } else{
+    //           만약 열 헤더가 없으면 본래 병합된 값으로 판단
+                for(var i = column-1; i >= 0; i--){
+                    if (excelGrid.columns[i].header){
+                        var header =  excelGrid.columns[i].header + " - "+column+" index"
+                        break;
+                    }
+                }
+            }
+        var binding = _convertHeaderToBinding(header);
+        item[binding] = cellValue;
+        }
+      arr.push(item);
+    }
+    return arr;
+}
+
+function _convertHeaderToBinding(header) {
+    return header.replace(/\s/, '').toLowerCase();
+}
+//엑셀 양식 다운로드
+function downTemplate(){
+    window.location.assign("<%=request.getContextPath()%>" + "/template/재고현황양식.xlsx");
+}
+
+// 상단 정보 표기
+function getQuantityInfo(){
+    $.ajax({
+        url : "/stock/getQuantityInfo",
+        async : false, // 비동기모드 : true, 동기식모드 : false
+        type : 'POST',
+        success : function(result) {
+            $("#tot_quantity").text(result.tot_quantity.toLocaleString('ko-KR') + "개");
+            $("#add_warehousing").text(result.add_warehousing.toLocaleString('ko-KR') + "개");
+            $("#tot_asset").text(result.tot_asset.toLocaleString('ko-KR') + "원");
+           
+        },
+        error : function(request,status,error) {
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+        });
+    
+}
+
+//엑셀 업로드 저장
+function saveGrid(){
+    if(confirm("저장 하시겠습니까?")){
+        var item  = excelGrid.rows;
+            var rows = [];
+            var params;
+            for(var i=0; i< item.length; i++){
+                var value = wijmo.changeType(excelGrid.collectionView.items[i].재고수량, wijmo.DataType.Number, null);
+                if(!wijmo.isNumber(value)){
+                    alert("재고수량은 숫자만 가능합니다.");
+                    return false;
+                }
+                params={
+                    lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,3),
+                    itemCd : excelGrid.collectionView.items[i].물품코드,
+                    quantity : excelGrid.collectionView.items[i].재고수량
+                }
+                rows.push(params);
+            }
+        $.ajax({
+            url : "/stock/saveQuantityList",
+            async : false, // 비동기모드 : true, 동기식모드 : false
+            type : 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(rows),
+            success : function(result) {
+                alert("저장되었습니다.");
+                getStockList();
+            },
+            error : function(request,status,error) {
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+            });
+    }
+}
 
 </script>
 
@@ -201,21 +374,23 @@ function exportExcel(){
                 <div class="admin_summary">
                     <dl>
                         <dt>총 재고수량</dt>
-                        <dd>00개</dd>
+                        <dd id="tot_quantity">00개</dd>
                     </dl>
                     <dl>
                         <dt>추가입고 필요항목</dt>
-                        <dd>00개</dd>
+                        <dd id="add_warehousing">00개</dd>
                     </dl>
                     <dl>
                         <dt>총 재고자산</dt>
-                        <dd>0000원</dd>
+                        <dd id="tot_asset">0000원</dd>
                     </dl>
                 </div>
                 <div class="admin_utility">
                     <div class="admin_btn">
-                        <button class="btn">엑셀 업로드</button>
-                        <button class="btn" onclick="exportExcel();">엑셀 다운로드</button>
+                        <input type="file" class="form-control" style="display:none" id="importFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12" />
+                        <button class="btn" id="excelTemplate" name = "excelTemplate" onclick="downTemplate();">엑셀 템플릿</button>
+                        <button class="btn" id="importExcel" name = "importExcel" onclick="findFile();">엑셀 업로드</button>
+                        <button class="btn" id="exportExcel" name = "exportExcel" onclick="exportExcel();">엑셀 다운로드</button>
                     </div>
                 </div>
                 <div class="admin_content">
@@ -242,20 +417,21 @@ function exportExcel(){
                             <span><dfn class="mark_short"></dfn> 부족</span>
                         </div>
                         <div class="btn_wrap">
-                            <button type="button" class="stroke">칼럼위치저장</button>
-                            <button type="button" class="stroke">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="_getUserGridLayout('stockMngLayout', stockMngGrid);">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('stockMngLayout', stockMngGrid, stockMngColumns);">칼럼초기화</button>
+                            <button type="button" id="saveBtn" onclick="saveGrid()">저장</button>
                         </div>
-                        <div class="grid_wrap">
-                            <div id="stockGrid"  style="height:500px;"></div>
-                        	<div id="stockGridPager" class="pager"></div>
+                        <div class="grid_wrap" id = "stockDiv" style="position:relative;">
+                            <div id="stockMngGrid"  style="height:500px;"></div>
+                        	<div id="stockMngGridPager" class="pager"></div>
                         </div>
                         <div class="grid_wrap" id="excelDiv" style="position:relative;">
                         	<div id="excelGrid"  style="height:500px;"></div>
                         	<div id="excelGridPager" class="pager"></div>
                         </div>
                         <div class="btn_wrap">
-                            <button type="button" class="stroke">칼럼위치저장</button>
-                            <button type="button" class="stroke">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="_getUserGridLayout('stockMngLayout', stockMngGrid);">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('stockMngLayout', stockMngGrid, stockMngColumns);">칼럼초기화</button>
                         </div>
                     </div>
                 </div>

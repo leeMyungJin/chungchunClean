@@ -32,7 +32,7 @@ function pageLoad(){
 	$('#stock').addClass("current");
 	$('#stock_code').addClass("current");
     loadGridStockList('init');
-    $("#totalItemCnt").text(_fillZero(5,'${totalItemCnt}') + "개");
+    $("#totalItemCnt").text("${totalItemCnt}".toLocaleString('ko-KR') + "개");
 
     //엑셀 업로드
     $("#importFile").on('change', function (params) {
@@ -64,8 +64,8 @@ function loadGridStockList(type, result){
 
         stockColumns =  [
                 { isReadOnly: true, width: 35, align:"center"},
-                { binding: 'lCategyCd', header: '대카테고리코드', isReadOnly: true, width: 300, align:"center"},
-                { binding: 'lCategyNm', header: '대카테고리명', isReadOnly: true, width: 300, align:"center"},
+                { binding: 'lCategyCd', header: '카테고리코드', isReadOnly: true, width: 300, align:"center"},
+                { binding: 'lCategyNm', header: '카테고리명', isReadOnly: true, width: 300, align:"center"},
                 { binding: 'itemCd', header: '물품코드', isReadOnly: false, width: 300, align:"center"  },
                 { binding: 'itemNm', header: '물품명', isReadOnly: false, width: 300, align:"center"  },
                 { binding: 'cost', header: '원가', isReadOnly: false, width: 300, align:"center"}
@@ -81,8 +81,7 @@ function loadGridStockList(type, result){
             itemsSource: stockView
         });
 
-        localStorage.setItem('stockInitLayout', stockGrid.columnLayout);
-        _setUserGridLayout('stockLayout', stockGrid, stockColumns );
+       _setUserGridLayout('stockLayout', stockGrid, stockColumns);
 
                   //행번호 표시하기
         stockGrid.itemFormatter = function (panel, r, c, cell) { 
@@ -112,8 +111,8 @@ function loadGridStockList(type, result){
             autoGenerateColumns: false,
             alternatingRowStep: 0,
             columns: [
-                { binding: 'lCategyCd', header: '대카테고리코드', isReadOnly: false, width: 230, align:"center"},
-                { binding: 'lCategyNm', header: '대카테고리명', isReadOnly: false,  width: 230, align:"center"},
+                { binding: 'lCategyCd', header: '카테고리코드', isReadOnly: false, width: 230, align:"center"},
+                { binding: 'lCategyNm', header: '카테고리명', isReadOnly: false,  width: 230, align:"center"},
                 { binding: 'regDate', header: '등록일시', isReadOnly: true, width: 230, align:"center"  }
             ],
             beginningEdit: function (s, e) {
@@ -122,7 +121,7 @@ function loadGridStockList(type, result){
                 if(item.regDate != undefined){
                     if (col.binding == 'lCategyCd') {
                         e.cancel = true;
-                        alert("대카테고리코드는 신규 행일때만 입력이 가능합니다.");
+                        alert("카테고리코드는 신규 행일때만 입력이 가능합니다.");
                     }
                 }
             },
@@ -130,17 +129,15 @@ function loadGridStockList(type, result){
                 var col = s.columns[e.col];
                 if (col.binding == 'lCategyCd') {
                     var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.String, col.format);
-                    if (value.length != 2) {
+                    if (value.length != 3) {
                         e.cancel = true;
-                        e.stayInEditMode = true;
-                        alert('대카테고리코드는 2자리 입니다.');
+                        alert('카테고리코드는 3자리 입니다.');
                         return false;
                     }
                     value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
                     if( !wijmo.isNumber(value) || value < 0){
                         e.cancel = true;
-                        e.stayInEditMode = true;
-                        alert('대카테고리코드는 숫자로만 입력 가능합니다.');
+                        alert('카테고리코드는 숫자로만 입력 가능합니다.');
                         return false;
                     }
 
@@ -220,10 +217,8 @@ function getStockList(){
           });
 }
 
-//팝업 오픈
-function showPop(pop){
-	if(pop == "add_category"){
-        $.ajax({
+function getCategyList(){
+     $.ajax({
             url : "/stock/getCategoryList",
             async : false, // 비동기모드 : true, 동기식모드 : false
             type : 'POST',
@@ -235,13 +230,19 @@ function showPop(pop){
              	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
           });
+}
+
+//팝업 오픈
+function showPop(pop){
+	if(pop == "add_category"){
+        getCategyList();
 	}else if(pop == "add_product"){
         $('#category1')
             .empty()
             .append('<option selected="selected" value="all" selected>전체</option>');
-        $('#category2')
+   /*      $('#category2')
             .empty()
-            .append('<option selected="selected" value="all" selected>전체</option>');
+            .append('<option selected="selected" value="all" selected>전체</option>'); */
         getCategoryDtl();
         $("#category1").val("all");
         $("#category2").val("all");
@@ -317,7 +318,8 @@ function deleteRows(type){
                     contentType: 'application/json',
                     data: JSON.stringify(rows),
                     success : function(result) {
-                        loadGridStockList('category', result);
+                        alert("삭제되었습니다.");
+                        getCategyList('category', result);
                     },
                     error : function(request,status,error) {
                         alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -406,12 +408,24 @@ function saveGrid(type){
         }else{ // 엑셀 업로드 저장하기
             var item  = excelGrid.rows;
             var rows = [];
+            var params;
             for(var i=0; i< item.length; i++){
-                rows.push(item[i]);
+                var value = wijmo.changeType(excelGrid.collectionView.items[i].원가, wijmo.DataType.Number, null);
+                if(!wijmo.isNumber(value)){
+                    alert("원가는 숫자만 입력 가능합니다.");
+                    return false;
+                }
+                params={
+                    lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,2),
+                    itemCd : excelGrid.collectionView.items[i].물품코드.substring(2),
+                    itemNm : excelGrid.collectionView.items[i].물품명,
+                    cost : excelGrid.collectionView.items[i].원가
+                }
+                rows.push(params);
             }
             if(confirm("저장 하시겠습니까??")){
                 $.ajax({
-                    url : "/stock/saveExcelStock",
+                    url : "/stock/saveStock",
                     async : false, // 비동기모드 : true, 동기식모드 : false
                     type : 'POST',
                     contentType: 'application/json',
@@ -433,13 +447,13 @@ function saveGrid(type){
 // 물품 중복 체크
 function dupCheckItem() {
     if($("#category1").val() == "all"){
-        alert("대카테고리를 선택하시기 바랍니다.");
+        alert("카테고리를 선택하시기 바랍니다.");
         return false;
     }else if($("#product").val().trim().length == 0){
         alert("상품명을 입력하시기 바랍니다.");
         return false;
-    }else if($("#code").val().length < 5){
-        alert("코드는 5자리 입니다.ex)00001");
+    }else if($("#code").val().length < 4){
+        alert("코드는 4자리 입니다.ex)0001");
         return false;
     }else if($("#cost").val().length < 1){
         alert("원가를 입력하시기 바랍니다.");
@@ -448,8 +462,7 @@ function dupCheckItem() {
     
     var params = {
         lCategyCd : $("#category1").val(),
-        mCategyCd : $("#category2").val(),
-        itemCd : $("#category1").val() + $("#category2").val() + $("#code").val(),
+        itemCd : $("#category1").val() + $("#code").val(),
         itemNm : $("#product").val(),
         cost : $("#cost").val()
     };
@@ -481,8 +494,7 @@ function addItem(){
     }else{
         var params = {
             lCategyCd : $("#category1").val(),
-            mCategyCd : $("#category2").val(),
-            itemCd : $("#category1").val() + $("#category2").val().substr(2,2) + $("#code").val(),
+            itemCd : $("#category1").val() + $("#code").val(),
             itemNm : $("#product").val(),
             cost : $("#cost").val()
         };
@@ -490,13 +502,15 @@ function addItem(){
             url : "/stock/addItem",
             async : false, // 비동기모드 : true, 동기식모드 : false
             type : 'POST',
-            data: params,
+            contentType: 'application/json',
+            data: JSON.stringify(params),
             success : function(result) {
                     alert("등록 되었습니다.");
                     dupCheckItemFlag = false;
                     $("#totItemCnt").val(parseInt($("#totItemCnt").val()) + 1);
-                    $("#totalItemCnt").text(_fillZero(5,$("#totItemCnt").val()) + "개");
+                    $("#totalItemCnt").text($("#totItemCnt").val().toLocaleString('ko-KR') + "개");
                     closePop();
+                    getStockList();
             },
             error : function(request,status,error) {
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -533,24 +547,71 @@ function findFile(){
 //엑셀 업로드
 function importExcel(){
     $("#stockDiv").hide();
+    stockView = new wijmo.collections.CollectionView(null, {
+            pageSize: 100,
+            groupDescriptions: ['lCategyNm']
+    });
     $("#excelDiv").show();
         var inputEle =  document.querySelector('#importFile');
         if (inputEle.files[0]) {
-            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(excelGrid, inputEle.files[0]);
-        }
+            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(excelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
+        // 데이터 바인딩할 함수 호출
+        bindImportedDataIntoModel()
+        excelGrid.columns.forEach(col => {
+          col.width = 300,
+          col.align = "center"
+        })
+      });
+    }
          // 체크박스 생성
-        excelSelector = new wijmo.grid.selector.Selector(excelGrid, {
-            itemChecked: () => {
-            }
-        });
+        excelSelector = new wijmo.grid.selector.Selector(excelGrid);
         excelSelector.column = excelGrid.columns[0];
+}
+
+function bindImportedDataIntoModel() {
+    const newData = (getImportedCVData());
+    excelGrid.columns.clear();
+    data = new wijmo.collections.CollectionView(newData);
+    excelGrid.autoGenerateColumns = true;
+    excelGrid.itemsSource = data;
+}
+
+function getImportedCVData() {
+    const arr = [];
+    let nullRow = true;
+    for (let row = 0; row < excelGrid.rows.length; row++) {
+        const item = {};
+        for (let column = 0; column < excelGrid.columns.length; column++) {
+            const cellValue = excelGrid.getCellData(row, column, false);
+            //병합된 헤더 처리 
+            // let header = grid.columns[column].header ? grid.columns[column].header : grid.columns[column - 1].header + '-2';
+        // 만약 열 헤더가 있으면
+            if (excelGrid.columns[column].header){
+            var header =  excelGrid.columns[column].header
+            } else{
+    //           만약 열 헤더가 없으면 본래 병합된 값으로 판단
+                for(var i = column-1; i >= 0; i--){
+                    if (excelGrid.columns[i].header){
+                        var header =  excelGrid.columns[i].header + " - "+column+" index"
+                        break;
+                    }
+                }
+            }
+        var binding = _convertHeaderToBinding(header);
+        item[binding] = cellValue;
+        }
+      arr.push(item);
+    }
+    return arr;
+}
+
+function _convertHeaderToBinding(header) {
+    return header.replace(/\s/, '').toLowerCase();
 }
 
 //엑셀 양식 다운로드
 function downTemplate(){
-    window.location.assign("<%=request.getContextPath()%>" + "/template/excelTemplate.xlsx");
-    // var url = "<%=request.getContextPath()%>/" + "template/excelTemplate.xlsx";
-    //   location.href=url;
+    window.location.assign("<%=request.getContextPath()%>" + "/template/물품관리양식.xlsx");
 }
 
 </script>
@@ -576,7 +637,6 @@ function downTemplate(){
                         <input type="file" class="form-control" style="display:none" id="importFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12" />
                         <button class="btn" id="excelTemplate" name = "excelTemplate" onclick="downTemplate();">엑셀 템플릿</button>
                         <button class="btn" id="importExcel" name = "importExcel" onclick="findFile();">엑셀 업로드</button>
-                        <!--<button class="btn" id="importExcel2" name = "importExcel2" onclick="importExcel();">엑셀 업로드2</button> -->
                         <button class="btn" id="exportExcel" name = "exportExcel" onclick="exportExcel();">엑셀 다운로드</button>
                     </div>
                 </div>
@@ -612,8 +672,8 @@ function downTemplate(){
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
                         <div class="btn_wrap">
-                            <button type="button" class="stroke" onclick="_getUserGridLayout('stockLayout', stockGrid);">칼럼위치저장</button>
-                            <button type="button" class="stroke" onClick="_resetUserGridLayout('stockInitLayout', 'stockLayout', stockGrid);">칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="_getUserGridLayout('stockLayout', stockGrid);">칼럼위치저장</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('stockLayout', stockGrid,stockColumns);">칼럼초기화</button>
                             <button type="button">QR출력</button>
                             <button type="button" onclick="saveGrid('stock')">저장</button>
                             <button type="button" onclick="deleteRows('stock')">삭제</button>
@@ -628,7 +688,7 @@ function downTemplate(){
                         </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onclick="_getUserGridLayout('stockLayout', stockGrid);">칼럼위치저장</button>
-                            <button type="button" class="stroke" onClick="_resetUserGridLayout('stockInitLayout', 'stockLayout', stockGrid);" >칼럼초기화</button>
+                            <button type="button" class="stroke" onClick="_resetUserGridLayout('stockLayout', 'stockLayout', stockGrid);" >칼럼초기화</button>
                             <button type="button">QR출력</button>
                             <button type="button" onclick="saveGrid('stock')">저장</button>
                             <button type="button" onclick="deleteRows('stock')">삭제</button>
@@ -682,7 +742,7 @@ function downTemplate(){
                 <dfn>필수항목 *</dfn>
                 <form action="#" method="post">
                     <div class="row">
-                        <label for="category1">대카테고리<i>*</i></label>
+                        <label for="category1">카테고리<i>*</i></label>
                             <select name="category1" id="category1">
                             </select>
                     </div>
@@ -692,11 +752,12 @@ function downTemplate(){
                     </div>
                     <div class="row">
                         <label for="code">코드<i>*</i></label>
-                        <input type="text" id="code" name="code"  maxlength = "5"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+                        <input type="text" id="code" name="code"  maxlength = "4"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
                     </div>
                     <div class="row">
                         <label for="cost">원가<i>*</i></label>
-                        <input type="text" id="cost" name="cost" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+                        <input type="number
+                        " id="cost" name="cost" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
                     </div>
                 </form>
                 <div class="popup_btn_area">
