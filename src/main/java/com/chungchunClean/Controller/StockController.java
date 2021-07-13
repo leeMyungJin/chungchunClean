@@ -220,6 +220,28 @@ public class StockController {
         // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
     }
     
+    /**
+     * 입출 수정 저장
+     * 
+     * @return
+     */
+    @RequestMapping(value="/saveUpdateStockCurrent", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void saveUpdateStockCurrent(@RequestBody List<StockVo> params){
+        stockService.saveUpdateStockCurrent(params);
+    }
+    
+    /**
+     * 입출 재고 업데이트
+     * 
+     * @return
+     */
+    @RequestMapping(value="/saveStockCurrentQuantity", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void saveStockCurrentQuantity(@RequestBody List<StockVo> params){
+        stockService.saveStockCurrentQuantity(params);
+    }
+    
  
     /**
      *물품 리스트 가져오기

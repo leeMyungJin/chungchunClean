@@ -52,7 +52,7 @@ function loadGridStockList(type, result){
                 { binding: 'status', header: '상태', isReadOnly: true, width: 60, align:"center"},
                 { binding: 'lCategyCd', header: '카테고리코드', isReadOnly: true, visible: false, width: 200, align:"center"},
                 { binding: 'lCategyNm', header: '카테고리명', isReadOnly: true, width: 230, align:"center"},
-                { binding: 'itemNm', header: '물품명', isReadOnly: true, width: 230, align:"center"  },
+                { binding: 'itemNm', header: '물품명', isReadOnly: true, width: '*', align:"center"  },
                 { binding: 'itemCd', header: '코드번호', isReadOnly: true, width: 200, align:"center"},
                 { binding: 'cost', header: '원가', isReadOnly: true, width: 200, align:"center"},
                 { binding: 'quantity', header: '재고수량', isReadOnly: true, width: 200, align:"center"},
@@ -370,7 +370,7 @@ function saveGrid(){
 
         <div class="admin_container">
             <section class="admin_section">
-                <h2 class="admin_title">재고관리</h2>
+                <h2 class="admin_title">재고현황</h2>
                 <div class="admin_summary">
                     <dl>
                         <dt>총 재고수량</dt>

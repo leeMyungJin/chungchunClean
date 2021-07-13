@@ -16,8 +16,9 @@ var currentColumns;
 var currentSelector;
 var editGrid;
 var editGridView;
-var categyList;
 var itemList;
+var lCategyList;
+var classifiList;
 
 function pageLoad(){
 	$('#stock').addClass("current");
@@ -52,43 +53,140 @@ function loadGridCurrentList(type, result){
 		        cv: currentView
 		    });
 		   
-		   //var categyMap = new wijmo.grid.DataMap(getCategoryDtl(), 'lCategyCd', 'lCategyNm');
-		  
-		  /* {
-		          binding: 'lCategyCd', header: '카테고리', dataMap: categyMap, width: 100,
-		          cellTemplate: '<span id="lCategyCd_${col.dataMap.getDataItem(value).lCategyCd}">${lCategyNm}</span>'
-		     }, */
-		     
-		   var lCategyList = new wijmo.grid.DataMap(getCategoryList(), 'id', 'name');
-		   var classifiList = new wijmo.grid.DataMap(getClassifiList(), 'id', 'name');
-		   var itemList = new wijmo.grid.DataMap(getItemList(), 'id', 'name');
-		  /* itemList.getDisplayValues = function (dataItem) {
-			    let validItem = getItemList().filter(itemNm => itemNm.lCategyCd == dataItem.lCategyCd);
-			    return validCities.map(itemNm => itemNm.itemNm);
-			}; */
-		     
+		   lCategyList = new wijmo.grid.DataMap(getCategoryList(), 'id', 'name');
+		   classifiList = new wijmo.grid.DataMap(getClassifiList(), 'id', 'name');
+		   itemList = new wijmo.grid.DataMap(getItemList(), 'id', 'name');
+		   itemList.getDisplayValues = function (dataItem) {
+			    let validItem = getItemList().filter(itemCd => itemCd.lCategyCd == dataItem.lCategyCd);
+			    return validItem.map(itemCd => itemCd.name);
+			}; 
+		    
 		   currentColumns = [
-			   { isReadOnly: true, width: 35, align:"center"},
-			   	  { binding: 'cateSarSeq', header: 'seq', isReadOnly: true, width: 100, align:"center" },
+			      { isReadOnly: true, width: 35, align:"center"},
+			      { binding: 'cateSarSeq', header: '시퀀스', isReadOnly: true, width: 0, align:"center" },
 			      { binding: 'cretDt', header: '일자', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'cretNm', header: '담당자', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'classifiCd', header: '분류', isReadOnly: false, width: 100, align:"center", dataMap: classifiList, dataMapEditor: 'DropDownList' },
-			      { binding: 'lCategyCd', header: '카테고리', isReadOnly: false, width: 100, align:"center", dataMap: lCategyList, dataMapEditor: 'DropDownList' },
-			      { binding: 'itemCd', header: '물품코드', isReadOnly: false, width: 100, align:"center" },
-			      { binding: 'itemNm', header: '물품명', isReadOnly: false, width: 100, align:"center", dataMap: itemList, dataMapEditor: 'DropDownList'},
-			      { binding: 'cost', header: '원가', isReadOnly: false, width: 100, align:"center" },
-			      { binding: 'sarQuantity', header: '입출고수량', isReadOnly: false, width: 100, align:"center" },
-			      { binding: 'returnQuantity', header: '반품수량', isReadOnly: false, width: 100, align:"center" },
-			      { binding: 'quantity', header: '재고수량', isReadOnly: false, width: 100, align:"center" },
+			      { binding: 'classifiCd', header: '분류', isReadOnly: false, width: 150, align:"center", dataMap: classifiList, dataMapEditor: 'DropDownList' },
+			      { binding: 'lCategyCd', header: '카테고리', isReadOnly: false, width: 150, align:"center", dataMap: lCategyList, dataMapEditor: 'DropDownList' },
+			      { binding: 'itemCd', header: '물품', isReadOnly: false, width: '*', align:"center", dataMap: itemList, dataMapEditor: 'DropDownList'},
+			      { binding: 'cost', header: '원가', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'sarQuantity', header: '입출고수량', isReadOnly: false, width: 150, align:"center"},
+			      { binding: 'returnQuantity', header: '반품수량', isReadOnly: false, width: 150, align:"center" },
+			      { binding: 'quantity', header: '재고수량', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'updtDt', header: '수정일자', isReadOnly: true, width: 100, align:"center" }
 			];
+			 
 		   
 		   currentGrid = new wijmo.grid.FlexGrid('#currentGrid', {
 			    autoGenerateColumns: false,
 			    alternatingRowStep: 0,
 			    columns: currentColumns,
-			    itemsSource: currentView
+			    itemsSource: currentView,
+			/*    formatItem:function(s,e){
+			    	if (e.panel == s.cells) {
+			            var col = s.columns[e.col];
+		                if (col.binding == 'sarQuantity' || col.binding == 'returnQuantity') {
+		                    //셀 서식
+		                    var html;
+		                    var value = s.getCellData(e.row, e.col);
+		                    console.log(value);
+		                    var classifiCd = s.getCellData(e.row, 'classifiCd');
+		                    
+		                    if(value != undefined && value != null && value > 0){
+		                    	if(classifiCd == "S" || classifiCd == "RS"){
+		                    		col.cellTemplate = '<span class="change_plus">+'+value;
+			                    }else if(classifiCd == "R" || classifiCd == "RR"){
+			                    	col.cellTemplate = '<span class="change_minus">-'+value;
+			                    }       	
+		                    }  
+		                    
+		                   if(quantity != undefined && quantity != null && quantity > 0){
+		                    	if(classifiCd == "S" || classifiCd == "RS"){
+			                    	html = '<span class="change_plus">+'+quantity+'</span>';
+			                    }else if(classifiCd == "R" || classifiCd == "RR"){
+			                    	html = '<span class="change_minus">-'+quantity+'</span>';
+			                    }
+			                    e.cell.innerHTML = html;           	
+		                    }       
+		                }
+		            }
+			      },*/
+			      beginningEdit: function (s, e) {
+		                var col = s.columns[e.col];
+		                var item = s.rows[e.row].dataItem;
+		                if(item.updtDt != undefined){
+		                    if (col.binding == 'classifiCd' || col.binding == 'lCategyCd' || col.binding == 'itemCd' ) {
+		                        e.cancel = true;
+		                        alert("신규 행일때만 입력이 가능합니다.");
+		                    }
+		                }
+		                
+		                if (col.binding == 'sarQuantity') {
+		                	classifiCd = s.getCellData(e.row, 'classifiCd');
+		                	if(classifiCd == "RS" || classifiCd == "RR"){
+		                		e.cancel = true;
+		                		alert("분류가 입고/출고일 경우에만 입력 가능합니다.");
+		                	}
+		                	
+		                }else if(col.binding == 'returnQuantity'){
+		                	classifiCd = s.getCellData(e.row, 'classifiCd');
+		                	if(classifiCd == "S" || classifiCd == "R"){
+		                		e.cancel = true;
+		                		alert("분류가 반품입고/반품출고일 경우에만 입력 가능합니다.");
+		                	}
+		                	
+		                }
+		            },
+		            cellEditEnding: (s, e) => {
+		                let col = s.columns[e.col];
+		                let value = s.activeEditor.value;
+		                if (col.binding == 'itemCd') {
+		                  var item = getItemList().filter(item => item.name == value);
+		                  s.setCellData(e.row, 'cost', item[0].cost);
+		                  s.setCellData(e.row, 'quantity', item[0].quantity);
+		                
+		                }else if(col.binding == 'sarQuantity' || col.binding == 'returnQuantity'){
+		                	var quantity = s.getCellData(e.row, 'quantity');
+		                	
+		                	if(classifiCd == "S" || classifiCd == "RS"){
+		                		s.setCellData(e.row, 'quantity', Number(quantity) + Number(value));
+		                    }else if(classifiCd == "R" || classifiCd == "RR"){
+		                    	s.setCellData(e.row, 'quantity', Number(quantity) - Number(value));
+		                    }
+		                	
+		                }
+		              }
 			  });
+		   
+		   currentGrid.formatItem.addHandler(function (s, e) {
+			   if (e.panel == s.cells) {
+		            var col = s.columns[e.col];
+	                if (col.binding == 'sarQuantity' || col.binding == 'returnQuantity') {
+	                    //셀 서식
+	                    var html;
+	                    var value = s.getCellData(e.row, e.col);
+	                    console.log(value);
+	                    var classifiCd = s.getCellData(e.row, 'classifiCd');
+	                    
+	                    /*if(value != undefined && value != null && value > 0){
+	                    	if(classifiCd == "S" || classifiCd == "RS"){
+	                    		col.cellTemplate = '<span class="change_plus">+'+value;
+		                    }else if(classifiCd == "R" || classifiCd == "RR"){
+		                    	col.cellTemplate = '<span class="change_minus">-'+value;
+		                    }       	
+	                    }  */
+	                    
+	                    if(value != undefined && value != null && value > 0){
+	                    	if(classifiCd == "S" || classifiCd == "RS"){
+		                    	html = '<span class="change_plus">+'+value+'</span>';
+		                    }else if(classifiCd == "R" || classifiCd == "RR"){
+		                    	html = '<span class="change_minus">-'+value+'</span>';
+		                    }
+		                    e.cell.innerHTML = html;           	
+	                    }      
+	                }
+	            }
+	        });
 		   	
 		   	//행번호
 		   	currentGrid.itemFormatter = function (panel, r, c, cell) { 
@@ -97,40 +195,23 @@ function loadGridCurrentList(type, result){
 	            }
 	        };
 	        
-	     // 체크박스 생성
-	      currentSelector = new wijmo.grid.selector.Selector(currentGrid);
-	    // currentSelector = new wijmo.grid.selector.Selector(currentGrid, {itemChecked: () => {}});
-	    // currentSelector.column = currentGrid.columns[0];
+	     	// 체크박스 생성
+	    	//  currentSelector = new wijmo.grid.selector.Selector(currentGrid);
 	    
-	      currentGrid.formatItem.addHandler(function (s, e) {
-            //  "sarQuantity, returnQuantity" 열에 대한 커스텀 렌더링
-            if (e.panel == s.cells) {
-	            var col = s.columns[e.col];
-	            var classifiCd = s.getCellData(e.row, e.col);
-	            var html;
-                if (e.row > 0 && col.binding == 'classifiCd') {
-                    //셀 서식
-                    var html = '<div class="mark_{status}"/>';
-                    if(status == 'O') {
-                        html = html.replace('{status}', 'enough');
-                    }else if(status == 'X') {
-                        html = html.replace('{status}', 'short');
-                    }
-                    e.cell.innerHTML = html;                    
-                }
-            }
-        });
-	        
 	        editGrid = new wijmo.grid.FlexGrid('#editGrid', {
 	            itemsSource: currentView.itemsEdited,
 	            isReadOnly: true
 	        });
 	        
 	        _setUserGridLayout('currentLayout', currentGrid, currentColumns);
+	     	currentSelector = new wijmo.grid.selector.Selector(currentGrid);
+	     	currentSelector.column = currentGrid.columns[0];
+	     	new wijmo.grid.filter.FlexGridFilter(currentGrid);
 			  
 	  }else{		  
 		   currentView = new wijmo.collections.CollectionView(result, {
-		       pageSize: 100
+		       pageSize: 100,
+		       trackChanges: true
 		   });
 		  currentGridPager.cv = currentView;
 		  currentGrid.itemsSource = currentView;
@@ -181,7 +262,11 @@ function getItemList() {
                 	var item = [];
                 	
                 	for(var i =0; i<result.length; i++){
-                		item[i] = { id: result[i].itemCd, name: result[i].itemNm, lCategyCd: result[i].lCategyCd };	
+                		item[i] = { id: result[i].itemCd
+                				, name: result[i].itemNm
+                				, lCategyCd: result[i].lCategyCd
+                				, cost: result[i].cost
+                				, quantity: result[i].quantity };	
                 	}
                 	console.log(item);
                 	returnVal = item;
@@ -303,33 +388,71 @@ function deleteRows(){
 }
 
 function saveGrid(){
-	var editItem = currentView.itemsEdited;
     var addItem  = currentView.itemsAdded;
-    var rows = [];
-    for(var i =0; i< editItem.length; i++){
-            rows.push(editItem[i]);
-    }
-    for(var i=0; i< addItem.length; i++){
-        rows.push(addItem[i]);
-    }
+    var editItem = currentView.itemsEdited;
+    var addRows = [];
+	var editRows = [];
+	var rows = [];
 
-    wijmo.Control.getControl("#editGrid").refresh(true);
+    for(var i=0; i< addItem.length; i++){
+    	addRows.push(addItem[i]);
+    	rows.push(addItem[i]);
+    }
+	
+	for(var i =0; i< editItem.length; i++){
+    	editRows.push(editItem[i]);
+    	rows.push(editItem[i]);
+    }
+    
+	wijmo.Control.getControl("#editGrid").refresh(true);
     if(confirm("변경한 내용을 저장 하시겠습니까??")){
-        $.ajax({
-            url : "/stock/saveStockCurrent",
+    	$.ajax({
+            url : "/stock/saveStockCurrentQuantity",
             async : false, // 비동기모드 : true, 동기식모드 : false
             type : 'POST',
             contentType: 'application/json',
             data: JSON.stringify(rows),
             success : function(result) {
-                alert("저장되었습니다.");
-                getCurrentList();
+            	insertUpdateGrid(addRows, editRows);
             },
             error : function(request,status,error) {
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
         });
     }
+}
+
+function insertUpdateGrid(addRows, editRows){
+    $.ajax({
+        url : "/stock/saveStockCurrent",
+        async : false, // 비동기모드 : true, 동기식모드 : false
+        type : 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(addRows),
+        success : function(result) {
+            saveUpdateGrid(editRows);
+        },
+        error : function(request,status,error) {
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+    });
+}
+
+function saveUpdateGrid(editRows){
+	$.ajax({
+        url : "/stock/saveUpdateStockCurrent",
+        async : false, // 비동기모드 : true, 동기식모드 : false
+        type : 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(editRows),
+        success : function(result) {
+            alert("저장되었습니다.");
+            getCurrentList();
+        },
+        error : function(request,status,error) {
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+    });
 }
 
 </script>

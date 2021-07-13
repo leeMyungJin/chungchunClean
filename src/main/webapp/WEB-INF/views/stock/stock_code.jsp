@@ -68,7 +68,7 @@ function loadGridStockList(type, result){
                 { binding: 'lCategyNm', header: '카테고리명', isReadOnly: true, width: 300, align:"center"},
                 { binding: 'itemCd', header: '물품코드', isReadOnly: false, width: 300, align:"center"  },
                 { binding: 'itemNm', header: '물품명', isReadOnly: false, width: 300, align:"center"  },
-                { binding: 'cost', header: '원가', isReadOnly: false, width: 300, align:"center"}
+                { binding: 'cost', header: '원가', isReadOnly: false, width: '*', align:"center"}
             ]
 		  
 		// hostElement에 Wijmo의 FlexGird 생성
@@ -112,7 +112,7 @@ function loadGridStockList(type, result){
             alternatingRowStep: 0,
             columns: [
                 { binding: 'lCategyCd', header: '카테고리코드', isReadOnly: false, width: 230, align:"center"},
-                { binding: 'lCategyNm', header: '카테고리명', isReadOnly: false,  width: 230, align:"center"},
+                { binding: 'lCategyNm', header: '카테고리명', isReadOnly: false,  width: '*', align:"center"},
                 { binding: 'regDate', header: '등록일시', isReadOnly: true, width: 230, align:"center"  }
             ],
             beginningEdit: function (s, e) {
@@ -621,7 +621,7 @@ function downTemplate(){
         <%@ include file="../include/nav.jsp" %>
         <div class="admin_container">
             <section class="admin_section">
-                <h2 class="admin_title">코드관리</h2>
+                <h2 class="admin_title">물품관리</h2>
                 <div class="admin_summary">
                     <dl>
                         <dt>총 물품 수</dt>

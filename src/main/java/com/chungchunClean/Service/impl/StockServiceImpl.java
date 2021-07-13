@@ -125,6 +125,23 @@ public class StockServiceImpl implements StockService {
 	}	
 	
 	@Override
+	public void saveUpdateStockCurrent(List<StockVo> params) {
+		for(StockVo vo : params){
+			vo.setUpdtId("testId");
+			stockMapper.saveUpdateStockCurrent(vo);
+		}	
+	}
+	
+	@Override
+	public void saveStockCurrentQuantity(List<StockVo> params) {
+		for(StockVo vo : params){
+			vo.setUpdtId("testId");
+			stockMapper.saveStockCurrentQuantity(vo);
+		}
+		
+	}
+	
+	@Override
 	public int getTodayStore() {
 		return stockMapper.getTodayStore();
 	}
