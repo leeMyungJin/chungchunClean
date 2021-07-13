@@ -109,8 +109,10 @@ public class StockServiceImpl implements StockService {
 	
 	@Override
 	public void deleteStockCurrent(List<StockVo> params) {
-		for(StockVo vo : params)
+		for(StockVo vo : params) {
 			stockMapper.deleteStockCurrent(vo);
+			stockMapper.deleteStockCurrentQuantity(vo);
+		}
 		
 	}
 	

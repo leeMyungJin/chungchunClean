@@ -215,6 +215,31 @@ FROM
 	where cate_sar_seq = #{cateSarSeq}::integer
 </delete>
 
+<update id="deleteStockCurrentQuantity" parameterType="StockVo">
+update web.category_dtl
+set quantity = (select quantity 
+				from web.category_dtl 
+				where l_categy_cd = #{lCategyCd}
+				and item_cd = #{itemCd} ) 
+				<choose>
+					<when test='classifiCd == "S"'>
+						- #{sarQuantity}::numeric
+					</when>
+					<when test='classifiCd == "R"'>
+						+ #{sarQuantity}::numeric
+					</when>
+					<when test="classifiCd == 'RS'">
+						- #{returnQuantity}::numeric
+					</when>
+					<when test="classifiCd == 'RR'">
+						+ #{returnQuantity}::numeric
+					</when>
+				</choose>
+				
+where l_categy_cd = #{lCategyCd}
+and item_cd = #{itemCd}
+</update>
+
 <insert id="saveStockCurrent" parameterType="StockVo">
 insert into web.category_dtl_sar (
 		cate_sar_seq --시퀀스
