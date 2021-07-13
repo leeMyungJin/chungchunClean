@@ -38,7 +38,7 @@
 					ctg_bas.l_categy_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
-			<when test="con == 'product'">
+			<when test="con == 'item'">
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
