@@ -27,6 +27,8 @@ public interface StockMapper  {
     public List<StockVo> getStockCurrentList(HashMap<String,Object> params);
     public void deleteStockCurrent(StockVo params);
     public void saveStockCurrent(StockVo params);
+    public void saveUpdateStockCurrent(StockVo params);
+    public void saveStockCurrentQuantity(StockVo params);
     public int getTodayStore();
 	public int getTodayRelease();
     public int getTodayReturnStore();

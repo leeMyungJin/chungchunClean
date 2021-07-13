@@ -7,3 +7,10 @@
 .url_call:visited {
   color: #656565;
 }
+
+.change_plus {
+    color: #0432ff;
+}
+.change_minus {
+    color: darkred;
+}

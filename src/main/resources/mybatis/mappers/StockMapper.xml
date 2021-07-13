@@ -205,9 +205,9 @@ FROM
 		</choose>
 	</if>
 	<if test="fromDate != null and toDate != null">
-		and cret_dt between #{fromDate}::timestamp and #{toDate}::timestamp 
+		and cret_dt between #{fromDate}::timestamp and (to_date(#{toDate}, 'YYYY-MM-DD')+1)::timestamp
 	</if>
-	ORDER BY cret_dt, l_categy_cd, item_cd
+	ORDER BY cate_sar_seq
 </select>
 
 <delete id="deleteStockCurrent" parameterType="StockVo">
@@ -217,7 +217,8 @@ FROM
 
 <insert id="saveStockCurrent" parameterType="StockVo">
 insert into web.category_dtl_sar (
-		l_categy_cd -- 대카테고리코드
+		cate_sar_seq --시퀀스
+		, l_categy_cd -- 대카테고리코드
 		, l_categy_nm -- 대카테고리명
 		, item_cd-- 물품코드
 		, item_nm -- 물품명
@@ -234,23 +235,65 @@ insert into web.category_dtl_sar (
 		, cret_nm -- 등록자명
 )
 values(
-		#{lCategyCd} -- 대카테고리코드
-		, #{lCategyNm} -- 대카테고리명
+		(select max(cate_sar_seq)+1 from WEB.category_dtl_sar) -- 시퀀스
+		, #{lCategyCd} -- 대카테고리코드
+		, (select l_categy_nm from WEB.CATEGORY_BAS where l_categy_cd = #{lCategyCd}) -- 대카테고리명
 		, #{itemCd}-- 물품코드
-		, #{itemNm} -- 물품명
-		, #{cost} -- 물품원가
-		, #{quantity}-- 물품재고
+		, (select item_nm from WEB.CATEGORY_DTL where item_cd = #{itemCd}) -- 물품명
+		, #{cost}::numeric -- 물품원가
+		, (select quantity 
+			from web.category_dtl 
+			where l_categy_cd = #{lCategyCd}
+			and item_cd = #{itemCd}) -- 물품재고
 		, #{classifiCd} -- 분류코드
-		, #{classifiNm} -- 분류명
-		, #{sarQuantity} -- 입출고수량
-		, #{returnQuantity} -- 반품입출고수량
-		, #{cretDt} -- 등록일자
+		, (select code_dtl_nm from WEB.code where code_cd = 'classifi' and code_dtl_cd = #{classifiCd})-- 분류명
+		, #{sarQuantity}::numeric -- 입출고수량
+		, #{returnQuantity}::numeric -- 반품입출고수량
+		, NOW() -- 등록일자
 		, #{cretId} -- 등록자
-		, #{updtDt} -- 수정일자
+		, NOW() -- 수정일자
 		, #{updtId} -- 수정자
-		, #{cretNm} -- 등록자명
+		, #{cretId} -- 등록자명
 )
 </insert>
+
+<update id="saveUpdateStockCurrent" parameterType="StockVo">
+UPDATE web.category_dtl_sar
+	SET quantity = (select quantity 
+					from web.category_dtl 
+					where l_categy_cd = #{lCategyCd}
+					and item_cd = #{itemCd}) -- 물품재고
+		, sar_quantity = #{sarQuantity}::numeric -- 입출고수량
+		, return_quantity = #{returnQuantity}::numeric -- 반품입출고수량
+		, updt_dt		= now()
+		, updt_id		= #{updtId}
+WHERE cate_sar_seq = #{cateSarSeq}::numeric
+</update>
+
+<update id="saveStockCurrentQuantity" parameterType="StockVo">
+update web.category_dtl
+set quantity = (select quantity 
+				from web.category_dtl 
+				where l_categy_cd = #{lCategyCd}
+				and item_cd = #{itemCd} ) 
+				<choose>
+					<when test='classifiCd == "S"'>
+						+ #{sarQuantity}::numeric
+					</when>
+					<when test='classifiCd == "R"'>
+						- #{sarQuantity}::numeric
+					</when>
+					<when test="classifiCd == 'RS'">
+						+ #{returnQuantity}::numeric
+					</when>
+					<when test="classifiCd == 'RR'">
+						- #{returnQuantity}::numeric
+					</when>
+				</choose>
+				
+where l_categy_cd = #{lCategyCd}
+and item_cd = #{itemCd}
+</update>
 
 <select id="getTodayStore" resultType="Integer">
 	select COALESCE(sum(sar_quantity), 0)
@@ -281,7 +324,7 @@ values(
 </select>	
 
 <select id="getItemList" resultType="StockVo">
-	select distinct l_categy_cd, item_cd, item_nm
+	select distinct l_categy_cd, item_cd, item_nm, COALESCE(quantity, 0) as quantity, cost
 	from WEB.CATEGORY_dtl
 	ORDER BY l_categy_cd, item_cd
 </select>
