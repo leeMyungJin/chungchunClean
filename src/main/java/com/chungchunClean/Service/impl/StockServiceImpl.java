@@ -9,6 +9,7 @@ import com.chungchunClean.Util.Util;
 import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.StockVo;
 
+import org.checkerframework.checker.units.qual.radians;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,13 +79,17 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public void saveStock(List<StockVo> params) {
+	public Integer saveStock(List<StockVo> params) {
+		int cnt = 0;
 		for(StockVo vo : params){
 			vo.setUpdtId("testId");
 			vo.setCretId("testId");
-			stockMapper.saveStock(vo);
+			if(vo.getItemCd().length() == 7 && stockMapper.checkCategory(vo) > 0){
+				stockMapper.saveStock(vo);
+				cnt++;
+			}
 		}
-		
+		return cnt;		
 	}	
 
 	@Override
@@ -92,6 +97,23 @@ public class StockServiceImpl implements StockService {
 		stockMapper.saveQuantity(params);
 		
 	}
+
+	
+	@Override
+	public Integer saveQuantityList(List<StockVo> params) {
+		int cnt = 0;
+		HashMap<String, String> item = new HashMap<String,String>();
+		for(StockVo vo : params){
+			item.clear();
+			item.put("lCategyCd", vo.getlCategyCd());
+			item.put("itemCd", vo.getItemCd());
+			if(stockMapper.dupCheckItem(item) != ""){
+				stockMapper.saveQuantity(vo);
+				cnt++;
+			}
+		}
+		return cnt;
+	}	
 	
 	@Override
 	public HashMap<String, Object> getQuantityInfo() {
@@ -125,7 +147,6 @@ public class StockServiceImpl implements StockService {
 		}
 		
 	}	
-	
 	@Override
 	public void saveUpdateStockCurrent(List<StockVo> params) {
 		for(StockVo vo : params){
@@ -171,6 +192,5 @@ public class StockServiceImpl implements StockService {
 	@Override
 	public List<CodeVo> getClassifiList() {
 		return stockMapper.getClassifiList();
-	}	
-
+	}
 }

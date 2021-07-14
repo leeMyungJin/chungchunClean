@@ -54,13 +54,20 @@
 	ORDER BY l_categy_cd, item_cd
 </select>
 
-<select id="getCategoryList" resultType="com.chungchunClean.vo.StockVo">
+<select id="getCategoryList" resultType="StockVo">
 	SELECT 
 		ctg_bas.l_categy_cd ,
 		ctg_bas.l_categy_nm ,
 		to_char(coalesce(updt_dt, cret_dt),'yyyy-mm-dd HH24:MI:SS') as reg_date
 	FROM web.category_bas ctg_bas
 	ORDER BY l_categy_cd
+</select>
+
+<select id="checkCategory" parameterType="StockVo" resultType="Integer">
+	SELECT count(l_categy_cd)
+	FROM web.category_bas ctg_bas
+	WHERE 1=1
+	  AND l_categy_cd = #{lCategyCd}
 </select>
 
 <delete id="deleteCategory" parameterType="StockVo">

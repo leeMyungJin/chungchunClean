@@ -7,17 +7,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.chungchunClean.Service.ObjectService;
+import com.chungchunClean.Util.Encrypt;
+import com.chungchunClean.vo.BldgVo;
+import com.chungchunClean.vo.StaffVo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.chungchunClean.Service.ObjectService;
-import com.chungchunClean.vo.StaffVo;
-import com.chungchunClean.Util.Encrypt;
 
 
 @Controller
@@ -99,5 +99,14 @@ public class ObjectController {
     	objectService.updateStaff(params);
     }    
     
+    /**
+     * 건물 조회
+     */
+    @RequestMapping(value = "/getBldgList")
+    @ResponseBody
+    public List<BldgVo> getBldgList(@RequestParam HashMap<String,Object> params){
+    	return objectService.getBldgList(params);
+    }  
+
   
 }

@@ -22,7 +22,6 @@ var categorySelectCnt = 0;
 var dupCheckItemFlag = false;
 var excelGrid;
 var excelView;
-var excelGridPager;
 var excelSelector;
 var addGrid;
 var editGrid;
@@ -149,13 +148,6 @@ function loadGridStockList(type, result){
         editGrid = new wijmo.grid.FlexGrid('#editGrid', {
             itemsSource: categoryView.itemsEdited,
             isReadOnly: true
-        });
-
-        //엑셀 업로드용 그리드 
-            excelGridPager = new wijmo.input.CollectionViewNavigator('#excelGridPager', {
-            byPage: true,
-            headerFormat: '{currentPage:n0} / {pageCount:n0}',
-            cv: excelView
         });
 
 		// hostElement에 Wijmo의 FlexGird 생성
@@ -416,8 +408,8 @@ function saveGrid(type){
                     return false;
                 }
                 params={
-                    lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,2),
-                    itemCd : excelGrid.collectionView.items[i].물품코드.substring(2),
+                    lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,3),
+                    itemCd : excelGrid.collectionView.items[i].물품코드,
                     itemNm : excelGrid.collectionView.items[i].물품명,
                     cost : excelGrid.collectionView.items[i].원가
                 }
@@ -684,7 +676,6 @@ function downTemplate(){
                         </div>
                         <div class="grid_wrap" id="excelDiv" style="position:relative;">
                         	<div id="excelGrid"  style="height:500px;"></div>
-                        	<div id="excelGridPager" class="pager"></div>
                         </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onclick="_getUserGridLayout('stockLayout', stockGrid);">칼럼위치저장</button>
@@ -709,7 +700,7 @@ function downTemplate(){
             <div class="popup_grid">
                 <div class="popup_btn_area">
                     <div class="right">
-                        <button type="button" class="popup_btn">삭제</button>
+                        <button type="button" class="popup_btn" onclick="deleteRows('category');">삭제</button>
                         <button type="button" class="popup_btn" onclick="saveGrid('category')">저장</button>
                     </div>
                 </div>

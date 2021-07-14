@@ -8,9 +8,188 @@
 </head>
 
 <script type="text/javascript">
+var bldgView;
+var bldgGridPager;
+var bldgGrid;
+var bldgColumns;
+var bldgSelector;
+var excelGrid;
+var excelView;
+var excelSelector;
 function pageLoad(){
 	$('#object').addClass("current");
 	$('#building').addClass("current");
+
+    loadGridStockList('init');
+}
+
+//그리드 초기 셋팅
+function loadGridStockList(type, result){
+    if(type == "init"){     
+        $("#excelDiv").hide();
+        $("#saveBtn").hide();
+        bldgView = new wijmo.collections.CollectionView(result, {
+            pageSize: 100,
+            groupDescriptions: ['lCategyNm']
+        });
+		// 페이지 이동
+        bldgGridPager = new wijmo.input.CollectionViewNavigator('#bldgGridPager', {
+            byPage: true,
+            headerFormat: '{currentPage:n0} / {pageCount:n0}',
+            cv: bldgView
+        });
+
+        bldgColumns =  [
+                { isReadOnly: true, width: 50, align:"center"},
+                { binding: 'areaCd', header: '지역코드', isReadOnly: true, width: 60, visible: false, align:"center"},
+                { binding: 'areaNm', header: '지역', isReadOnly: true, width: 100, align:"center"},
+                { binding: 'dtlAddr', header: '상세주소', isReadOnly: true, width: 300, align:"center"},
+                { binding: 'bldgCd', header: '건물코드', isReadOnly: true, width: 60, visible: false,align:"center"},
+                { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 150, align:"center"},
+                { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 150, align:"center"},
+                { binding: 'conCost', header: '계약금액', isReadOnly: true,  width: 150, align:"center"},
+                { binding: 'dongNum', header: '동번호', isReadOnly: true, width: 60, align:"center"},
+                { binding: 'memo', header: '메모', isReadOnly: true, width: 280, align:"center"  },
+                { binding: 'activeYn', header: '활성화', isReadOnly: true, width: 80, align:"center"},
+                { binding: 'cretDt', header: '계정생성일', isReadOnly: true, width: 175, align:"center"},
+                { binding: 'edit', header: '정보수정', isReadOnly: true, width: "*", align:"center"}
+            ]
+		  
+		// hostElement에 Wijmo의 FlexGird 생성
+        // itemsSource: data - CollectionView로 데이터를 그리드에 바인딩
+        // autoGenerateColumns: false >> 컬럼 사용자 정의 
+        bldgGrid = new wijmo.grid.FlexGrid('#bldgGrid', {
+            autoGenerateColumns: false,
+            alternatingRowStep: 0,
+            columns : bldgColumns,
+            itemsSource: bldgView,
+            cellEditEnding: function (s, e) {
+                var col = s.columns[e.col];
+                var inven = s.columns[e.col - 1];
+                if (col.binding == 'add') {
+                    var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
+                    if( !wijmo.isNumber(value)){
+                        e.cancel = true;
+                        e.stayInEditMode = false;
+                        alert('숫자로만 입력 가능합니다.');
+                        return false;
+                    }else{
+                        e.getRow().dataItem.quantity += value;// 입력값 재고수량에 계산
+                        if(e.getRow().dataItem.quantity > 10){
+                            e.getRow().dataItem.status = 'O';
+                        }else{
+                            e.getRow().dataItem.status = 'X';
+                        }
+                    //    bldgView.items[e.row -1].quantity += value ; 
+                       var params = {
+                            lCategyCd   : e.getRow().dataItem.lCategyCd,
+                            itemCd      : e.getRow().dataItem.itemCd,
+                            quantity    : e.getRow().dataItem.quantity ,
+                        }
+                         $.ajax({
+                            url : "/stock/saveQuantity",
+                            async : false, // 비동기모드 : true, 동기식모드 : false
+                            type : 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(params),
+                            success : function(result) {
+                                getQuantityInfo();
+                            },
+                            error : function(request,status,error) {
+                                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                            }
+                        });
+                       s.activeEditor.value = 0; // 입력값 0으로 초기화
+
+                    }
+
+                }
+            }
+        });
+
+        _setUserGridLayout('bldgLayout', bldgGrid, bldgColumns );
+
+        //행번호 표시하기
+        bldgGrid.itemFormatter = function (panel, r, c, cell) { 
+            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+                cell.textContent = (r + 1).toString();
+            }
+        };
+
+        bldgGrid.formatItem.addHandler(function (s, e) {
+            // 열 헤더에 대한 중앙 정렬 
+            if (e.panel == s.columnHeaders) {
+            e.cell.innerHTML = '<div class="v-center">' +
+                e.cell.innerHTML + '</div>';
+            }
+            //  "status" 열에 대한 커스텀 렌더링
+            if (e.panel == s.cells) {
+            var col = s.columns[e.col];
+            var status = s.getCellData(e.row, e.col);
+                if (col.binding == 'status' && (status == 'O' || status == 'X')) {
+                    //셀 서식
+                    var html = '<div class="mark_{status}"/>';
+                    if(status == 'O') {
+                        html = html.replace('{status}', 'enough');
+                    }else if(status == 'X') {
+                        html = html.replace('{status}', 'short');
+                    }
+                    e.cell.innerHTML = html;                    
+                }
+            }
+        });
+
+		// hostElement에 Wijmo의 FlexGird 생성
+        // itemsSource: data - CollectionView로 데이터를 그리드에 바인딩
+        // autoGenerateColumns: false >> 컬럼 사용자 정의 
+        excelGrid = new wijmo.grid.FlexGrid('#excelGrid', {
+            autoGenerateColumns: false,
+            alternatingRowStep: 0,
+            columns : bldgColumns,
+            itemsSource: excelView
+        });
+
+        //행번호 표시하기
+        excelGrid.itemFormatter = function (panel, r, c, cell) { 
+            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+                cell.textContent = (r + 1).toString();
+            }
+        };
+        // 체크박스 생성
+        bldgSelector = new wijmo.grid.selector.Selector(bldgGrid);
+        bldgSelector.column = bldgGrid.columns[0];
+    }else{
+        bldgView = new wijmo.collections.CollectionView(result, {
+            pageSize: 100,
+            groupDescriptions: ['areaNm', 'bldgNm', 'dongNum']
+        });
+        bldgGrid.columns[0].width = 50;
+        bldgGridPager.cv = bldgView;
+        bldgGrid.itemsSource = bldgView;
+	  }
+      refreshPaging(bldgGrid.collectionView.totalItemCount, 1, bldgGrid, 'bldgGrid');
+}
+
+function getBldgList(){
+    $("#excelDiv").hide();
+    $("#bldgDiv").show();
+    var params = {
+            inq : $("#inq").val(),
+            con : $("#con").val()
+    	}
+    	$.ajax({
+            url : "/object/getBldgList",
+            async : false, // 비동기모드 : true, 동기식모드 : false
+            type : 'POST',
+            data : params,
+            success : function(result) {
+        	    loadGridStockList('search', result);
+            },
+            error : function(request,status,error) {
+             	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+          });
+
 }
 </script>
 
@@ -54,7 +233,7 @@ function pageLoad(){
                             </select>
                             <label for="inq"></label>
                             <input type="text" id="inq" placeholder=",로 다중검색 가능">
-                            <button type="button">조회</button>
+                            <button type="button" id="search" onClick="getBldgList();">조회</button>
                         </form>
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
@@ -65,7 +244,13 @@ function pageLoad(){
                             <button type="button">QR출력</button>
                             <button type="button">저장</button>
                         </div>
-                        <div class="grid_wrap">Grid 영역입니다</div>
+                        <div class="grid_wrap" id="bldgDiv" style="position:relative;">
+                        	<div id="bldgGrid"  style="height:500px;"></div>
+                        	<div id="bldgGridPager" class="pager"></div>
+                        </div>
+                        <div class="grid_wrap" id="excelDiv" style="position:relative;">
+                        	<div id="excelGrid"  style="height:500px;"></div>
+                        </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke">칼럼위치저장</button>
                             <button type="button" class="stroke">칼럼초기화</button>

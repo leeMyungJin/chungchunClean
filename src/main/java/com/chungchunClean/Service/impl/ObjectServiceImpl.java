@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.chungchunClean.Mappers.ObjectMapper;
 import com.chungchunClean.Service.ObjectService;
 import com.chungchunClean.Util.Util;
+import com.chungchunClean.vo.BldgVo;
 import com.chungchunClean.vo.StaffVo;
 import com.chungchunClean.Mappers.LoginMapper;
 import com.chungchunClean.Util.Encrypt;
@@ -70,6 +71,13 @@ public class ObjectServiceImpl implements ObjectService {
 			params.replace("password", shaPwd);
 		}
 		objectMapper.updateStaff(params);
+	}
+
+	@Override
+	public List<BldgVo> getBldgList(HashMap<String, Object> params) {
+		if(params.get("inq") != null)
+			params.replace("inq", Util.makeForeach((String)params.get("inq"), ","));
+		return objectMapper.getBldgList(params);
 	}
 	
 }

@@ -19,6 +19,7 @@ public interface StockMapper  {
     public String dupCheckItem(HashMap<String, String> params);
     public void addItem(StockVo params);
     public void deleteItem(StockVo vo);
+    public Integer checkCategory(StockVo vo);
     public String getTotalItemCnt();
     public void saveStock(StockVo params);
     public void saveQuantity(StockVo params);

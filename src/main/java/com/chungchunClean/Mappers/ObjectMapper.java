@@ -3,6 +3,7 @@ package com.chungchunClean.Mappers;
 import java.util.HashMap;
 import java.util.List;
 
+import com.chungchunClean.vo.BldgVo;
 import com.chungchunClean.vo.StaffVo;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -24,4 +25,6 @@ public interface ObjectMapper  {
 	public void updateStaff(HashMap<String,String> params);
 	
 	public StaffVo getStaffInfo(StaffVo vo);
+
+    public List<BldgVo> getBldgList(HashMap<String, Object> params);
 }

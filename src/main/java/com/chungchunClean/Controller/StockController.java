@@ -146,8 +146,8 @@ public class StockController {
      */
     @RequestMapping(value="/saveStock", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void saveStock(@RequestBody List<StockVo> params){
-        stockService.saveStock(params);
+    public Integer saveStock(@RequestBody List<StockVo> params){
+        return stockService.saveStock(params);
         // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
     }
 
@@ -170,8 +170,7 @@ public class StockController {
     @RequestMapping(value="/saveQuantityList", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
     public void saveQuantityList(@RequestBody List<StockVo> params){
-        for(StockVo vo : params)
-            stockService.saveQuantity(vo);
+            stockService.saveQuantityList(params);
     }
 
     /**

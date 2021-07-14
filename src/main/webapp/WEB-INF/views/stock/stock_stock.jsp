@@ -14,17 +14,16 @@ var stockMngGrid;
 var stockMngColumns;
 var excelGrid;
 var excelView;
-var excelGridPager;
 
 function pageLoad(){
 	$('#stock').addClass("current");
 	$('#stock_stock').addClass("current");
-    $("#essesntail").attr("checked",true);
     loadGridStockList('init');
     //엑셀 업로드
     $("#importFile").on('change', function (params) {
         importExcel();
     });
+    $("#essential").trigger("click");
 }
 
 function enterkey() {
@@ -78,32 +77,37 @@ function loadGridStockList(type, result){
                         alert('숫자로만 입력 가능합니다.');
                         return false;
                     }else{
-                        e.getRow().dataItem.quantity += value;// 입력값 재고수량에 계산
-                        if(e.getRow().dataItem.quantity > 10){
-                            e.getRow().dataItem.status = 'O';
-                        }else{
-                            e.getRow().dataItem.status = 'X';
-                        }
-                    //    stockMngView.items[e.row -1].quantity += value ; 
-                       var params = {
-                            lCategyCd   : e.getRow().dataItem.lCategyCd,
-                            itemCd      : e.getRow().dataItem.itemCd,
-                            quantity    : e.getRow().dataItem.quantity ,
-                        }
-                         $.ajax({
-                            url : "/stock/saveQuantity",
-                            async : false, // 비동기모드 : true, 동기식모드 : false
-                            type : 'POST',
-                            contentType: 'application/json',
-                            data: JSON.stringify(params),
-                            success : function(result) {
-                                getQuantityInfo();
-                            },
-                            error : function(request,status,error) {
-                                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        if(e.getRow().dataItem.quantity + value >= 0){
+                            e.getRow().dataItem.quantity += value;// 입력값 재고수량에 계산
+                            if(e.getRow().dataItem.quantity > 10){
+                                e.getRow().dataItem.status = 'O';
+                            }else{
+                                e.getRow().dataItem.status = 'X';
                             }
-                        });
-                       s.activeEditor.value = 0; // 입력값 0으로 초기화
+                            var params = {
+                                lCategyCd   : e.getRow().dataItem.lCategyCd,
+                                itemCd      : e.getRow().dataItem.itemCd,
+                                quantity    : e.getRow().dataItem.quantity ,
+                            }
+                            $.ajax({
+                                url : "/stock/saveQuantity",
+                                async : false, // 비동기모드 : true, 동기식모드 : false
+                                type : 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify(params),
+                                success : function(result) {
+                                    getQuantityInfo();
+                                },
+                                error : function(request,status,error) {
+                                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                                }
+                            });
+                            s.activeEditor.value = 0; // 입력값 0으로 초기화
+                         }else{
+                            alert("재고수량은 0보다 커야 합니다.");
+                            s.activeEditor.value = 0; // 입력값 0으로 초기화
+                            return false;
+                         }
 
                     }
 
@@ -141,13 +145,6 @@ function loadGridStockList(type, result){
                     e.cell.innerHTML = html;                    
                 }
             }
-        });
-
-        //엑셀 업로드용 그리드 
-            excelGridPager = new wijmo.input.CollectionViewNavigator('#excelGridPager', {
-            byPage: true,
-            headerFormat: '{currentPage:n0} / {pageCount:n0}',
-            cv: excelView
         });
 
 		// hostElement에 Wijmo의 FlexGird 생성
@@ -406,7 +403,7 @@ function saveGrid(){
                             <label for="inq"></label>
                             <input type="text" id="inq" placeholder=",로 다중검색 가능" onclick="enterkey()">
                             <button type="button" onclick ="getStockList();">조회</button>
-                            <input type="checkbox" id="essential" name="essential">
+                            <input type="checkbox" id="essential" name="essential" onChange = "getStockList();">
                             <label for="essential">추가입고 필요항목만 보기</label>
                         </form>
                     </div>
@@ -427,7 +424,6 @@ function saveGrid(){
                         </div>
                         <div class="grid_wrap" id="excelDiv" style="position:relative;">
                         	<div id="excelGrid"  style="height:500px;"></div>
-                        	<div id="excelGridPager" class="pager"></div>
                         </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('stockMngLayout', stockMngGrid);">칼럼위치저장</button>
