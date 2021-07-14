@@ -348,7 +348,7 @@ function saveGrid(){
             contentType: 'application/json',
             data: JSON.stringify(rows),
             success : function(result) {
-                alert("저장되었습니다.");
+                alert("총 " + result + "건이 저장되었습니다.");
                 getStockList();
             },
             error : function(request,status,error) {

@@ -107,7 +107,7 @@ public class StockServiceImpl implements StockService {
 			item.clear();
 			item.put("lCategyCd", vo.getlCategyCd());
 			item.put("itemCd", vo.getItemCd());
-			if(stockMapper.dupCheckItem(item) != ""){
+			if(stockMapper.dupCheckItem(item) != null){
 				stockMapper.saveQuantity(vo);
 				cnt++;
 			}

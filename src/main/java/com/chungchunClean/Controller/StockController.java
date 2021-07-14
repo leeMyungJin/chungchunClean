@@ -169,8 +169,8 @@ public class StockController {
      */
     @RequestMapping(value="/saveQuantityList", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void saveQuantityList(@RequestBody List<StockVo> params){
-            stockService.saveQuantityList(params);
+    public Integer saveQuantityList(@RequestBody List<StockVo> params){
+            return stockService.saveQuantityList(params);
     }
 
     /**
