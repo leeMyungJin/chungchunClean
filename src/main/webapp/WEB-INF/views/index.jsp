@@ -6,14 +6,14 @@
 <title>Insert title here</title>
 </head>
 <body>
- <form action="http://183.111.126.197/file/uploadFile" method="post" enctype="multipart/form-data">
+ <form action="https://183.111.126.197/file/uploadFile" method="post" enctype="multipart/form-data">
         <input type="file" name="file" id="file">
         <input type="text" name="filePath" id="filePath" value= "">
         <input type="text" name="fileName" id="fileName" value = "">
         <input type="submit" name="submit" value="Upload File">
     </form>
 </body>
-<form action="http://183.111.126.197/file/deleteFile" method="post" enctype="multipart/form-data">
+<form action="https://183.111.126.197/file/deleteFile" method="post" enctype="multipart/form-data">
         <input type="file" name="file" id="file">
         <input type="text" name="filePath" id="filePath" value= "">
         <input type="text" name="fileName" id="fileName" value = "">

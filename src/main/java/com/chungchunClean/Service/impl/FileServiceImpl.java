@@ -17,7 +17,7 @@ public class FileServiceImpl implements FileService{
         String fileName = params.get("fileName"); // 저장할 파일명
         String result = ""; // 결과 메세지
         try{
-            File dest = new File(filePath + "/"+ fileName);
+            File dest = new File(filePath ,fileName);
             if(!dest.exists()) // 해당 경로가 없을 경우 
                 dest.mkdirs();  // 폴더 생성
             file.transferTo(dest);
@@ -35,7 +35,7 @@ public class FileServiceImpl implements FileService{
         String fileName = params.get("fileName"); // 삭제할 파일명
         String result ; // 결과 메세지
         try{
-            File dest = new File(filePath + "/" + fileName);
+            File dest = new File(filePath ,fileName);
             if(dest.exists()){   // 파일이 존재하는 경우
                 dest.delete();
                 result = "file delete success";
