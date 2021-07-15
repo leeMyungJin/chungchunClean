@@ -3,6 +3,7 @@ package com.chungchunClean.Service.impl;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import com.chungchunClean.Mappers.LoginMapper;
 import com.chungchunClean.Mappers.PushMapper;
 import com.chungchunClean.Service.PushService;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -25,6 +26,9 @@ public class PushServiceImpl implements PushService{
 
     @Autowired
     PushMapper pushMapper;
+    
+    @Autowired
+    LoginMapper loginMapper;
 
 
     /** Push 서비스
@@ -117,7 +121,7 @@ public class PushServiceImpl implements PushService{
             RestTemplate rt = new RestTemplate();            
             
             // FCM Push메세지 발송
-            ResponseEntity<String> res = rt.exchange("https://fcm.googleapis.com/v1/projects/itda001/messages:send"
+            ResponseEntity<String> res = rt.exchange("https://fcm.googleapis.com/v1/projects/cccleangroup001/messages:send"
                     , HttpMethod.POST
                     , httpEntity
                     , String.class);
@@ -136,7 +140,7 @@ public class PushServiceImpl implements PushService{
     @Override
     public String getUserToken(HashMap<String, String> params) {
         // TODO Auto-generated method stub
-        return pushMapper.getUserToken(params);
+        return loginMapper.getUserToken(params);
     }
     
 }

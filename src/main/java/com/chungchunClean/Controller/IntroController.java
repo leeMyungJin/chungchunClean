@@ -11,4 +11,10 @@ public class IntroController {
     public String intro() {
         return "login/login";
     }
+	
+	
+	@RequestMapping(value = "/index", method = {RequestMethod.POST , RequestMethod.GET})
+    public String index() {
+        return "index";
+    }
 }
