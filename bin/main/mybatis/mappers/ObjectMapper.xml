@@ -134,5 +134,60 @@
 		   updt_id='test'
 		WHERE staff_id=#{id}
 	</update>
+
+	<select id="getBldgList" parameterType="BldgVo" resultType="BldgVo">
+	SELECT
+		BAS.area_cd ,
+		BAS.area_nm ,
+		bas .bldg_cd ,
+		BAS.bldg_nm ,
+		BAS.client_nm ,
+		BAS.con_cost ,
+		BAS.dtl_addr ,
+		BAS.pnum ,
+		BAS.surtax ,
+		BAS.surtax_yn ,
+		DTL.active_yn ,
+		DTL.dong_num ,
+		DTL.dong_qr_url ,
+		DTL.memo ,
+		TO_CHAR(BAS.cret_dt, 'YYYY-MM-DD') cret_dt
+	FROM
+		web.BLDG_BAS BAS
+	LEFT OUTER JOIN web.BLDG_DTL DTL on BAS.bldg_cd = DTL.bldg_cd
+	WHERE 1=1
+	<if test="inq != null">
+			AND 
+			<choose>
+				<when test="con == 'area'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						BAS.AREA_NM LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<when test="con == 'client'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						BAS.CLIENT_NM LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<when test="con == 'building'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						BAS.BLDG_NM LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<otherwise>
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						BAS.AREA_NM LIKE '%' || #{item} || '%'
+						or BAS.CLIENT_NM LIKE '%' || #{item} || '%'
+						or BAS.BLDG_NM LIKE '%' || #{item} || '%'
+					</foreach>
+				</otherwise>
+			</choose>
+		</if>
+	order by BAS.CRET_DT
+	</select>
 	
 </mapper>
