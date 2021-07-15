@@ -9,13 +9,17 @@
 			staff_pass,
 			password_key
 		from web.staff
-		where staff_id = #{staffId}
+		where staff_id = #{id}
 	</select>
 	
-	<update id="updateLoginTime" parameterType="StaffVo">
+	<update id="updateLoginTime" parameterType = "StaffVo">
 		update web.staff set
-		lateass_dt = #{lateassDt}::timestamp
-		where staff_id = #{staffId}
+		lateass_dt = #{lastLogin}::timestamp
+		where staff_id = #{id}
 	</update>
+	
+	<select id="getUserToken" parameterType="hashMap" resultType="String">
+		select usertoken from web.staff where staff_id = #{id}
+	</select>
 	
 </mapper>

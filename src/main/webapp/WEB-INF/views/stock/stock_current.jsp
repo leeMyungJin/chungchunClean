@@ -82,16 +82,15 @@ function loadGridCurrentList(type, result){
 			    alternatingRowStep: 0,
 			    columns: currentColumns,
 			    itemsSource: currentView,
-			/*    formatItem:function(s,e){
+			    formatItem:function(s,e){
 			    	if (e.panel == s.cells) {
 			            var col = s.columns[e.col];
 		                if (col.binding == 'sarQuantity' || col.binding == 'returnQuantity') {
 		                    //셀 서식
 		                    var html;
 		                    var value = s.getCellData(e.row, e.col);
-		                    console.log(value);
 		                    var classifiCd = s.getCellData(e.row, 'classifiCd');
-		                    
+		                    /*
 		                    if(value != undefined && value != null && value > 0){
 		                    	if(classifiCd == "S" || classifiCd == "RS"){
 		                    		col.cellTemplate = '<span class="change_plus">+'+value;
@@ -99,18 +98,18 @@ function loadGridCurrentList(type, result){
 			                    	col.cellTemplate = '<span class="change_minus">-'+value;
 			                    }       	
 		                    }  
-		                    
-		                   if(quantity != undefined && quantity != null && quantity > 0){
+		                    */
+		                   if(value != undefined && value != null && value > 0){
 		                    	if(classifiCd == "S" || classifiCd == "RS"){
-			                    	html = '<span class="change_plus">+'+quantity+'</span>';
+			                    	html = '<span class="change_plus">+'+value+'</span>';
 			                    }else if(classifiCd == "R" || classifiCd == "RR"){
-			                    	html = '<span class="change_minus">-'+quantity+'</span>';
+			                    	html = '<span class="change_minus">-'+value+'</span>';
 			                    }
 			                    e.cell.innerHTML = html;           	
 		                    }       
 		                }
 		            }
-			      },*/
+			      },
 			      beginningEdit: function (s, e) {
 		                var col = s.columns[e.col];
 		                var item = s.rows[e.row].dataItem;
@@ -121,6 +120,7 @@ function loadGridCurrentList(type, result){
 		                    }
 		                }
 		                
+		                var quantity = s.getCellData(e.row, 'quantity');
 		                if (col.binding == 'sarQuantity') {
 		                	classifiCd = s.getCellData(e.row, 'classifiCd');
 		                	if(classifiCd == "RS" || classifiCd == "RR"){
@@ -144,20 +144,49 @@ function loadGridCurrentList(type, result){
 		                  var item = getItemList().filter(item => item.name == value);
 		                  s.setCellData(e.row, 'cost', item[0].cost);
 		                  s.setCellData(e.row, 'quantity', item[0].quantity);
-		                
+		               
 		                }else if(col.binding == 'sarQuantity' || col.binding == 'returnQuantity'){
-		                	var quantity = s.getCellData(e.row, 'quantity');
-		                	
-		                	if(classifiCd == "S" || classifiCd == "RS"){
-		                		s.setCellData(e.row, 'quantity', Number(quantity) + Number(value));
-		                    }else if(classifiCd == "R" || classifiCd == "RR"){
-		                    	s.setCellData(e.row, 'quantity', Number(quantity) - Number(value));
+		                	//숫자여부 확인
+		                	var formatValue = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
+		                    if( !wijmo.isNumber(formatValue)){
+		                        e.cancel = true;
+		                        e.stayInEditMode = false;
+		                        alert('숫자로만 입력 가능합니다.');
+		                        return false;
 		                    }
 		                	
+		                    //재고수량 계산
+		                    var quantity = s.getCellData(e.row, 'quantity');
+		                	if(classifiCd == "S" || classifiCd == "RS"){
+		                		if(e.getRow().dataItem.quantity + Number(value) < 0){
+			                    	alert("재고수량은 0보다 커야 합니다.");
+		                            s.activeEditor.value = s.getCellData(e.row, e.col); // 입력값 old값으로 초기화
+		                            return false;
+			                    }else{
+			                    	s.setCellData(e.row, 'quantity', Number(quantity) + Number(value));
+			                    }
+		                		
+		                    }else if(classifiCd == "R" || classifiCd == "RR"){
+		                    	if(e.getRow().dataItem.quantity - Number(value) < 0){
+			                    	alert("재고수량은 0보다 커야 합니다.");
+		                            s.activeEditor.value = s.getCellData(e.row, e.col); // 입력값 old값으로 초기화
+		                            return false;
+			                    }else{
+			                    	s.setCellData(e.row, 'quantity', Number(quantity) - Number(value));
+			                    }
+		                    }
+		                	
+		                //카테고리 변경시 이하 값 초기화
+		                }else if(col.binding == 'lCategyCd'){
+		                	e.getRow().dataItem.itemCd = '';
+		                	e.getRow().dataItem.cost = '';
+		                	e.getRow().dataItem.sarQuantity = '';
+		                	e.getRow().dataItem.returnQuantity = '';
+		                	e.getRow().dataItem.quantity = '';
 		                }
 		              }
 			  });
-		   
+		   /*
 		   currentGrid.formatItem.addHandler(function (s, e) {
 			   if (e.panel == s.cells) {
 		            var col = s.columns[e.col];
@@ -167,14 +196,6 @@ function loadGridCurrentList(type, result){
 	                    var value = s.getCellData(e.row, e.col);
 	                    console.log(value);
 	                    var classifiCd = s.getCellData(e.row, 'classifiCd');
-	                    
-	                    /*if(value != undefined && value != null && value > 0){
-	                    	if(classifiCd == "S" || classifiCd == "RS"){
-	                    		col.cellTemplate = '<span class="change_plus">+'+value;
-		                    }else if(classifiCd == "R" || classifiCd == "RR"){
-		                    	col.cellTemplate = '<span class="change_minus">-'+value;
-		                    }       	
-	                    }  */
 	                    
 	                    if(value != undefined && value != null && value > 0){
 	                    	if(classifiCd == "S" || classifiCd == "RS"){
@@ -186,7 +207,7 @@ function loadGridCurrentList(type, result){
 	                    }      
 	                }
 	            }
-	        });
+	        }); */
 		   	
 		   	//행번호
 		   	currentGrid.itemFormatter = function (panel, r, c, cell) { 
@@ -194,9 +215,6 @@ function loadGridCurrentList(type, result){
 	                cell.textContent = (r + 1).toString();
 	            }
 	        };
-	        
-	     	// 체크박스 생성
-	    	//  currentSelector = new wijmo.grid.selector.Selector(currentGrid);
 	    
 	        editGrid = new wijmo.grid.FlexGrid('#editGrid', {
 	            itemsSource: currentView.itemsEdited,
@@ -204,6 +222,8 @@ function loadGridCurrentList(type, result){
 	        });
 	        
 	        _setUserGridLayout('currentLayout', currentGrid, currentColumns);
+	        
+	    	// 체크박스 생성
 	     	currentSelector = new wijmo.grid.selector.Selector(currentGrid);
 	     	currentSelector.column = currentGrid.columns[0];
 	     	new wijmo.grid.filter.FlexGridFilter(currentGrid);
@@ -395,11 +415,15 @@ function saveGrid(){
 	var rows = [];
 
     for(var i=0; i< addItem.length; i++){
+    	if(!saveVal(addItem[i])) return false;
+    	
     	addRows.push(addItem[i]);
     	rows.push(addItem[i]);
     }
 	
 	for(var i =0; i< editItem.length; i++){
+		if(!saveVal(addItem[i])) return false;
+		
     	editRows.push(editItem[i]);
     	rows.push(editItem[i]);
     }
@@ -420,6 +444,28 @@ function saveGrid(){
             }
         });
     }
+}
+
+function saveVal(item){
+	if(item.classifiCd == null || item.classifiCd == ''){
+		alert("분류를 선택해주세요.");
+		return false;
+	
+	}else if(item.lCategyCd == null || item.lCategyCd == ''){
+		alert("카테고리를 선택해주세요.");
+		return false;
+		
+	}else if(item.itemCd == null || item.itemCd == ''){
+		alert("물품을 선택해주세요.");
+		return false;
+		
+	}else if((item.returnQuantity == null || item.returnQuantity == '') && (item.sarQuantity == null || item.sarQuantity == '') ){
+		alert("수량을 입력해주세요.");
+		return false;
+		
+	}
+	
+	return true;
 }
 
 function insertUpdateGrid(addRows, editRows){
@@ -513,12 +559,12 @@ function saveUpdateGrid(editRows){
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
-                    	<button type="button" class="stroke left" onClick="addRow()">+ 추가</button>
-                    	<button type="button" class="stroke left" onClick="saveGrid()">저장</button>
-                    	<button type="button" class="stroke left" onClick="deleteRows()">삭제</button>
+                    	<button type="button" class="stroke left" onClick="addRow()">+ 이력추가</button>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('currentLayout', currentGrid);">칼럼위치저장</button>
                             <button type="button" class="stroke" onClick="_resetUserGridLayout('currentLayout', currentGrid, currentColumns);">칼럼초기화</button>
+                        	<button type="button" onclick="saveGrid()">저장</button>
+                            <button type="button" onclick="deleteRows()">삭제</button>
                         </div>
                         <div class="grid_wrap">
                         	<div id="currentGrid"  style="height:500px;"></div>
@@ -527,6 +573,8 @@ function saveUpdateGrid(editRows){
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('currentLayout', currentGrid);">칼럼위치저장</button>
                             <button type="button" class="stroke" onClick="_resetUserGridLayout('currentLayout', currentGrid, currentColumns);">칼럼초기화</button>
+                        	<button type="button" onclick="saveGrid()">저장</button>
+                            <button type="button" onclick="deleteRows()">삭제</button>
                         </div>
                     </div>
                 </div>
