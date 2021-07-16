@@ -27,13 +27,13 @@
 
 <script type="text/javascript">
 function setStockQr(){
-	var qrList = "${qrList}";
-	console.log(qrList);
-	for(var i =0; i<qrList.length; i++){
-		let qrCode = new QrCode('#barcode_'+qrList[i].cd , {
-	        value: qrList[i].nm
+	var qrList = "${qrCnt}";
+	console.log("${qrList}");
+	 for(var i =1; i<=qrList; i++){
+		let qrCode = new wijmo.barcode.common.QrCode('#barcode_'+i , {
+            value : $("#barcode_"+i).attr("nm")
 	    });
-	}
+	} 
 }
 </script>
 
@@ -41,9 +41,9 @@ function setStockQr(){
     <div class="qr_wrap">
         <div class="btn_wrap"><a href="javascript:window.print()">출력하기</a></div>
         <ul class="qr_list">
-        <c:forEach var="qrList" items="${qrList}">
+         <c:forEach var="qrList" items="${qrList}">
 			<li>
-               <div id="barcode_${qrList.cd}" class="qr">QR</div>
+               <div id="barcode_${qrList.cd}" class="qr" nm="${qrList.nm}"></div>
                <p class="txt">${qrList.cd}</p>
                <p class="txt">QR값 : ${qrList.nm}</p>
            	</li>
