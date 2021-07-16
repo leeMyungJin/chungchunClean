@@ -2,6 +2,8 @@
  *  공통 javaScript
  */
 
+//import { QrCode } from 'wijmo.barcode.common';
+
 function _logOut() {
     if (confirm("로그아웃 하시겠습니까??") == true) {
         location.href = "/login/logout";
