@@ -271,6 +271,7 @@ public class StockController {
     	List<CodeVo> codeVo = stockService.getStockQrList(params);
         
     	model.addAttribute("qrList", codeVo);
+        model.addAttribute("qrCnt",codeVo.size());
         
     	return "stock/p_stock_qr";
     }
