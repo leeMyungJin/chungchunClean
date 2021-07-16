@@ -192,4 +192,12 @@ public class StockServiceImpl implements StockService {
 	public List<CodeVo> getClassifiList() {
 		return stockMapper.getClassifiList();
 	}
+	
+	@Override
+	public List<CodeVo> getStockQrList(HashMap<String, Object> params) {
+		if(params.get("inq") != null)
+			params.replace("inq", Util.makeForeach((String)params.get("inq"), ","));
+		return stockMapper.getStockQrList(params);
+	}
+	
 }

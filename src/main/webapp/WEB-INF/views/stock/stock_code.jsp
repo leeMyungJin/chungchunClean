@@ -606,6 +606,11 @@ function downTemplate(){
     window.location.assign("<%=request.getContextPath()%>" + "/template/물품관리양식.xlsx");
 }
 
+function popStockQrList(){
+	var win = window.open("/stock/getStockQrList?inq="+$("#inq").val()+"&con="+$("#con").val(), "PopupWin", "width=1000,height=600");
+
+}
+
 </script>
 
 <body onload="pageLoad()">
@@ -666,7 +671,7 @@ function downTemplate(){
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('stockLayout', stockGrid);">칼럼위치저장</button>
                             <button type="button" class="stroke" onClick="_resetUserGridLayout('stockLayout', stockGrid,stockColumns);">칼럼초기화</button>
-                            <button type="button">QR출력</button>
+                            <button type="button" onClick="popStockQrList();">QR출력</button>
                             <button type="button" onclick="saveGrid('stock')">저장</button>
                             <button type="button" onclick="deleteRows('stock')">삭제</button>
                         </div>
@@ -680,7 +685,7 @@ function downTemplate(){
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onclick="_getUserGridLayout('stockLayout', stockGrid);">칼럼위치저장</button>
                             <button type="button" class="stroke" onClick="_resetUserGridLayout('stockLayout', 'stockLayout', stockGrid);" >칼럼초기화</button>
-                            <button type="button">QR출력</button>
+                            <button type="button" onClick="popStockQrList();">QR출력</button>
                             <button type="button" onclick="saveGrid('stock')">저장</button>
                             <button type="button" onclick="deleteRows('stock')">삭제</button>
                         </div>

@@ -368,4 +368,44 @@ and item_cd = #{itemCd}
 	ORDER BY code_dtl_nm
 </select>
 
+<select id="getStockQrList" parameterType="hashMap" resultType="CodeVo">
+	select ctg_dtl.qr_url cd, ctg_dtl.item_nm nm
+	from web.category_bas ctg_bas left outer join WEB.category_dtl ctg_dtl on ctg_bas.l_categy_cd = ctg_dtl.l_categy_cd
+	where
+		1 = 1
+	<if test="inq != null">
+		<choose>
+			<when test="con == 'all'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					ctg_bas.l_categy_nm LIKE '%' || #{item} || '%'
+					or
+					ctg_dtl.item_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'category'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					ctg_bas.l_categy_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'item'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					ctg_dtl.item_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+		</choose>
+	</if>
+	<if test="esn == 'true'">
+		AND ctg_dtl.quantity <![CDATA[<=]]> 10
+	</if>
+	AND ctg_dtl.item_cd is not null
+		ORDER BY ctg_bas.l_categy_cd, ctg_dtl.item_cd
+</select>
+
+
 </mapper>

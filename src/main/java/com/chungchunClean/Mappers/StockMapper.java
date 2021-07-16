@@ -37,5 +37,6 @@ public interface StockMapper  {
 	public int getTodayReturnRelease();
 	public List<StockVo> getItemList();
 	public List<CodeVo> getClassifiList();
+	public List<CodeVo> getStockQrList(HashMap<String, Object> params);
 
 }

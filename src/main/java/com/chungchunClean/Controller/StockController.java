@@ -260,6 +260,20 @@ public class StockController {
     public List<CodeVo> getClassifiList(){
         return stockService.getClassifiList(); // 카테고리 저장 후 다시 조회
     }
+    
+    /**
+     * 코드 리스트 가져오기
+     * @param params
+     * @return
+     */
+    @RequestMapping(value="/getStockQrList", method = {RequestMethod.POST , RequestMethod.GET})
+    public String getStockQrList(@RequestParam HashMap<String,Object> params, Model model){
+    	List<CodeVo> codeVo = stockService.getStockQrList(params);
+        
+    	model.addAttribute("qrList", codeVo);
+        
+    	return "stock/p_stock_qr";
+    }
 
 
 }

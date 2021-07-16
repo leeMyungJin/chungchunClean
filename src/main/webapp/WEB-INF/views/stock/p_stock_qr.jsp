@@ -1,3 +1,7 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -5,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>청춘클린</title>
-    <link rel="stylesheet" href="css/reset.css">
+     <%@ include file="../include/header.jsp" %>
     <style>
         .qr_wrap{width:1000px; max-width:1000px;}
         .btn_wrap{text-align:right; margin:5px 45px;}
@@ -20,115 +24,30 @@
         }
     </style>
 </head>
-<body>
+
+<script type="text/javascript">
+function setStockQr(){
+	var qrList = "${qrList}";
+	console.log(qrList);
+	for(var i =0; i<qrList.length; i++){
+		let qrCode = new QrCode('#barcode_'+qrList[i].cd , {
+	        value: qrList[i].nm
+	    });
+	}
+}
+</script>
+
+<body onload="setStockQr()"> 
     <div class="qr_wrap">
         <div class="btn_wrap"><a href="javascript:window.print()">출력하기</a></div>
         <ul class="qr_list">
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
-            <li>
-                <div class="qr">QR</div>
-                <p class="txt">QR번호</p>
-                <p class="txt">QR값 : 지역_건물명_동번호</p>
-            </li>
+        <c:forEach var="qrList" items="${qrList}">
+			<li>
+               <div id="barcode_${qrList.cd}" class="qr">QR</div>
+               <p class="txt">${qrList.cd}</p>
+               <p class="txt">QR값 : ${qrList.nm}</p>
+           	</li>
+		</c:forEach>
         </ul>
         <div class="btn_wrap"><a href="javascript:window.print()">출력하기</a></div>
     </div>

@@ -17,7 +17,7 @@
 <script src="https://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" /> 
 
-<!-- wijmo 그리드 -->>
+<!-- wijmo 그리드 -->
 <!-- Wijmo 레퍼런스 (필수) -->
 <link href="../wijmo/Dist/styles/wijmo.min.css" rel="stylesheet" />
 <!-- 
@@ -41,6 +41,8 @@
 <script src="../wijmo/Dist/controls/wijmo.grid.selector.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.grid.search.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.grid.grouppanel.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.barcode.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.barcode.common.min.js"></script>
 <script src="../wijmo/Dist/jszip.min.js"></script>
 
 <!-- Wijmo custom culture (옵션, 원하는 문화권을 추가) -->
