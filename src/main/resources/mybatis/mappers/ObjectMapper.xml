@@ -190,4 +190,43 @@
 	order by BAS.CRET_DT
 	</select>
 	
+	
+	<select id="getBuildingQrList" parameterType="hashMap" resultType="CodeVo">
+	select dtl.dong_qr_url cd, BAS.area_nm || '_' || bas.bldg_nm || '_' || dtl.dong_num as nm
+	from web.BLDG_DTL DTL left join web.BLDG_BAS BAS on DTL.bldg_cd = BAS.bldg_cd
+	where 1=1	
+	<if test="inq != null">
+			AND 
+			<choose>
+				<when test="con == 'area'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						BAS.AREA_NM LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<when test="con == 'client'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						BAS.CLIENT_NM LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<when test="con == 'building'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						BAS.BLDG_NM LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<otherwise>
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						BAS.AREA_NM LIKE '%' || #{item} || '%'
+						or BAS.CLIENT_NM LIKE '%' || #{item} || '%'
+						or BAS.BLDG_NM LIKE '%' || #{item} || '%'
+					</foreach>
+				</otherwise>
+			</choose>
+		</if>
+	order by BAS.CRET_DT
+	</select>
+	
 </mapper>

@@ -11,6 +11,16 @@
 function pageLoad(){
 	$('#calculate').addClass("current");
 	$('#calculate_process').addClass("current");
+	
+	tab_panel('panel_mon','panel_add');
+}
+
+function tab_panel(showTab, hideTab){
+	$('#'+showTab).css("display","block"); 
+	$('#'+hideTab).css("display","none"); 
+	
+	$('#tab_'+showTab).addClass("on"); 
+	$('#tab_'+hideTab).removeClass("on"); 
 }
 </script>
 
@@ -24,8 +34,8 @@ function pageLoad(){
                 <h2 class="admin_title">정산처리</h2>
                 <!-- 탭 메뉴 -->
                 <div role="tablist" class="admin_tab">
-                    <a href="#panel_mon" role="tab" class="on">월관리청소</a>
-                    <a href="#panel_add" role="tab">부가수익</a>
+                    <a id="tab_panel_mon" href="javascript:tab_panel('panel_mon','panel_add');" role="tab" class="on">월관리청소</a>
+                    <a id="tab_panel_add" href="javascript:tab_panel('panel_add','panel_mon');" role="tab">부가수익</a>
                 </div>
                 <!-- 탭 패널 : 월관리청소 -->
                 <div id="panel_mon" role="tabpanel" class="tabpanel">

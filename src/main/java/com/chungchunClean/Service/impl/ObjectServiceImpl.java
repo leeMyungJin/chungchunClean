@@ -10,6 +10,7 @@ import com.chungchunClean.Mappers.ObjectMapper;
 import com.chungchunClean.Service.ObjectService;
 import com.chungchunClean.Util.Util;
 import com.chungchunClean.vo.BldgVo;
+import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.StaffVo;
 import com.chungchunClean.Mappers.LoginMapper;
 import com.chungchunClean.Util.Encrypt;
@@ -78,6 +79,14 @@ public class ObjectServiceImpl implements ObjectService {
 		if(params.get("inq") != null)
 			params.replace("inq", Util.makeForeach((String)params.get("inq"), ","));
 		return objectMapper.getBldgList(params);
+	}
+	
+	
+	@Override
+	public List<CodeVo> getBuildingQrList(HashMap<String, Object> params) {
+		if(params.get("inq") != null)
+			params.replace("inq", Util.makeForeach((String)params.get("inq"), ","));
+		return objectMapper.getBuildingQrList(params);
 	}
 	
 }

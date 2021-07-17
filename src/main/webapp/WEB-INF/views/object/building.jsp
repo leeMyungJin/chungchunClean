@@ -191,6 +191,12 @@ function getBldgList(){
           });
 
 }
+
+function popBuildingQrList(){
+	var win = window.open("/object/getBuildingQrList?inq="+$("#inq").val()+"&con="+$("#con").val(), "PopupWin", "width=1000,height=600");
+
+}
+
 </script>
 
 <body onload="pageLoad()">
@@ -241,7 +247,7 @@ function getBldgList(){
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="click();">칼럼위치저장</button>
                             <button type="button" class="stroke">칼럼초기화</button>
-                            <button type="button">QR출력</button>
+                            <button type="button" onClick="popBuildingQrList();">QR출력</button>
                             <button type="button">저장</button>
                         </div>
                         <div class="grid_wrap" id="bldgDiv" style="position:relative;">

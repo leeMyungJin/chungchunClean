@@ -8,10 +8,229 @@
 </head>
 
 <script type="text/javascript">
+var monView;
+var monGridPager;
+var monGrid;
+var monColumns;
+
+var addView;
+var addGridPager;
+var addGrid;
+var addColumns;
+
 function pageLoad(){
 	$('#calculate').addClass("current");
 	$('#calculate_history').addClass("current");
+	
+	tab_panel('panel_mon','panel_add');
+	
+	var today = _getFormatDate(new Date());
+	$('#fromDate').val(today);
+	$('#toDate').val(today);
+	$('#fromDate').attr('max',today);
+	$('#toDate').attr('max',today);
+	
+	loadGridMonList('init');
 }
+
+function tab_panel(showTab, hideTab){
+	$('#'+showTab).css("display","block"); 
+	$('#'+hideTab).css("display","none"); 
+	
+	$('#tab_'+showTab).addClass("on"); 
+	$('#tab_'+hideTab).removeClass("on"); 
+}
+
+function enterkey(type) {
+	if(window.event.keyCode == 13){
+		if(type == "mon"){
+			getMonList();
+			
+		}else if(type == "add"){
+			getAddList();
+			
+		}
+	}
+}
+
+
+//그리드 초기 셋팅
+function loadGridMonList(type, result){
+	  if(type == "init"){
+		  
+		  //월관리
+		   monView = new wijmo.collections.CollectionView(result, {
+		       pageSize: 100
+		   });
+		    
+		   monGridPager = new wijmo.input.CollectionViewNavigator('#monGridPager', {
+		        byPage: true,
+		        headerFormat: '{currentPage:n0} / {pageCount:n0}',
+		        cv: monView
+		    });
+		   
+		   monColumns = [
+			      { binding: 'onWorkDt', header: '출근시각', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'offWorkDt', header: '퇴근시각', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'officerNm', header: '담당자', isReadOnly: true, width: 60, align:"center" },
+			      { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 60, align:"center"  },
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 120, align:"center"  },
+			      { binding: 'cretDt', header: '업로드일자', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'siteMntrUrl', header: '현장점검 URL', isReadOnly: true, width: 200, align:"center" }
+			];
+		  
+		   monGrid = new wijmo.grid.FlexGrid('#monGrid', {
+			    autoGenerateColumns: false,
+			    alternatingRowStep: 0,
+			    columns: monColumns,
+			    itemsSource: monView
+			  });
+			  
+		   	_setUserGridLayout('monLayout', monGrid, monColumns);
+		   	
+		   	
+			//부가수익 
+		 	addView = new wijmo.collections.CollectionView(result, {
+		       pageSize: 100
+		   });
+		    
+		   addGridPager = new wijmo.input.CollectionViewNavigator('#addGridPager', {
+		        byPage: true,
+		        headerFormat: '{currentPage:n0} / {pageCount:n0}',
+		        cv: addView
+		    });
+		   
+		   addColumns = [
+			      { binding: 'onWorkDt', header: '출근시각', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'offWorkDt', header: '퇴근시각', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'officerNm', header: '담당자', isReadOnly: true, width: 60, align:"center" },
+			      { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 60, align:"center"  },
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 120, align:"center"  },
+			      { binding: 'cretDt', header: '업로드일자', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'siteMntrUrl', header: '현장점검 URL', isReadOnly: true, width: 200, align:"center" }
+			];
+		  
+		   addGrid = new wijmo.grid.FlexGrid('#addGrid', {
+			    autoGenerateColumns: false,
+			    alternatingRowStep: 0,
+			    columns: addColumns,
+			    itemsSource: addView
+			  });
+			  
+		   	_setUserGridLayout('addLayout', addGrid, addColumns);
+		   	
+			  
+	  }else{	
+		  //월관리
+		   monView = new wijmo.collections.CollectionView(result, {
+		       pageSize: 100
+		   });
+		  monGridPager.cv = monView;
+		  monGrid.itemsSource = monView;
+		  
+		  
+		  //부가수익 
+		   addView = new wijmo.collections.CollectionView(result, {
+		       pageSize: 100
+		   });
+		  addGridPager.cv = addView;
+		  addGrid.itemsSource = addView;
+		  
+	  }
+	  
+	  refreshPaging(monGrid.collectionView.totalItemCount, 1, monGrid, 'monGrid');  // 페이징 초기 셋팅
+	  refreshPaging(addGrid.collectionView.totalItemCount, 1, addGrid, 'addGrid');  // 페이징 초기 셋팅 
+	  
+}
+
+
+function getMonList(){
+	var param = {
+		con 	: $('#con').val()
+		, inq 	: $('#inq').val()
+		, fromDate : $('#fromDate').val()
+		, toDate : $('#toDate').val()
+	};
+	
+	$.ajax({
+      type : 'POST',
+      url : '/history/getMonList',
+      dataType : null,
+      data : param,
+      success : function(result) {
+      	console.log("getMonList success");
+      	loadGridMonList('search', result);
+      },
+      error: function(request, status, error) {
+      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+      }
+  });
+}
+
+function getAddList(){
+	var param = {
+		con 	: $('#con').val()
+		, inq 	: $('#inq').val()
+		, fromDate : $('#fromDate').val()
+		, toDate : $('#toDate').val()
+		, subcon : $('#subcon').val()
+	};
+	
+	$.ajax({
+      type : 'POST',
+      url : '/history/getAddList',
+      dataType : null,
+      data : param,
+      success : function(result) {
+      	console.log("getAddList success");
+      	loadGridAddList('search', result);
+      },
+      error: function(request, status, error) {
+      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+      }
+  });
+}
+
+function monExportExcel(){
+	var gridView = monGrid.collectionView;
+	var oldPgSize = gridView.pageSize;
+	var oldPgIndex = gridView.pageIndex;
+
+  //전체 데이터를 엑셀다운받기 위해서는 페이징 제거 > 엑셀 다운 > 페이징 재적용 하여야 함.
+  monGrid.beginUpdate();
+  monView.pageSize = 0;
+
+  wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(monGrid, {includeCellStyles: true, includeColumnHeaders: true}, '월관리청소.xlsx',
+	      saved => {
+	    	gridView.pageSize = oldPgSize;
+	    	gridView.moveToPage(oldPgIndex);
+	    	monGrid.endUpdate();
+	      }, null
+	 );
+}
+
+function addExportExcel(){
+	var gridView = addGrid.collectionView;
+	var oldPgSize = gridView.pageSize;
+	var oldPgIndex = gridView.pageIndex;
+
+  //전체 데이터를 엑셀다운받기 위해서는 페이징 제거 > 엑셀 다운 > 페이징 재적용 하여야 함.
+  addGrid.beginUpdate();
+  addView.pageSize = 0;
+
+  wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(monGrid, {includeCellStyles: true, includeColumnHeaders: true}, '부가수익.xlsx',
+	      saved => {
+	    	gridView.pageSize = oldPgSize;
+	    	gridView.moveToPage(oldPgIndex);
+	    	addGrid.endUpdate();
+	      }, null
+	 );
+}
+
 </script>
 
 <body onload="pageLoad()">
@@ -23,8 +242,8 @@ function pageLoad(){
                 <h2 class="admin_title">정산이력</h2>
                 <!-- 탭 메뉴 -->
                 <div role="tablist" class="admin_tab">
-                    <a href="#panel_mon" role="tab" class="on">월관리청소</a>
-                    <a href="#panel_add" role="tab">부가수익</a>
+                    <a id="tab_panel_mon" href="javascript:tab_panel('panel_mon','panel_add');" role="tab" class="on">월관리청소</a>
+                    <a id="tab_panel_add" href="javascript:tab_panel('panel_add','panel_mon');" role="tab">부가수익</a>
                 </div>
                 <!-- 탭 패널 : 월관리청소 -->
                 <div id="panel_mon" role="tabpanel" class="tabpanel">
@@ -45,13 +264,13 @@ function pageLoad(){
                     <div class="admin_utility">
                         <form action="#" method="post">
                             <label for>조회일</label>
-                            <input type="date" id="fromDate" value="2021-06-02">
-                            -
-                            <input type="date" id="toDate" value="2021-06-02">
-                            <button type="button" class="admin_utility_btn">조회</button>
+                            <input type="date" id="fromDate" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey('mon');">
+                     	   	-
+                       		<input type="date" id="toDate" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey('mon');">
+                            <button type="button" class="admin_utility_btn" onClick="getMonList();">조회</button>
                         </form>
                         <div class="admin_btn">
-                            <button class="btn">엑셀 다운로드</button>
+                            <button class="btn" onClick="monExportExcel();">엑셀 다운로드</button>
                         </div>
                     </div>
                     <div class="admin_content">
@@ -65,9 +284,9 @@ function pageLoad(){
                                     <option value="building">건물명</option>
                                     <option value="depositor">입금자명</option>
                                 </select>
-                                <label for="inq"></label>
-                                <input type="text" id="inq" placeholder=",로 다중검색 가능">
-                                <button type="button">조회</button>
+                                <label for="inq" onkeyup="enterkey('mon');"></label>
+                                <input type="text" id="inq" placeholder=",로 다중검색 가능" onkeyup="enterkey('mon');">
+                                <button type="button" onClick="getMonList();">조회</button>
                             </form>
                             <div class="summary">
                                 <dl>
@@ -87,13 +306,16 @@ function pageLoad(){
                         <!-- 보드 영역 admin_dashboard-->
                         <div class="admin_dashboard">
                             <div class="btn_wrap">
-                                <button type="button" class="stroke">칼럼위치저장</button>
-                                <button type="button" class="stroke">칼럼초기화</button>
+                                <button type="button" class="stroke" onClick="_getUserGridLayout('monLayout', monGrid);">칼럼위치저장</button>
+                                <button type="button" class="stroke" onClick="_resetUserGridLayout('monLayout', monGrid, monColumns);">칼럼초기화</button>
                             </div>
-                            <div class="grid_wrap">Grid 영역입니다</div>
+                            <div class="grid_wrap">
+                                <div id="monGrid"  style="height:500px;"></div>
+                        		<div id="monGridPager" class="pager"></div>
+                            </div>
                             <div class="btn_wrap">
-                                <button type="button" class="stroke">칼럼위치저장</button>
-                                <button type="button" class="stroke">칼럼초기화</button>
+                                <button type="button" class="stroke" onClick="_getUserGridLayout('monLayout', monGrid);">칼럼위치저장</button>
+                                <button type="button" class="stroke" onClick="_resetUserGridLayout('monLayout', monGrid, monColumns);">칼럼초기화</button>
                             </div>
                         </div>
                     </div>
@@ -121,11 +343,11 @@ function pageLoad(){
                     <div class="admin_utility">
                         <form action="#" method="post">
                             <label for="Date">조회일</label>
-                            <input type="date" id="Date" value="2021-06-02">
-                            <button class="admin_utility_btn">조회</button>
+                            <input type="date" id="Date" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey('add');">
+                            <button class="admin_utility_btn" onClick="getAddList();">조회</button>
                         </form>
                         <div class="admin_btn">
-                            <button class="btn">엑셀 다운로드</button>
+                            <button class="btn" onClick="addExportExcel();">엑셀 다운로드</button>
                         </div>
                     </div>
                     <div class="admin_content">
@@ -139,9 +361,9 @@ function pageLoad(){
                                     <option value="building">건물명</option>
                                     <option value="depositor">입금자명</option>
                                 </select>
-                                <label for="inq"></label>
-                                <input type="text" placeholder=",로 다중검색 가능">
-                                <button type="button">조회</button>
+                                <label for="inq" onkeyup="enterkey('add');"></label>
+                                <input type="text" placeholder=",로 다중검색 가능" onkeyup="enterkey('add');">
+                                <button type="button" onClick="getAddList();">조회</button>
                             </form>
                             <div class="summary" style="position: relative; top:10px;">
                                 <dl>
@@ -173,13 +395,16 @@ function pageLoad(){
                         <!-- 보드 영역 admin_dashboard-->
                         <div class="admin_dashboard">
                             <div class="btn_wrap">
-                                <button type="button" class="stroke">칼럼위치저장</button>
-                                <button type="button" class="stroke">칼럼초기화</button>
+ 	                           	<button type="button" class="stroke" onClick="_getUserGridLayout('addLayout', addGrid);">칼럼위치저장</button>
+	                            <button type="button" class="stroke" onClick="_resetUserGridLayout('addLayout', addGrid, addColumns);">칼럼초기화</button>
                             </div>
-                            <div class="grid_wrap">Grid 영역입니다</div>
+                            <div class="grid_wrap">
+                                <div id="addGrid"  style="height:500px;"></div>
+                        		<div id="addGridPager" class="pager"></div>
+                            </div>
                             <div class="btn_wrap">
-                                <button type="button" class="stroke">칼럼위치저장</button>
-                                <button type="button" class="stroke">칼럼초기화</button>
+ 	                           	<button type="button" class="stroke" onClick="_getUserGridLayout('addLayout', addGrid);">칼럼위치저장</button>
+	                            <button type="button" class="stroke" onClick="_resetUserGridLayout('addLayout', addGrid, addColumns);">칼럼초기화</button>
                             </div>
                         </div>
                     </div>
