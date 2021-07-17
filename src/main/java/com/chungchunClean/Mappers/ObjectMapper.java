@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.chungchunClean.vo.BldgVo;
+import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.StaffVo;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -27,4 +28,6 @@ public interface ObjectMapper  {
 	public StaffVo getStaffInfo(StaffVo vo);
 
     public List<BldgVo> getBldgList(HashMap<String, Object> params);
+    
+    public List<CodeVo> getBuildingQrList(HashMap<String,Object> params);
 }
