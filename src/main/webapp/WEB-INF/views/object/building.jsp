@@ -16,6 +16,8 @@ var bldgSelector;
 var excelGrid;
 var excelView;
 var excelSelector;
+var bldgDtlGrid;
+var bldgDtlView;
 function pageLoad(){
 	$('#object').addClass("current");
 	$('#building').addClass("current");
@@ -52,7 +54,15 @@ function loadGridStockList(type, result){
                 { binding: 'memo', header: '메모', isReadOnly: true, width: 280, align:"center"  },
                 { binding: 'activeYn', header: '활성화', isReadOnly: true, width: 80, align:"center"},
                 { binding: 'cretDt', header: '계정생성일', isReadOnly: true, width: 175, align:"center"},
-                { binding: 'edit', header: '정보수정', isReadOnly: true, width: "*", align:"center"}
+                { binding: 'edit', header: '정보수정', isReadOnly: true, width: "*", align:"center",
+                    cellTemplate: wijmo.grid.cellmaker.CellMaker.makeButton({
+                        text: '<b>수정</b>',
+                        click: (e, ctx) => {
+                            alert("수정!!");
+                        }
+                        
+                    })
+                }
             ]
 		  
 		// hostElement에 Wijmo의 FlexGird 생성
@@ -115,29 +125,37 @@ function loadGridStockList(type, result){
                 cell.textContent = (r + 1).toString();
             }
         };
-
-        bldgGrid.formatItem.addHandler(function (s, e) {
-            // 열 헤더에 대한 중앙 정렬 
-            if (e.panel == s.columnHeaders) {
-            e.cell.innerHTML = '<div class="v-center">' +
-                e.cell.innerHTML + '</div>';
-            }
-            //  "status" 열에 대한 커스텀 렌더링
-            if (e.panel == s.cells) {
-            var col = s.columns[e.col];
-            var status = s.getCellData(e.row, e.col);
-                if (col.binding == 'status' && (status == 'O' || status == 'X')) {
-                    //셀 서식
-                    var html = '<div class="mark_{status}"/>';
-                    if(status == 'O') {
-                        html = html.replace('{status}', 'enough');
-                    }else if(status == 'X') {
-                        html = html.replace('{status}', 'short');
-                    }
-                    e.cell.innerHTML = html;                    
-                }
-            }
+        // 건물추가 - 동 그리드 
+        bldgDtlView = new wijmo.collections.CollectionView(result, {
+            pageSize: 100,
+            groupDescriptions: ['lCategyNm']
         });
+        bldgDtlColumns =  [
+                { binding: 'dongNum', header: '동번호', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'cleanCnt', header: '청소횟수', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'activeYn', header: '활성화여부', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'fromDt', header: '시작일', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'toDt', header: '종료일', isReadOnly: false, width: "*", align:"center"}
+
+            ]
+		  
+		// hostElement에 Wijmo의 FlexGird 생성
+        // itemsSource: data - CollectionView로 데이터를 그리드에 바인딩
+        // autoGenerateColumns: false >> 컬럼 사용자 정의 
+        bldgDtlGrid = new wijmo.grid.FlexGrid('#bldgDtlGrid', {
+            autoGenerateColumns: false,
+            alternatingRowStep: 0,
+            columns : bldgDtlColumns,
+            itemsSource: bldgView,
+        });
+
+        //행번호 표시하기
+        bldgDtlGrid.itemFormatter = function (panel, r, c, cell) { 
+            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+                cell.textContent = (r + 1).toString();
+            }
+        };
+        
 
 		// hostElement에 Wijmo의 FlexGird 생성
         // itemsSource: data - CollectionView로 데이터를 그리드에 바인딩
@@ -189,7 +207,33 @@ function getBldgList(){
              	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
             }
           });
+}
 
+function showPop(pop){
+    if(pop == 'new_building'){
+        dupCheckIdFlag = false;
+        newBuildingForm.region.value="";
+        newBuildingForm.dtlAddr.value="";
+        newBuildingForm.builName.value="";
+        newBuildingForm.builNum.value="";
+        newBuildingForm.downPay.value="";
+        newBuildingForm.memo.value="";
+
+
+    }
+    $('#'+pop).addClass('is-visible');
+}
+
+function closePop(){
+	$('.popup').removeClass('is-visible');
+}
+
+function findAddr(){
+
+    var pop = window.open("/object/jusoPopup","pop","width=570,height=420, scrollbars=yes, resizable=yes"); } 
+    var jusoCallBack = function(roadFullAddr,roadAddrPart1,addrDetail,roadAddrPart2,engAddr,jibunAddr,zipNo, admCd, rnMgtSn, bdMgtSn, detBdNmList, bdNm, bdKdcd, siNm, sggNm, emdNm, liNm, rn, udrtYn,buldMnnm, buldSlno, mtYn, lnbrMnnm, lnbrSlno, emdNo){ 
+        document.getElementById("dtlAddr").value = addrDetail;
+        document.getElementById("dtlAddr").value = addrDetail;
 }
 </script>
 
@@ -210,7 +254,7 @@ function getBldgList(){
                         <dd>00개</dd>
                     </dl>
                     <!-- 클릭시 건물추가 팝업창 띄움 -->
-                    <a href="#new_building">건물추가</a>
+                    <a href="javascript:void(0);" onclick="showPop('new_building');">건물추가</a>
                 </div>
                 <div class="admin_utility">
                     <div class="admin_btn">
@@ -264,19 +308,27 @@ function getBldgList(){
     </div>
     <!-- 팝업 -->
     <!-- 팝업 : 건물추가-->
-    <div class="popup" id="new_building" style="display:none;">
+    <div class="popup" id="new_building">
         <div class="popup_container">
             <div class="popup_head">
                 <p class="popup_title">건물추가</p>
-                <button type="button" class="popup_close">x</button>
+                <button type="button" class="popup_close" onClick="closePop();">>x</button>
             </div>
             <div class="popup_inner">
                 <dfn>필수항목 *</dfn>
-                <form action="#" method="post">
+                <form id="newBuildingForm">
                     <div class="row">
-                        <label for="region">지역<i>*</i></label>
-                        <input type="text" id="region" name="region" required>
-                        <button type="button" class="popup_btn att">검색</button>
+                        <label for="area">지역<i>*</i></label>
+                        <input type="text" id="area" name="area" required>
+                        <button type="button" class="popup_btn att" onClick="findAddr();">검색</button>
+                    </div>
+                    <div class="row" style="display:none">
+                        <label for="areaCd">지역코드<i>*</i></label>
+                        <input type="text" id="areaCd" name="areaCd" required>
+                    </div>
+                    <div class="row">
+                        <label for="zone">구역<i>*</i></label>
+                        <input type="text" id="zone" name="zone" required>
                     </div>
                     <div class="row">
                         <label for="dtlAddr">상세주소<i>*</i></label>
@@ -291,11 +343,14 @@ function getBldgList(){
                         <label for="builNum">건물번호<i>*</i></label>
                         <input type="text" id="builNum" name="builNum" onfocus="this.blur()" readonly>
                     </div>
-                    <div class="row">
+                    <div class="row" style= "display: flex;">
                         <label for="codeNum">동 번호<i>*</i></label>
-                        <input type="text" id="codeNum" name="codeNum" required>
-                        <button type="button" class="popup_btn att">추가</button>
+                        <div id="bldgDtlGrid"  style="height:80px; width:600px;"></div>
+                        <button type="button"  style="width:50px;"class="popup_btn att" onClick="addDong();">추가</button>
+                        
+                        
                     </div>
+                    
                     <div class="row">
                         <label for="downPay">계약금액<i>*</i></label>
                         <input type="text" id="downPay" name="downPay" required>

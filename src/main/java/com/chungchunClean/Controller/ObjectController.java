@@ -108,5 +108,12 @@ public class ObjectController {
     	return objectService.getBldgList(params);
     }  
 
+    /**
+     * 주소검색 팝업 띄우기
+     */
+    @RequestMapping(value = "/jusoPopup")
+    public String jusoPopup(@RequestParam HashMap<String,Object> params){
+        return "object/jusoPopup";
+    } 
   
 }
