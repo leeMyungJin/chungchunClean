@@ -3,6 +3,9 @@ package com.chungchunClean.Controller;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +32,10 @@ public class CalculateController {
     }
     
     @RequestMapping(value = "/history", method = {RequestMethod.POST , RequestMethod.GET})
-    public String moveHistory() {
+    public String moveHistory(Model model) {
+    	
+    	model.addAttribute("totalCost", calculateService.getMonTodayCost());
+    	
         return "calculate/calculate_history";
     }
     
@@ -41,4 +47,12 @@ public class CalculateController {
     	
     	return calculateList;
     }
+    
+    @RequestMapping(value = "/getMonlableCost")
+    @ResponseBody
+    public HashMap<String,Object> getMonlableCost(@RequestParam HashMap<String,Object> params){
+    	
+    	return calculateService.getMonlableCost(params);
+    }
 }
+

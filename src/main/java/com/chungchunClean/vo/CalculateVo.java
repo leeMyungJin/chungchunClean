@@ -1,76 +1,110 @@
 package com.chungchunClean.vo;
 
 public class CalculateVo {
-	private String bldg_cd;
-	private String tax_bill;
-	private String out_cost;
-	private String over_cost;
-	private String manage_cost;
-	private String add_cost;
-	private String deposit_cost;
-	private String deposit_mt;
-	private String deposit_dt;
+	private String areaCd;
+	private String areaNm;
+	private String bldgNm;
+	private String bldgCd; 
+	private String surtax;
+	private String surtaxYn;
+	private String taxBill; 
+	private String outCost;
+	private String overCost;
+	private String manageCost;
+	private String addCost;
+	private String depositCost;
+	private String depositMt;
+	private String depositDt;
 	private String depositor;
 	private String pnum;
 	private String memo;
-	private String cret_dt;
-	private String cret_id;
-	private String updt_dt;
-	private String updt_id;
-	
-	public String getBldg_cd() {
-		return bldg_cd;
+	private String cretDt;
+	private String cretId;
+	private String updtDt;
+	private String updtId;
+	public String getAreaCd() {
+		return areaCd;
 	}
-	public void setBldg_cd(String bldg_cd) {
-		this.bldg_cd = bldg_cd;
+	public void setAreaCd(String areaCd) {
+		this.areaCd = areaCd;
 	}
-	public String getTax_bill() {
-		return tax_bill;
+	public String getAreaNm() {
+		return areaNm;
 	}
-	public void setTax_bill(String tax_bill) {
-		this.tax_bill = tax_bill;
+	public void setAreaNm(String areaNm) {
+		this.areaNm = areaNm;
 	}
-	public String getOut_cost() {
-		return out_cost;
+	public String getBldgNm() {
+		return bldgNm;
 	}
-	public void setOut_cost(String out_cost) {
-		this.out_cost = out_cost;
+	public void setBldgNm(String bldgNm) {
+		this.bldgNm = bldgNm;
 	}
-	public String getOver_cost() {
-		return over_cost;
+	public String getBldgCd() {
+		return bldgCd;
 	}
-	public void setOver_cost(String over_cost) {
-		this.over_cost = over_cost;
+	public void setBldgCd(String bldgCd) {
+		this.bldgCd = bldgCd;
 	}
-	public String getManage_cost() {
-		return manage_cost;
+	public String getSurtax() {
+		return surtax;
 	}
-	public void setManage_cost(String manage_cost) {
-		this.manage_cost = manage_cost;
+	public void setSurtax(String surtax) {
+		this.surtax = surtax;
 	}
-	public String getAdd_cost() {
-		return add_cost;
+	public String getSurtaxYn() {
+		return surtaxYn;
 	}
-	public void setAdd_cost(String add_cost) {
-		this.add_cost = add_cost;
+	public void setSurtaxYn(String surtaxYn) {
+		this.surtaxYn = surtaxYn;
 	}
-	public String getDeposit_cost() {
-		return deposit_cost;
+	public String getTaxBill() {
+		return taxBill;
 	}
-	public void setDeposit_cost(String deposit_cost) {
-		this.deposit_cost = deposit_cost;
+	public void setTaxBill(String taxBill) {
+		this.taxBill = taxBill;
 	}
-	public String getDeposit_mt() {
-		return deposit_mt;
+	public String getOutCost() {
+		return outCost;
 	}
-	public void setDeposit_mt(String deposit_mt) {
-		this.deposit_mt = deposit_mt;
+	public void setOutCost(String outCost) {
+		this.outCost = outCost;
 	}
-	public String getDeposit_dt() {
-		return deposit_dt;
+	public String getOverCost() {
+		return overCost;
 	}
-	public void setDeposit_dt(String deposit_dt) {
-		this.deposit_dt = deposit_dt;
+	public void setOverCost(String overCost) {
+		this.overCost = overCost;
+	}
+	public String getManageCost() {
+		return manageCost;
+	}
+	public void setManageCost(String manageCost) {
+		this.manageCost = manageCost;
+	}
+	public String getAddCost() {
+		return addCost;
+	}
+	public void setAddCost(String addCost) {
+		this.addCost = addCost;
+	}
+	public String getDepositCost() {
+		return depositCost;
+	}
+	public void setDepositCost(String depositCost) {
+		this.depositCost = depositCost;
+	}
+	public String getDepositMt() {
+		return depositMt;
+	}
+	public void setDepositMt(String depositMt) {
+		this.depositMt = depositMt;
+	}
+	public String getDepositDt() {
+		return depositDt;
+	}
+	public void setDepositDt(String depositDt) {
+		this.depositDt = depositDt;
 	}
 	public String getDepositor() {
 		return depositor;
@@ -90,38 +124,39 @@ public class CalculateVo {
 	public void setMemo(String memo) {
 		this.memo = memo;
 	}
-	public String getCret_dt() {
-		return cret_dt;
+	public String getCretDt() {
+		return cretDt;
 	}
-	public void setCret_dt(String cret_dt) {
-		this.cret_dt = cret_dt;
+	public void setCretDt(String cretDt) {
+		this.cretDt = cretDt;
 	}
-	public String getCret_id() {
-		return cret_id;
+	public String getCretId() {
+		return cretId;
 	}
-	public void setCret_id(String cret_id) {
-		this.cret_id = cret_id;
+	public void setCretId(String cretId) {
+		this.cretId = cretId;
 	}
-	public String getUpdt_dt() {
-		return updt_dt;
+	public String getUpdtDt() {
+		return updtDt;
 	}
-	public void setUpdt_dt(String updt_dt) {
-		this.updt_dt = updt_dt;
+	public void setUpdtDt(String updtDt) {
+		this.updtDt = updtDt;
 	}
-	public String getUpdt_id() {
-		return updt_id;
+	public String getUpdtId() {
+		return updtId;
 	}
-	public void setUpdt_id(String updt_id) {
-		this.updt_id = updt_id;
+	public void setUpdtId(String updtId) {
+		this.updtId = updtId;
 	}
 	
 	@Override
 	public String toString() {
-		return "CalculateVo [bldg_cd=" + bldg_cd + ", tax_bill=" + tax_bill + ", out_cost=" + out_cost + ", over_cost="
-				+ over_cost + ", manage_cost=" + manage_cost + ", add_cost=" + add_cost + ", deposit_cost="
-				+ deposit_cost + ", deposit_mt=" + deposit_mt + ", deposit_dt=" + deposit_dt + ", depositor="
-				+ depositor + ", pnum=" + pnum + ", memo=" + memo + ", cret_dt=" + cret_dt + ", cret_id=" + cret_id
-				+ ", updt_dt=" + updt_dt + ", updt_id=" + updt_id + "]";
+		return "CalculateVo [areaCd=" + areaCd + ", areaNm=" + areaNm + ", bldgNm=" + bldgNm + ", bldgCd=" + bldgCd
+				+ ", surtax=" + surtax + ", surtaxYn=" + surtaxYn + ", taxBill=" + taxBill + ", outCost=" + outCost
+				+ ", overCost=" + overCost + ", manageCost=" + manageCost + ", addCost=" + addCost + ", depositCost="
+				+ depositCost + ", depositMt=" + depositMt + ", depositDt=" + depositDt + ", depositor=" + depositor
+				+ ", pnum=" + pnum + ", memo=" + memo + ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt="
+				+ updtDt + ", updtId=" + updtId + "]";
 	}
 	
 	

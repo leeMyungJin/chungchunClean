@@ -58,9 +58,11 @@ function enterkey(type) {
 function loadGridMonList(type, result){
 	  if(type == "init"){
 		  
+		  
 		  //월관리
 		   monView = new wijmo.collections.CollectionView(result, {
-		       pageSize: 100
+			   pageSize: 100
+		       ,groupDescriptions: ['bldgNm']
 		   });
 		    
 		   monGridPager = new wijmo.input.CollectionViewNavigator('#monGridPager', {
@@ -70,16 +72,21 @@ function loadGridMonList(type, result){
 		    });
 		   
 		   monColumns = [
-			      { binding: 'onWorkDt', header: '출근시각', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'offWorkDt', header: '퇴근시각', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'officerNm', header: '담당자', isReadOnly: true, width: 60, align:"center" },
-			      { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 60, align:"center"  },
-			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 120, align:"center"  },
-			      { binding: 'cretDt', header: '업로드일자', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" },
-			      { binding: 'siteMntrUrl', header: '현장점검 URL', isReadOnly: true, width: 200, align:"center" }
+			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'bldgCd', header: '건물코드', isReadOnly: true, width: 0, align:"center"  },
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'manageCost', header: '관리비', isReadOnly: true, width: 150, align:"center" },
+			      { binding: 'taxBill', header: '세금계산서', isReadOnly: true, width: 150, align:"center"  },
+			      { binding: 'overCost', header: '추가금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
+			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum'  },
+			      { binding: 'overCost', header: '이월금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
+			      { binding: 'depositCost', header: '관리비입금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
+			      { binding: 'depositDt', header: '입금날짜', isReadOnly: true, width: 150, align:"center" },
+			      { binding: 'depositor', header: '입금자명', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 150, align:"center" },
+			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" }
 			];
-		  
+		    
 		   monGrid = new wijmo.grid.FlexGrid('#monGrid', {
 			    autoGenerateColumns: false,
 			    alternatingRowStep: 0,
@@ -87,9 +94,19 @@ function loadGridMonList(type, result){
 			    itemsSource: monView
 			  });
 			  
+		   monGrid.columnFooters.rows.push(new wijmo.grid.GroupRow());
+		   monGrid.bottomLeftCells.setCellData(0, 0, 'Σ');
+		   
 		   	_setUserGridLayout('monLayout', monGrid, monColumns);
 		   	
-		   	
+		   	//행번호
+		   	monGrid.itemFormatter = function (panel, r, c, cell) { 
+	            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+	                cell.textContent = (r + 1).toString();
+	            }
+	        };
+	    
+	        
 			//부가수익 
 		 	addView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
@@ -102,14 +119,18 @@ function loadGridMonList(type, result){
 		    });
 		   
 		   addColumns = [
-			      { binding: 'onWorkDt', header: '출근시각', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'offWorkDt', header: '퇴근시각', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'officerNm', header: '담당자', isReadOnly: true, width: 60, align:"center" },
-			      { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 60, align:"center"  },
-			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 120, align:"center"  },
-			      { binding: 'cretDt', header: '업로드일자', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" },
-			      { binding: 'siteMntrUrl', header: '현장점검 URL', isReadOnly: true, width: 200, align:"center" }
+			      { binding: 'areaCd', header: '지역', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'manageCost', header: '관리비', isReadOnly: true, width: 60, align:"center" },
+			      { binding: 'taxBill', header: '세금계산서', isReadOnly: true, width: 60, align:"center"  },
+			      { binding: 'bldgNm', header: '추가금', isReadOnly: true, width: 120, align:"center"  },
+			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'overCost', header: '이월금', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'depositCost', header: '관리비입금', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'depositMt', header: '입금날짜', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'depositor', header: '입금자명', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" }
 			];
 		  
 		   addGrid = new wijmo.grid.FlexGrid('#addGrid', {
@@ -121,11 +142,20 @@ function loadGridMonList(type, result){
 			  
 		   	_setUserGridLayout('addLayout', addGrid, addColumns);
 		   	
+		   	//행번호
+		   	addGrid.itemFormatter = function (panel, r, c, cell) { 
+	            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+	                cell.textContent = (r + 1).toString();
+	            }
+	        };
+	    
+		   	
 			  
 	  }else{	
 		  //월관리
 		   monView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
+		       ,groupDescriptions: ['bldgNm']
 		   });
 		  monGridPager.cv = monView;
 		  monGrid.itemsSource = monView;
@@ -156,7 +186,7 @@ function getMonList(){
 	
 	$.ajax({
       type : 'POST',
-      url : '/history/getMonList',
+      url : '/calculate/getMonList',
       dataType : null,
       data : param,
       success : function(result) {
@@ -168,6 +198,24 @@ function getMonList(){
 
       }
   });
+	
+	$.ajax({
+	      type : 'POST',
+	      url : '/calculate/getMonlableCost',
+	      dataType : null,
+	      data : param,
+	      success : function(result) {
+	      	console.log(result);
+	        $("#lableAddCost").text(result.addcost+ "원");
+	        $("#lableDepositCost").text(result.depositcost+ "원");
+	        $("#lableOutCost").text(result.outcost+ "원");
+
+	      },
+	      error: function(request, status, error) {
+	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+	      }
+	  });
 }
 
 function getAddList(){
@@ -249,16 +297,16 @@ function addExportExcel(){
                 <div id="panel_mon" role="tabpanel" class="tabpanel">
                     <div class="admin_summary">
                         <dl>
-                            <dt>총 누적미수금(이월금)</dt>
-                            <dd>0000원</dd>
+                            <dt>금년 누적미수금</dt>
+                            <dd>${totalCost.outcost}원</dd>
                         </dl>
                         <dl>
-                            <dt>총 입금금액</dt>
-                            <dd>0000원</dd>
+                            <dt>금년 입금금액(부가세포함)</dt>
+                            <dd>${totalCost.depositcost}원</dd>
                         </dl>
                         <dl>
-                            <dt>총 추가금</dt>
-                            <dd>0000원</dd>
+                            <dt>금년 추가금</dt>
+                            <dd>${totalCost.addcost}원</dd>
                         </dl>
                     </div>
                     <div class="admin_utility">
@@ -291,15 +339,15 @@ function addExportExcel(){
                             <div class="summary">
                                 <dl>
                                     <dt>미수금</dt>
-                                    <dd>0000원</dd>
+                                    <dd id="lableOutCost">0000원</dd>
                                 </dl>
                                 <dl>
                                     <dt>입금금액</dt>
-                                    <dd>0000원</dd>
+                                    <dd id="lableDepositCost">0000원</dd>
                                 </dl>
                                 <dl>
                                     <dt>추가금</dt>
-                                    <dd>0000원</dd>
+                                    <dd id="lableAddCost">0000원</dd>
                                 </dl>
                             </div>
                         </div>

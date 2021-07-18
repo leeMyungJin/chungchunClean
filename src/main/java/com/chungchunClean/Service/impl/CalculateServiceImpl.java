@@ -25,5 +25,17 @@ public class CalculateServiceImpl implements CalculateService{
 		List<CalculateVo> calculateList = calculateMapper.getMonList(params);
 		return calculateList;
 	}
+
+	@Override
+	public HashMap<String, Object> getMonTodayCost(){
+		return calculateMapper.getMonTodayCost();
+	}
 	
+	@Override
+	public HashMap<String, Object> getMonlableCost(HashMap<String,Object> params){
+		if(params.get("inq") != null)
+			params.replace("inq", Util.makeForeach((String)params.get("inq"), ","));
+		
+		return calculateMapper.getMonlableCost(params);
+	}
 }
