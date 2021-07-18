@@ -3,5 +3,124 @@
 
 <mapper namespace="com.chungchunClean.Mappers.CalculateMapper">
 
+<select id="getMonList" parameterType="hashMap" resultType="CalculateVo">
+	select bb.area_cd
+		, bb.area_nm
+		, bb.bldg_cd
+		, bb.bldg_nm
+		, bb.surtax 
+		, bb.surtax_yn 
+		, amm.manage_cost 
+		, amm.tax_bill
+		, amm.add_cost 
+		, amm.out_cost 
+		, amm.over_cost 
+		, amm.deposit_cost 
+		, to_char(amm.deposit_dt , 'YYYY-MM-DD') as deposit_dt 
+		, amm.depositor 
+		, amm.pnum 
+		, amm.memo
+	from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
+	where
+		1 = 1
+	<if test="inq != null">
+		<choose>
+			<when test="con == 'all'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.area_nm LIKE '%' || #{item} || '%'
+					or
+					bb.bldg_nm LIKE '%' || #{item} || '%'
+					or
+					amm.depositor LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'site'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.area_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'building'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.bldg_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'depositor'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					amm.depositor LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+		</choose>
+	</if>
+	<if test="fromDate != null and toDate != null">
+		and amm.cret_dt between #{fromDate}::timestamp and (to_date(#{toDate}, 'YYYY-MM-DD')+1)::timestamp
+	</if>
+	ORDER BY bb.area_cd, bb.area_nm, amm.deposit_dt
+</select>
+
+
+<select id="getMonTodayCost" resultType="HashMap">
+	select coalesce(sum(amm.out_cost), 0) as outCost -- 금년 미수금
+       	,coalesce(sum(amm.deposit_cost), 0) as depositCost -- 금년 입금금액 (부가세포함)
+      	,coalesce(sum(amm.add_cost), 0) as addCost --금년 추가금
+	from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
+	where 1=1
+	and extract('YEAR' from deposit_dt) = extract('YEAR' from now())
+</select>
+
+<select id="getMonlableCost" parameterType="hashMap" resultType="HashMap">
+select coalesce(sum(amm.out_cost), 0) as outCost -- 금년 미수금
+      ,coalesce(sum(amm.deposit_cost), 0) as depositCost -- 금년 입금금액 (부가세포함)
+      ,coalesce(sum(amm.add_cost), 0) as addCost --금년 추가금
+	from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
+	where 1=1
+		<if test="inq != null">
+		<choose>
+			<when test="con == 'all'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.area_nm LIKE '%' || #{item} || '%'
+					or
+					bb.bldg_nm LIKE '%' || #{item} || '%'
+					or
+					amm.depositor LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'site'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.area_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'building'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.bldg_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'depositor'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					amm.depositor LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+		</choose>
+	</if>
+	<if test="fromDate != null and toDate != null">
+		and amm.cret_dt between #{fromDate}::timestamp and (to_date(#{toDate}, 'YYYY-MM-DD')+1)::timestamp
+	</if>
+</select>
+
 	
 </mapper>

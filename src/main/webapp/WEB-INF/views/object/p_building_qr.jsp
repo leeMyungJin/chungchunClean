@@ -30,9 +30,9 @@ function setBuildingQr(){
 	var qrList = "${qrCnt}";
 	console.log("${qrList}");
 	 for(var i =1; i<=qrList; i++){
-		console.log($("#barcode_"+i).attr("nm"));
+		console.log($("#barcode_"+i).attr("cd"));
 		let qrCode = new wijmo.barcode.common.QrCode('#barcode_'+i , {
-            value : $("#barcode_"+i).attr("nm")
+            value : $("#barcode_"+i).attr("cd")
 	    });
 	} 
 }
@@ -44,9 +44,9 @@ function setBuildingQr(){
         <ul class="qr_list">
         	<c:forEach var="qrList" items="${qrList}" varStatus="status">
 	            <li>
-	                <div id="barcode_${status.count}" class="qr" nm="${qrList.nm}"></div>
+	                <div id="barcode_${status.count}" class="qr" cd="${qrList.cd}"></div>
 	                <p class="txt">${qrList.cd}</p>
-	                <p class="txt">QR값 : ${qrList.nm}</p>
+	                <p class="txt">${qrList.nm}</p>
 	            </li>
             </c:forEach>
         </ul>
