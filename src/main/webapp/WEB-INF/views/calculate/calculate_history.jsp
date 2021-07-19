@@ -228,19 +228,39 @@ function getAddList(){
 	};
 	
 	$.ajax({
-      type : 'POST',
-      url : '/history/getAddList',
-      dataType : null,
-      data : param,
-      success : function(result) {
-      	console.log("getAddList success");
-      	loadGridAddList('search', result);
-      },
-      error: function(request, status, error) {
-      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+	      type : 'POST',
+	      url : '/calculate/getAddList',
+	      dataType : null,
+	      data : param,
+	      success : function(result) {
+	      	console.log("getAddList success");
+	      	loadGridAddList('search', result);
+	      },
+	      error: function(request, status, error) {
+	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 
-      }
-  });
+	      }
+	  });
+		
+		$.ajax({
+		      type : 'POST',
+		      url : '/calculate/getMonlableCost',
+		      dataType : null,
+		      data : param,
+		      success : function(result) {
+		      	console.log(result);
+		        $("#lableMaterCost").text(result.matercost+ "원");
+		        $("#lableDepositCost").text(result.outsccost+ "원");
+		        $("#lableOutscCost").text(result.depositcost+ "원");
+		        $("#lableQuoteCost").text(result.quotecost+ "원");
+		        $("#lableAddCost").text(result.addcost+ "원");
+		        $("#lableOverCost").text(result.overcost+ "원");
+		      },
+		      error: function(request, status, error) {
+		      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+		      }
+		  });
 }
 
 function monExportExcel(){
@@ -373,19 +393,19 @@ function addExportExcel(){
                     <div class="admin_summary">
                         <dl>
                             <dt>금년 견적(매출)</dt>
-                            <dd>0000원</dd>
+                            <dd>${totalAddCost.quotecost}원</dd>
                         </dl>
                         <dl>
                             <dt>금년 입금금액</dt>
-                            <dd>0000원</dd>
+                            <dd>${totalAddCost.depositcost}원</dd>
                         </dl>
                         <dl>
                             <dt>금년 이월금</dt>
-                            <dd>0000원</dd>
+                            <dd>${totalAddCost.overcost}원</dd>
                         </dl>
                         <dl>
                             <dt>금년 추가금</dt>
-                            <dd>0000원</dd>
+                            <dd>${totalAddCost.addcost}원</dd>
                         </dl>
                     </div>
                     <div class="admin_utility">
@@ -415,28 +435,28 @@ function addExportExcel(){
                             </form>
                             <div class="summary" style="position: relative; top:10px;">
                                 <dl>
-                                    <dt>계약금</dt>
-                                    <dd>0000원</dd>
+                                    <dt>견적금</dt> 
+                                    <dd id="lableQuoteCost">0000원</dd>
                                 </dl>
                                 <dl>
                                     <dt>추가금</dt>
-                                    <dd>0000원</dd>
+                                    <dd id="lableAddCost">0000원</dd>
                                 </dl>
                                 <dl>
                                     <dt>재료비</dt>
-                                    <dd>0000원</dd>
+                                    <dd id="lableMaterCost">0000원</dd>
                                 </dl>
                                 <dl>
                                     <dt>외주비</dt>
-                                    <dd>0000원</dd>
+                                    <dd id="lableOutscCost">0000원</dd>
                                 </dl>
                                 <dl>
-                                    <dt>미수금</dt>
-                                    <dd>0000원</dd>
+                                    <dt>이월금</dt>
+                                    <dd id="lableOverCost">0000원</dd>
                                 </dl>
                                 <dl>
                                     <dt>입금금액</dt>
-                                    <dd>0000원</dd>
+                                    <dd id="lableDepositCost">0000원</dd>
                                 </dl>
                             </div>
                         </div>

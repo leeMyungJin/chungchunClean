@@ -35,6 +35,7 @@ public class CalculateController {
     public String moveHistory(Model model) {
     	
     	model.addAttribute("totalCost", calculateService.getMonTodayCost());
+    	model.addAttribute("totalAddCost", calculateService.getAddTodayCost());
     	
         return "calculate/calculate_history";
     }
@@ -53,6 +54,22 @@ public class CalculateController {
     public HashMap<String,Object> getMonlableCost(@RequestParam HashMap<String,Object> params){
     	
     	return calculateService.getMonlableCost(params);
+    }
+    
+    @RequestMapping(value = "/getAddList")
+    @ResponseBody
+    public List<CalculateVo> getAddList(@RequestParam HashMap<String,Object> params){
+    	
+    	List<CalculateVo> calculateList = calculateService.getAddList(params);
+    	
+    	return calculateList;
+    }
+    
+    @RequestMapping(value = "/getAddlableCost")
+    @ResponseBody
+    public HashMap<String,Object> getAddlableCost(@RequestParam HashMap<String,Object> params){
+    	
+    	return calculateService.getAddlableCost(params);
     }
 }
 

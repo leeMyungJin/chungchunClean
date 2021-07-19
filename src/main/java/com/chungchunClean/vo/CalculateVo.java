@@ -22,6 +22,15 @@ public class CalculateVo {
 	private String cretId;
 	private String updtDt;
 	private String updtId;
+	
+	private String outscCost;
+	private String materCost;
+	private String quoteCost;
+	private String addDt;
+	private String classifiCd;
+	private String classifiNm;
+	private String itemCd;
+	private String itemNm;
 	public String getAreaCd() {
 		return areaCd;
 	}
@@ -148,7 +157,54 @@ public class CalculateVo {
 	public void setUpdtId(String updtId) {
 		this.updtId = updtId;
 	}
-	
+	public String getOutscCost() {
+		return outscCost;
+	}
+	public void setOutscCost(String outscCost) {
+		this.outscCost = outscCost;
+	}
+	public String getMaterCost() {
+		return materCost;
+	}
+	public void setMaterCost(String materCost) {
+		this.materCost = materCost;
+	}
+	public String getQuoteCost() {
+		return quoteCost;
+	}
+	public void setQuoteCost(String quoteCost) {
+		this.quoteCost = quoteCost;
+	}
+	public String getAddDt() {
+		return addDt;
+	}
+	public void setAddDt(String addDt) {
+		this.addDt = addDt;
+	}
+	public String getClassifiCd() {
+		return classifiCd;
+	}
+	public void setClassifiCd(String classifiCd) {
+		this.classifiCd = classifiCd;
+	}
+	public String getClassifiNm() {
+		return classifiNm;
+	}
+	public void setClassifiNm(String classifiNm) {
+		this.classifiNm = classifiNm;
+	}
+	public String getItemCd() {
+		return itemCd;
+	}
+	public void setItemCd(String itemCd) {
+		this.itemCd = itemCd;
+	}
+	public String getItemNm() {
+		return itemNm;
+	}
+	public void setItemNm(String itemNm) {
+		this.itemNm = itemNm;
+	}
 	@Override
 	public String toString() {
 		return "CalculateVo [areaCd=" + areaCd + ", areaNm=" + areaNm + ", bldgNm=" + bldgNm + ", bldgCd=" + bldgCd
@@ -156,7 +212,9 @@ public class CalculateVo {
 				+ ", overCost=" + overCost + ", manageCost=" + manageCost + ", addCost=" + addCost + ", depositCost="
 				+ depositCost + ", depositMt=" + depositMt + ", depositDt=" + depositDt + ", depositor=" + depositor
 				+ ", pnum=" + pnum + ", memo=" + memo + ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt="
-				+ updtDt + ", updtId=" + updtId + "]";
+				+ updtDt + ", updtId=" + updtId + ", outscCost=" + outscCost + ", materCost=" + materCost
+				+ ", quoteCost=" + quoteCost + ", addDt=" + addDt + ", classifiCd=" + classifiCd + ", classifiNm="
+				+ classifiNm + ", itemCd=" + itemCd + ", itemNm=" + itemNm + "]";
 	}
 	
 	

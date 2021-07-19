@@ -15,4 +15,8 @@ public interface CalculateMapper  {
 	public List<CalculateVo> getMonList(HashMap<String,Object> params);
 	public HashMap<String, Object> getMonTodayCost();
 	public HashMap<String, Object> getMonlableCost(HashMap<String,Object> params);
+	
+	public List<CalculateVo> getAddList(HashMap<String,Object> params);
+	public HashMap<String, Object> getAddTodayCost();
+	public HashMap<String, Object> getAddlableCost(HashMap<String,Object> params);
 }
