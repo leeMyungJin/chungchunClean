@@ -56,9 +56,7 @@ function enterkey(type) {
 
 //그리드 초기 셋팅
 function loadGridMonList(type, result){
-	  if(type == "init"){
-		  
-		  
+	  if(type == "init"){ 
 		  //월관리
 		   monView = new wijmo.collections.CollectionView(result, {
 			   pageSize: 100
@@ -110,6 +108,7 @@ function loadGridMonList(type, result){
 			//부가수익 
 		 	addView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
+		       ,groupDescriptions: ['bldgNm']
 		   });
 		    
 		   addGridPager = new wijmo.input.CollectionViewNavigator('#addGridPager', {
@@ -119,18 +118,16 @@ function loadGridMonList(type, result){
 		    });
 		   
 		   addColumns = [
-			      { binding: 'areaCd', header: '지역', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'manageCost', header: '관리비', isReadOnly: true, width: 60, align:"center" },
-			      { binding: 'taxBill', header: '세금계산서', isReadOnly: true, width: 60, align:"center"  },
-			      { binding: 'bldgNm', header: '추가금', isReadOnly: true, width: 120, align:"center"  },
-			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'overCost', header: '이월금', isReadOnly: true, width: '*', align:"center" },
-			      { binding: 'depositCost', header: '관리비입금', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'addDt', header: '일자', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'classifiNm', header: '분류', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'itemNm', header: '내역', isReadOnly: true, width: 60, align:"center" },
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 60, align:"center"  },
+			      { binding: 'quoteCost', header: '견적', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum'  },
+			      { binding: 'materCost', header: '재료비', isReadOnly: true, width: 100, align:"center", aggregate: 'Sum'  },
+			      { binding: 'outscCost', header: '외주', isReadOnly: true, width: '*', align:"center", aggregate: 'Sum' },
+			      { binding: 'depositCost', header: '입금', isReadOnly: true, width: '*', align:"center", aggregate: 'Sum' },
 			      { binding: 'depositMt', header: '입금날짜', isReadOnly: true, width: '*', align:"center" },
-			      { binding: 'depositor', header: '입금자명', isReadOnly: true, width: '*', align:"center" },
-			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: '*', align:"center" },
-			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" }
+			      { binding: 'depositor', header: '입금자명', isReadOnly: true, width: '*', align:"center" }
 			];
 		  
 		   addGrid = new wijmo.grid.FlexGrid('#addGrid', {
@@ -164,6 +161,7 @@ function loadGridMonList(type, result){
 		  //부가수익 
 		   addView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
+		       ,groupDescriptions: ['bldgNm']
 		   });
 		  addGridPager.cv = addView;
 		  addGrid.itemsSource = addView;
@@ -400,8 +398,8 @@ function addExportExcel(){
                             <dd>${totalAddCost.depositcost}원</dd>
                         </dl>
                         <dl>
-                            <dt>금년 이월금</dt>
-                            <dd>${totalAddCost.overcost}원</dd>
+                            <dt>금년 미수금</dt>
+                            <dd>${totalAddCost.outcost}원</dd>
                         </dl>
                         <dl>
                             <dt>금년 추가금</dt>
