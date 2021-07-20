@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chungchunClean.Mappers.IncomeMapper">
+
+<select id="getIncomeList" parameterType="hashMap" resultType="CalculateVo">
+select type, deposit_dt, area_cd, area_nm, bldg_cd, bldg_nm, pnum
+		, sum(con_cost) as con_cost
+		, sum(add_cost) as add_cost
+		, sum(out_cost) as out_cost
+		, sum(deposit_cost) as deposit_cost
+	--	, max(deposit_dt) as deposit_dt
+	--	, max(depositor) as depositor
+from 
+	(select  '부가수익' as type
+			, to_char(aa.add_dt , 'YYYY-MM') as deposit_dt
+			, bb.area_cd 
+			, bb.area_nm 
+			, bb.bldg_cd 
+			, bb.bldg_nm 
+			, bb.pnum
+			, aa.quote_cost as con_cost
+			, aa.add_cost 
+			, aa.out_cost 
+			, aa.deposit_cost 
+		--	, to_char(aa.deposit_dt , 'YYYY-MM-DD') as deposit_dt 
+		--	, aa.depositor 
+	from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd 
+	where 1=1
+<if test="inq != null">
+		<choose>
+			<when test="con == 'all'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.area_nm LIKE '%' || #{item} || '%'
+					or
+					bb.bldg_nm LIKE '%' || #{item} || '%'
+					or
+					aa.depositor LIKE '%' || #{item} || '%' 
+				</foreach>
+			</when>
+			<when test="con == 'site'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.area_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'building'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.bldg_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+		<when test="con == 'depositor'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					aa.depositor LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+		</choose>
+	</if>
+		
+	union all
+	
+	select '월관리' as type
+			, to_char(amm.deposit_dt , 'YYYY-MM') as deposit_dt 
+			, bb.area_cd
+			, bb.area_nm
+			, bb.bldg_cd
+			, bb.bldg_nm
+			, bb.pnum 
+			, bb.con_cost + bb.surtax as con_cost
+			, amm.add_cost
+			, amm.out_cost 	
+			, amm.deposit_cost 
+			--, to_char(amm.deposit_dt , 'YYYY-MM-DD') as deposit_dt 
+			--, amm.depositor 
+		from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
+		where 1=1
+		<if test="inq != null">
+		<choose>
+			<when test="con == 'all'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.area_nm LIKE '%' || #{item} || '%'
+					or
+					bb.bldg_nm LIKE '%' || #{item} || '%'
+					or
+					amm.depositor LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'site'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.area_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'building'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.bldg_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'depositor'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					amm.depositor LIKE '%' || #{item} || '%'
+				</foreach>
+			</when> 
+		</choose>
+	</if>
+	) as a
+where 1=1
+	<if test="fromDate != null and toDate != null">
+		and to_char(deposit_dt , 'YYYY-MM') between #{fromDate} and #{toDate}
+	</if>
+	group by type, deposit_dt, area_cd, area_nm, bldg_cd, bldg_nm, pnum	
+</select>
+
+
+<select id="getIncomeTodayCost" resultType="HashMap">
+select sum(con_cost) as conCost
+		, sum(add_cost) as addCost
+		, sum(out_cost) as outCost
+		, sum(deposit_cost)as depositCost
+from (
+	select coalesce(sum(aa.quote_cost), 0)+coalesce(sum(aa.add_cost), 0) as con_cost --금년 매출액 (견적 + 추가금)
+			, coalesce(sum(aa.add_cost), 0) as add_cost --금년 추가금
+			, coalesce(sum(aa.out_cost), 0) as out_cost --금년 미수금
+			, coalesce(sum(aa.deposit_cost), 0) as deposit_cost --금년 입금금액
+	from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd 
+	where 1=1
+	and extract('YEAR' from aa.deposit_dt) = extract('YEAR' from now())
+	--and to_char(aa.deposit_dt , 'YYYY-MM') between #{fromDate} and #{toDate}
+	
+	union all
+	
+	select  coalesce(sum(bb.con_cost), 0)+coalesce(sum(bb.surtax), 0)+coalesce(sum(amm.add_cost), 0) as con_cost
+		,coalesce(sum(amm.add_cost), 0) as add_cost --금년 추가금
+		, coalesce(sum(amm.out_cost), 0) as out_cost -- 금년 미수금
+	   	,coalesce(sum(amm.deposit_cost), 0) as deposit_cost -- 금년 입금금액
+	from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
+	where 1=1
+	and extract('YEAR' from deposit_dt) = extract('YEAR' from now())
+) as a
+
+</select>
+
+<select id="getIncomelableCost" parameterType="hashMap" resultType="HashMap">
+select sum(con_cost) as conCost
+		, sum(add_cost) as addCost
+		, sum(out_cost) as outCost
+		, sum(deposit_cost)as depositCost
+from (
+	select coalesce(sum(aa.quote_cost), 0)+coalesce(sum(aa.add_cost), 0) as con_cost --금년 매출액 (견적 + 추가금)
+			, coalesce(sum(aa.add_cost), 0) as add_cost --금년 추가금
+			, coalesce(sum(aa.out_cost), 0) as out_cost --금년 미수금
+			, coalesce(sum(aa.deposit_cost), 0) as deposit_cost --금년 입금금액
+	from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd 
+	where 1=1
+	<if test="inq != null">
+		<choose>
+			<when test="con == 'all'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.area_nm LIKE '%' || #{item} || '%'
+					or
+					bb.bldg_nm LIKE '%' || #{item} || '%'
+					or
+					aa.depositor LIKE '%' || #{item} || '%' 
+				</foreach>
+			</when>
+			<when test="con == 'site'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.area_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'building'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.bldg_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+		<when test="con == 'depositor'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					aa.depositor LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+		</choose>
+	</if>
+	<if test="fromDate != null and toDate != null">
+		and to_char(aa.deposit_dt , 'YYYY-MM') between #{fromDate} and #{toDate}
+	</if>
+	
+	union all
+	
+	select  coalesce(sum(bb.con_cost), 0)+coalesce(sum(bb.surtax), 0)+coalesce(sum(amm.add_cost), 0) as con_cost
+		,coalesce(sum(amm.add_cost), 0) as add_cost --금년 추가금
+		, coalesce(sum(amm.out_cost), 0) as out_cost -- 금년 미수금
+	   	,coalesce(sum(amm.deposit_cost), 0) as deposit_cost -- 금년 입금금액
+	from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
+	where 1=1
+	<if test="inq != null">
+		<choose>
+			<when test="con == 'all'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.area_nm LIKE '%' || #{item} || '%'
+					or
+					bb.bldg_nm LIKE '%' || #{item} || '%'
+					or
+					amm.depositor LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'site'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.area_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'building'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					bb.bldg_nm LIKE '%' || #{item} || '%'
+				</foreach>
+			</when>
+			<when test="con == 'depositor'">
+			AND 
+				<foreach collection="inq" item="item"
+					index="index" open="(" close=")" separator="or">
+					amm.depositor LIKE '%' || #{item} || '%'
+				</foreach>
+			</when> 
+		</choose>
+	</if>
+	<if test="fromDate != null and toDate != null">
+		and to_char(aa.deposit_dt , 'YYYY-MM') between #{fromDate} and #{toDate}
+	</if>
+) as a
+</select>
+	
+</mapper>

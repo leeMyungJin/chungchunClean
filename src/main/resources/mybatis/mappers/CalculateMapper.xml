@@ -193,7 +193,7 @@ select coalesce(sum(amm.out_cost), 0) as outCost -- 금년 미수금
 <select id="getAddTodayCost" resultType="HashMap">
 select coalesce(sum(aa.quote_cost), 0) as quote_cost --금년 견적
 		, coalesce(sum(aa.add_cost), 0) as add_cost --금년 추가금
-		, coalesce(sum(aa.over_cost), 0) as over_cost --금년 이월금
+		, coalesce(sum(aa.out_cost), 0) as over_cost --금년 이월금
 		, coalesce(sum(aa.deposit_cost), 0) as deposit_cost --금년 입금금액
 from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd 
 where extract('YEAR' from aa.deposit_dt) = extract('YEAR' from now())	
