@@ -23,8 +23,19 @@ public interface ObjectService {
     
     public void updateStaff(HashMap<String,String> params);
 
-    public List<BldgVo> getBldgList(HashMap<String, Object> params);
+    public List<BldgVo> getBuildingList(HashMap<String, Object> params);
     
     public List<CodeVo> getBuildingQrList(HashMap<String,Object> params);
+
+    public String dupCheckBuilding(HashMap<String, Object> params);
+
+    public String getMaxBldgCd();
+
+    public void addBuildingBas(HashMap<String, Object> params);
+
+    public void addBuildingDetail(List<BldgVo> params, String string);
+
+    public HashMap<String,Long> getBldgInfo();
+
 
 }

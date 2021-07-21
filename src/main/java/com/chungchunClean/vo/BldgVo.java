@@ -20,6 +20,12 @@ public class BldgVo {
     private String memo;
     private String activeYn;
     private String dongQrUrl;
+    private String conFromDt;
+    private String conToDt;
+    private Integer cleanCnt;
+    private String fromDt;
+    private String toDt;
+
     
 
     /**
@@ -274,13 +280,84 @@ public class BldgVo {
         this.dongQrUrl = dongQrUrl;
     }
 
+    /**
+     * @return String return the conFromDt
+     */
+    public String getConFromDt() {
+        return conFromDt;
+    }
+
+    /**
+     * @param conFromDt the conFromDt to set
+     */
+    public void setConFromDt(String conFromDt) {
+        this.conFromDt = conFromDt;
+    }
+
+    /**
+     * @return String return the conToDt
+     */
+    public String getConToDt() {
+        return conToDt;
+    }
+
+    /**
+     * @param conToDt the conToDt to set
+     */
+    public void setConToDt(String conToDt) {
+        this.conToDt = conToDt;
+    }
+
+    /**
+     * @return Integer return the cleanCnt
+     */
+    public Integer getCleanCnt() {
+        return cleanCnt;
+    }
+
+    /**
+     * @param cleanCnt the cleanCnt to set
+     */
+    public void setCleanCnt(Integer cleanCnt) {
+        this.cleanCnt = cleanCnt;
+    }
+
+    /**
+     * @return String return the fromDt
+     */
+    public String getFromDt() {
+        return fromDt;
+    }
+
+    /**
+     * @param fromDt the fromDt to set
+     */
+    public void setFromDt(String fromDt) {
+        this.fromDt = fromDt;
+    }
+
+    /**
+     * @return String return the toDt
+     */
+    public String getToDt() {
+        return toDt;
+    }
+
+    /**
+     * @param toDt the toDt to set
+     */
+    public void setToDt(String toDt) {
+        this.toDt = toDt;
+    }
+
     @Override
     public String toString() {
         return "BldgVo [activeYn=" + activeYn + ", areaCd=" + areaCd + ", areaNm=" + areaNm + ", bldgCd=" + bldgCd
-                + ", bldgNm=" + bldgNm + ", clientNm=" + clientNm + ", conCost=" + conCost + ", cretDt=" + cretDt
-                + ", cretId=" + cretId + ", dongNum=" + dongNum + ", dongQrUrl=" + dongQrUrl + ", dtlAddr=" + dtlAddr
-                + ", memo=" + memo + ", pnum=" + pnum + ", surTax=" + surTax + ", surTaxYn=" + surTaxYn + ", updtDt="
-                + updtDt + ", updtId=" + updtId + "]";
+                + ", bldgNm=" + bldgNm + ", cleanCnt=" + cleanCnt + ", clientNm=" + clientNm + ", conCost=" + conCost
+                + ", conFromDt=" + conFromDt + ", conToDt=" + conToDt + ", cretDt=" + cretDt + ", cretId=" + cretId
+                + ", dongNum=" + dongNum + ", dongQrUrl=" + dongQrUrl + ", dtlAddr=" + dtlAddr + ", fromDt=" + fromDt
+                + ", memo=" + memo + ", pnum=" + pnum + ", surTax=" + surTax + ", surTaxYn=" + surTaxYn + ", toDt="
+                + toDt + ", updtDt=" + updtDt + ", updtId=" + updtId + "]";
     }
 
 }

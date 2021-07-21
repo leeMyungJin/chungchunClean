@@ -27,7 +27,17 @@ public interface ObjectMapper  {
 	
 	public StaffVo getStaffInfo(StaffVo vo);
 
-    public List<BldgVo> getBldgList(HashMap<String, Object> params);
+    public List<BldgVo> getBuildingList(HashMap<String, Object> params);
     
     public List<CodeVo> getBuildingQrList(HashMap<String,Object> params);
+
+	public Integer dupCheckBuilding(HashMap<String, Object> params);
+
+	public String getMaxBldgCd();
+
+    public void addBuildingBas(HashMap<String, Object> params);
+
+    public void addBuildingDetail(BldgVo vo);
+
+	public HashMap<String,Long> getBldgInfo();
 }

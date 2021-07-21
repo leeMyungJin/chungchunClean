@@ -75,10 +75,10 @@ public class ObjectServiceImpl implements ObjectService {
 	}
 
 	@Override
-	public List<BldgVo> getBldgList(HashMap<String, Object> params) {
+	public List<BldgVo> getBuildingList(HashMap<String, Object> params) {
 		if(params.get("inq") != null)
 			params.replace("inq", Util.makeForeach((String)params.get("inq"), ","));
-		return objectMapper.getBldgList(params);
+		return objectMapper.getBuildingList(params);
 	}
 	
 	
@@ -87,6 +87,44 @@ public class ObjectServiceImpl implements ObjectService {
 		if(params.get("inq") != null)
 			params.replace("inq", Util.makeForeach((String)params.get("inq"), ","));
 		return objectMapper.getBuildingQrList(params);
+	}
+
+	@Override
+	public String dupCheckBuilding(HashMap<String, Object> params) {
+		int buildingCnt = objectMapper.dupCheckBuilding(params);
+		String result = "";
+		if(buildingCnt > 0)
+			result = "true";
+		else
+			result = "false";
+
+		return result;
+	}
+
+	@Override
+	public String getMaxBldgCd() {
+		return objectMapper.getMaxBldgCd();
+	}
+
+	@Override
+	public void addBuildingBas(HashMap<String, Object> params) {
+		objectMapper.addBuildingBas(params);
+		
+	}
+
+	@Override
+	public void addBuildingDetail(List<BldgVo> params, String id) {
+		for(BldgVo vo : params){
+			vo.setUpdtId(id);
+			vo.setCretId(id);
+			objectMapper.addBuildingDetail(vo);
+		}
+	}
+
+	@Override
+	public HashMap<String,Long> getBldgInfo() {
+		// TODO Auto-generated method stub
+		return objectMapper.getBldgInfo();
 	}
 	
 }
