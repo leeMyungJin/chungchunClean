@@ -47,9 +47,9 @@ function loadGridIncomeList(type, result){
 		   
 		   incomeColumns = [
 			      { binding: 'type', header: '분야', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'deposit_dt', header: '일자', isReadOnly: true, width: 0, align:"center"  },
-			      { binding: 'area_nm', header: '지역', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'bldg_nm', header: '건물명', isReadOnly: true, width: 150, align:"center" },
+			      { binding: 'depositDt', header: '일자', isReadOnly: true, width: 0, align:"center"  },
+			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 150, align:"center" },
 			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 150, align:"center"  },
 			      { binding: 'conCost', header: '계약금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
 			      { binding: 'addCost', header: '추가금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum'  },
@@ -98,7 +98,7 @@ function getIncomeList(){
 	
 	$.ajax({
       type : 'POST',
-      url : '/calculate/getIncomeList',
+      url : '/income/getIncomeList',
       dataType : null,
       data : param,
       success : function(result) {
@@ -113,7 +113,7 @@ function getIncomeList(){
 	
 	$.ajax({
 	      type : 'POST',
-	      url : '/calculate/getIncomelableCost',
+	      url : '/income/getIncomelableCost',
 	      dataType : null,
 	      data : param,
 	      success : function(result) {
@@ -178,10 +178,10 @@ function exportExcel(){
                 </div>
                 <div class="admin_utility">
                     <form action="#" method="post">
-                        <label for>조회일</label>
-                        <input type="date" id="fromDate" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey();">
+                        <label for>조회월</label>
+                        <input type="month" id="fromDate" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey();">
                      	   	-
-                       	<input type="date" id="toDate" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey();">
+                       	<input type="month" id="toDate" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey();">
                         <button type="button" class="admin_utility_btn" onClick="getIncomeList();">조회</button>
                     </form>
                     <div class="admin_btn">

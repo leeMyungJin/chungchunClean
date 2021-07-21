@@ -8,11 +8,11 @@ public class CalculateVo {
 	private String surtax;
 	private String surtaxYn;
 	private String taxBill; 
-	private String outCost;
-	private String overCost;
-	private String manageCost;
-	private String addCost;
-	private String depositCost;
+	private Integer outCost;
+	private Integer overCost;
+	private Integer manageCost;
+	private Integer addCost;
+	private Integer depositCost;
 	private String depositMt;
 	private String depositDt;
 	private String depositor;
@@ -23,14 +23,16 @@ public class CalculateVo {
 	private String updtDt;
 	private String updtId;
 	
-	private String outscCost;
-	private String materCost;
-	private String quoteCost;
+	private Integer outscCost;
+	private Integer materCost;
+	private Integer quoteCost;
 	private String addDt;
 	private String classifiCd;
 	private String classifiNm;
 	private String itemCd;
 	private String itemNm;
+	private String type;
+	
 	public String getAreaCd() {
 		return areaCd;
 	}
@@ -73,34 +75,34 @@ public class CalculateVo {
 	public void setTaxBill(String taxBill) {
 		this.taxBill = taxBill;
 	}
-	public String getOutCost() {
+	public Integer getOutCost() {
 		return outCost;
 	}
-	public void setOutCost(String outCost) {
+	public void setOutCost(Integer outCost) {
 		this.outCost = outCost;
 	}
-	public String getOverCost() {
+	public Integer getOverCost() {
 		return overCost;
 	}
-	public void setOverCost(String overCost) {
+	public void setOverCost(Integer overCost) {
 		this.overCost = overCost;
 	}
-	public String getManageCost() {
+	public Integer getManageCost() {
 		return manageCost;
 	}
-	public void setManageCost(String manageCost) {
+	public void setManageCost(Integer manageCost) {
 		this.manageCost = manageCost;
 	}
-	public String getAddCost() {
+	public Integer getAddCost() {
 		return addCost;
 	}
-	public void setAddCost(String addCost) {
+	public void setAddCost(Integer addCost) {
 		this.addCost = addCost;
 	}
-	public String getDepositCost() {
+	public Integer getDepositCost() {
 		return depositCost;
 	}
-	public void setDepositCost(String depositCost) {
+	public void setDepositCost(Integer depositCost) {
 		this.depositCost = depositCost;
 	}
 	public String getDepositMt() {
@@ -157,22 +159,22 @@ public class CalculateVo {
 	public void setUpdtId(String updtId) {
 		this.updtId = updtId;
 	}
-	public String getOutscCost() {
+	public Integer getOutscCost() {
 		return outscCost;
 	}
-	public void setOutscCost(String outscCost) {
+	public void setOutscCost(Integer outscCost) {
 		this.outscCost = outscCost;
 	}
-	public String getMaterCost() {
+	public Integer getMaterCost() {
 		return materCost;
 	}
-	public void setMaterCost(String materCost) {
+	public void setMaterCost(Integer materCost) {
 		this.materCost = materCost;
 	}
-	public String getQuoteCost() {
+	public Integer getQuoteCost() {
 		return quoteCost;
 	}
-	public void setQuoteCost(String quoteCost) {
+	public void setQuoteCost(Integer quoteCost) {
 		this.quoteCost = quoteCost;
 	}
 	public String getAddDt() {
@@ -205,6 +207,12 @@ public class CalculateVo {
 	public void setItemNm(String itemNm) {
 		this.itemNm = itemNm;
 	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	@Override
 	public String toString() {
 		return "CalculateVo [areaCd=" + areaCd + ", areaNm=" + areaNm + ", bldgNm=" + bldgNm + ", bldgCd=" + bldgCd
@@ -214,8 +222,9 @@ public class CalculateVo {
 				+ ", pnum=" + pnum + ", memo=" + memo + ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt="
 				+ updtDt + ", updtId=" + updtId + ", outscCost=" + outscCost + ", materCost=" + materCost
 				+ ", quoteCost=" + quoteCost + ", addDt=" + addDt + ", classifiCd=" + classifiCd + ", classifiNm="
-				+ classifiNm + ", itemCd=" + itemCd + ", itemNm=" + itemNm + "]";
+				+ classifiNm + ", itemCd=" + itemCd + ", itemNm=" + itemNm + ", type=" + type + "]";
 	}
+	
 	
 	
     

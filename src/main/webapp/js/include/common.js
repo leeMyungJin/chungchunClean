@@ -52,6 +52,59 @@ function _resetUserGridLayout(layoutId, grid, initColumns) {
     _setUserGridLayout(layoutId, grid, initColumns);
 }
 
+function _fnisMonth(vMonth, id) {
+	var vValue = vMonth;
+    var vValue_Num = vValue.replace(/[^0-9]/g, ""); //숫자를 제외한 나머지는 예외처리
+    var curtDate = new Date();
+    var flag = true;
+
+    if (_fnToNull(vValue_Num) == "") {
+        alert("날짜를 입력 해 주세요.");
+        flag = false;
+    }
+
+    //8자리가 아닌 경우 false
+    if (vValue_Num.length != 6) {
+        alert("날짜를 2020. 01 형식으로 입력 해 주세요.");
+        flag = false;
+    }
+
+    //6자리의 yyyymm를 원본 , 4자리 , 2자리로 변경해 주기 위한 패턴생성
+    var rxDatePattern = /^(\d{4})(\d{1,2})$/;
+    var dtArray = vValue_Num.match(rxDatePattern);
+
+    if (dtArray == null) {
+        flag = false;
+    }
+
+    //0번째는 원본 , 1번째는 yyyy(년) , 2번재는 mm(월)
+    dtYear = dtArray[1];
+    dtMonth = dtArray[2];
+    
+    //yyyymm 체크
+    if (dtMonth < 1 || dtMonth > 12) {
+        alert("존재하지 않은 월을 입력하셨습니다. \n다시 한번 확인 해주세요");
+        flag = false;
+    }
+
+    //미래날짜 체크 
+    var curtYYYYMM = curtDate.getFullYear() +''+ ( curtDate.getMonth() + 1 <= 9 ? '0' + (curtDate.getMonth() + 1) : (curtDate.getMonth() + 1));
+    console.log(vValue_Num);
+    console.log(curtYYYYMM);
+    console.log(vValue > curtYYYYMM);
+    if (vValue_Num > curtYYYYMM) {
+        alert("미래월을 입력하셨습니다. \n미래월은 조회가 불가능합니다.");
+        flag = false;
+    }
+
+    if (flag) {
+        return true;
+
+    } else {
+        $('#' + id).val(curtYYYYMM);
+        return false;
+    }
+}
 
 function _fnisDate(vDate, id) {
     var vValue = vDate;
