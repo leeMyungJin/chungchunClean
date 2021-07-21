@@ -409,7 +409,7 @@ function addExportExcel(){
                     <div class="admin_utility">
                         <form action="#" method="post">
                             <label for="Date">조회일</label>
-                            <input type="date" id="Date" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey('add');">
+                            <input type="date" id="date" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey('add');">
                             <button class="admin_utility_btn" onClick="getAddList();">조회</button>
                         </form>
                         <div class="admin_btn">
