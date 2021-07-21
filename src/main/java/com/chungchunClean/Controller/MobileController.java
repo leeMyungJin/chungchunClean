@@ -33,7 +33,7 @@ public class MobileController {
         try {
             String coords = longitude+","+latitude; //위도+경도
             String sourcecrs = "epsg:4326"; //좌표시스템
-            String orders = "legalcode"; //법정동, 행정도, 지번, 도로명 조회 선택
+            String orders = "addr"; //법정동, 행정도, 지번, 도로명 조회 선택
             String output = "json"; //데이터 타입
             String apiURL = "https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?coords="+coords+"&sourcecrs="+sourcecrs+"&orders="+orders+"&output="+output;
             
@@ -70,9 +70,15 @@ public class MobileController {
 	            JSONObject jsonObj = (JSONObject) jsonParse.parse(response.toString()); //Json형태로 파싱해서 JsonObject에 넣음
 	            
 	            JSONObject regionObj = (JSONObject) ((JSONObject) ((JSONArray) jsonObj.get("results")).get(0)).get("region");
+				JSONObject landObj = (JSONObject) ((JSONObject) ((JSONArray) jsonObj.get("results")).get(0)).get("land");
+				System.out.println("박준호........" +regionObj);
+				System.out.println("박준호2222........" +landObj);
 	            String area1 = (String) ((JSONObject)regionObj.get("area1")).get("name").toString();
 	            String area2 = (String) ((JSONObject)regionObj.get("area2")).get("name").toString();
 	            String area3 = (String) ((JSONObject)regionObj.get("area3")).get("name").toString();
+				String area4 = (String) landObj.get("number1");
+				String area5 = (String) landObj.get("number2");
+
 
 	            JSONObject returnObj = new JSONObject();
 	            returnObj.put("area1", area1);
@@ -80,6 +86,7 @@ public class MobileController {
 	            returnObj.put("area3", area3);
 	            returnObj.put("area4", area1+" "+area2);
 				returnObj.put("area5", area1+" "+area2+" "+area3);
+				returnObj.put("area6", area1+" "+area2+" "+area3+" "+area4+"-"+area5);
 
 	            return returnObj.toString();
                 
