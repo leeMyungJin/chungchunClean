@@ -25,7 +25,7 @@ public class IncomeController {
     @RequestMapping(value = "/", method = {RequestMethod.POST , RequestMethod.GET})
     public String moveHistory(Model model) {
     	
-    	model.addAttribute("totalCost", incomeService.getMonTodayCost());
+    	model.addAttribute("totalCost", incomeService.getIncomeTodayCost());
     	
         return "income/income";
     }
