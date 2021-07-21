@@ -31,6 +31,8 @@ public class CalculateVo {
 	private String classifiNm;
 	private String itemCd;
 	private String itemNm;
+	private String type;
+	
 	public String getAreaCd() {
 		return areaCd;
 	}
@@ -205,6 +207,12 @@ public class CalculateVo {
 	public void setItemNm(String itemNm) {
 		this.itemNm = itemNm;
 	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
 	@Override
 	public String toString() {
 		return "CalculateVo [areaCd=" + areaCd + ", areaNm=" + areaNm + ", bldgNm=" + bldgNm + ", bldgCd=" + bldgCd
@@ -214,7 +222,7 @@ public class CalculateVo {
 				+ ", pnum=" + pnum + ", memo=" + memo + ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt="
 				+ updtDt + ", updtId=" + updtId + ", outscCost=" + outscCost + ", materCost=" + materCost
 				+ ", quoteCost=" + quoteCost + ", addDt=" + addDt + ", classifiCd=" + classifiCd + ", classifiNm="
-				+ classifiNm + ", itemCd=" + itemCd + ", itemNm=" + itemNm + "]";
+				+ classifiNm + ", itemCd=" + itemCd + ", itemNm=" + itemNm + ", type=" + type + "]";
 	}
 	
 	

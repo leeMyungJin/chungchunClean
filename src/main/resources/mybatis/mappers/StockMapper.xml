@@ -104,8 +104,8 @@ AND item_cd = #{itemCd}
 
 <insert id="addItem" parameterType="StockVo">
 INSERT INTO WEB.CATEGORY_DTL
-(l_categy_cd,  item_cd, item_nm, cost, cret_dt, cret_id, updt_dt ,updt_id, quantity)
-VALUES(#{lCategyCd}, #{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId},0)	
+(l_categy_cd,  item_cd, item_nm, cost, cret_dt, cret_id, updt_dt ,updt_id, quantity, qr_url)
+VALUES(#{lCategyCd}, #{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId},0, 'QR'||#{itemCd})	
 </insert>
 
 <delete id="deleteItem" parameterType="StockVo">
@@ -121,8 +121,8 @@ FROM WEB.CATEGORY_DTL
 
 <insert id="saveStock" parameterType="StockVo">
 INSERT INTO WEB.CATEGORY_DTL 
-  (l_categy_cd,   item_cd, item_nm, cost, cret_dt, cret_id, updt_dt, updt_id)
-  VALUES (#{lCategyCd},#{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId})
+  (l_categy_cd,   item_cd, item_nm, cost, cret_dt, cret_id, updt_dt, updt_id, qr_url)
+  VALUES (#{lCategyCd},#{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId}, 'QR'||#{itemCd})
 ON CONFLICT( l_categy_cd, item_cd) DO
 UPDATE
 	SET l_categy_cd = #{lCategyCd},
@@ -131,6 +131,7 @@ UPDATE
 		cost		=  #{cost}::numeric,
 		updt_dt		= now(),
 		updt_id		= #{updtId}
+		qr_url 		= 'QR'||#{itemCd}
 </insert>
 
 <update id="saveQuantity" parameterType="StockVo">

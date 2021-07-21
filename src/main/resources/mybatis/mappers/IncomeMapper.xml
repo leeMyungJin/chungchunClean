@@ -120,7 +120,7 @@ from
 	) as a
 where 1=1
 	<if test="fromDate != null and toDate != null">
-		and to_char(deposit_dt , 'YYYY-MM') between #{fromDate} and #{toDate}
+		and deposit_dt between #{fromDate} and #{toDate}
 	</if>
 	group by type, deposit_dt, area_cd, area_nm, bldg_cd, bldg_nm, pnum	
 </select>
@@ -139,7 +139,6 @@ from (
 	from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd 
 	where 1=1
 	and extract('YEAR' from aa.deposit_dt) = extract('YEAR' from now())
-	--and to_char(aa.deposit_dt , 'YYYY-MM') between #{fromDate} and #{toDate}
 	
 	union all
 	
@@ -251,7 +250,7 @@ from (
 		</choose>
 	</if>
 	<if test="fromDate != null and toDate != null">
-		and to_char(aa.deposit_dt , 'YYYY-MM') between #{fromDate} and #{toDate}
+		and to_char(amm.deposit_dt , 'YYYY-MM') between #{fromDate} and #{toDate}
 	</if>
 ) as a
 </select>
