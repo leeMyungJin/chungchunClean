@@ -150,7 +150,7 @@
 		DTL.active_yn ,
 		DTL.dong_num ,
 		DTL.dong_qr_url ,
-		DTL.memo ,
+		BAS.memo ,
 		TO_CHAR(BAS.cret_dt, 'YYYY-MM-DD') cret_dt
 	FROM
 		web.BLDG_BAS BAS
