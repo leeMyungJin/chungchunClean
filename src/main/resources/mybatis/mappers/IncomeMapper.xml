@@ -72,7 +72,7 @@ from
 			, bb.area_nm
 			, bb.bldg_cd
 			, bb.bldg_nm
-			, bb.pnum 
+			, amm.pnum
 			, bb.con_cost + bb.surtax as con_cost
 			, amm.add_cost
 			, amm.out_cost 	
@@ -122,7 +122,7 @@ where 1=1
 	<if test="fromDate != null and toDate != null">
 		and deposit_dt between #{fromDate} and #{toDate}
 	</if>
-	group by type, deposit_dt, area_cd, area_nm, bldg_cd, bldg_nm, pnum	
+	group by deposit_dt, type, area_cd, area_nm, bldg_cd, bldg_nm, pnum	
 </select>
 
 

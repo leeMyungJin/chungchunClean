@@ -83,7 +83,7 @@ function loadGridMonList(type, result){
 		        cv: monView
 		    });
 		   
-		   monColumns = [
+ 		   monColumns = [
 			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'bldgCd', header: '건물코드', isReadOnly: true, width: 0, align:"center"  },
 			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 100, align:"center"  },
