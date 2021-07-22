@@ -28,7 +28,6 @@ var excelGrid;
 var excelView;
 var excelSelector;
 
-var addGrid;
 var editGrid;
 var editGridView;
 
@@ -76,7 +75,6 @@ function loadGridMonList(type, result){
 		  //월관리
 		   monView = new wijmo.collections.CollectionView(result, {
 			   pageSize: 100
-		       ,groupDescriptions: ['bldgNm']
 		   });
 		    
 		   monGridPager = new wijmo.input.CollectionViewNavigator('#monGridPager', {
@@ -124,7 +122,6 @@ function loadGridMonList(type, result){
 			//부가수익 
 		 	addView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
-		       ,groupDescriptions: ['bldgNm']
 		   });
 		    
 		   addGridPager = new wijmo.input.CollectionViewNavigator('#addGridPager', {
@@ -134,15 +131,15 @@ function loadGridMonList(type, result){
 		    });
 		   
 		   addColumns = [
-			      { binding: 'addDt', header: '일자', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'addDt', header: '일자', isReadOnly: true, width: 150, align:"center" },
 			      { binding: 'classifiNm', header: '분류', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'itemNm', header: '내역', isReadOnly: true, width: 60, align:"center" },
-			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 60, align:"center"  },
+			      { binding: 'itemNm', header: '내역', isReadOnly: true, width: 150, align:"center" },
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 100, align:"center"  },
 			      { binding: 'quoteCost', header: '견적', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum'  },
 			      { binding: 'materCost', header: '재료비', isReadOnly: true, width: 100, align:"center", aggregate: 'Sum'  },
 			      { binding: 'outscCost', header: '외주', isReadOnly: true, width: '*', align:"center", aggregate: 'Sum' },
 			      { binding: 'depositCost', header: '입금', isReadOnly: true, width: '*', align:"center", aggregate: 'Sum' },
-			      { binding: 'depositMt', header: '입금날짜', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'depositDt', header: '입금날짜', isReadOnly: true, width: '*', align:"center" },
 			      { binding: 'depositor', header: '입금자명', isReadOnly: true, width: '*', align:"center" }
 			];
 		  
@@ -154,6 +151,9 @@ function loadGridMonList(type, result){
 			  });
 			  
 		   	_setUserGridLayout('addLayout', addGrid, addColumns);
+		   	
+			addGrid.columnFooters.rows.push(new wijmo.grid.GroupRow());
+			addGrid.bottomLeftCells.setCellData(0, 0, 'Σ');
 		   	
 		   	//행번호
 		   	addGrid.itemFormatter = function (panel, r, c, cell) { 
@@ -216,6 +216,11 @@ function loadGridMonList(type, result){
 	            itemsSource: classifiView.itemsEdited,
 	            isReadOnly: true
 	        });
+	        
+	        editGrid = new wijmo.grid.FlexGrid('#editGrid', {
+	            itemsSource: currentView.itemsEdited,
+	            isReadOnly: true
+	        });
 	    
 		   	
 			  
@@ -226,8 +231,9 @@ function loadGridMonList(type, result){
 	        });
 	        classifiGridPager.cv = classifiView;
 	        classifiGrid.itemsSource = classifiView;
-	  }else{	
-		  //월관리
+	        
+	  }else if(type == "mon"){
+		//월관리
 		   monView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
 		       ,groupDescriptions: ['bldgNm']
@@ -235,7 +241,7 @@ function loadGridMonList(type, result){
 		  monGridPager.cv = monView;
 		  monGrid.itemsSource = monView;
 		  
-		  
+	  }else{	  
 		  //부가수익 
 		   addView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
@@ -263,11 +269,12 @@ function getMonList(){
 	$.ajax({
       type : 'POST',
       url : '/calculate/getMonList',
+      async : false, // 비동기모드 : true, 동기식모드 : false
       dataType : null,
       data : param,
       success : function(result) {
-      	console.log("getMonList success");
-      	loadGridMonList('search', result);
+	      	console.log("getMonList success");
+	      	loadGridMonList('mon', result);
       },
       error: function(request, status, error) {
       	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -278,6 +285,7 @@ function getMonList(){
 	$.ajax({
 	      type : 'POST',
 	      url : '/calculate/getMonlableCost',
+	      async : false, // 비동기모드 : true, 동기식모드 : false
 	      dataType : null,
 	      data : param,
 	      success : function(result) {
@@ -296,21 +304,20 @@ function getMonList(){
 
 function getAddList(){
 	var param = {
-		con 	: $('#con').val()
-		, inq 	: $('#inq').val()
-		, fromDate : $('#fromDate').val()
-		, toDate : $('#toDate').val()
-		, subcon : $('#subcon').val()
+		con 	: $('#con2').val()
+		, inq 	: $('#inq2').val()
+		, fromDate : $('#date').val()
 	};
 	
 	$.ajax({
 	      type : 'POST',
 	      url : '/calculate/getAddList',
+	      async : false, // 비동기모드 : true, 동기식모드 : false
 	      dataType : null,
 	      data : param,
 	      success : function(result) {
 	      	console.log("getAddList success");
-	      	loadGridAddList('search', result);
+	      	loadGridMonList('search', result);
 	      },
 	      error: function(request, status, error) {
 	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -321,16 +328,17 @@ function getAddList(){
 		$.ajax({
 		      type : 'POST',
 		      url : '/calculate/getMonlableCost',
+		      async : false, // 비동기모드 : true, 동기식모드 : false
 		      dataType : null,
 		      data : param,
 		      success : function(result) {
 		      	console.log(result);
-		        $("#lableMaterCost").text(result.matercost+ "원");
-		        $("#lableDepositCost").text(result.outsccost+ "원");
-		        $("#lableOutscCost").text(result.depositcost+ "원");
-		        $("#lableQuoteCost").text(result.quotecost+ "원");
-		        $("#lableAddCost").text(result.addcost+ "원");
-		        $("#lableOverCost").text(result.overcost+ "원");
+		        $("#addlableMaterCost").text(result.matercost+ "원");
+		        $("#addlableDepositCost").text(result.outsccost+ "원");
+		        $("#addlableOutscCost").text(result.depositcost+ "원");
+		        $("#addlableQuoteCost").text(result.quotecost+ "원");
+		        $("#addlableAddCost").text(result.addcost+ "원");
+		        $("#addlableOverCost").text(result.overcost+ "원");
 		      },
 		      error: function(request, status, error) {
 		      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -384,16 +392,21 @@ function closePop(){
 }
 // 행추가
 function addRow(type){
-    add = true;
-    if(type == 'classifi'){
-        classifiGrid.allowAddNew = add;
+    if(type == 'mon'){
+    	monGrid.allowAddNew = true;
+    	
+    }else if(type == 'add'){
+    	addGrid.allowAddNew = true;
+    	
+    }else if(type == 'classifi'){
+        classifiGrid.allowAddNew = true;
     }
 }
 
 //행 삭제
 function deleteRows(type){
-    if(type == 'stock'){
-        var item = stockGrid.rows.filter(r => r.isSelected); 
+    if(type == 'mon'){
+        var item = monGrid.rows.filter(r => r.isSelected); 
         var rows = [];
         var params;
          if(item.length == 0){
@@ -405,14 +418,42 @@ function deleteRows(type){
             }
             if(confirm("선택한 행들을 삭제 하시겠습니까??")){
                 $.ajax({
-                    url : "/stock/deleteItem",
+                    url : "/calculate/deleteMonItem",
                     async : false, // 비동기모드 : true, 동기식모드 : false
                     type : 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(rows),
                     success : function(result) {
                         alert("삭제되었습니다.");
-                        getStockList();
+                        getMonList();
+                    },
+                    error : function(request,status,error) {
+                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+            }
+        }
+    }else if(type == 'add'){
+    	var item = addGrid.rows.filter(r => r.isSelected); 
+        var rows = [];
+        var params;
+         if(item.length == 0){
+            alert("선택된 행이 없습니다.");
+            return false;
+        }else{
+            for(var i =0; i< item.length ; i++){
+                rows.push(item[i].dataItem);
+            }
+            if(confirm("선택한 행들을 삭제 하시겠습니까??")){
+                $.ajax({
+                    url : "/calculate/deleteAddItem",
+                    async : false, // 비동기모드 : true, 동기식모드 : false
+                    type : 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(rows),
+                    success : function(result) {
+                        alert("삭제되었습니다.");
+                        getAddList();
                     },
                     error : function(request,status,error) {
                         alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -433,14 +474,14 @@ function deleteRows(type){
             }
             if(confirm("선택한 행들을 삭제 하시겠습니까??")){
                 $.ajax({
-                    url : "/stock/deleteClassifi",
+                    url : "/calcutage/deleteClassifiItem",
                     async : false, // 비동기모드 : true, 동기식모드 : false
                     type : 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(rows),
                     success : function(result) {
                         alert("삭제되었습니다.");
-                        getCategyList('classifi', result);
+                        getClassifiList();
                     },
                     error : function(request,status,error) {
                         alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -451,6 +492,240 @@ function deleteRows(type){
     }   
 }
 
+
+//데이터 저장
+function saveGrid(type){
+  if(type == "mon"){
+      var editItem = monView.itemsEdited;
+      var addItem  = monView.itemsAdded;
+      var rows = [];
+      for(var i =0; i< editItem.length ; i++){
+              rows.push(editItem[i]);
+      }
+      for(var i=0; i< addItem.length; i++){
+          rows.push(addItem[i]);
+      }
+
+      wijmo.Control.getControl("#editGrid").refresh(true);
+      if(confirm("변경한 내용을 저장 하시겠습니까??")){
+          $.ajax({
+              url : "/calculage/saveMon",
+              async : false, // 비동기모드 : true, 동기식모드 : false
+              type : 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(rows),
+              success : function(result) {
+                  alert("저장되었습니다.");
+                  loadGridMonList('mon', result);
+              },
+              error : function(request,status,error) {
+                  alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+              }
+          });
+      }
+  }else if(type == 'add'){
+      if(addView.itemCount > 0){
+          var editItem = addView.itemsEdited;
+          var addItem  = addView.itemsAdded;
+          var rows = [];
+          for(var i =0; i< editItem.length ; i++){
+                  rows.push(editItem[i]);
+          }
+          for(var i=0; i< addItem.length; i++){
+              rows.push(addItem[i]);
+          }
+          if(confirm("저장 하시겠습니까??")){
+              $.ajax({
+                  url : "/calculate/saveAdd",
+                  async : false, // 비동기모드 : true, 동기식모드 : false
+                  type : 'POST',
+                  contentType: 'application/json',
+                  data: JSON.stringify(rows),
+                  success : function(result) {
+                      alert("저장되었습니다.");
+                      getAddList();
+                  },
+                  error : function(request,status,error) {
+                      alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                  }
+              });
+          }
+      }else if(type == 'classifi'){
+    	  if(classifiView.itemCount > 0){
+              var editItem = classifiView.itemsEdited;
+              var addItem  = classifiView.itemsAdded;
+              var rows = [];
+              for(var i =0; i< editItem.length ; i++){
+                      rows.push(editItem[i]);
+              }
+              for(var i=0; i< addItem.length; i++){
+                  rows.push(addItem[i]);
+              }
+              if(confirm("저장 하시겠습니까??")){
+                  $.ajax({
+                      url : "/calculate/saveClassifi",
+                      async : false, // 비동기모드 : true, 동기식모드 : false
+                      type : 'POST',
+                      contentType: 'application/json',
+                      data: JSON.stringify(rows),
+                      success : function(result) {
+                          alert("저장되었습니다.");
+                          getClassifiList();
+                      },
+                      error : function(request,status,error) {
+                          alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                      }
+                  });
+              }
+      }else if(type == 'monExcel'){// 엑셀 업로드 저장하기
+          var item  = monGrid.rows;
+          var rows = [];
+          var params;
+          for(var i=0; i< item.length; i++){
+              var value = wijmo.changeType(excelGrid.collectionView.items[i].원가, wijmo.DataType.Number, null);
+              if(!wijmo.isNumber(value)){
+                  alert("원가는 숫자만 입력 가능합니다.");
+                  return false;
+              }
+              params={
+                  lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,3),
+                  itemCd : excelGrid.collectionView.items[i].물품코드,
+                  itemNm : excelGrid.collectionView.items[i].물품명,
+                  cost : excelGrid.collectionView.items[i].원가
+              }
+              rows.push(params);
+          }
+          if(confirm("저장 하시겠습니까??")){
+              $.ajax({
+                  url : "/stock/saveStock",
+                  async : false, // 비동기모드 : true, 동기식모드 : false
+                  type : 'POST',
+                  contentType: 'application/json',
+                  data: JSON.stringify(rows),
+                  success : function(result) {
+                      alert("총 " + result + "건이 저장되었습니다.");
+                      getStockList();
+                  },
+                  error : function(request,status,error) {
+                      alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                  }
+              });
+          }
+      }else if(type == 'addExcel'){// 엑셀 업로드 저장하기
+          var item  = monGrid.rows;
+          var rows = [];
+          var params;
+          for(var i=0; i< item.length; i++){
+              var value = wijmo.changeType(excelGrid.collectionView.items[i].원가, wijmo.DataType.Number, null);
+              if(!wijmo.isNumber(value)){
+                  alert("원가는 숫자만 입력 가능합니다.");
+                  return false;
+              }
+              params={
+                  lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,3),
+                  itemCd : excelGrid.collectionView.items[i].물품코드,
+                  itemNm : excelGrid.collectionView.items[i].물품명,
+                  cost : excelGrid.collectionView.items[i].원가
+              }
+              rows.push(params);
+          }
+          if(confirm("저장 하시겠습니까??")){
+              $.ajax({
+                  url : "/stock/saveStock",
+                  async : false, // 비동기모드 : true, 동기식모드 : false
+                  type : 'POST',
+                  contentType: 'application/json',
+                  data: JSON.stringify(rows),
+                  success : function(result) {
+                      alert("총 " + result + "건이 저장되었습니다.");
+                      getStockList();
+                  },
+                  error : function(request,status,error) {
+                      alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                  }
+              });
+          }
+      }
+      
+  }
+}
+
+
+//물품 중복 체크
+  function dupCheckItem() {
+      if($("#category1").val() == "all"){
+          alert("카테고리를 선택하시기 바랍니다.");
+          return false;
+      }else if($("#product").val().trim().length == 0){
+          alert("상품명을 입력하시기 바랍니다.");
+          return false;
+      }else if($("#code").val().length < 4){
+          alert("코드는 4자리 입니다.ex)0001");
+          return false;
+      }else if($("#cost").val().length < 1){
+          alert("원가를 입력하시기 바랍니다.");
+          return false;
+      }
+      
+      var params = {
+          lCategyCd : $("#category1").val(),
+          itemCd : $("#category1").val() + $("#code").val(),
+          itemNm : $("#product").val(),
+          cost : $("#cost").val()
+      };
+      $.ajax({
+          url : "/stock/dupCheckItem",
+          async : false, // 비동기모드 : true, 동기식모드 : false
+          type : 'POST',
+          data: params,
+          success : function(result) {
+              if(result != "" ){
+                  alert("이미 등록된 물품코드 입니다.");
+                  dupCheckItemFlag = false;
+              }else{
+                  alert("등록 가능한 물품코드 입니다.");
+                  dupCheckItemFlag = true;
+
+              }
+          },
+          error : function(request,status,error) {
+              alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+          }
+      });
+  }
+  // 물품 추가하기
+  function addItem(){
+      if(!dupCheckItemFlag){
+          alert("중복확인을 먼저 하시기 바랍니다.");
+          return false;
+      }else{
+          var params = {
+              lCategyCd : $("#category1").val(),
+              itemCd : $("#category1").val() + $("#code").val(),
+              itemNm : $("#product").val(),
+              cost : $("#cost").val()
+          };
+          $.ajax({
+              url : "/stock/addItem",
+              async : false, // 비동기모드 : true, 동기식모드 : false
+              type : 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(params),
+              success : function(result) {
+                      alert("등록 되었습니다.");
+                      dupCheckItemFlag = false;
+                      $("#totItemCnt").val(parseInt($("#totItemCnt").val()) + 1);
+                      $("#totalItemCnt").text($("#totItemCnt").val().toLocaleString('ko-KR') + "개");
+                      closePop();
+                      getStockList();
+              },
+              error : function(request,status,error) {
+                  alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+              }
+          });
+      }
+  }
+  
 function monExportExcel(){
 	var gridView = monGrid.collectionView;
 	var oldPgSize = gridView.pageSize;
@@ -478,7 +753,7 @@ function addExportExcel(){
   addGrid.beginUpdate();
   addView.pageSize = 0;
 
-  wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(monGrid, {includeCellStyles: true, includeColumnHeaders: true}, '부가수익.xlsx',
+  wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(addGrid, {includeCellStyles: true, includeColumnHeaders: true}, '부가수익.xlsx',
 	      saved => {
 	    	gridView.pageSize = oldPgSize;
 	    	gridView.moveToPage(oldPgIndex);
@@ -523,11 +798,9 @@ function addExportExcel(){
                         </dl>
                     </div>
                     <div class="admin_utility">
-                        <form action="#" method="post">
-                            <label for="Date">조회일</label>
-                            <input type="date" id="date" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey('mon');">
-                            <button class="admin_utility_btn">조회</button>
-                        </form>
+                        <label for="Date">조회일</label>
+                        <input type="month" id="date" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey('mon');">
+                        <button class="admin_utility_btn">조회</button>
                         <div class="admin_btn">
                             <button class="btn">엑셀 업로드</button>
                             <button class="btn">엑셀 다운로드</button>
@@ -551,15 +824,15 @@ function addExportExcel(){
                             <div class="summary">
                                 <dl>
                                     <dt>미수금</dt>
-                                    <dd id="lableOutCost">0000원</dd>
+                                    <dd id="lableOutCost">0원</dd>
                                 </dl>
                                 <dl>
                                     <dt>입금금액</dt>
-                                    <dd id="lableDepositCost">0000원</dd>
+                                    <dd id="lableDepositCost">0원</dd>
                                 </dl>
                                 <dl>
                                     <dt>추가금</dt>
-                                    <dd id="lableAddCost">0000원</dd>
+                                    <dd id="lableAddCost">0원</dd>
                                 </dl>
                             </div>
                         </div>
@@ -595,17 +868,15 @@ function addExportExcel(){
                         </dl>
                         <dl>
                             <dt>총 이월금</dt>
-                            <dd>${totalAddCost.outcost}원</dd>
+                            <dd>${totalAddCost.overcost}원</dd>
                         </dl>
-                        <a href="#add_category">분류명생성</a>
-                        <a href="#add_breakdown">내역생성</a>
+                        <a href="javascript:void(0);" onclick="showPop('add_category');">분류명생성</a>
+                    	<a href="javascript:void(0);" onclick="showPop('add_breakdown');">내역생성</a>
                     </div>
                     <div class="admin_utility">
-                        <form action="#" method="post">
-                            <label for="Date">방문일</label>
-                            <input type="date" id="date" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey('add');">
-                            <button class="admin_utility_btn" onClick="getAddList();">조회</button>
-                        </form>
+                        <label for="date2">방문일</label>
+                        <input type="month" id="date2" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey('add');">
+                        <button class="admin_utility_btn" onClick="getAddList();">조회</button>
                         <div class="admin_btn">
                             <button class="btn">거래명세서 출력</button>
                             <button class="btn">엑셀 업로드</button>
@@ -615,42 +886,40 @@ function addExportExcel(){
                     <div class="admin_content">
                         <!-- 필터 영역 admin_filter -->
                         <div class="admin_filter">
-                            <form action="#" id="search_form" name="search_form">
-                                <label for="con">검색조건</label>
-                                <select name="con" id="con">
-                                    <option value="all" selected="selected">전체</option>
-                                    <option value="site">지역</option>
-                                    <option value="building">건물명</option>
-                                    <option value="depositor">입금자명</option>
-                                </select>
-                                <label for="inq" onkeyup="enterkey('add');"></label>
-                                <input type="text" placeholder=",로 다중검색 가능" onkeyup="enterkey('add');">
-                                <button type="button" onClick="getAddList();">조회</button>
-                            </form>
+                            <label for="con2">검색조건</label>
+                            <select name="con2" id="con2">
+                                <option value="all" selected="selected">전체</option>
+                                <option value="site">지역</option>
+                                <option value="building">건물명</option>
+                                <option value="depositor">입금자명</option>
+                            </select>
+                            <label for="inq2" onkeyup="enterkey('add');"></label>
+                            <input type="text" id="inq2" placeholder=",로 다중검색 가능" onkeyup="enterkey('add');">
+                            <button type="button" onClick="getAddList();">조회</button>
                             <div class="summary" style="position: relative; top:10px;">
                                 <dl>
                                     <dt>견적</dt>
-                                    <dd id="lableQuoteCost">0000원</dd>
+                                    <dd id="addlableQuoteCost">0원</dd>
                                 </dl>
                                 <dl>
                                     <dt>추가금</dt>
-                                    <dd id="lableAddCost">0000원</dd>
+                                    <dd id="addlableAddCost">0원</dd>
                                 </dl>
                                 <dl>
                                     <dt>재료비</dt>
-                                    <dd id="lableMaterCost">0000원</dd>
+                                    <dd id="addlableMaterCost">0원</dd>
                                 </dl>
                                 <dl>
                                     <dt>외주비</dt>
-                                    <dd id="lableOutscCost">0000원</dd>
+                                    <dd id="addlableOutscCost">0원</dd>
                                 </dl>
                                 <dl>
                                     <dt>미수금</dt>
-                                    <dd id="lableOverCost">0000원</dd>
+                                    <dd id="addlableOverCost">0원</dd>
                                 </dl>
                                 <dl>
                                     <dt>입금금액</dt>
-                                    <dd id="lableDepositCost">0000원</dd>
+                                    <dd id="addlableDepositCost">0원</dd>
                                 </dl>
                             </div>
                         </div>
