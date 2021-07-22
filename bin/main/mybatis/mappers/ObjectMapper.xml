@@ -135,7 +135,7 @@
 		WHERE staff_id=#{id}
 	</update>
 
-	<select id="getBldgList" parameterType="BldgVo" resultType="BldgVo">
+	<select id="getBuildingList" parameterType="BldgVo" resultType="BldgVo">
 	SELECT
 		BAS.area_cd ,
 		BAS.area_nm ,
@@ -228,5 +228,48 @@
 		</if>
 	order by BAS.CRET_DT
 	</select>
-	
+
+	<select id="dupCheckBuilding" parameterType="hashMap" resultType="Integer">
+	select count(bldg_cd)
+	  from WEB.bldg_bas bb 
+	 where 1=1
+	   and area_cd  = #{areaCd}
+	   and zone = #{zone}
+	   and dtl_addr  = #{dtlAddr}
+	</select>
+
+	<select id="getMaxBldgCd" resultType="String">
+	 select bldg_cd
+	   from web.bldg_bas
+	  where 1=1
+	  order by bldg_cd  desc
+	  limit 1
+	</select>
+
+	<insert id="addBuildingBas" parameterType="hashMap">
+	insert into web.bldg_Bas 
+	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, con_cost, con_from_dt, con_to_dt,  surtax_yn,cret_dt, cret_id, updt_dt, updt_id, zone, memo)
+	values
+	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, #{pnum}, #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxYn}, now(), #{id}, now(), #{id}, #{zone}, #{memo})
+	</insert>
+	<insert id="addBuildingDetail" parameterType="hashMap">
+	insert into web.bldg_dtl
+	(bldg_cd, dong_num,  active_yn, dong_qr_url, cret_dt, cret_id, updt_dt, updt_id, clean_cnt, from_dt, to_dt)
+	values
+	(#{bldgCd}, #{dongNum},#{activeYn}, #{dongQrUrl}, now(), #{cretId}, now(), #{updtId}, #{cleanCnt}, #{fromDt}, #{toDt})
+	</insert>
+
+	<select id="getBldgInfo" resultType="hashMap">
+	select
+		(
+			select
+				count(*)
+			from web.bldg_Bas
+		) as bas_cnt ,
+		(
+			select
+				count(*)
+			from web.bldg_dtl 
+		) as dtl_cnt
+	</select>
 </mapper>
