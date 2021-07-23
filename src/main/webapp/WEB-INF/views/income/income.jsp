@@ -8,6 +8,44 @@
 </head>
 
 <script type="text/javascript">
+class RestrictedMergeManager extends wijmo.grid.MergeManager {
+    getMergedRange(p, r, c, clip = true) {
+        //
+        //기본 셀 범위 생성
+        var rng = null;
+        //
+        // 단일 셀로 시작
+        rng = new wijmo.grid.CellRange(r, c);
+        var pcol = c > 0 ? c - 1 : c;
+        //
+        // 병합에 사용할 참조 값 가져오기
+        var val = p.getCellData(r, c, false);
+        var pval = p.getCellData(r, pcol, false);
+        //
+        // 위로 확장
+        while (rng.row > 0 &&
+            p.getCellData(rng.row - 1, c, false) == val &&
+            p.getCellData(rng.row - 1, pcol, false) == pval) {
+            rng.row--;
+        }
+        //
+        // 아래로 확장
+        while (rng.row2 < p.rows.length - 1 &&
+            p.getCellData(rng.row2 + 1, c, false) == val &&
+            p.getCellData(rng.row2 + 1, pcol, false) == pval) {
+            rng.row2++;
+        }
+        //
+        //단일 셀 범위에는 무시
+        if (rng.isSingleCell) {
+            rng = null;
+        }
+        //
+        // 마무리
+        return rng;
+    }
+}
+
 var incomeView;
 var incomeGridPager;
 var incomeGrid;
@@ -46,19 +84,20 @@ function loadGridIncomeList(type, result){
 		    });
 		   
 		   incomeColumns = [
-			      { binding: 'type', header: '분야', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'depositDt', header: '일자', isReadOnly: true, width: 0, align:"center"  },
-			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 150, align:"center" },
-			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 150, align:"center"  },
-			      { binding: 'conCost', header: '계약금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
-			      { binding: 'addCost', header: '추가금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum'  },
-			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
-			      { binding: 'depositCost', header: '입금금액', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' }
+			      { binding: 'depositDt', header: '일자', isReadOnly: true, width: 100, align:"center", allowMerging: true  },
+			      { binding: 'type', header: '분야', isReadOnly: true, width: 100, align:"center", allowMerging: true },
+			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 100, align:"center", allowMerging: true },
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 150, align:"center", allowMerging: false  },
+			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 150, align:"center" , allowMerging: false  },
+			      { binding: 'conCost', header: '계약금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false  },
+			      { binding: 'addCost', header: '추가금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false   },
+			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false  },
+			      { binding: 'depositCost', header: '입금금액', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false  }
 			];
 		    
 		   incomeGrid = new wijmo.grid.FlexGrid('#incomeGrid', {
 			    autoGenerateColumns: false,
+			    allowMerging: 'Cells',
 			    alternatingRowStep: 0,
 			    columns: incomeColumns,
 			    itemsSource: incomeView
@@ -75,6 +114,9 @@ function loadGridIncomeList(type, result){
 	                cell.textContent = (r + 1).toString();
 	            }
 	        };
+	        
+	     // 사용자 지정 병합 매니저 적용
+	        incomeGrid.mergeManager = new RestrictedMergeManager();
 			  
 	  }else{	
 		  //월관리
@@ -121,6 +163,7 @@ function getIncomeList(){
 	        $("#lableAddCost").text(result.addcost+ "원");
 	        $("#lableDepositCost").text(result.depositcost+ "원");
 	        $("#lableOutCost").text(result.outcost+ "원");
+	        $("#labelConCost").text(result.concost+ "원");
 
 	      },
 	      error: function(request, status, error) {
@@ -206,19 +249,19 @@ function exportExcel(){
                         <div class="summary">
                             <dl>
                                 <dt>매출액</dt>
-                                <dd id="labelConCost">0000원</dd>
+                                <dd id="labelConCost">0원</dd>
                             </dl>
                             <dl>
                                 <dt>미수금</dt>
-                                <dd id="lableOutCost">0000원</dd>
+                                <dd id="lableOutCost">0원</dd>
                             </dl>
                             <dl>
                                 <dt>입금금액</dt>
-                                <dd  id="lableDepositCost">0000원</dd>
+                                <dd  id="lableDepositCost">0원</dd>
                             </dl>
                             <dl>
                                 <dt>추가금</dt>
-                                <dd  id="lableAddCost">0000원</dd>
+                                <dd  id="lableAddCost">0원</dd>
                             </dl>
                         </div>
                     </div>

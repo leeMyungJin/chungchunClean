@@ -18,10 +18,10 @@ var addGridPager;
 var addGrid;
 var addColumns;
 
-var categoryGrid;
-var categoryView;
-var categoryGridPager;
-var categorySelector;
+var classifiGrid;
+var classifiView;
+var classifiGridPager;
+var classifiSelector;
 var dupCheckItemFlag = false;
 
 var excelGrid;
@@ -83,7 +83,7 @@ function loadGridMonList(type, result){
 		        cv: monView
 		    });
 		   
-		   monColumns = [
+ 		   monColumns = [
 			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'bldgCd', header: '건물코드', isReadOnly: true, width: 0, align:"center"  },
 			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 100, align:"center"  },
@@ -108,15 +108,13 @@ function loadGridMonList(type, result){
 			  
 		   monGrid.columnFooters.rows.push(new wijmo.grid.GroupRow());
 		   monGrid.bottomLeftCells.setCellData(0, 0, 'Σ');
-		   
-		   	_setUserGridLayout('monLayout', monGrid, monColumns);
-		   	
-		   	//행번호
-		   	monGrid.itemFormatter = function (panel, r, c, cell) { 
+	  	
+		   monGrid.itemFormatter = function (panel, r, c, cell) { 
 	            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
 	                cell.textContent = (r + 1).toString();
 	            }
 	        };
+		   	_setUserGridLayout('monLayout', monGrid, monColumns);
 	    
 	        
 			//부가수익 
@@ -149,18 +147,16 @@ function loadGridMonList(type, result){
 			    columns: addColumns,
 			    itemsSource: addView
 			  });
-			  
-		   	_setUserGridLayout('addLayout', addGrid, addColumns);
-		   	
+		
 			addGrid.columnFooters.rows.push(new wijmo.grid.GroupRow());
 			addGrid.bottomLeftCells.setCellData(0, 0, 'Σ');
 		   	
-		   	//행번호
 		   	addGrid.itemFormatter = function (panel, r, c, cell) { 
 	            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
 	                cell.textContent = (r + 1).toString();
 	            }
 	        };
+		   	_setUserGridLayout('addLayout', addGrid, addColumns);
 	        
 	        
 	        //분류 추가 팝업 그리드
@@ -173,6 +169,7 @@ function loadGridMonList(type, result){
 	            headerFormat: '{currentPage:n0} / {pageCount:n0}',
 	            cv: classifiView
 	        });
+	        
 	        classifiGrid = new wijmo.grid.FlexGrid('#classifiGrid', {
 	            autoGenerateColumns: false,
 	            alternatingRowStep: 0,
@@ -211,18 +208,14 @@ function loadGridMonList(type, result){
 	            },
 	            itemsSource: classifiView,
 	        });
+	        
 	        classifiSelector = new wijmo.grid.selector.Selector(classifiGrid);
+	        
 	        editGrid = new wijmo.grid.FlexGrid('#editGrid', {
 	            itemsSource: classifiView.itemsEdited,
 	            isReadOnly: true
 	        });
 	        
-	        editGrid = new wijmo.grid.FlexGrid('#editGrid', {
-	            itemsSource: currentView.itemsEdited,
-	            isReadOnly: true
-	        });
-	    
-		   	
 			  
 	  }else if(type == "classifi"){
 	        classifiView = new wijmo.collections.CollectionView(result, {
@@ -241,7 +234,7 @@ function loadGridMonList(type, result){
 		  monGridPager.cv = monView;
 		  monGrid.itemsSource = monView;
 		  
-	  }else{	  
+	  }else if(type == "add"){	  
 		  //부가수익 
 		   addView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
@@ -280,7 +273,7 @@ function getMonList(){
       	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 
       }
-  });
+  	});
 	
 	$.ajax({
 	      type : 'POST',
@@ -323,33 +316,33 @@ function getAddList(){
 	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 
 	      }
-	  });
-		
-		$.ajax({
-		      type : 'POST',
-		      url : '/calculate/getMonlableCost',
-		      async : false, // 비동기모드 : true, 동기식모드 : false
-		      dataType : null,
-		      data : param,
-		      success : function(result) {
-		      	console.log(result);
-		        $("#addlableMaterCost").text(result.matercost+ "원");
-		        $("#addlableDepositCost").text(result.outsccost+ "원");
-		        $("#addlableOutscCost").text(result.depositcost+ "원");
-		        $("#addlableQuoteCost").text(result.quotecost+ "원");
-		        $("#addlableAddCost").text(result.addcost+ "원");
-		        $("#addlableOverCost").text(result.overcost+ "원");
-		      },
-		      error: function(request, status, error) {
-		      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+	});
+	
+	$.ajax({
+	      type : 'POST',
+	      url : '/calculate/getMonlableCost',
+	      async : false, // 비동기모드 : true, 동기식모드 : false
+	      dataType : null,
+	      data : param,
+	      success : function(result) {
+	      	console.log(result);
+	        $("#addlableMaterCost").text(result.matercost+ "원");
+	        $("#addlableDepositCost").text(result.outsccost+ "원");
+	        $("#addlableOutscCost").text(result.depositcost+ "원");
+	        $("#addlableQuoteCost").text(result.quotecost+ "원");
+	        $("#addlableAddCost").text(result.addcost+ "원");
+	        $("#addlableOverCost").text(result.overcost+ "원");
+	      },
+	      error: function(request, status, error) {
+	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 
-		      }
-		  });
+	      }
+	  });
 }
 
 function getClassifiList(){
     $.ajax({
-           url : "/stock/getClassifiList",
+           url : "/calculate/getClassifiList",
            async : false, // 비동기모드 : true, 동기식모드 : false
            type : 'POST',
            success : function(result) {
@@ -365,23 +358,21 @@ function getClassifiList(){
 //팝업 오픈
 function showPop(pop){
 	if(pop == "add_category"){
-        getCategyList();
-	}else if(pop == "add_product"){
-        $('#classifi1')
+		getClassifiList();
+		
+	}else if(pop == "add_breakdown"){
+       /*  $('#classifi1')
             .empty()
             .append('<option selected="selected" value="all" selected>전체</option>');
-   /*      $('#category2')
-            .empty()
-            .append('<option selected="selected" value="all" selected>전체</option>'); */
         getClassifiDtl();
         $("#classifi1").val("all");
         $("#classifi2").val("all");
         $("#product").val("");
         $("#cost").val("");
-        $("#code").val("");
+        $("#code").val(""); */
 	}
-	 $('#'+pop).addClass('is-visible');
-    
+	
+	$('#'+pop).addClass('is-visible');
 }
 
 //팝업 종료
@@ -390,6 +381,7 @@ function closePop(){
     add = false;
     classifiGrid.allowAddNew = add;
 }
+
 // 행추가
 function addRow(type){
     if(type == 'mon'){
@@ -550,104 +542,104 @@ function saveGrid(type){
                   }
               });
           }
-      }else if(type == 'classifi'){
-    	  if(classifiView.itemCount > 0){
-              var editItem = classifiView.itemsEdited;
-              var addItem  = classifiView.itemsAdded;
-              var rows = [];
-              for(var i =0; i< editItem.length ; i++){
-                      rows.push(editItem[i]);
-              }
-              for(var i=0; i< addItem.length; i++){
-                  rows.push(addItem[i]);
-              }
-              if(confirm("저장 하시겠습니까??")){
-                  $.ajax({
-                      url : "/calculate/saveClassifi",
-                      async : false, // 비동기모드 : true, 동기식모드 : false
-                      type : 'POST',
-                      contentType: 'application/json',
-                      data: JSON.stringify(rows),
-                      success : function(result) {
-                          alert("저장되었습니다.");
-                          getClassifiList();
-                      },
-                      error : function(request,status,error) {
-                          alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                      }
-                  });
-              }
-      }else if(type == 'monExcel'){// 엑셀 업로드 저장하기
-          var item  = monGrid.rows;
-          var rows = [];
-          var params;
-          for(var i=0; i< item.length; i++){
-              var value = wijmo.changeType(excelGrid.collectionView.items[i].원가, wijmo.DataType.Number, null);
-              if(!wijmo.isNumber(value)){
-                  alert("원가는 숫자만 입력 가능합니다.");
-                  return false;
-              }
-              params={
-                  lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,3),
-                  itemCd : excelGrid.collectionView.items[i].물품코드,
-                  itemNm : excelGrid.collectionView.items[i].물품명,
-                  cost : excelGrid.collectionView.items[i].원가
-              }
-              rows.push(params);
-          }
-          if(confirm("저장 하시겠습니까??")){
-              $.ajax({
-                  url : "/stock/saveStock",
-                  async : false, // 비동기모드 : true, 동기식모드 : false
-                  type : 'POST',
-                  contentType: 'application/json',
-                  data: JSON.stringify(rows),
-                  success : function(result) {
-                      alert("총 " + result + "건이 저장되었습니다.");
-                      getStockList();
-                  },
-                  error : function(request,status,error) {
-                      alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                  }
-              });
-          }
-      }else if(type == 'addExcel'){// 엑셀 업로드 저장하기
-          var item  = monGrid.rows;
-          var rows = [];
-          var params;
-          for(var i=0; i< item.length; i++){
-              var value = wijmo.changeType(excelGrid.collectionView.items[i].원가, wijmo.DataType.Number, null);
-              if(!wijmo.isNumber(value)){
-                  alert("원가는 숫자만 입력 가능합니다.");
-                  return false;
-              }
-              params={
-                  lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,3),
-                  itemCd : excelGrid.collectionView.items[i].물품코드,
-                  itemNm : excelGrid.collectionView.items[i].물품명,
-                  cost : excelGrid.collectionView.items[i].원가
-              }
-              rows.push(params);
-          }
-          if(confirm("저장 하시겠습니까??")){
-              $.ajax({
-                  url : "/stock/saveStock",
-                  async : false, // 비동기모드 : true, 동기식모드 : false
-                  type : 'POST',
-                  contentType: 'application/json',
-                  data: JSON.stringify(rows),
-                  success : function(result) {
-                      alert("총 " + result + "건이 저장되었습니다.");
-                      getStockList();
-                  },
-                  error : function(request,status,error) {
-                      alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                  }
-              });
-          }
       }
-      
-  }
+     }else if(type == 'classifi'){
+   	  if(classifiView.itemCount > 0){
+             var editItem = classifiView.itemsEdited;
+             var addItem  = classifiView.itemsAdded;
+             var rows = [];
+             for(var i =0; i< editItem.length ; i++){
+                     rows.push(editItem[i]);
+             }
+             for(var i=0; i< addItem.length; i++){
+                 rows.push(addItem[i]);
+             }
+             if(confirm("저장 하시겠습니까??")){
+                 $.ajax({
+                     url : "/calculate/saveClassifi",
+                     async : false, // 비동기모드 : true, 동기식모드 : false
+                     type : 'POST',
+                     contentType: 'application/json',
+                     data: JSON.stringify(rows),
+                     success : function(result) {
+                         alert("저장되었습니다.");
+                         getClassifiList();
+                     },
+                     error : function(request,status,error) {
+                         alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                     }
+                 });
+             }
+   	  	}
+     }else if(type == 'monExcel'){// 엑셀 업로드 저장하기
+         var item  = monGrid.rows;
+         var rows = [];
+         var params;
+         for(var i=0; i< item.length; i++){
+             var value = wijmo.changeType(excelGrid.collectionView.items[i].원가, wijmo.DataType.Number, null);
+             if(!wijmo.isNumber(value)){
+                 alert("원가는 숫자만 입력 가능합니다.");
+                 return false;
+             }
+             params={
+                 lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,3),
+                 itemCd : excelGrid.collectionView.items[i].물품코드,
+                 itemNm : excelGrid.collectionView.items[i].물품명,
+                 cost : excelGrid.collectionView.items[i].원가
+             }
+             rows.push(params);
+         }
+         if(confirm("저장 하시겠습니까??")){
+             $.ajax({
+                 url : "/stock/saveStock",
+                 async : false, // 비동기모드 : true, 동기식모드 : false
+                 type : 'POST',
+                 contentType: 'application/json',
+                 data: JSON.stringify(rows),
+                 success : function(result) {
+                     alert("총 " + result + "건이 저장되었습니다.");
+                     getStockList();
+                 },
+                 error : function(request,status,error) {
+                     alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                 }
+             });
+         }
+     }else if(type == 'addExcel'){// 엑셀 업로드 저장하기
+         var item  = monGrid.rows;
+         var rows = [];
+         var params;
+         for(var i=0; i< item.length; i++){
+             var value = wijmo.changeType(excelGrid.collectionView.items[i].원가, wijmo.DataType.Number, null);
+             if(!wijmo.isNumber(value)){
+                 alert("원가는 숫자만 입력 가능합니다.");
+                 return false;
+             }
+             params={
+                 lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,3),
+                 itemCd : excelGrid.collectionView.items[i].물품코드,
+                 itemNm : excelGrid.collectionView.items[i].물품명,
+                 cost : excelGrid.collectionView.items[i].원가
+             }
+             rows.push(params);
+         }
+         if(confirm("저장 하시겠습니까??")){
+             $.ajax({
+                 url : "/stock/saveStock",
+                 async : false, // 비동기모드 : true, 동기식모드 : false
+                 type : 'POST',
+                 contentType: 'application/json',
+                 data: JSON.stringify(rows),
+                 success : function(result) {
+                     alert("총 " + result + "건이 저장되었습니다.");
+                     getStockList();
+                 },
+                 error : function(request,status,error) {
+                     alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                 }
+             });
+         }
+     }
 }
 
 
@@ -693,6 +685,7 @@ function saveGrid(type){
           }
       });
   }
+  
   // 물품 추가하기
   function addItem(){
       if(!dupCheckItemFlag){
@@ -967,14 +960,13 @@ function addExportExcel(){
                    <button class="btn" onclick="addRow('classifi');">+ 행 추가</button>
                     <div id="classifiGrid"></div>
                     <div id="classifiGridPager" class="pager"></div>
-                    <div>
-                    <button class="btn" onclick="addRow('classifi');">+ 행 추가</button>
                 </div>
-                <div class="popup_btn_area">
-                    <div class="right">
-                        <button type="button" class="popup_btn" onclick="deleteRows('classifi');">삭제</button>
-                        <button type="button" class="popup_btn" onclick="saveGrid('classifi');">저장</button>
-                    </div>
+                    <button class="btn" onclick="addRow('classifi');">+ 행 추가</button>
+            </div>
+            <div class="popup_btn_area">
+                <div class="right">
+                    <button type="button" class="popup_btn" onclick="deleteRows('classifi');">삭제</button>
+                    <button type="button" class="popup_btn" onclick="saveGrid('classifi');">저장</button>
                 </div>
             </div>
         </div>
@@ -1013,5 +1005,10 @@ function addExportExcel(){
         </div>
     </div>
     <!--내역생성 팝업 영역 끝 -->
+        <!--물품추가 팝업 영역 끝-->
+    <!-- 추가된 행 / 수정된 행 처리용 그리드 -->
+    <div class="grid_wrap" id="editDiv" style="display:none;">
+        <div id="editGrid"  style="height:500px;"></div>
+    </div>
 </body>
 </html>

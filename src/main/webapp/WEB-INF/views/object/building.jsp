@@ -375,7 +375,7 @@ function addBuilding(){
                 error : function(request,status,error) {
                     alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                 }
-            }); */
+            });
             //상세정보 저장
             $.ajax({
                 url : "/object/addBuildingDetail",
