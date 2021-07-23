@@ -10,6 +10,7 @@ import com.chungchunClean.Mappers.CalculateMapper;
 import com.chungchunClean.Service.CalculateService;
 import com.chungchunClean.Util.Util;
 import com.chungchunClean.vo.CalculateVo;
+import com.chungchunClean.vo.StockVo;
 
 @Service
 public class CalculateServiceImpl implements CalculateService{
@@ -60,4 +61,63 @@ public class CalculateServiceImpl implements CalculateService{
 		
 		return calculateMapper.getAddlableCost(params);
 	}
+	
+	
+	@Override
+	public List<CalculateVo> getClassifiList(){
+
+		List<CalculateVo> calculateList = calculateMapper.getClassifiList();
+		return calculateList;
+	}
+	
+	@Override
+	public void deleteMonItem(List<CalculateVo> params) {
+		for(CalculateVo vo : params)
+			calculateMapper.deleteMonItem(vo);
+	}
+	
+	@Override
+	public void deleteAddItem(List<CalculateVo> params) {
+		for(CalculateVo vo : params)
+			calculateMapper.deleteAddItem(vo);
+	}
+	
+	@Override
+	public void deleteClassifiItem(List<CalculateVo> params) {
+		for(CalculateVo vo : params)
+			calculateMapper.deleteClassifiItem(vo);
+	}
+	
+	@Override
+	public void saveMon(List<CalculateVo> params) {
+		for(CalculateVo vo : params){
+			vo.setUpdtId("testId");
+			vo.setCretId("testId");
+			calculateMapper.saveMon(vo);
+		}
+	}	
+	
+	@Override
+	public void saveAdd(List<CalculateVo> params) {
+		for(CalculateVo vo : params){
+			vo.setUpdtId("testId");
+			vo.setCretId("testId");
+			calculateMapper.saveAdd(vo);
+		}
+	}	
+	
+	@Override
+	public void saveClassifi(List<CalculateVo> params) {
+		for(CalculateVo vo : params){
+			vo.setUpdtId("testId");
+			vo.setCretId("testId");
+			calculateMapper.saveClassifi(vo);
+		}
+	}	
+	
+	@Override
+	public String dupCheckClassifi(HashMap<String, String> params) {
+		return calculateMapper.dupCheckClassifi(params);
+	}
+
 }

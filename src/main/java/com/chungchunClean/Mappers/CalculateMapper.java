@@ -19,4 +19,16 @@ public interface CalculateMapper  {
 	public List<CalculateVo> getAddList(HashMap<String,Object> params);
 	public HashMap<String, Object> getAddTodayCost();
 	public HashMap<String, Object> getAddlableCost(HashMap<String,Object> params);
+	
+	public List<CalculateVo> getClassifiList();
+	
+    public void deleteMonItem(CalculateVo vo);
+    public void deleteAddItem(CalculateVo params);
+    public void deleteClassifiItem(CalculateVo params);
+    
+    public void saveMon(CalculateVo params);
+    public void saveAdd(CalculateVo params);
+    public void saveClassifi(CalculateVo params);
+    
+    public String dupCheckClassifi(HashMap<String, String> params);
 }

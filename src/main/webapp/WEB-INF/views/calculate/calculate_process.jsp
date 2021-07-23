@@ -174,33 +174,33 @@ function loadGridMonList(type, result){
 	            autoGenerateColumns: false,
 	            alternatingRowStep: 0,
 	            columns: [
-	                { binding: 'lCategyCd', header: '카테고리코드', isReadOnly: false, width: 230, align:"center"},
-	                { binding: 'lCategyNm', header: '카테고리명', isReadOnly: false,  width: '*', align:"center"},
-	                { binding: 'regDate', header: '등록일시', isReadOnly: true, width: 230, align:"center"  }
+	                { binding: 'classifiCd', header: '분류코드', isReadOnly: false, width: 230, align:"center"},
+	                { binding: 'classifiNm', header: '분류명', isReadOnly: false,  width: '*', align:"center"},
+	                { binding: 'cretDt', header: '등록일시', isReadOnly: true, width: 230, align:"center"  }
 	            ],
 	            beginningEdit: function (s, e) {
 	                var col = s.columns[e.col];
 	                var item = s.rows[e.row].dataItem;
-	                if(item.regDate != undefined){
-	                    if (col.binding == 'lCategyCd') {
+	                if(item.cretDt != undefined){
+	                    if (col.binding == 'classifiCd') {
 	                        e.cancel = true;
-	                        alert("카테고리코드는 신규 행일때만 입력이 가능합니다.");
+	                        alert("분류코드는 신규 행일때만 입력이 가능합니다.");
 	                    }
 	                }
 	            },
 	            cellEditEnding: function (s, e) {
 	                var col = s.columns[e.col];
-	                if (col.binding == 'lCategyCd') {
+	                if (col.binding == 'classifiCd') {
 	                    var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.String, col.format);
 	                    if (value.length != 3) {
 	                        e.cancel = true;
-	                        alert('카테고리코드는 3자리 입니다.');
+	                        alert('분류코드는 3자리 입니다.');
 	                        return false;
 	                    }
 	                    value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
 	                    if( !wijmo.isNumber(value) || value < 0){
 	                        e.cancel = true;
-	                        alert('카테고리코드는 숫자로만 입력 가능합니다.');
+	                        alert('분류코드는 숫자로만 입력 가능합니다.');
 	                        return false;
 	                    }
 
@@ -230,6 +230,7 @@ function loadGridMonList(type, result){
 		   monView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
 		       ,groupDescriptions: ['bldgNm']
+		   		,trackChanges: true
 		   });
 		  monGridPager.cv = monView;
 		  monGrid.itemsSource = monView;
@@ -239,6 +240,7 @@ function loadGridMonList(type, result){
 		   addView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
 		       ,groupDescriptions: ['bldgNm']
+	   			,trackChanges: true
 		   });
 		  addGridPager.cv = addView;
 		  addGrid.itemsSource = addView;
@@ -346,7 +348,7 @@ function getClassifiList(){
            async : false, // 비동기모드 : true, 동기식모드 : false
            type : 'POST',
            success : function(result) {
-        	loadGridMonList('classifi', result);
+        		loadGridMonList('classifi', result);
 
            },
            error : function(request,status,error) {
@@ -378,8 +380,7 @@ function showPop(pop){
 //팝업 종료
 function closePop(){
 	$('.popup').removeClass('is-visible');
-    add = false;
-    classifiGrid.allowAddNew = add;
+    classifiGrid.allowAddNew = false;
 }
 
 // 행추가

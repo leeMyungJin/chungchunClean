@@ -249,5 +249,36 @@ from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd
 	</if>
 </select>
 
+
+<select id="getClassifiList"  resultType="CalculateVo">
+	select classifi_cd, classifi_nm, to_char(cret_dt, 'YYYY-MM-DD') as cret_dt 
+	from web.adjust_add_cd_bas
+</select>
+
+<delete id="deleteMonItem" parameterType="CalculateVo">
+</delete>
+
+<delete id="deleteAddItem" parameterType="CalculateVo">
+</delete>
+
+<delete id="deleteClassifiItem" parameterType="CalculateVo">
+</delete>
+
+
+
+<insert id="saveMon" parameterType="CalculateVo">
+</insert>
+
+<insert id="saveAdd" parameterType="CalculateVo">
+</insert>
+
+<insert id="saveClassifi" parameterType="CalculateVo">
+</insert>
+
+<select id="dupCheckClassifi" resultType="String" parameterType="CalculateVo">
+</select>
+
+
+
 	
 </mapper>
