@@ -33,6 +33,7 @@ public class CalculateVo {
 	private String itemNm;
 	private String type;
 	private Integer conCost;
+	private String addSeq;
 	
 	public String getAreaCd() {
 		return areaCd;
@@ -220,6 +221,12 @@ public class CalculateVo {
 	public void setConCost(Integer conCost) {
 		this.conCost = conCost;
 	}
+	public String getAddSeq() {
+		return addSeq;
+	}
+	public void setAddSeq(String addSeq) {
+		this.addSeq = addSeq;
+	}
 	@Override
 	public String toString() {
 		return "CalculateVo [areaCd=" + areaCd + ", areaNm=" + areaNm + ", bldgNm=" + bldgNm + ", bldgCd=" + bldgCd
@@ -230,7 +237,7 @@ public class CalculateVo {
 				+ updtDt + ", updtId=" + updtId + ", outscCost=" + outscCost + ", materCost=" + materCost
 				+ ", quoteCost=" + quoteCost + ", addDt=" + addDt + ", classifiCd=" + classifiCd + ", classifiNm="
 				+ classifiNm + ", itemCd=" + itemCd + ", itemNm=" + itemNm + ", type=" + type + ", conCost=" + conCost
-				+ "]";
+				+ ", addSeq=" + addSeq + "]";
 	}
 	
 	

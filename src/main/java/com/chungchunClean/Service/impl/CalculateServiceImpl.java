@@ -64,28 +64,47 @@ public class CalculateServiceImpl implements CalculateService{
 	
 	
 	@Override
-	public List<CalculateVo> getClassifiList(){
+	public List<CalculateVo> getClassifiList(HashMap<String,Object> params){
 
-		List<CalculateVo> calculateList = calculateMapper.getClassifiList();
+		List<CalculateVo> calculateList = calculateMapper.getClassifiList(params);
 		return calculateList;
 	}
 	
+	
 	@Override
-	public void deleteMonItem(List<CalculateVo> params) {
+	public List<CalculateVo> getItemList(HashMap<String,Object> params){
+
+		List<CalculateVo> calculateList = calculateMapper.getItemList(params);
+		return calculateList;
+	}
+	
+	
+	@Override
+	public void deleteMon(List<CalculateVo> params) {
 		for(CalculateVo vo : params)
-			calculateMapper.deleteMonItem(vo);
+			calculateMapper.deleteMon(vo);
 	}
 	
 	@Override
-	public void deleteAddItem(List<CalculateVo> params) {
+	public void deleteAdd(List<CalculateVo> params) {
 		for(CalculateVo vo : params)
-			calculateMapper.deleteAddItem(vo);
+			calculateMapper.deleteAdd(vo);
 	}
 	
 	@Override
-	public void deleteClassifiItem(List<CalculateVo> params) {
-		for(CalculateVo vo : params)
-			calculateMapper.deleteClassifiItem(vo);
+	public void deleteClassifi(List<CalculateVo> params) {
+		for(CalculateVo vo : params) {
+			vo.setUpdtId("testId");
+			calculateMapper.deleteClassifi(vo);
+		}
+	}
+	
+	@Override
+	public void deleteItem(List<CalculateVo> params) {
+		for(CalculateVo vo : params) {
+			vo.setUpdtId("testId");
+			calculateMapper.deleteItem(vo);
+		}
 	}
 	
 	@Override
@@ -116,8 +135,12 @@ public class CalculateServiceImpl implements CalculateService{
 	}	
 	
 	@Override
-	public String dupCheckClassifi(HashMap<String, String> params) {
-		return calculateMapper.dupCheckClassifi(params);
+	public void saveItem(List<CalculateVo> params) {
+		for(CalculateVo vo : params){
+			vo.setUpdtId("testId");
+			vo.setCretId("testId");
+			calculateMapper.saveItem(vo);
+		}
 	}
 
 }

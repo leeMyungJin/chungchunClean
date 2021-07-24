@@ -24,6 +24,12 @@ var classifiGridPager;
 var classifiSelector;
 var dupCheckItemFlag = false;
 
+var itemGrid;
+var itemView;
+var itemGridPager;
+var itemSelector;
+var classifiList;
+
 var excelGrid;
 var excelView;
 var excelSelector;
@@ -44,7 +50,7 @@ function pageLoad(){
 	$('#fromDate').attr('max',today);
 	$('#toDate').attr('max',today);
 	
-	loadGridMonList('init');
+	loadGridList('init');
 }
 
 function tab_panel(showTab, hideTab){
@@ -70,7 +76,7 @@ function enterkey(type) {
 
 
 //그리드 초기 셋팅
-function loadGridMonList(type, result){
+function loadGridList(type, result){
 	  if(type == "init"){ 
 		  //월관리
 		   monView = new wijmo.collections.CollectionView(result, {
@@ -211,20 +217,72 @@ function loadGridMonList(type, result){
 	        
 	        classifiSelector = new wijmo.grid.selector.Selector(classifiGrid);
 	        
+	        
+	      //분류 내역 추가 팝업 그리드
+	        itemView = new wijmo.collections.CollectionView(result, {
+	            pageSize: 100
+	        });
+	    
+	        itemGridPager = new wijmo.input.CollectionViewNavigator('#itemGridPager', {
+	            byPage: true,
+	            headerFormat: '{currentPage:n0} / {pageCount:n0}',
+	            cv: itemView
+	        });
+	        
+	        classifiList = new wijmo.grid.DataMap(getClassifiList('itemPop'), 'id', 'name');
+	        itemGrid = new wijmo.grid.FlexGrid('#itemGrid', {
+	            autoGenerateColumns: false,
+	            alternatingRowStep: 0,
+	            columns: [
+	            	{ binding: 'classifiCd', header: '내역코드', isReadOnly: false, width: 230, align:"center" , dataMap: classifiList, dataMapEditor: 'DropDownList'},
+	            	{ binding: 'itemCd', header: '내역코드', isReadOnly: false, width: 230, align:"center"},
+	                { binding: 'itemNm', header: '내역명', isReadOnly: false,  width: '*', align:"center"},
+	                { binding: 'cretDt', header: '등록일시', isReadOnly: true, width: 230, align:"center"  }
+	            ],
+	            beginningEdit: function (s, e) {
+	                var col = s.columns[e.col];
+	                var item = s.rows[e.row].dataItem;
+	                if(item.cretDt != undefined){
+	                    if (col.binding == 'itemCd') {
+	                        e.cancel = true;
+	                        alert("내역코드는 신규 행일때만 입력이 가능합니다.");
+	                        
+	                    }else if (col.binding == 'classifiCd') {
+	                        e.cancel = true;
+	                        alert("분류코드는 신규 행일때만 입력이 가능합니다.");
+	                    }
+	                }
+	            },
+	            cellEditEnding: function (s, e) {
+	                var col = s.columns[e.col];
+	                if (col.binding == 'itemCd') {
+	                    var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.String, col.format);
+	                    if (value.length != 4) {
+	                        e.cancel = true;
+	                        alert('내역코드는 4자리 입니다.');
+	                        return false;
+	                    }
+	                    value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
+	                    if( !wijmo.isNumber(value) || value < 0){
+	                        e.cancel = true;
+	                        alert('내역코드는 숫자로만 입력 가능합니다.');
+	                        return false;
+	                    }
+
+	                }
+	            },
+	            itemsSource: itemView,
+	        });
+	        
+	        itemSelector = new wijmo.grid.selector.Selector(itemGrid);
+	        
+	        //수정용 그리드
 	        editGrid = new wijmo.grid.FlexGrid('#editGrid', {
 	            itemsSource: classifiView.itemsEdited,
 	            isReadOnly: true
 	        });
 	        
 			  
-	  }else if(type == "classifi"){
-	        classifiView = new wijmo.collections.CollectionView(result, {
-	            pageSize: 100,
-	            trackChanges: true
-	        });
-	        classifiGridPager.cv = classifiView;
-	        classifiGrid.itemsSource = classifiView;
-	        
 	  }else if(type == "mon"){
 		//월관리
 		   monView = new wijmo.collections.CollectionView(result, {
@@ -245,10 +303,30 @@ function loadGridMonList(type, result){
 		  addGridPager.cv = addView;
 		  addGrid.itemsSource = addView;
 		  
+	  }else if(type == "classifi"){
+	        classifiView = new wijmo.collections.CollectionView(result, {
+	            pageSize: 100,
+	            trackChanges: true
+	        });
+	        classifiGridPager.cv = classifiView;
+	        classifiGrid.itemsSource = classifiView;
+	        
+	  }else if(type == "item"){
+		    classifiList = new wijmo.grid.DataMap(getClassifiList('itemPop'), 'id', 'name');
+	        itemView = new wijmo.collections.CollectionView(result, {
+	            pageSize: 100,
+	            trackChanges: true
+	        });
+	        itemGridPager.cv = itemView;
+	        itemGrid.itemsSource = itemView;
+	        
 	  }
 	  
-	  refreshPaging(monGrid.collectionView.totalItemCount, 1, monGrid, 'monGrid');  // 페이징 초기 셋팅
-	  refreshPaging(addGrid.collectionView.totalItemCount, 1, addGrid, 'addGrid');  // 페이징 초기 셋팅 
+	  // 페이징 초기 셋팅
+	  refreshPaging(monGrid.collectionView.totalItemCount, 1, monGrid, 'monGrid');  
+	  refreshPaging(addGrid.collectionView.totalItemCount, 1, addGrid, 'addGrid');  
+	  refreshPaging(classifiGrid.collectionView.totalItemCount, 1, classifiGrid, 'classifiGrid');  
+	  refreshPaging(itemGrid.collectionView.totalItemCount, 1, itemGrid, 'itemGrid'); 
 	  
 }
 
@@ -269,7 +347,7 @@ function getMonList(){
       data : param,
       success : function(result) {
 	      	console.log("getMonList success");
-	      	loadGridMonList('mon', result);
+	      	loadGridList('mon', result);
       },
       error: function(request, status, error) {
       	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -312,7 +390,7 @@ function getAddList(){
 	      data : param,
 	      success : function(result) {
 	      	console.log("getAddList success");
-	      	loadGridMonList('search', result);
+	      	loadGridList('add', result);
 	      },
 	      error: function(request, status, error) {
 	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -342,47 +420,6 @@ function getAddList(){
 	  });
 }
 
-function getClassifiList(){
-    $.ajax({
-           url : "/calculate/getClassifiList",
-           async : false, // 비동기모드 : true, 동기식모드 : false
-           type : 'POST',
-           success : function(result) {
-        		loadGridMonList('classifi', result);
-
-           },
-           error : function(request,status,error) {
-            	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-           }
-         });
-}
-
-//팝업 오픈
-function showPop(pop){
-	if(pop == "add_category"){
-		getClassifiList();
-		
-	}else if(pop == "add_breakdown"){
-       /*  $('#classifi1')
-            .empty()
-            .append('<option selected="selected" value="all" selected>전체</option>');
-        getClassifiDtl();
-        $("#classifi1").val("all");
-        $("#classifi2").val("all");
-        $("#product").val("");
-        $("#cost").val("");
-        $("#code").val(""); */
-	}
-	
-	$('#'+pop).addClass('is-visible');
-}
-
-//팝업 종료
-function closePop(){
-	$('.popup').removeClass('is-visible');
-    classifiGrid.allowAddNew = false;
-}
-
 // 행추가
 function addRow(type){
     if(type == 'mon'){
@@ -393,6 +430,9 @@ function addRow(type){
     	
     }else if(type == 'classifi'){
         classifiGrid.allowAddNew = true;
+        
+    }else if(type == 'item'){
+        itemGrid.allowAddNew = true;
     }
 }
 
@@ -411,7 +451,7 @@ function deleteRows(type){
             }
             if(confirm("선택한 행들을 삭제 하시겠습니까??")){
                 $.ajax({
-                    url : "/calculate/deleteMonItem",
+                    url : "/calculate/deleteMon",
                     async : false, // 비동기모드 : true, 동기식모드 : false
                     type : 'POST',
                     contentType: 'application/json',
@@ -439,7 +479,7 @@ function deleteRows(type){
             }
             if(confirm("선택한 행들을 삭제 하시겠습니까??")){
                 $.ajax({
-                    url : "/calculate/deleteAddItem",
+                    url : "/calculate/deleteAdd",
                     async : false, // 비동기모드 : true, 동기식모드 : false
                     type : 'POST',
                     contentType: 'application/json',
@@ -467,14 +507,14 @@ function deleteRows(type){
             }
             if(confirm("선택한 행들을 삭제 하시겠습니까??")){
                 $.ajax({
-                    url : "/calcutage/deleteClassifiItem",
+                    url : "/calculate/deleteClassifi",
                     async : false, // 비동기모드 : true, 동기식모드 : false
                     type : 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(rows),
                     success : function(result) {
                         alert("삭제되었습니다.");
-                        getClassifiList();
+                        getClassifiList('list');
                     },
                     error : function(request,status,error) {
                         alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -482,7 +522,35 @@ function deleteRows(type){
                 });
             }
         }
-    }   
+    }else if(type == 'item'){
+        var item = itemGrid.rows.filter(r => r.isSelected);
+        var rows = [];
+        var params;
+         if(item.length == 0){
+            alert("선택된 행이 없습니다.");
+            return false;
+        }else{
+            for(var i =0; i< item.length ; i++){
+                rows.push(item[i].dataItem);
+            }
+            if(confirm("선택한 행들을 삭제 하시겠습니까??")){
+                $.ajax({
+                    url : "/calculate/deleteItem",
+                    async : false, // 비동기모드 : true, 동기식모드 : false
+                    type : 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(rows),
+                    success : function(result) {
+                        alert("삭제되었습니다.");
+                        getItemList('list');
+                    },
+                    error : function(request,status,error) {
+                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+            }
+        }
+    }      
 }
 
 
@@ -493,14 +561,15 @@ function saveGrid(type){
       var addItem  = monView.itemsAdded;
       var rows = [];
       for(var i =0; i< editItem.length ; i++){
-              rows.push(editItem[i]);
+    	  if(!saveVal(type, addItem[i])) return false;
+          rows.push(editItem[i]);
       }
       for(var i=0; i< addItem.length; i++){
           rows.push(addItem[i]);
       }
 
       wijmo.Control.getControl("#editGrid").refresh(true);
-      if(confirm("변경한 내용을 저장 하시겠습니까??")){
+      if(confirm("저장 하시겠습니까?")){
           $.ajax({
               url : "/calculage/saveMon",
               async : false, // 비동기모드 : true, 동기식모드 : false
@@ -509,7 +578,7 @@ function saveGrid(type){
               data: JSON.stringify(rows),
               success : function(result) {
                   alert("저장되었습니다.");
-                  loadGridMonList('mon', result);
+                  loadGridList('mon', result);
               },
               error : function(request,status,error) {
                   alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -522,12 +591,14 @@ function saveGrid(type){
           var addItem  = addView.itemsAdded;
           var rows = [];
           for(var i =0; i< editItem.length ; i++){
-                  rows.push(editItem[i]);
+        	  if(!saveVal(type, addItem[i])) return false;
+        	  rows.push(editItem[i]);
           }
           for(var i=0; i< addItem.length; i++){
               rows.push(addItem[i]);
           }
-          if(confirm("저장 하시겠습니까??")){
+          wijmo.Control.getControl("#editGrid").refresh(true);
+          if(confirm("저장 하시겠습니까?")){
               $.ajax({
                   url : "/calculate/saveAdd",
                   async : false, // 비동기모드 : true, 동기식모드 : false
@@ -546,16 +617,32 @@ function saveGrid(type){
       }
      }else if(type == 'classifi'){
    	  if(classifiView.itemCount > 0){
+   			var dupChk;
+		  	var dupChkList = getClassifiList('dupChk');
+   		  
              var editItem = classifiView.itemsEdited;
              var addItem  = classifiView.itemsAdded;
              var rows = [];
              for(var i =0; i< editItem.length ; i++){
-                     rows.push(editItem[i]);
+            	 if(!saveVal(type, editItem[i])) return false;
+                 rows.push(editItem[i]);
              }
              for(var i=0; i< addItem.length; i++){
-                 rows.push(addItem[i]);
+            	 if(!saveVal(type, addItem[i])) return false;
+            	 
+            	 dupChk = dupChkList.filter(function(element){
+          	        return element.classifiCd == addItem[i].classifiCd;
+          	    });
+ 	         	  
+ 	         	if(dupChk.length > 0){
+ 	         		alert( '분류코드 : '+addItem[i].classifiCd+ ' - 생성이력이 존재하는 분류코드입니다.');
+ 	         		return false;
+ 	         	}
+ 	         	 
+                rows.push(addItem[i]);
              }
-             if(confirm("저장 하시겠습니까??")){
+             wijmo.Control.getControl("#editGrid").refresh(true);
+             if(confirm("저장 하시겠습니까?")){
                  $.ajax({
                      url : "/calculate/saveClassifi",
                      async : false, // 비동기모드 : true, 동기식모드 : false
@@ -564,7 +651,7 @@ function saveGrid(type){
                      data: JSON.stringify(rows),
                      success : function(result) {
                          alert("저장되었습니다.");
-                         getClassifiList();
+                         getClassifiList('list');
                      },
                      error : function(request,status,error) {
                          alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -572,7 +659,51 @@ function saveGrid(type){
                  });
              }
    	  	}
-     }else if(type == 'monExcel'){// 엑셀 업로드 저장하기
+     }else if(type == 'item'){
+      	  if(itemView.itemCount > 0){
+      		  var dupChk;
+      		  var dupChkList = getItemList('dupChk');
+              var editItem = itemView.itemsEdited;
+              var addItem  = itemView.itemsAdded;
+              var rows = [];
+              for(var i =0; i< editItem.length ; i++){
+            	  if(!saveVal(type, editItem[i])) return false;
+                  rows.push(editItem[i]);
+              }
+              for(var i=0; i< addItem.length; i++){
+            	  if(!saveVal(type, addItem[i])) return false;
+            	  
+            	  dupChk = dupChkList.filter(function(element){
+            	      return element.itemCd == (addItem[i].classifiCd + addItem[i].itemCd);
+            	  });
+            	  
+	   	          if(dupChk.length > 0){
+	   	              alert( '내역코드 : '+addItem[i].itemCd+ ' - 해당 분류에 생성이력이 존재하는 내역코드입니다.');
+	   	         	  return false;
+	   	          }
+            	  
+	   	       	  addItem[i].itemCd = addItem[i].classifiCd + addItem[i].itemCd;
+                  rows.push(addItem[i]);
+              }
+              wijmo.Control.getControl("#editGrid").refresh(true);
+              if(confirm("저장 하시겠습니까?")){
+                  $.ajax({
+                      url : "/calculate/saveItem",
+                      async : false, // 비동기모드 : true, 동기식모드 : false
+                      type : 'POST',
+                      contentType: 'application/json',
+                      data: JSON.stringify(rows),
+                      success : function(result) {
+                          alert("저장되었습니다.");
+                          getItemList('list');
+                      },
+                      error : function(request,status,error) {
+                          alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                      }
+                  });
+              }
+    	  	}
+      }else if(type == 'monExcel'){// 엑셀 업로드 저장하기
          var item  = monGrid.rows;
          var rows = [];
          var params;
@@ -590,7 +721,7 @@ function saveGrid(type){
              }
              rows.push(params);
          }
-         if(confirm("저장 하시겠습니까??")){
+         if(confirm("저장 하시겠습니까?")){
              $.ajax({
                  url : "/stock/saveStock",
                  async : false, // 비동기모드 : true, 동기식모드 : false
@@ -624,7 +755,7 @@ function saveGrid(type){
              }
              rows.push(params);
          }
-         if(confirm("저장 하시겠습니까??")){
+         if(confirm("저장 하시겠습니까?")){
              $.ajax({
                  url : "/stock/saveStock",
                  async : false, // 비동기모드 : true, 동기식모드 : false
@@ -643,83 +774,126 @@ function saveGrid(type){
      }
 }
 
+function saveVal(type, item){
+	if(type == "mon"){
+		
+	}else if(type == "add"){
+		
+		
+	}else if(type == "classifi"){
+		if(item.classifiCd == null || item.classifiCd == ''){
+			alert("분류를 입력해주세요.");
+			return false;
+		}else if(item.classifiNm == null || item.classifiNm == ''){
+			alert("분류명을 입력해주세요.");
+			return false;
+		}
+		
+	}else if(type == "item"){
+		if(item.classifiCd == null || item.classifiCd == ''){
+			alert("분류를 선택해주세요.");
+			return false;
+			
+		}else if(item.itemCd == null || item.itemCd == ''){
+			alert("내역코드를 입력해주세요.");
+			return false;
+			
+		}else if(item.itemNm == null || item.itemNm == ''){
+			alert("내역명을 입력해주세요.");
+			return false;
+		}
+	}
+	
+	return true;
+}
 
-//물품 중복 체크
-  function dupCheckItem() {
-      if($("#category1").val() == "all"){
-          alert("카테고리를 선택하시기 바랍니다.");
-          return false;
-      }else if($("#product").val().trim().length == 0){
-          alert("상품명을 입력하시기 바랍니다.");
-          return false;
-      }else if($("#code").val().length < 4){
-          alert("코드는 4자리 입니다.ex)0001");
-          return false;
-      }else if($("#cost").val().length < 1){
-          alert("원가를 입력하시기 바랍니다.");
-          return false;
-      }
-      
-      var params = {
-          lCategyCd : $("#category1").val(),
-          itemCd : $("#category1").val() + $("#code").val(),
-          itemNm : $("#product").val(),
-          cost : $("#cost").val()
-      };
-      $.ajax({
-          url : "/stock/dupCheckItem",
-          async : false, // 비동기모드 : true, 동기식모드 : false
-          type : 'POST',
-          data: params,
-          success : function(result) {
-              if(result != "" ){
-                  alert("이미 등록된 물품코드 입니다.");
-                  dupCheckItemFlag = false;
-              }else{
-                  alert("등록 가능한 물품코드 입니다.");
-                  dupCheckItemFlag = true;
+function getClassifiList(type){
+	var returnVal;
+	var param = { type : type };
+	
+    $.ajax({
+           url : "/calculate/getClassifiList",
+           async : false, // 비동기모드 : true, 동기식모드 : false
+           type : 'POST',
+           data : param,
+           success : function(result) {
+        	   if(type == 'list'){
+        		   loadGridList('classifi', result);
+        		   
+        	   }else if(type == 'itemPop'){
+        		   if(result.length > 0){
+	                   	var classifi = [];
+	                   	
+	                   	for(var i =0; i<result.length; i++){
+	                   		classifi[i] = { id: result[i].classifiCd, name: result[i].classifiNm };	
+	                   	}
+	                   	console.log(classifi);
+	                   	returnVal = classifi;
+	                   	
+                   }
+        	   }else if(type == 'dupChk'){
+        		   returnVal = result;
+        	   }
+           },
+           error : function(request,status,error) {
+            	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+           }
+       });
+    
+    if(type != 'list') return returnVal;
+}
 
-              }
-          },
-          error : function(request,status,error) {
-              alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-          }
-      });
-  }
-  
-  // 물품 추가하기
-  function addItem(){
-      if(!dupCheckItemFlag){
-          alert("중복확인을 먼저 하시기 바랍니다.");
-          return false;
-      }else{
-          var params = {
-              lCategyCd : $("#category1").val(),
-              itemCd : $("#category1").val() + $("#code").val(),
-              itemNm : $("#product").val(),
-              cost : $("#cost").val()
-          };
-          $.ajax({
-              url : "/stock/addItem",
-              async : false, // 비동기모드 : true, 동기식모드 : false
-              type : 'POST',
-              contentType: 'application/json',
-              data: JSON.stringify(params),
-              success : function(result) {
-                      alert("등록 되었습니다.");
-                      dupCheckItemFlag = false;
-                      $("#totItemCnt").val(parseInt($("#totItemCnt").val()) + 1);
-                      $("#totalItemCnt").text($("#totItemCnt").val().toLocaleString('ko-KR') + "개");
-                      closePop();
-                      getStockList();
-              },
-              error : function(request,status,error) {
-                  alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-              }
-          });
-      }
-  }
-  
+
+function getItemList(type){
+	var returnVal;
+	var param = { type : type };
+	
+    $.ajax({
+           url : "/calculate/getItemList",
+           async : false, // 비동기모드 : true, 동기식모드 : false
+           type : 'POST',
+           data : param,
+           success : function(result) {
+        	   if(type == 'list'){
+        		   loadGridList('item', result);
+        		   
+        	   }else if(type == 'dupChk'){
+        		   returnVal = result;
+        	   }
+
+           },
+           error : function(request,status,error) {
+            	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+           }
+         });
+    
+    if(type != 'list') return returnVal;
+    
+}
+
+
+//팝업 오픈
+function showPop(pop){
+	if(pop == "add_category"){
+		getClassifiList('list');
+		
+	}else if(pop == "add_breakdown"){
+		getItemList('list');
+	}
+	
+	$('#'+pop).addClass('is-visible');
+}
+
+//팝업 종료
+function closePop(type){
+	if(type == 'classifi'){
+		classifiGrid.allowAddNew = false;
+	}else if(type == 'item'){
+		itemGrid.allowAddNew = false;
+	}
+	$('.popup').removeClass('is-visible');
+}
+
 function monExportExcel(){
 	var gridView = monGrid.collectionView;
 	var oldPgSize = gridView.pageSize;
@@ -948,9 +1122,9 @@ function addExportExcel(){
         <div class="popup_container">
             <div class="popup_head">
                 <p class="popup_title">분류명추가</p>
-                <button type="button" class="popup_close" onClick="closePop();">x</button>
+                <button type="button" class="popup_close" onClick="closePop('classifi');">x</button>
             </div>
-            <div class="popup_inner">
+            <div class="popup_grid">
                 <div class="popup_btn_area">
                     <div class="right">
                         <button type="button" class="popup_btn" onclick="deleteRows('classifi');">삭제</button>
@@ -961,50 +1135,75 @@ function addExportExcel(){
                    <button class="btn" onclick="addRow('classifi');">+ 행 추가</button>
                     <div id="classifiGrid"></div>
                     <div id="classifiGridPager" class="pager"></div>
-                </div>
                     <button class="btn" onclick="addRow('classifi');">+ 행 추가</button>
-            </div>
-            <div class="popup_btn_area">
-                <div class="right">
-                    <button type="button" class="popup_btn" onclick="deleteRows('classifi');">삭제</button>
-                    <button type="button" class="popup_btn" onclick="saveGrid('classifi');">저장</button>
                 </div>
+                <div class="popup_btn_area">
+	                <div class="right">
+	                    <button type="button" class="popup_btn" onclick="deleteRows('classifi');">삭제</button>
+	                    <button type="button" class="popup_btn" onclick="saveGrid('classifi');">저장</button>
+	                </div>
+	            </div>
             </div>
         </div>
     </div>
     <!--분류명생성 팝업 영역 끝 -->
     <!-- 팝업 : 내역생성 -->
     <div class="popup" id="add_breakdown">
+        <div class="popup_container">
+            <div class="popup_head">
+                <p class="popup_title">내역추가</p>
+                <button type="button" class="popup_close" onClick="closePop('item');">x</button>
+            </div>
+            <div class="popup_grid">
+                <div class="popup_btn_area">
+                    <div class="right">
+                        <button type="button" class="popup_btn" onclick="deleteRows('item');">삭제</button>
+                        <button type="button" class="popup_btn" onclick="saveGrid('item')">저장</button>
+                    </div>
+                </div>
+                <div class="popup_grid_area">
+                   <button class="btn" onclick="addRow('item');">+ 행 추가</button>
+                    <div id="itemGrid"></div>
+                    <div id="itemGridPager" class="pager"></div>
+                    <button class="btn" onclick="addRow('item');">+ 행 추가</button>
+                </div>
+                <div class="popup_btn_area">
+	                <div class="right">
+	                    <button type="button" class="popup_btn" onclick="deleteRows('item');">삭제</button>
+	                    <button type="button" class="popup_btn" onclick="saveGrid('item');">저장</button>
+	                </div>
+	            </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    
+   <!--  <div class="popup" id="add_breakdown">
         <div class="popup_container" > 
             <div class="popup_head">
                 <p class="popup_title">내역추가</p>
-                <button type="button" class="popup_close" onClick="closePop();">x</button>
+                <button type="button" class="popup_close" onClick="closePop('item');">x</button>
             </div>
             <div class="popup_inner">
                 <dfn>필수항목 *</dfn>
                 <form action="#" method="post">
                     <div class="row">
-                        <label for="sort">분류명<i>*</i></label>
-                        <select name="sort" id="sort">
-                            <option value="all" selected="selected">전체</option>
-                            <option value="">하자보수</option>
-                            <option value="">공실청소</option>
+                        <label for="classifi1">분류명<i>*</i></label>
+                        <select name="classifi1" id="classifi1">
                         </select>
                     </div>
-                    <div class="row">
-                        <label for="breakdown">내역명<i>*</i></label>
-                        <input type="text" id="breakdown" name="breakdown" required><br>
-                        <input type="text" id="breakdown" name="breakdown" style="margin:10px 0 0 103px;" required><br>
-                        <input type="text" id="breakdown" name="breakdown" style="margin:10px 0 0 103px;" required>
-                        <button type="button" class="popup_btn att">추가</button>
+                    <div class="row" id = "itemInput">
                     </div>
                 </form>
                 <div class="popup_btn_area">
-                    <button type="button" class="popup_btn confirm">추가</button>
+                    <button type="button" class="popup_btn confirm" onClick="saveClassifiItem();">추가</button>
                 </div>
             </div>
         </div>
     </div>
+     -->
+    
     <!--내역생성 팝업 영역 끝 -->
         <!--물품추가 팝업 영역 끝-->
     <!-- 추가된 행 / 수정된 행 처리용 그리드 -->
