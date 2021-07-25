@@ -188,8 +188,6 @@ select coalesce(sum(amm.out_cost), 0) as outCost -- 금년 미수금
 	ORDER BY bb.area_cd, bb.area_nm, aa.deposit_dt
 </select>
 
-
-
 <select id="getAddTodayCost" resultType="HashMap">
 select coalesce(sum(aa.quote_cost), 0) as quoteCost --금년 견적
 		, coalesce(sum(aa.add_cost), 0) as addCost --금년 추가금
@@ -249,21 +247,64 @@ from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd
 	</if>
 </select>
 
-
-<select id="getClassifiList"  resultType="CalculateVo">
+<select id="getClassifiList"  parameterType="hashMap"  resultType="CalculateVo">
 	select classifi_cd, classifi_nm, to_char(cret_dt, 'YYYY-MM-DD') as cret_dt 
 	from web.adjust_add_cd_bas
+	where 1=1
+	<if test="type == 'list' or type == 'itemPop'">
+		and active_yn = 'Y'
+	</if>
+	<if test="type == 'dupChk'">
+		and active_yn = 'N'
+	</if>
+	order by classifi_cd
 </select>
 
-<delete id="deleteMonItem" parameterType="CalculateVo">
+<select id="getItemList"  parameterType="hashMap"  resultType="CalculateVo">
+	select classifi_cd, item_cd, item_nm, to_char(cret_dt, 'YYYY-MM-DD') as cret_dt 
+	from web.adjust_add_cd_dtl
+	where 1=1
+	<if test="type == 'list'">
+		and active_yn = 'Y'
+	</if>
+	<if test="type == 'dupChk'">
+		and active_yn = 'N'
+	</if>
+	order by classifi_cd, item_cd
+</select>
+
+<delete id="deleteMon" parameterType="CalculateVo">
+
 </delete>
 
-<delete id="deleteAddItem" parameterType="CalculateVo">
+<delete id="deleteAdd" parameterType="CalculateVo">
+DELETE FROM WEB.adjust_add
+WHERE 1=1
+AND add_seq = #{addSeq}
 </delete>
 
-<delete id="deleteClassifiItem" parameterType="CalculateVo">
-</delete>
+<update id="deleteClassifi" parameterType="CalculateVo">
+UPDATE WEB.adjust_add_cd_bas SET
+	active_yn = 'N'
+	, updt_dt		= now()
+	, updt_id		= #{updtId}
+WHERE classifi_cd = #{classifiCd};
 
+UPDATE WEB.adjust_add_cd_dtl set
+	active_yn = 'N'
+	, updt_dt		= now()
+	, updt_id		= #{updtId}
+WHERE classifi_cd = #{classifiCd}
+</update>
+
+<update id="deleteItem" parameterType="CalculateVo">
+UPDATE WEB.adjust_add_cd_dtl set
+	active_yn = 'N'
+	, updt_dt		= now()
+	, updt_id		= #{updtId}
+WHERE classifi_cd = #{classifiCd}
+AND  item_cd = #{itemCd}
+</update>
 
 
 <insert id="saveMon" parameterType="CalculateVo">
@@ -273,12 +314,27 @@ from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd
 </insert>
 
 <insert id="saveClassifi" parameterType="CalculateVo">
+INSERT INTO WEB.adjust_add_cd_bas 
+  (classifi_cd, classifi_nm, cret_dt, cret_id, updt_dt, updt_id)
+  VALUES (#{classifiCd} , #{classifiNm}, now(), #{cretId}, now(), #{updtId})
+ON CONFLICT( classifi_cd ) DO
+UPDATE
+	SET classifi_nm = #{classifiNm},
+		updt_dt		= now(),
+		updt_id		= #{updtId}
 </insert>
 
-<select id="dupCheckClassifi" resultType="String" parameterType="CalculateVo">
-</select>
+<insert id="saveItem" parameterType="CalculateVo">
+INSERT INTO WEB.adjust_add_cd_dtl 
+  (classifi_cd, item_cd, item_nm, cret_dt, cret_id, updt_dt, updt_id)
+  VALUES (#{classifiCd} , #{itemCd}, #{itemNm}, now(), #{cretId}, now(), #{updtId})
+ON CONFLICT( classifi_cd, item_cd) DO
+UPDATE
+	SET item_nm = #{itemNm},
+		updt_dt		= now(),
+		updt_id		= #{updtId}
 
-
+</insert>
 
 	
 </mapper>

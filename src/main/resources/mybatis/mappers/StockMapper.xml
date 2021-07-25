@@ -105,7 +105,7 @@ AND item_cd = #{itemCd}
 <insert id="addItem" parameterType="StockVo">
 INSERT INTO WEB.CATEGORY_DTL
 (l_categy_cd,  item_cd, item_nm, cost, cret_dt, cret_id, updt_dt ,updt_id, quantity, qr_url)
-VALUES(#{lCategyCd}, #{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId},0, 'QR'||#{itemCd})	
+VALUES(#{lCategyCd}, #{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId},0, #{itemCd})	
 </insert>
 
 <delete id="deleteItem" parameterType="StockVo">
@@ -131,7 +131,7 @@ UPDATE
 		cost		=  #{cost}::numeric,
 		updt_dt		= now(),
 		updt_id		= #{updtId}
-		qr_url 		= 'QR'||#{itemCd}
+		qr_url 		= #{itemCd}
 </insert>
 
 <update id="saveQuantity" parameterType="StockVo">

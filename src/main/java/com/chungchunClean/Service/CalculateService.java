@@ -17,16 +17,17 @@ public interface CalculateService {
 	public HashMap<String, Object> getAddTodayCost();
 	public HashMap<String, Object> getAddlableCost(HashMap<String,Object> params);
 	
-	public List<CalculateVo> getClassifiList();
+	public List<CalculateVo> getClassifiList(HashMap<String,Object> params);
+	public List<CalculateVo> getItemList(HashMap<String,Object> params);
 	
-    public void deleteMonItem(List<CalculateVo> params);
-    public void deleteAddItem(List<CalculateVo> params);
-    public void deleteClassifiItem(List<CalculateVo> params);
+    public void deleteMon(List<CalculateVo> params);
+    public void deleteAdd(List<CalculateVo> params);
+    public void deleteClassifi(List<CalculateVo> params);
+    public void deleteItem(List<CalculateVo> params);
     
     public void saveMon(List<CalculateVo> params);
     public void saveAdd(List<CalculateVo> params);
     public void saveClassifi(List<CalculateVo> params);
-    
-    public String dupCheckClassifi(HashMap<String, String> params);
+    public void saveItem(List<CalculateVo> params);
     
 }

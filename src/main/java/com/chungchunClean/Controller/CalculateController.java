@@ -80,30 +80,45 @@ public class CalculateController {
     
     @RequestMapping(value = "/getClassifiList")
     @ResponseBody
-    public List<CalculateVo> getClassifiList(){
+    public List<CalculateVo> getClassifiList(@RequestParam HashMap<String,Object> params){
     	
-    	List<CalculateVo> calculateList = calculateService.getClassifiList();
+    	List<CalculateVo> calculateList = calculateService.getClassifiList(params);
+    	
+    	return calculateList;
+    }
+    
+    @RequestMapping(value = "/getItemList")
+    @ResponseBody
+    public List<CalculateVo> getItemList(@RequestParam HashMap<String,Object> params){
+    	
+    	List<CalculateVo> calculateList = calculateService.getItemList(params);
     	
     	return calculateList;
     }
     
     
-    @RequestMapping(value="/deleteMonItem", method = {RequestMethod.POST , RequestMethod.GET})
+    @RequestMapping(value="/deleteMon", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void deleteMonItem(@RequestBody List<CalculateVo> params){
-    	calculateService.deleteMonItem(params);
+    public void deleteMon(@RequestBody List<CalculateVo> params){
+    	calculateService.deleteMon(params);
     }
     
-    @RequestMapping(value="/deleteAddItem", method = {RequestMethod.POST , RequestMethod.GET})
+    @RequestMapping(value="/deleteAdd", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void deleteAddItem(@RequestBody List<CalculateVo> params){
-    	calculateService.deleteAddItem(params);
+    public void deleteAdd(@RequestBody List<CalculateVo> params){
+    	calculateService.deleteAdd(params);
     }
     
-    @RequestMapping(value="/deleteClassifiItem", method = {RequestMethod.POST , RequestMethod.GET})
+    @RequestMapping(value="/deleteClassifi", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void deleteClassifiItem(@RequestBody List<CalculateVo> params){
-    	calculateService.deleteClassifiItem(params);
+    public void deleteClassifi(@RequestBody List<CalculateVo> params){
+    	calculateService.deleteClassifi(params);
+    }
+    
+    @RequestMapping(value="/deleteItem", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void deleteItem(@RequestBody List<CalculateVo> params){
+    	calculateService.deleteItem(params);
     }
     
     @RequestMapping(value="/saveMon", method = {RequestMethod.POST , RequestMethod.GET})
@@ -124,10 +139,10 @@ public class CalculateController {
     	calculateService.saveClassifi(params);
     }
     
-    @RequestMapping(value="/dupCheckClassifi", method = {RequestMethod.POST , RequestMethod.GET})
+    @RequestMapping(value="/saveItem", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public String dupCheckClassifi(@RequestParam HashMap<String,String> params){
-        return calculateService.dupCheckClassifi(params); 
+    public void saveItem(@RequestBody List<CalculateVo> params){
+    	calculateService.saveItem(params);
     }
 
 
