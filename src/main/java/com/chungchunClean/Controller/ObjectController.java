@@ -157,6 +157,7 @@ public class ObjectController {
         objectService.addBuildingBas(params);
     } 
 
+
      /**
      * 건물 상세 등록 
      */
@@ -181,8 +182,68 @@ public class ObjectController {
      * 계약서 팝업
      */
     @RequestMapping(value = "/contract")
-    public String contract(){
+    public String contract(HttpServletRequest req, Model model){
+        String bldgCd = req.getParameter("bldgCd");
+        System.out.println("bldgCd is :" + bldgCd);
+        model.addAttribute("bldgContInfo", objectService.getBldgContInfo(bldgCd));
         return "object/p_contract";
     } 
+
+    /**건물 상세정보 조회 */
+    @RequestMapping(value= "/getDetailBuildingList")
+    @ResponseBody
+    public List<BldgVo> getDetailBuildingList(@RequestParam HashMap<String,String> params){
+        return objectService.getDetailBuildingList(params);
+    }
+
+    /**
+     * 건물 마스터 수정 
+     */
+    @RequestMapping(value = "/modifyBuilding")
+    @ResponseBody
+    public void modifyBuilding(@RequestParam HashMap<String,Object> params, HttpServletRequest req){
+        // params.put("id",req.getSession().getAttribute("id").toString());
+        params.put("id","test");
+        // BLDG_BAS 등록
+        objectService.modifyBuilding(params);
+    }
+
+    /**
+     * 건물 마스터 수정 
+     */
+    @RequestMapping(value = "/modifyBuildingDetail")
+    @ResponseBody
+    public void modifyBuildingDetail(@RequestBody List<BldgVo> params, HttpServletRequest req){
+        // params.put("id",req.getSession().getAttribute("id").toString());
+        
+        // BLDG_BAS 등록
+        for(BldgVo vo : params){
+            vo.setCretId("test");
+            vo.setUpdtId("test");
+            objectService.modifyBuildingDetail(vo);
+        }
+    }
+
+     /**
+     * 건물 마스터 삭제
+     */
+    @RequestMapping(value = "/deleteBuilding")
+    @ResponseBody
+    public void deleteBuilding(@RequestParam HashMap<String,String> params, HttpServletRequest req){
+        // params.put("id",req.getSession().getAttribute("id").toString());
+            objectService.deleteBuilding(params);
+            objectService.deleteBuildingDetailAll(params);
+    }
+    /**
+     * 건물 상세 삭제
+     */
+    @RequestMapping(value = "/deleteBuildingDetail")
+    @ResponseBody
+    public void deleteBuildingDetail(@RequestBody List<BldgVo> params, HttpServletRequest req){
+        // params.put("id",req.getSession().getAttribute("id").toString());
+        for(BldgVo vo : params){
+            objectService.deleteBuildingDetail(vo);
+        }
+    }
   
 }

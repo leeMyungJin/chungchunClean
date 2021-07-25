@@ -347,7 +347,7 @@ function saveGrid(type){
         var addItem  = categoryView.itemsAdded;
         var rows = [];
         for(var i =0; i< editItem.length ; i++){
-                rows.push(editItem[i]);
+            rows.push(editItem[i]);
         }
         for(var i=0; i< addItem.length; i++){
             rows.push(addItem[i]);

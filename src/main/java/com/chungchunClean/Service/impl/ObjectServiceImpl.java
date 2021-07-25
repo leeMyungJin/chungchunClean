@@ -123,8 +123,46 @@ public class ObjectServiceImpl implements ObjectService {
 
 	@Override
 	public HashMap<String,Long> getBldgInfo() {
-		// TODO Auto-generated method stub
 		return objectMapper.getBldgInfo();
+	}
+
+	@Override
+	public Object getBldgContInfo(String bldgCd) {
+		return objectMapper.getBldgContInfo(bldgCd);
+	}
+
+	@Override
+	public List<BldgVo> getDetailBuildingList(HashMap<String, String> params) {
+		return objectMapper.getDetailBuildingList(params);
+	}
+
+	@Override
+	public void modifyBuilding(HashMap<String, Object> params) {
+		objectMapper.modifyBuilding(params);
+	}
+
+	@Override
+	public void modifyBuildingDetail(BldgVo vo) {
+		objectMapper.modifyBuildingDetail(vo);
+		
+	}
+
+	@Override
+	public void deleteBuildingDetail(BldgVo vo) {
+		objectMapper.deleteBuildingDetail(vo);
+		
+	}
+
+	@Override
+	public void deleteBuilding(HashMap<String, String> params) {
+		objectMapper.deleteBuildingBas(params);
+		
+	}
+
+	@Override
+	public void deleteBuildingDetailAll(HashMap<String, String> params) {
+		objectMapper.deleteBuildingDetailAll(params);
+		
 	}
 	
 }

@@ -37,5 +37,19 @@ public interface ObjectService {
 
     public HashMap<String,Long> getBldgInfo();
 
+    public Object getBldgContInfo(String bldgCd);
+
+    public List<BldgVo> getDetailBuildingList(HashMap<String, String> params);
+
+    public void modifyBuilding(HashMap<String, Object> params);
+
+    public void modifyBuildingDetail(BldgVo vo);
+
+    public void deleteBuildingDetail(BldgVo vo);
+
+    public void deleteBuilding(HashMap<String, String> params);
+
+    public void deleteBuildingDetailAll(HashMap<String, String> params);
+
 
 }

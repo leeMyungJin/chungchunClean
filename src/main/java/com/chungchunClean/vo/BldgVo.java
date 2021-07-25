@@ -10,8 +10,8 @@ public class BldgVo {
     private String dtlAddr;
     private String clientNm;
     private Double conCost;
-    private Double surTax;
-    private String surTaxYn;
+    private Double surtax;
+    private String surtaxYn;
     private String cretId;
     private String cretDt;
     private String updtId;
@@ -25,6 +25,8 @@ public class BldgVo {
     private Integer cleanCnt;
     private String fromDt;
     private String toDt;
+    private String addr;
+    private String zone;
 
     
 
@@ -138,34 +140,6 @@ public class BldgVo {
      */
     public void setConCost(Double conCost) {
         this.conCost = conCost;
-    }
-
-    /**
-     * @return Double return the surTax
-     */
-    public Double getSurTax() {
-        return surTax;
-    }
-
-    /**
-     * @param surTax the surTax to set
-     */
-    public void setSurTax(Double surTax) {
-        this.surTax = surTax;
-    }
-
-    /**
-     * @return String return the surTaxYn
-     */
-    public String getSurTaxYn() {
-        return surTaxYn;
-    }
-
-    /**
-     * @param surTaxYn the surTaxYn to set
-     */
-    public void setSurTaxYn(String surTaxYn) {
-        this.surTaxYn = surTaxYn;
     }
 
     /**
@@ -350,14 +324,70 @@ public class BldgVo {
         this.toDt = toDt;
     }
 
+    /**
+     * @return String return the addr
+     */
+    public String getAddr() {
+        return addr;
+    }
+
+    /**
+     * @param addr the addr to set
+     */
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
+
+    /**
+     * @return String return the zone
+     */
+    public String getZone() {
+        return zone;
+    }
+
+    /**
+     * @param zone the zone to set
+     */
+    public void setZone(String zone) {
+        this.zone = zone;
+    }
+
+    /**
+     * @return Double return the surtax
+     */
+    public Double getSurtax() {
+        return surtax;
+    }
+
+    /**
+     * @param surtax the surtax to set
+     */
+    public void setSurtax(Double surtax) {
+        this.surtax = surtax;
+    }
+
+    /**
+     * @return String return the surtaxYn
+     */
+    public String getSurtaxYn() {
+        return surtaxYn;
+    }
+
+    /**
+     * @param surtaxYn the surtaxYn to set
+     */
+    public void setSurtaxYn(String surtaxYn) {
+        this.surtaxYn = surtaxYn;
+    }
+
     @Override
     public String toString() {
-        return "BldgVo [activeYn=" + activeYn + ", areaCd=" + areaCd + ", areaNm=" + areaNm + ", bldgCd=" + bldgCd
-                + ", bldgNm=" + bldgNm + ", cleanCnt=" + cleanCnt + ", clientNm=" + clientNm + ", conCost=" + conCost
-                + ", conFromDt=" + conFromDt + ", conToDt=" + conToDt + ", cretDt=" + cretDt + ", cretId=" + cretId
-                + ", dongNum=" + dongNum + ", dongQrUrl=" + dongQrUrl + ", dtlAddr=" + dtlAddr + ", fromDt=" + fromDt
-                + ", memo=" + memo + ", pnum=" + pnum + ", surTax=" + surTax + ", surTaxYn=" + surTaxYn + ", toDt="
-                + toDt + ", updtDt=" + updtDt + ", updtId=" + updtId + "]";
+        return "BldgVo [activeYn=" + activeYn + ", addr=" + addr + ", areaCd=" + areaCd + ", areaNm=" + areaNm
+                + ", bldgCd=" + bldgCd + ", bldgNm=" + bldgNm + ", cleanCnt=" + cleanCnt + ", clientNm=" + clientNm
+                + ", conCost=" + conCost + ", conFromDt=" + conFromDt + ", conToDt=" + conToDt + ", cretDt=" + cretDt
+                + ", cretId=" + cretId + ", dongNum=" + dongNum + ", dongQrUrl=" + dongQrUrl + ", dtlAddr=" + dtlAddr
+                + ", fromDt=" + fromDt + ", memo=" + memo + ", pnum=" + pnum + ", surtax=" + surtax + ", surtaxYn="
+                + surtaxYn + ", toDt=" + toDt + ", updtDt=" + updtDt + ", updtId=" + updtId + ", zone=" + zone + "]";
     }
 
 }
