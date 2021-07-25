@@ -127,7 +127,7 @@ public class ObjectServiceImpl implements ObjectService {
 	}
 
 	@Override
-	public Object getBldgContInfo(String bldgCd) {
+	public BldgVo getBldgContInfo(String bldgCd) {
 		return objectMapper.getBldgContInfo(bldgCd);
 	}
 

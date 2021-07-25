@@ -139,15 +139,18 @@
 	SELECT
 		BAS.area_cd ,
 		BAS.area_nm ,
-		bas .bldg_cd ,
+		bas.bldg_cd ,
 		BAS.bldg_nm ,
 		BAS.client_nm ,
 		BAS.con_cost ,
 		BAS.dtl_addr ,
+		BAS.zone,
 		BAS.pnum ,
 		BAS.surtax ,
 		BAS.surtax_yn ,
-		DTL.active_yn ,
+		BAS.active_yn ,
+		BAS.con_from_dt,
+		BAS.con_to_dt,
 		DTL.dong_num ,
 		DTL.dong_qr_url ,
 		BAS.memo ,
@@ -248,15 +251,15 @@
 
 	<insert id="addBuildingBas" parameterType="hashMap">
 	insert into web.bldg_Bas 
-	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, con_cost, con_from_dt, con_to_dt,  surtax_yn,cret_dt, cret_id, updt_dt, updt_id, zone, memo)
+	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, con_cost, con_from_dt, con_to_dt,  surtax_yn, surtax ,cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
 	values
-	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, #{pnum}, #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxYn}, now(), #{id}, now(), #{id}, #{zone}, #{memo})
+	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, #{pnum}, #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxYn}, #{surtax}::numeric, now(), #{id}, now(), #{id}, #{zone}, #{memo}, #{activeYn})
 	</insert>
 	<insert id="addBuildingDetail" parameterType="hashMap">
 	insert into web.bldg_dtl
-	(bldg_cd, dong_num,  active_yn, dong_qr_url, cret_dt, cret_id, updt_dt, updt_id, clean_cnt, from_dt, to_dt)
+	(bldg_cd, dong_num,  dong_qr_url, cret_dt, cret_id, updt_dt, updt_id, clean_cnt, from_dt, to_dt)
 	values
-	(#{bldgCd}, #{dongNum},#{activeYn}, #{dongQrUrl}, now(), #{cretId}, now(), #{updtId}, #{cleanCnt}, #{fromDt}, #{toDt})
+	(#{bldgCd}, #{dongNum}, #{dongQrUrl}, now(), #{cretId}, now(), #{updtId}, #{cleanCnt}, #{fromDt}, #{toDt})
 	</insert>
 
 	<select id="getBldgInfo" resultType="hashMap">
@@ -272,4 +275,83 @@
 			from web.bldg_dtl 
 		) as dtl_cnt
 	</select>
+	<select id="getBldgContInfo" parameterType="String" resultType = "BldgVo">
+	select 
+	    bldg_cd
+	   ,bldg_nm
+	   ,client_nm
+	   ,con_from_dt  	
+	   ,con_to_dt
+	   ,con_cost
+	   ,pnum
+	   ,dtl_addr
+	from web.bldg_bas
+	where bldg_cd= #{bldgCd}
+	</select>
+
+	<select id="getDetailBuildingList" parameterType="hashMap" resultType="BldgVo">
+	select
+		bldg_cd,
+		dong_num,
+		clean_cnt,
+		to_char(from_dt::date,'yyyy-mm-dd') from_dt,
+		to_char(to_dt::date,'yyyy-mm-dd') to_dt,
+		to_char(cret_dt, 'yyyy-mm-dd') cret_dt
+	from web.bldg_dtl
+	where bldg_cd=#{bldgCd}
+	</select>
+
+	<insert id="modifyBuilding" parameterType="hashMap">
+	insert into web.bldg_Bas 
+	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, con_cost, con_from_dt, con_to_dt,  surtax_yn, surtax, cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
+	values
+	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, #{pnum}, #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxYn}, #{surtax}::numeric, now(), #{id}, now(), #{id}, #{zone}, #{memo}, #{activeYn})
+	ON CONFLICT(bldg_cd) DO
+	UPDATE SET
+	  client_nm = #{clientNm},
+	  area_cd = #{areaCd},
+	  area_nm = #{areaNm},
+	  bldg_nm = #{bldgNm},
+	  dtl_addr = #{dtlAddr},
+	  pnum = #{pnum},
+	  con_cost = #{conCost}::numeric,
+	  con_from_dt = #{conFromDt},
+	  con_to_dt = #{conToDt},
+	  surtax_yn  =#{surtaxYn},
+	  surtax = #{surtax}::numeric,
+	  updt_dt = now(),
+	  updt_id = #{id},
+	  zone = #{zone},
+	  memo = #{memo},
+	  active_yn = #{activeYn}
+	</insert>
+	<insert id="modifyBuildingDetail" parameterType="BldgVo">
+	insert into web.bldg_dtl
+	(bldg_cd, dong_num,  dong_qr_url, cret_dt, cret_id, updt_dt, updt_id, clean_cnt, from_dt, to_dt)
+	values
+	(#{bldgCd}, #{dongNum}, #{dongQrUrl}, now(), #{cretId}, now(), #{updtId}, #{cleanCnt}, #{fromDt}, #{toDt})
+	ON CONFLICT(bldg_cd, dong_num) DO 
+	UPDATE SET 
+	  updt_dt = now(),
+	  updt_id = #{updtId},
+	  clean_cnt = #{cleanCnt},
+	  from_dt = #{fromDt},
+	  to_dt = #{toDt}
+	</insert>
+
+	<delete id="deleteBuildingBas" parameterType="HashMap">
+	delete from web.bldg_bas
+	 where bldg_cd = #{bldgCd}
+	</delete>
+
+	<delete id="deleteBuildingDetail" parameterType="BldgVo">
+	delete from web.bldg_dtl
+	 where bldg_cd = #{bldgCd} and dong_num = #{dongNum}
+	</delete>
+
+	<delete id="deleteBuildingDetailAll" parameterType="BldgVo">
+	delete from web.bldg_dtl
+	 where bldg_cd = #{bldgCd}
+	</delete>
+	
 </mapper>

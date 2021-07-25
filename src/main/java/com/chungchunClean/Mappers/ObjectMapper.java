@@ -41,7 +41,7 @@ public interface ObjectMapper  {
 
 	public HashMap<String,Long> getBldgInfo();
 
-    public Object getBldgContInfo(String bldgCd);
+    public BldgVo getBldgContInfo(String bldgCd);
 
 	public List<BldgVo> getDetailBuildingList(HashMap<String, String> params);
 
