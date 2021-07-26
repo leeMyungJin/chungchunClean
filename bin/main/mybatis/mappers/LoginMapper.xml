@@ -19,7 +19,7 @@
 	</update>
 	
 	<select id="getUserToken" parameterType="hashMap" resultType="String">
-		select usertoken from web.staff where staff_id = #{staffId}
+		select usertoken from web.staff where staff_id = #{id}
 	</select>
 	
 </mapper>

@@ -22,8 +22,15 @@ public class DailyController {
 	DailyService dailyService;
 	
     @RequestMapping(value = "/", method = {RequestMethod.POST , RequestMethod.GET})
-    public String moveDaily() {
-        return "daily/daily";
+    public String moveDaily(Model model) {
+    	return "daily/daily";
+    }
+    
+    @RequestMapping(value = "/getDailylable")
+    @ResponseBody
+    public HashMap<String,Object> getDailylable(@RequestParam HashMap<String,Object> params){
+    	
+    	return dailyService.getDailylable(params);
     }
     
     @RequestMapping(value = "/getDailyList")

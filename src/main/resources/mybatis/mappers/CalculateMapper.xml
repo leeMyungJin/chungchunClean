@@ -6,23 +6,39 @@
 <select id="getMonList" parameterType="hashMap" resultType="CalculateVo">
 	select bb.area_cd
 		, bb.area_nm
+		, bb.zone
 		, bb.bldg_cd
 		, bb.bldg_nm
-		, bb.surtax 
+		, bb.con_cost
+		, bb.surtax
 		, bb.surtax_yn 
-		, amm.manage_cost 
 		, amm.tax_bill
-		, amm.add_cost 
-		, amm.out_cost 
-		, amm.over_cost 
+		, amm.add_cost  
+		, coalesce(bb.con_cost, 0) + coalesce(bb.surtax, 0) + coalesce(amm.add_cost, 0) - coalesce(amm.deposit_cost, 0) as out_cost --계약금+부가세+추가금-입금 = 미수금
+		, oc.over_cost as over_cost 
+		, oc.over_cost as over_cost_temp 
 		, amm.deposit_cost 
 		, to_char(amm.deposit_dt , 'YYYY-MM-DD') as deposit_dt 
 		, amm.depositor 
-		, amm.pnum 
+		, bb.pnum 
 		, amm.memo
-	from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
-	where
-		1 = 1
+		, coalesce(amm.mon_mt, #{date}) as mon_mt
+	from web.bldg_bas bb left join (select * 
+									from web.adjust_mt_manage 
+									<if test="date != null">
+										where mon_mt = #{date}
+									</if>
+									) amm on bb.bldg_cd = amm.bldg_cd
+						 left join (select bldg_cd, mon_mt, over_cost 
+									from web.adjust_mt_manage 
+									where ( bldg_cd, mon_mt ) in (select bldg_cd, max(mon_mt)
+																	from web.adjust_mt_manage 
+																	<if test="date != null">
+																		where mon_mt <![CDATA[ <= ]]> #{date}
+																	</if>
+																	group by bldg_cd)
+									) oc on bb.bldg_cd = oc.bldg_cd
+	where bb.active_yn = 'Y'
 	<if test="inq != null">
 		<choose>
 			<when test="con == 'all'">
@@ -66,9 +82,9 @@
 </select>
 
 
-<select id="getMonTodayCost" resultType="HashMap">
-	select coalesce(sum(amm.out_cost), 0) as outCost -- 금년 미수금
-       	,coalesce(sum(amm.deposit_cost), 0) as depositCost -- 금년 입금금액 (부가세포함)
+<select id="getMonTotalCost" resultType="HashMap">
+	select coalesce(sum(bb.con_cost), 0) + coalesce(sum(bb.surtax), 0) + coalesce(sum(amm.add_cost), 0) - coalesce(sum(amm.deposit_cost), 0) as outCost -- 금년 미수금
+		,coalesce(sum(amm.deposit_cost), 0) as depositCost -- 금년 입금금액 (부가세포함)
       	,coalesce(sum(amm.add_cost), 0) as addCost --금년 추가금
 	from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
 	where 1=1
@@ -76,11 +92,16 @@
 </select>
 
 <select id="getMonlableCost" parameterType="hashMap" resultType="HashMap">
-select coalesce(sum(amm.out_cost), 0) as outCost -- 금년 미수금
-      ,coalesce(sum(amm.deposit_cost), 0) as depositCost -- 금년 입금금액 (부가세포함)
+	select coalesce(sum(bb.con_cost), 0) + coalesce(sum(bb.surtax), 0) + coalesce(sum(amm.add_cost), 0) - coalesce(sum(amm.deposit_cost), 0) as outCost -- 금년 미수금
+		,coalesce(sum(amm.deposit_cost), 0) as depositCost -- 금년 입금금액 (부가세포함)
       ,coalesce(sum(amm.add_cost), 0) as addCost --금년 추가금
-	from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
-	where 1=1
+	from web.bldg_bas bb left join (select * 
+									from web.adjust_mt_manage 
+									<if test="date != null">
+										where mon_mt = #{date}
+									</if>
+									) amm on bb.bldg_cd = amm.bldg_cd
+	where bb.active_yn = 'Y'
 		<if test="inq != null">
 		<choose>
 			<when test="con == 'all'">
@@ -124,25 +145,26 @@ select coalesce(sum(amm.out_cost), 0) as outCost -- 금년 미수금
 
 
 <select id="getAddList" parameterType="hashMap" resultType="CalculateVo">
-	select to_char(aa.add_dt , 'YYYY-MM-DD') as add_dt 
+	select  add_seq
+			, to_char(aa.add_dt , 'YYYY-MM-DD') as add_dt 
 			, aa.classifi_cd 
-			, aacb.classifi_nm 
+			, aacb.classifi_nm
 			, aa.item_cd
 			, aacd.item_nm 
-			, bb.bldg_cd 
-			, bb.bldg_nm 
+			, aa.area_nm
+			, aa.bldg_nm 
 			, aa.quote_cost 
 			, aa.mater_cost 
 			, aa.outsc_cost 
 			, aa.deposit_cost 
 			, to_char(aa.deposit_dt , 'YYYY-MM-DD') as deposit_dt 
 			, aa.depositor 
+			, aa.quote_cost - aa.deposit_cost as out_cost
 			, aa.cret_dt 
 			, aa.cret_id 
 			, aa.updt_dt 
 			, aa.updt_id 
-	from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd 
-							left join web.adjust_add_cd_bas aacb on aa.classifi_cd = aacb.classifi_cd 
+	from web.adjust_add aa left join web.adjust_add_cd_bas aacb on aa.classifi_cd = aacb.classifi_cd 
 							left join web.adjust_add_cd_dtl aacd on aacb.classifi_cd = aacd.classifi_cd and aacd.item_cd = aa.item_cd 
 	where
 		1 = 1
@@ -152,9 +174,9 @@ select coalesce(sum(amm.out_cost), 0) as outCost -- 금년 미수금
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					bb.area_nm LIKE '%' || #{item} || '%'
+					aa.area_nm LIKE '%' || #{item} || '%'
 					or
-					bb.bldg_nm LIKE '%' || #{item} || '%'
+					aa.bldg_nm LIKE '%' || #{item} || '%'
 					or
 					aa.depositor LIKE '%' || #{item} || '%'
 				</foreach>
@@ -163,14 +185,14 @@ select coalesce(sum(amm.out_cost), 0) as outCost -- 금년 미수금
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					bb.area_nm LIKE '%' || #{item} || '%'
+					aa.area_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'building'">
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					bb.bldg_nm LIKE '%' || #{item} || '%'
+					aa.bldg_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'depositor'">
@@ -185,15 +207,14 @@ select coalesce(sum(amm.out_cost), 0) as outCost -- 금년 미수금
 	<if test="date != null">
 		and to_char(aa.cret_dt, 'YYYY-MM') = #{date}
 	</if>
-	ORDER BY bb.area_cd, bb.area_nm, aa.deposit_dt
+	ORDER BY aa.add_dt, aa.classifi_cd, aa.item_cd
 </select>
 
-<select id="getAddTodayCost" resultType="HashMap">
+<select id="getAddTotalCost" resultType="HashMap">
 select coalesce(sum(aa.quote_cost), 0) as quoteCost --금년 견적
-		, coalesce(sum(aa.add_cost), 0) as addCost --금년 추가금
-		, coalesce(sum(aa.out_cost), 0) as overCost --금년 이월금
+		, coalesce(sum(aa.quote_cost), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost --금년 누적미수금 
 		, coalesce(sum(aa.deposit_cost), 0) as depositCost --금년 입금금액
-from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd 
+from web.adjust_add aa
 where extract('YEAR' from aa.deposit_dt) = extract('YEAR' from now())	
 </select>
 
@@ -202,9 +223,8 @@ select coalesce(sum(aa.mater_cost), 0) as materCost --재료비
 		, coalesce(sum(aa.outsc_cost), 0) as outscCost --외주비
 		, coalesce(sum(aa.deposit_cost), 0) as depositCost  --입금
 		, coalesce(sum(aa.quote_cost), 0) as quoteCost -- 견적금
-		, coalesce(sum(aa.add_cost), 0) as addCost --추가금
-		, coalesce(sum(aa.over_cost), 0) as overCost  --이월금
-from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd 
+		, coalesce(sum(aa.quote_cost), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost  --미수금
+from web.adjust_add aa
 	where 1=1
 	<if test="inq != null">
 		<choose>
@@ -212,9 +232,9 @@ from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					bb.area_nm LIKE '%' || #{item} || '%'
+					aa.area_nm LIKE '%' || #{item} || '%'
 					or
-					bb.bldg_nm LIKE '%' || #{item} || '%'
+					aa.bldg_nm LIKE '%' || #{item} || '%'
 					or
 					aa.depositor LIKE '%' || #{item} || '%'
 				</foreach>
@@ -223,14 +243,14 @@ from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					bb.area_nm LIKE '%' || #{item} || '%'
+					aa.area_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'building'">
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					bb.bldg_nm LIKE '%' || #{item} || '%'
+					aa.bldg_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'depositor'">
@@ -251,7 +271,7 @@ from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd
 	select classifi_cd, classifi_nm, to_char(cret_dt, 'YYYY-MM-DD') as cret_dt 
 	from web.adjust_add_cd_bas
 	where 1=1
-	<if test="type == 'list' or type == 'itemPop'">
+	<if test="type == 'list' or type == 'itemPop' or type == 'drop'">
 		and active_yn = 'Y'
 	</if>
 	<if test="type == 'dupChk'">
@@ -264,7 +284,7 @@ from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd
 	select classifi_cd, item_cd, item_nm, to_char(cret_dt, 'YYYY-MM-DD') as cret_dt 
 	from web.adjust_add_cd_dtl
 	where 1=1
-	<if test="type == 'list'">
+	<if test="type == 'list' or type == 'drop'">
 		and active_yn = 'Y'
 	</if>
 	<if test="type == 'dupChk'">
@@ -273,14 +293,18 @@ from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd
 	order by classifi_cd, item_cd
 </select>
 
-<delete id="deleteMon" parameterType="CalculateVo">
+<select id="getBldgList"  parameterType="hashMap"  resultType="CalculateVo">
+	select area_cd, area_nm, bldg_cd, bldg_nm , zone
+	from web.bldg_bas
+	where active_yn  = 'Y'
+	order by bldg_cd
+</select>
 
-</delete>
 
 <delete id="deleteAdd" parameterType="CalculateVo">
 DELETE FROM WEB.adjust_add
 WHERE 1=1
-AND add_seq = #{addSeq}
+AND add_seq = #{addSeq}::numeric
 </delete>
 
 <update id="deleteClassifi" parameterType="CalculateVo">
@@ -308,10 +332,123 @@ AND  item_cd = #{itemCd}
 
 
 <insert id="saveMon" parameterType="CalculateVo">
+INSERT INTO WEB.adjust_mt_manage 
+(area_cd
+  , area_nm 
+  , bldg_cd 
+  , bldg_nm 
+  , mon_mt 
+  , "zone" 
+  , surtax 
+  , tax_bill 
+  , over_cost 
+  , add_cost 
+  , con_cost
+  , deposit_cost 
+  , deposit_dt 
+  , depositor 
+  , pnum 
+  , memo 
+  , cret_dt
+  , cret_id
+  , updt_dt
+  , updt_id
+)VALUES (#{areaCd}
+	  , #{areaNm} 
+	  , #{bldgCd}
+	  , #{bldgNm} 
+	  , #{monMt} 
+	  , #{zone}
+	  , #{surtax} 
+	  , #{taxBill} 
+	  , #{overCost} 
+	  , #{addCost} 
+	  , #{conCost}
+	  , #{depositCost} 
+	  , #{depositDt}::timestamp
+	  , #{depositor} 
+	  , #{pnum} 
+	  , #{memo} 
+		, now()
+		, #{cretId}
+		, now()
+		, #{updtId}
+)
+ON CONFLICT(mon_mt , bldg_cd) DO
+UPDATE
+	SET tax_bill = #{taxBill},
+		add_cost = #{addCost},
+		out_cost = #{outCost},
+		over_cost = #{overCost},
+		deposit_cost = #{depositCost},
+		deposit_dt = #{depositDt}::timestamp,
+		depositor = #{depositor},
+		pnum = #{pnum},
+		memo = #{memo},
+		updt_dt		= now(),
+		updt_id		= #{updtId}
 </insert>
 
 <insert id="saveAdd" parameterType="CalculateVo">
+insert into web.adjust_add (
+	add_seq
+	,area_nm
+	,bldg_nm
+	,classifi_cd
+	,classifi_nm
+	,item_cd
+	,item_nm
+	,add_dt
+	,quote_cost
+	,mater_cost
+	,outsc_cost
+	,deposit_cost
+	,deposit_dt
+	,depositor
+	,cret_dt
+	,cret_id 
+	,updt_dt
+	,updt_id
+)values(
+	(select max(add_seq)+1 from WEB.adjust_add) -- 시퀀스
+	,#{areaNm}
+	,#{bldgNm}
+	,#{classifiCd}
+	,#{classifiNm}
+	,#{itemCd}
+	,#{itemNm}
+	,NOW()
+	,#{quoteCost}
+	,#{materCost}
+	,#{outscCost}
+	,#{depositCost}
+	,#{depositDt}::timestamp
+	,#{depositor}
+	,NOW()
+	,#{cretId}
+	,NOW()
+	,#{updtId}
+)
 </insert>
+
+<update id="saveUpdateAdd" parameterType="CalculateVo">
+update web.adjust_add set
+	bldg_nm = #{bldgNm}
+	, area_nm = #{areaNm}
+	, classifi_cd = #{classifiCd}
+	, classifi_nm = #{classifiNm}
+	, item_cd = #{itemCd}
+	, item_nm = #{itemNm}
+	, quote_cost = #{quoteCost}
+	, mater_Cost = #{materCost}
+	, outsc_cost = #{outscCost}
+	, deposit_cost = #{depositCost}
+	, deposit_dt = #{depositDt}::timestamp
+	, depositor = #{depositor}
+	, updt_dt = NOW()
+	, updt_id = #{updtId}
+where add_seq = #{addSeq}::numeric
+</update>
 
 <insert id="saveClassifi" parameterType="CalculateVo">
 INSERT INTO WEB.adjust_add_cd_bas 
