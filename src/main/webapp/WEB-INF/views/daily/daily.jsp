@@ -52,9 +52,11 @@ function loadGridDailyList(type, result){
 			      { binding: 'officerNm', header: '담당자', isReadOnly: true, width: 60, align:"center" },
 			      { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 60, align:"center"  },
 			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 120, align:"center"  },
+			      { binding: 'dongNum', header: '동번호', isReadOnly: true, width: 60, align:"center"  },
 			      { binding: 'cretDt', header: '업로드일자', isReadOnly: true, width: 100, align:"center"  },
 			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" },
-			      { binding: 'siteMntrUrl', header: '현장점검 URL', isReadOnly: true, width: 200, align:"center" }
+			      { binding: 'siteMntrUrl', header: '현장점검 URL', isReadOnly: true, width: 200, align:"center" },
+			      { binding: 'postLocNm', header: '근태위치', isReadOnly: true, width: 200, align:"center" }
 			];
 		  
 		   dailyGrid = new wijmo.grid.FlexGrid('#dailyGrid', {
@@ -74,6 +76,7 @@ function loadGridDailyList(type, result){
 		  dailyGrid.itemsSource = dailyView;
 	  }
 	  
+	  new wijmo.grid.filter.FlexGridFilter(dailyGrid);
 	  refreshPaging(dailyGrid.collectionView.totalItemCount, 1, dailyGrid, 'dailyGrid');  // 페이징 초기 셋팅
 	  
 }
@@ -101,6 +104,25 @@ function getDailyList(){
 
         }
     });
+	
+	$.ajax({
+	      type : 'POST',
+	      url : '/daily/getDailylable',
+	      async : false, // 비동기모드 : true, 동기식모드 : false
+	      dataType : null,
+	      data : param,
+	      success : function(result) {
+	      	console.log(result);
+	        $("#lableWorkDay").text(result.workday+ "일");
+	        $("#lableWorkTime").text(result.worktime+ "시간");
+	        $("#lableWorkBldg").text(result.workbldg+ "개");
+
+	      },
+	      error: function(request, status, error) {
+	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+	      }
+	  });
 }
 
 function exportExcel(){
@@ -179,6 +201,20 @@ function copyUrl(){
                             <input type="text" id="inq" placeholder=",로 다중검색 가능" onkeyup="enterkey();">
                             <button type="button" onClick="getDailyList();">조회</button>
                         </form>
+                        <div class="summary">
+                            <dl>
+                                <dt>근로일수</dt>
+                                <dd id="lableWorkDay">0일</dd>
+                            </dl>
+                            <dl>
+                                <dt>근로시간</dt>
+                                <dd id="lableWorkTime">0시간</dd>
+                            </dl>
+                            <dl>
+                                <dt>관리업체수</dt>
+                                <dd id="lableWorkBldg">0개</dd>
+                            </dl>
+                        </div>
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">

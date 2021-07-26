@@ -10,23 +10,24 @@ import com.chungchunClean.vo.StockVo;
 public interface CalculateService {
 	
 	public List<CalculateVo> getMonList(HashMap<String,Object> params);
-	public HashMap<String, Object> getMonTodayCost();
+	public HashMap<String, Object> getMonTotalCost();
 	public HashMap<String, Object> getMonlableCost(HashMap<String,Object> params);
 	
 	public List<CalculateVo> getAddList(HashMap<String,Object> params);
-	public HashMap<String, Object> getAddTodayCost();
+	public HashMap<String, Object> getAddTotalCost();
 	public HashMap<String, Object> getAddlableCost(HashMap<String,Object> params);
 	
 	public List<CalculateVo> getClassifiList(HashMap<String,Object> params);
 	public List<CalculateVo> getItemList(HashMap<String,Object> params);
+	public List<CalculateVo> getBldgList(HashMap<String,Object> params);
 	
-    public void deleteMon(List<CalculateVo> params);
     public void deleteAdd(List<CalculateVo> params);
     public void deleteClassifi(List<CalculateVo> params);
     public void deleteItem(List<CalculateVo> params);
     
     public void saveMon(List<CalculateVo> params);
     public void saveAdd(List<CalculateVo> params);
+    public void saveUpdateAdd(List<CalculateVo> params);
     public void saveClassifi(List<CalculateVo> params);
     public void saveItem(List<CalculateVo> params);
     

@@ -13,23 +13,24 @@ import org.apache.ibatis.annotations.Mapper;
 public interface CalculateMapper  {
 	
 	public List<CalculateVo> getMonList(HashMap<String,Object> params);
-	public HashMap<String, Object> getMonTodayCost();
+	public HashMap<String, Object> getMonTotalCost();
 	public HashMap<String, Object> getMonlableCost(HashMap<String,Object> params);
 	
 	public List<CalculateVo> getAddList(HashMap<String,Object> params);
-	public HashMap<String, Object> getAddTodayCost();
+	public HashMap<String, Object> getAddTotalCost();
 	public HashMap<String, Object> getAddlableCost(HashMap<String,Object> params);
 	
 	public List<CalculateVo> getClassifiList(HashMap<String,Object> params);
 	public List<CalculateVo> getItemList(HashMap<String,Object> params);
+	public List<CalculateVo> getBldgList(HashMap<String,Object> params);
 	
-    public void deleteMon(CalculateVo vo);
     public void deleteAdd(CalculateVo params);
     public void deleteClassifi(CalculateVo params);
     public void deleteItem(CalculateVo params);
     
     public void saveMon(CalculateVo params);
     public void saveAdd(CalculateVo params);
+    public void saveUpdateAdd(CalculateVo params);
     public void saveClassifi(CalculateVo params);
     public void saveItem(CalculateVo params);
 }

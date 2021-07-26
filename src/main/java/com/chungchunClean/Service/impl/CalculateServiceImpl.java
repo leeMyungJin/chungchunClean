@@ -28,8 +28,8 @@ public class CalculateServiceImpl implements CalculateService{
 	}
 
 	@Override
-	public HashMap<String, Object> getMonTodayCost(){
-		return calculateMapper.getMonTodayCost();
+	public HashMap<String, Object> getMonTotalCost(){
+		return calculateMapper.getMonTotalCost();
 	}
 	
 	@Override
@@ -50,8 +50,8 @@ public class CalculateServiceImpl implements CalculateService{
 	}
 
 	@Override
-	public HashMap<String, Object> getAddTodayCost(){
-		return calculateMapper.getAddTodayCost();
+	public HashMap<String, Object> getAddTotalCost(){
+		return calculateMapper.getAddTotalCost();
 	}
 	
 	@Override
@@ -78,11 +78,11 @@ public class CalculateServiceImpl implements CalculateService{
 		return calculateList;
 	}
 	
-	
 	@Override
-	public void deleteMon(List<CalculateVo> params) {
-		for(CalculateVo vo : params)
-			calculateMapper.deleteMon(vo);
+	public List<CalculateVo> getBldgList(HashMap<String,Object> params){
+
+		List<CalculateVo> calculateList = calculateMapper.getBldgList(params);
+		return calculateList;
 	}
 	
 	@Override
@@ -124,6 +124,14 @@ public class CalculateServiceImpl implements CalculateService{
 			calculateMapper.saveAdd(vo);
 		}
 	}	
+	
+	@Override
+	public void saveUpdateAdd(List<CalculateVo> params) {
+		for(CalculateVo vo : params){
+			vo.setUpdtId("testId");
+			calculateMapper.saveUpdateAdd(vo);
+		}	
+	}
 	
 	@Override
 	public void saveClassifi(List<CalculateVo> params) {

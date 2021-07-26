@@ -5,11 +5,12 @@ public class CalculateVo {
 	private String areaNm;
 	private String bldgNm;
 	private String bldgCd; 
-	private String surtax;
+	private Integer surtax;
 	private String surtaxYn;
 	private String taxBill; 
 	private Integer outCost;
 	private Integer overCost;
+	private Integer overCostTemp;
 	private Integer manageCost;
 	private Integer addCost;
 	private Integer depositCost;
@@ -34,7 +35,8 @@ public class CalculateVo {
 	private String type;
 	private Integer conCost;
 	private String addSeq;
-	
+	private String zone;
+	private String monMt;
 	public String getAreaCd() {
 		return areaCd;
 	}
@@ -59,10 +61,10 @@ public class CalculateVo {
 	public void setBldgCd(String bldgCd) {
 		this.bldgCd = bldgCd;
 	}
-	public String getSurtax() {
+	public Integer getSurtax() {
 		return surtax;
 	}
-	public void setSurtax(String surtax) {
+	public void setSurtax(Integer surtax) {
 		this.surtax = surtax;
 	}
 	public String getSurtaxYn() {
@@ -88,6 +90,12 @@ public class CalculateVo {
 	}
 	public void setOverCost(Integer overCost) {
 		this.overCost = overCost;
+	}
+	public Integer getOverCostTemp() {
+		return overCostTemp;
+	}
+	public void setOverCostTemp(Integer overCostTemp) {
+		this.overCostTemp = overCostTemp;
 	}
 	public Integer getManageCost() {
 		return manageCost;
@@ -227,18 +235,31 @@ public class CalculateVo {
 	public void setAddSeq(String addSeq) {
 		this.addSeq = addSeq;
 	}
+	public String getZone() {
+		return zone;
+	}
+	public void setZone(String zone) {
+		this.zone = zone;
+	}
+	public String getMonMt() {
+		return monMt;
+	}
+	public void setMonMt(String monMt) {
+		this.monMt = monMt;
+	}
 	@Override
 	public String toString() {
 		return "CalculateVo [areaCd=" + areaCd + ", areaNm=" + areaNm + ", bldgNm=" + bldgNm + ", bldgCd=" + bldgCd
 				+ ", surtax=" + surtax + ", surtaxYn=" + surtaxYn + ", taxBill=" + taxBill + ", outCost=" + outCost
-				+ ", overCost=" + overCost + ", manageCost=" + manageCost + ", addCost=" + addCost + ", depositCost="
-				+ depositCost + ", depositMt=" + depositMt + ", depositDt=" + depositDt + ", depositor=" + depositor
-				+ ", pnum=" + pnum + ", memo=" + memo + ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt="
-				+ updtDt + ", updtId=" + updtId + ", outscCost=" + outscCost + ", materCost=" + materCost
-				+ ", quoteCost=" + quoteCost + ", addDt=" + addDt + ", classifiCd=" + classifiCd + ", classifiNm="
-				+ classifiNm + ", itemCd=" + itemCd + ", itemNm=" + itemNm + ", type=" + type + ", conCost=" + conCost
-				+ ", addSeq=" + addSeq + "]";
+				+ ", overCost=" + overCost + ", overCostTemp=" + overCostTemp + ", manageCost=" + manageCost
+				+ ", addCost=" + addCost + ", depositCost=" + depositCost + ", depositMt=" + depositMt + ", depositDt="
+				+ depositDt + ", depositor=" + depositor + ", pnum=" + pnum + ", memo=" + memo + ", cretDt=" + cretDt
+				+ ", cretId=" + cretId + ", updtDt=" + updtDt + ", updtId=" + updtId + ", outscCost=" + outscCost
+				+ ", materCost=" + materCost + ", quoteCost=" + quoteCost + ", addDt=" + addDt + ", classifiCd="
+				+ classifiCd + ", classifiNm=" + classifiNm + ", itemCd=" + itemCd + ", itemNm=" + itemNm + ", type="
+				+ type + ", conCost=" + conCost + ", addSeq=" + addSeq + ", zone=" + zone + ", monMt=" + monMt + "]";
 	}
+	
 	
 	
     

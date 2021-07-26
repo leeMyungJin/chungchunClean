@@ -34,4 +34,13 @@ public class DailyServiceImpl implements DailyService {
 		return dailyInfo;
 	}
 	
+	
+	@Override
+	public HashMap<String, Object> getDailylable(HashMap<String,Object> params){
+		if(params.get("inq") != null)
+			params.replace("inq", Util.makeForeach((String)params.get("inq"), ","));
+		
+		return dailyMapper.getDailylable(params);
+	}
+	
 }

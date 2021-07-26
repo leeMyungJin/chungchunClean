@@ -71,8 +71,6 @@ public class MobileController {
 	            
 	            JSONObject regionObj = (JSONObject) ((JSONObject) ((JSONArray) jsonObj.get("results")).get(0)).get("region");
 				JSONObject landObj = (JSONObject) ((JSONObject) ((JSONArray) jsonObj.get("results")).get(0)).get("land");
-				System.out.println("박준호........" +regionObj);
-				System.out.println("박준호2222........" +landObj);
 	            String area1 = (String) ((JSONObject)regionObj.get("area1")).get("name").toString();
 	            String area2 = (String) ((JSONObject)regionObj.get("area2")).get("name").toString();
 	            String area3 = (String) ((JSONObject)regionObj.get("area3")).get("name").toString();
@@ -85,8 +83,9 @@ public class MobileController {
 	            returnObj.put("area2", area2);
 	            returnObj.put("area3", area3);
 	            returnObj.put("area4", area1+" "+area2);
-				returnObj.put("area5", area1+" "+area2+" "+area3);
-				returnObj.put("area6", area1+" "+area2+" "+area3+" "+area4+"-"+area5);
+		    returnObj.put("area5", area1+" "+area2+" "+area3);
+		    returnObj.put("area6", area1+" "+area2+" "+area3+" "+area4+"-"+area5);
+	            returnObj.put("area7", area2+" "+area3+" "+area4+"-"+area5);
 
 	            return returnObj.toString();
                 

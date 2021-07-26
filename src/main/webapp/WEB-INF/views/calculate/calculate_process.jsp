@@ -12,11 +12,13 @@ var monView;
 var monGridPager;
 var monGrid;
 var monColumns;
+var monSelector;
 
 var addView;
 var addGridPager;
 var addGrid;
 var addColumns;
+var addSelector;
 
 var classifiGrid;
 var classifiView;
@@ -51,6 +53,8 @@ function pageLoad(){
 	$('#toDate').attr('max',today);
 	
 	loadGridList('init');
+	getMonTotalCost();
+	getAddTotalCost();
 }
 
 function tab_panel(showTab, hideTab){
@@ -90,26 +94,82 @@ function loadGridList(type, result){
 		    });
 		   
  		   monColumns = [
-			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'bldgCd', header: '건물코드', isReadOnly: true, width: 0, align:"center"  },
-			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'manageCost', header: '관리비', isReadOnly: true, width: 150, align:"center" },
-			      { binding: 'taxBill', header: '세금계산서', isReadOnly: true, width: 150, align:"center"  },
-			      { binding: 'overCost', header: '추가금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
+ 			  	  { isReadOnly: true, width: 35, align:"center"},
+ 			  	  { binding: 'monMt', header: '월', isReadOnly: true, width: 100, align:"center"},
+ 			   	  { binding: 'areaCd', header: '지역', isReadOnly: true, width: 100, align:"center", visible: false },
+ 			   	  { binding: 'areaNm', header: '지역', isReadOnly: true, width: 100, align:"center" },
+ 			   	  { binding: 'zone', header: '구분', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'bldgCd', header: '건물코드', isReadOnly: true, width: 0, align:"center", visible: false},
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'conCost', header: '관리비', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum'  },
+			      { binding: 'surtax', header: '부가세', isReadOnly: true, width: 150, align:"center" , aggregate: 'Sum' },
+			      { binding: 'taxBill', header: '세금계산서', isReadOnly: false, width: 150, align:"center"  },
+			      { binding: 'addCost', header: '추가금', isReadOnly: false, width: 150, align:"center", aggregate: 'Sum' },
 			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum'  },
 			      { binding: 'overCost', header: '이월금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
-			      { binding: 'depositCost', header: '관리비입금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
-			      { binding: 'depositDt', header: '입금날짜', isReadOnly: true, width: 150, align:"center" },
-			      { binding: 'depositor', header: '입금자명', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'overCostTemp', header: '이월금 Temp', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
+			      { binding: 'depositCost', header: '관리비입금', isReadOnly: false, width: 150, align:"center", aggregate: 'Sum' },
+			      { binding: 'depositDt', header: '입금날짜', isReadOnly: false, width: 150, align:"center" },
+			      { binding: 'depositor', header: '입금자명', isReadOnly: false, width: 100, align:"center" },
 			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 150, align:"center" },
-			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" }
+			      { binding: 'memo', header: '비고', isReadOnly: false, width: 200, align:"center" }
 			];
 		    
+ 		   
+ 		  var depositDtEditor = new wijmo.input.InputDate(document.createElement("div"));
 		   monGrid = new wijmo.grid.FlexGrid('#monGrid', {
 			    autoGenerateColumns: false,
 			    alternatingRowStep: 0,
 			    columns: monColumns,
-			    itemsSource: monView
+			    itemsSource: monView,
+	            beginningEdit: function (s, e) {
+	                s.columns.getColumn("depositDt").editor = depositDtEditor;
+	                let depositDt = e.getRow().dataItem.depositDt;
+	                if (!depositDt) {
+	                    return;
+	                }
+	            },
+	            cellEditEnding: function (s, e) {
+	                var col = s.columns[e.col];
+	                var inven = s.columns[e.col - 1];
+	                if (col.binding == 'addCost' || col.binding == 'depositCost') {
+	                    var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
+	                    if( !wijmo.isNumber(value)){
+	                        e.cancel = true;
+	                        e.stayInEditMode = false;
+	                        alert('숫자로만 입력 가능합니다.');
+	                        return false;
+	                    }
+	                    
+	                }
+	                
+	                if(col.binding == "depositCost"){
+	                	//미수금 = 관리비(계약금) + 부가세 +  추가금 - 관리비입금
+	                    e.getRow().dataItem.outCost = Number((e.getRow().dataItem.conCost == null ? 0 : e.getRow().dataItem.conCost))
+	                    							+ Number((e.getRow().dataItem.surtax == null ? 0 : e.getRow().dataItem.surtax))
+	                    							+ Number((e.getRow().dataItem.addCost == null ? 0 : e.getRow().dataItem.addCost))
+	                    							- Number((s.activeEditor.value == null ? 0 : s.activeEditor.value));
+	                	
+	                	//이월금 = 누적미수금
+	                    e.getRow().dataItem.overCost = e.getRow().dataItem.overCostTemp + e.getRow().dataItem.outCost;
+	                    if(e.getRow().dataItem.outCost < 0)e.getRow().dataItem.outCost = 0;
+	                	
+	                }else if(col.binding == "addCost"){
+	                	//미수금 = 관리비(계약금) + 부가세 + 추가금 - 관리비입금
+	                    e.getRow().dataItem.outCost = Number((e.getRow().dataItem.conCost == null ? 0 : e.getRow().dataItem.conCost))
+													+ Number((e.getRow().dataItem.surtax == null ? 0 : e.getRow().dataItem.surtax))
+													+ Number((s.activeEditor.value  == null ? 0 : s.activeEditor.value))
+													- Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost));
+	                	
+	                	//이월금 = 누적미수금
+	                    e.getRow().dataItem.overCost = e.getRow().dataItem.overCostTemp + e.getRow().dataItem.outCost;
+	                    if(e.getRow().dataItem.outCost < 0)e.getRow().dataItem.outCost = 0;
+	                	
+	                }else if(col.binding == "depositDt"){
+	                    e.getRow().dataItem.depositDt = s.activeEditor.value;
+	                    
+	                }
+	            } 
 			  });
 			  
 		   monGrid.columnFooters.rows.push(new wijmo.grid.GroupRow());
@@ -120,8 +180,11 @@ function loadGridList(type, result){
 	                cell.textContent = (r + 1).toString();
 	            }
 	        };
-		   	_setUserGridLayout('monLayout', monGrid, monColumns);
-	    
+		   	
+	     	_setUserGridLayout('monLayout', monGrid, monColumns);
+	     	// 체크박스 생성
+	     	monSelector = new wijmo.grid.selector.Selector(monGrid);
+	     	monSelector.column = monGrid.columns[0];
 	        
 			//부가수익 
 		 	addView = new wijmo.collections.CollectionView(result, {
@@ -134,24 +197,76 @@ function loadGridList(type, result){
 		        cv: addView
 		    });
 		   
+		   classifiList = new wijmo.grid.DataMap(getClassifiList('drop'), 'id', 'name');
+		   itemList = new wijmo.grid.DataMap(getItemList('drop'), 'id', 'name');
+		   itemList.getDisplayValues = function (dataItem) {
+			    let validItem = getItemList('drop').filter(itemCd => itemCd.classifiCd == dataItem.classifiCd);
+			    return validItem.map(itemCd => itemCd.name);
+			}; 
+		    
 		   addColumns = [
-			      { binding: 'addDt', header: '일자', isReadOnly: true, width: 150, align:"center" },
-			      { binding: 'classifiNm', header: '분류', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'itemNm', header: '내역', isReadOnly: true, width: 150, align:"center" },
-			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'quoteCost', header: '견적', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum'  },
-			      { binding: 'materCost', header: '재료비', isReadOnly: true, width: 100, align:"center", aggregate: 'Sum'  },
-			      { binding: 'outscCost', header: '외주', isReadOnly: true, width: '*', align:"center", aggregate: 'Sum' },
-			      { binding: 'depositCost', header: '입금', isReadOnly: true, width: '*', align:"center", aggregate: 'Sum' },
-			      { binding: 'depositDt', header: '입금날짜', isReadOnly: true, width: '*', align:"center" },
-			      { binding: 'depositor', header: '입금자명', isReadOnly: true, width: '*', align:"center" }
+			   	  { isReadOnly: true, width: 35, align:"center"},
+			      { binding: 'addSeq', header: '시퀀스', isReadOnly: true, width: 150, align:"center", visible: false},
+			   	  { binding: 'addDt', header: '일자', isReadOnly: true, width: 150, align:"center" },
+			      { binding: 'classifiCd', header: '분류', isReadOnly: false, width: 150, align:"center" , dataMap: classifiList, dataMapEditor: 'DropDownList' },
+			      { binding: 'classifiNm', header: '분류명', isReadOnly: false, width: 100, align:"center", visible: false},
+			      { binding: 'itemCd', header: '내역', isReadOnly: false, width: 150, align:"center" , dataMap: itemList, dataMapEditor: 'DropDownList'},
+			      { binding: 'itemNm', header: '내역명', isReadOnly: false, width: 150, align:"center", visible: false},
+			      { binding: 'areaNm', header: '지역', isReadOnly: false, width: 150, align:"center"},
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: false, width: 200, align:"center"},
+			      { binding: 'quoteCost', header: '견적', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum'  },
+			      { binding: 'materCost', header: '재료비', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum'  },
+			      { binding: 'outscCost', header: '외주', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum' },
+			      { binding: 'depositCost', header: '입금', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum' },
+			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum'},
+			      { binding: 'depositDt', header: '입금날짜', isReadOnly: false, width: 150, align:"center" },
+			      { binding: 'depositor', header: '입금자명', isReadOnly: false, width: 100, align:"center" }
 			];
-		  
+		   var depositDtEditor = new wijmo.input.InputDate(document.createElement("div"));
 		   addGrid = new wijmo.grid.FlexGrid('#addGrid', {
 			    autoGenerateColumns: false,
 			    alternatingRowStep: 0,
 			    columns: addColumns,
-			    itemsSource: addView
+			    itemsSource: addView,
+			    beginningEdit: function (s, e) {
+	                s.columns.getColumn("depositDt").editor = depositDtEditor;
+	                let depositDt = e.getRow().dataItem.depositDt;
+	                if (!depositDt) {
+	                    return;
+	                }
+	            },
+	            cellEditEnding: function (s, e) {
+	                var col = s.columns[e.col];
+	                var inven = s.columns[e.col - 1];
+	                if (col.binding == 'quoteCost' || col.binding == 'materCost' || col.binding == 'outscCost' || col.binding == 'depositCost') {
+	                    var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
+	                    if( !wijmo.isNumber(value)){
+	                        e.cancel = true;
+	                        e.stayInEditMode = false;
+	                        alert('숫자로만 입력 가능합니다.');
+	                        return false;
+	                    }
+	                    
+	                   //미수금 
+	                   if (col.binding == 'quoteCost') {
+	                	   e.getRow().dataItem.outCost = s.activeEditor.value - e.getRow().dataItem.depositCost;
+	                	   if(isNaN(e.getRow().dataItem.outCost)) e.getRow().dataItem.outCost = 0;
+	                   }else if(col.binding == 'depositCost'){
+	                	   e.getRow().dataItem.outCost = e.getRow().dataItem.quoteCost - s.activeEditor.value;
+	                	   if(isNaN(e.getRow().dataItem.outCost)) e.getRow().dataItem.outCost = 0;
+	                   }
+	                   
+	                }else if(col.binding == "depositDt"){
+	                    e.getRow().dataItem.depositDt = s.activeEditor.value;
+	                    
+	                }else if(col.binding == "classifiCd"){
+	                    e.getRow().dataItem.classifiNm = s.activeEditor.value;
+	                    
+	                }else if(col.binding == "itemCd"){
+	                    e.getRow().dataItem.itemNm = s.activeEditor.value;
+	                    
+	                }
+	            } 
 			  });
 		
 			addGrid.columnFooters.rows.push(new wijmo.grid.GroupRow());
@@ -162,6 +277,11 @@ function loadGridList(type, result){
 	                cell.textContent = (r + 1).toString();
 	            }
 	        };
+	        
+	     	// 체크박스 생성
+	     	addSelector = new wijmo.grid.selector.Selector(addGrid);
+	     	addSelector.column = addGrid.columns[0];
+	        
 		   	_setUserGridLayout('addLayout', addGrid, addColumns);
 	        
 	        
@@ -287,7 +407,7 @@ function loadGridList(type, result){
 		//월관리
 		   monView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
-		       ,groupDescriptions: ['bldgNm']
+		       ,groupDescriptions: ['areaNm']
 		   		,trackChanges: true
 		   });
 		  monGridPager.cv = monView;
@@ -331,13 +451,56 @@ function loadGridList(type, result){
 }
 
 
+function getMonTotalCost(){
+	$.ajax({
+	      type : 'POST',
+	      url : '/calculate/getMonTotalCost',
+	      async : false, // 비동기모드 : true, 동기식모드 : false
+	      dataType : null,
+	      success : function(result) {
+	      	console.log(result);
+	        $("#totalOutcost").text(result.outcost+ "원");
+	        $("#totalDepositcost").text(result.depositcost+ "원");
+	        $("#totalAddcost").text(result.addcost+ "원");
+
+	      },
+	      error: function(request, status, error) {
+	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+	      }
+	  });
+}
+
+function getAddTotalCost(){
+	$.ajax({
+	      type : 'POST',
+	      url : '/calculate/getAddTotalCost',
+	      async : false, // 비동기모드 : true, 동기식모드 : false
+	      dataType : null,
+	      success : function(result) {
+	      	console.log(result);
+	        $("#totalAddDepositcost").text(result.depositcost.toLocaleString('ko-KR')+ "원");
+	        $("#totalAddOutcost").text(result.outcost.toLocaleString('ko-KR')+ "원");
+
+	      },
+	      error: function(request, status, error) {
+	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+	      }
+	  });
+}
+
 function getMonList(){
 	var param = {
 		con 	: $('#con').val()
 		, inq 	: $('#inq').val()
-		, fromDate : $('#fromDate').val()
-		, toDate : $('#toDate').val()
+		, date : $('#date').val()
 	};
+	
+	if($('#date').val() == null || $('#date').val() == ""){
+		alert("조회월은 필수 검색조건입니다.");
+		return false;
+	}
 	
 	$.ajax({
       type : 'POST',
@@ -363,9 +526,11 @@ function getMonList(){
 	      data : param,
 	      success : function(result) {
 	      	console.log(result);
-	        $("#lableAddCost").text(result.addcost+ "원");
-	        $("#lableDepositCost").text(result.depositcost+ "원");
-	        $("#lableOutCost").text(result.outcost+ "원");
+	        $("#lableAddCost").text(result.addcost.toLocaleString('ko-KR')+ "원");
+	        $("#lableDepositCost").text(result.depositcost.toLocaleString('ko-KR')+ "원");
+	        $("#lableOutCost").text(result.outcost.toLocaleString('ko-KR')+ "원");
+	        
+	        getMonTotalCost();
 
 	      },
 	      error: function(request, status, error) {
@@ -379,7 +544,7 @@ function getAddList(){
 	var param = {
 		con 	: $('#con2').val()
 		, inq 	: $('#inq2').val()
-		, fromDate : $('#date').val()
+		, date : $('#date2').val()
 	};
 	
 	$.ajax({
@@ -400,24 +565,27 @@ function getAddList(){
 	
 	$.ajax({
 	      type : 'POST',
-	      url : '/calculate/getMonlableCost',
+	      url : '/calculate/getAddlableCost',
 	      async : false, // 비동기모드 : true, 동기식모드 : false
 	      dataType : null,
 	      data : param,
 	      success : function(result) {
 	      	console.log(result);
-	        $("#addlableMaterCost").text(result.matercost+ "원");
-	        $("#addlableDepositCost").text(result.outsccost+ "원");
-	        $("#addlableOutscCost").text(result.depositcost+ "원");
-	        $("#addlableQuoteCost").text(result.quotecost+ "원");
-	        $("#addlableAddCost").text(result.addcost+ "원");
-	        $("#addlableOverCost").text(result.overcost+ "원");
+	        $("#addlableMaterCost").text(result.matercost.toLocaleString('ko-KR')+ "원");
+	        $("#addlableDepositCost").text(result.depositcost.toLocaleString('ko-KR')+ "원");
+	        $("#addlableOutscCost").text(result.outsccost.toLocaleString('ko-KR')+ "원");
+	        $("#addlableQuoteCost").text(result.quotecost.toLocaleString('ko-KR')+ "원");
+	        $("#addlableAddCost").text(result.addcost.toLocaleString('ko-KR')+ "원");
+	        $("#addlableOutCost").text(result.outcost.toLocaleString('ko-KR')+ "원");
+	        
+	        getAddTotalCost();
 	      },
 	      error: function(request, status, error) {
 	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 
 	      }
 	  });
+	
 }
 
 // 행추가
@@ -438,35 +606,7 @@ function addRow(type){
 
 //행 삭제
 function deleteRows(type){
-    if(type == 'mon'){
-        var item = monGrid.rows.filter(r => r.isSelected); 
-        var rows = [];
-        var params;
-         if(item.length == 0){
-            alert("선택된 행이 없습니다.");
-            return false;
-        }else{
-            for(var i =0; i< item.length ; i++){
-                rows.push(item[i].dataItem);
-            }
-            if(confirm("선택한 행들을 삭제 하시겠습니까??")){
-                $.ajax({
-                    url : "/calculate/deleteMon",
-                    async : false, // 비동기모드 : true, 동기식모드 : false
-                    type : 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(rows),
-                    success : function(result) {
-                        alert("삭제되었습니다.");
-                        getMonList();
-                    },
-                    error : function(request,status,error) {
-                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                    }
-                });
-            }
-        }
-    }else if(type == 'add'){
+   if(type == 'add'){
     	var item = addGrid.rows.filter(r => r.isSelected); 
         var rows = [];
         var params;
@@ -557,28 +697,25 @@ function deleteRows(type){
 //데이터 저장
 function saveGrid(type){
   if(type == "mon"){
-      var editItem = monView.itemsEdited;
-      var addItem  = monView.itemsAdded;
+	  
+      var allItem  = monGrid.collectionView.items;
       var rows = [];
-      for(var i =0; i< editItem.length ; i++){
-    	  if(!saveVal(type, addItem[i])) return false;
-          rows.push(editItem[i]);
-      }
-      for(var i=0; i< addItem.length; i++){
-          rows.push(addItem[i]);
+      for(var i =0; i< allItem.length ; i++){
+    	  if(!saveVal(type, allItem[i])) return false;
+          rows.push(allItem[i]);
       }
 
       wijmo.Control.getControl("#editGrid").refresh(true);
       if(confirm("저장 하시겠습니까?")){
           $.ajax({
-              url : "/calculage/saveMon",
+              url : "/calculate/saveMon",
               async : false, // 비동기모드 : true, 동기식모드 : false
               type : 'POST',
               contentType: 'application/json',
               data: JSON.stringify(rows),
               success : function(result) {
                   alert("저장되었습니다.");
-                  loadGridList('mon', result);
+                  getMonList();
               },
               error : function(request,status,error) {
                   alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -587,32 +724,55 @@ function saveGrid(type){
       }
   }else if(type == 'add'){
       if(addView.itemCount > 0){
-          var editItem = addView.itemsEdited;
-          var addItem  = addView.itemsAdded;
-          var rows = [];
-          for(var i =0; i< editItem.length ; i++){
-        	  if(!saveVal(type, addItem[i])) return false;
-        	  rows.push(editItem[i]);
-          }
-          for(var i=0; i< addItem.length; i++){
-              rows.push(addItem[i]);
-          }
+    	  var addItem  = addView.itemsAdded;
+    	    var addItem  = addView.itemsAdded;
+    	    var editItem = addView.itemsEdited;
+    	    var addRows = [];
+    		var editRows = [];
+    		var rows = [];
+
+    	    for(var i=0; i< addItem.length; i++){
+    	    	if(!saveVal(type, addItem[i])) return false;
+    	    	
+    	    	addRows.push(addItem[i]);
+    	    	rows.push(addItem[i]);
+    	    }
+    		
+    		for(var i =0; i< editItem.length; i++){
+    			if(!saveVal(type, editItem[i])) return false;
+    			
+    	    	editRows.push(editItem[i]);
+    	    	rows.push(editItem[i]);
+    	    }
+    		
           wijmo.Control.getControl("#editGrid").refresh(true);
           if(confirm("저장 하시겠습니까?")){
-              $.ajax({
-                  url : "/calculate/saveAdd",
-                  async : false, // 비동기모드 : true, 동기식모드 : false
-                  type : 'POST',
-                  contentType: 'application/json',
-                  data: JSON.stringify(rows),
-                  success : function(result) {
-                      alert("저장되었습니다.");
-                      getAddList();
-                  },
-                  error : function(request,status,error) {
-                      alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                  }
-              });
+        	  $.ajax({
+        	        url : "/calculate/saveAdd",
+        	        async : false, // 비동기모드 : true, 동기식모드 : false
+        	        type : 'POST',
+        	        contentType: 'application/json',
+        	        data: JSON.stringify(addRows),
+        	        success : function(result) {
+        	        	$.ajax({
+        	                url : "/calculate/saveUpdateAdd",
+        	                async : false, // 비동기모드 : true, 동기식모드 : false
+        	                type : 'POST',
+        	                contentType: 'application/json',
+        	                data: JSON.stringify(editRows),
+        	                success : function(result) {
+        	                    alert("저장되었습니다.");
+        	                    getAddList();
+        	                },
+        	                error : function(request,status,error) {
+        	                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        	                }
+        	            });
+        	        },
+        	        error : function(request,status,error) {
+        	            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        	        }
+        	    });
           }
       }
      }else if(type == 'classifi'){
@@ -776,9 +936,47 @@ function saveGrid(type){
 
 function saveVal(type, item){
 	if(type == "mon"){
-		
+		if( (item.taxBill != null && item.taxBill != '') && ( item.taxBill == null || item.taxBill == '' ) ){
+			alert("부가세가 존재하는 경우, 세금계산서 방식을 입력해주세요.");
+			return false;
+			
+		}else if(item.depositCost != null && item.depositCost != ''){
+			if(item.depositDt == null || item.depositDt == ''){
+				alert("입금날짜를 입력해주세요.");
+				return false;
+				
+			}else if(item.depositor == null || item.depositor == ''){
+				alert("입금자명을 입력해주세요.");
+				return false;
+			}
+		}
 	}else if(type == "add"){
 		
+		console.log(item.depositCost );
+		console.log(item);
+		
+		if(item.classifiCd == null || item.classifiCd == ''){
+			alert("분류를 입력해주세요.");
+			return false;
+		}else if(item.itemNm == null || item.itemNm == ''){
+			alert("내역을 입력해주세요.");
+			return false;
+		}else if(item.bldgNm == null || item.bldgNm == ''){
+			alert("건물명을 입력해주세요.");
+			return false;
+		}else if(item.quoteCost == null || item.quoteCost == ''){
+			alert("견적비를 입력해주세요.");
+			return false;
+		}else if(item.depositCost == null || item.depositCost == ''){
+			alert("입금비를 입력해주세요.");
+			return false;
+		}else if(item.depositDt == null || item.depositDt == ''){
+			alert("입금날짜를 입력해주세요.");
+			return false;
+		}else if(item.depositor == null || item.depositor == ''){
+			alert("입금자명을 입력해주세요.");
+			return false;
+		}
 		
 	}else if(type == "classifi"){
 		if(item.classifiCd == null || item.classifiCd == ''){
@@ -820,7 +1018,7 @@ function getClassifiList(type){
         	   if(type == 'list'){
         		   loadGridList('classifi', result);
         		   
-        	   }else if(type == 'itemPop'){
+        	   }else if(type == 'itemPop' || type == 'drop'){
         		   if(result.length > 0){
 	                   	var classifi = [];
 	                   	
@@ -831,8 +1029,10 @@ function getClassifiList(type){
 	                   	returnVal = classifi;
 	                   	
                    }
+        		   
         	   }else if(type == 'dupChk'){
         		   returnVal = result;
+        		   
         	   }
            },
            error : function(request,status,error) {
@@ -859,6 +1059,14 @@ function getItemList(type){
         		   
         	   }else if(type == 'dupChk'){
         		   returnVal = result;
+        	   
+        	   }else if(type == 'drop'){
+        		   var item = [];
+               	
+	               for(var i =0; i<result.length; i++){
+	            	   item[i] = { id: result[i].itemCd, name: result[i].itemNm, classifiCd: result[i].classifiCd };	
+	               }
+	               returnVal = item;
         	   }
 
            },
@@ -869,6 +1077,33 @@ function getItemList(type){
     
     if(type != 'list') return returnVal;
     
+}
+
+//카테고리 동적으로 가져오기
+function getBldgList() {
+	var returnVal;
+	
+    $.ajax({
+            url : "/calculate/getBldgList",
+            async : false, // 비동기모드 : true, 동기식모드 : false
+            type : 'POST',
+            success : function(result) {
+                if(result.length > 0){
+                	var bldg = [];
+                	
+                	for(var i =0; i<result.length; i++){
+                		bldg[i] = { id: result[i].bldgCd, name: result[i].bldgNm,  areaCd: result[i].areaCd,  areaNm: result[i].areaNm, zone: result[i].zone };	
+                	}
+                	returnVal = bldg;
+                	console.log(returnVal);
+                }
+            },
+            error : function(request,status,error) {
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+    });
+    
+    return returnVal;
 }
 
 
@@ -950,15 +1185,15 @@ function addExportExcel(){
                     <div class="admin_summary">
                         <dl>
                             <dt>총 누적미수금(이월금)</dt>
-                            <dd>${totalCost.outcost}원</dd>
+                            <dd id="totalOutcost">0원</dd>
                         </dl>
                         <dl>
                             <dt>총 입금금액</dt>
-                            <dd>${totalCost.depositcost}원</dd>
+                            <dd id="totalDepositcost">0원</dd>
                         </dl>
                         <dl>
                             <dt>총 추가금</dt>
-                            <dd>${totalCost.addcost}원</dd>
+                            <dd id="totalAddcost">0원</dd>
                         </dl>
                         <dl>
                             <dt>문자 잔액</dt>
@@ -966,12 +1201,12 @@ function addExportExcel(){
                         </dl>
                     </div>
                     <div class="admin_utility">
-                        <label for="Date">조회일</label>
+                        <label for="date">조회월</label>
                         <input type="month" id="date" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey('mon');">
-                        <button class="admin_utility_btn">조회</button>
+                        <button class="admin_utility_btn"  onClick="getMonList();">조회</button>
                         <div class="admin_btn">
                             <button class="btn">엑셀 업로드</button>
-                            <button class="btn">엑셀 다운로드</button>
+                            <button class="btn" onClick="monExportExcel();">엑셀 다운로드</button>
                         </div>
                     </div>
                     <div class="admin_content">
@@ -1011,7 +1246,7 @@ function addExportExcel(){
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('monLayout', monGrid, monColumns);">칼럼초기화</button>
                                 <button type="button">문구수정</button>
                                 <button type="button">문자발송</button>
-                                <button type="button">저장</button>
+                                <button type="button" onClick="saveGrid('mon')">저장</button>
                             </div>
                             <div class="grid_wrap">
                                 <div id="monGrid"  style="height:500px;"></div>
@@ -1022,7 +1257,7 @@ function addExportExcel(){
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('monLayout', monGrid, monColumns);">칼럼초기화</button>
                                 <button type="button">문구수정</button>
                                 <button type="button">문자발송</button>
-                                <button type="button">저장</button>
+                                <button type="button" onClick="saveGrid('mon')">저장</button>
                             </div>
                         </div>
                     </div>
@@ -1032,17 +1267,17 @@ function addExportExcel(){
                     <div class="admin_summary">
                         <dl>
                             <dt>총 입금금액</dt>
-                            <dd>${totalAddCost.depositcost}원</dd>
+                            <dd id="totalAddDepositcost">${totalAddCost.depositcost}원</dd>
                         </dl>
                         <dl>
-                            <dt>총 이월금</dt>
-                            <dd>${totalAddCost.overcost}원</dd>
+                            <dt>총 미수금</dt>
+                            <dd id="totalAddOutcost">${totalAddCost.outcost}원</dd>
                         </dl>
                         <a href="javascript:void(0);" onclick="showPop('add_category');">분류명생성</a>
                     	<a href="javascript:void(0);" onclick="showPop('add_breakdown');">내역생성</a>
                     </div>
                     <div class="admin_utility">
-                        <label for="date2">방문일</label>
+                        <label for="date2">조회일</label>
                         <input type="month" id="date2" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey('add');">
                         <button class="admin_utility_btn" onClick="getAddList();">조회</button>
                         <div class="admin_btn">
@@ -1066,12 +1301,8 @@ function addExportExcel(){
                             <button type="button" onClick="getAddList();">조회</button>
                             <div class="summary" style="position: relative; top:10px;">
                                 <dl>
-                                    <dt>견적</dt>
+                                    <dt>견적금</dt> 
                                     <dd id="addlableQuoteCost">0원</dd>
-                                </dl>
-                                <dl>
-                                    <dt>추가금</dt>
-                                    <dd id="addlableAddCost">0원</dd>
                                 </dl>
                                 <dl>
                                     <dt>재료비</dt>
@@ -1083,7 +1314,7 @@ function addExportExcel(){
                                 </dl>
                                 <dl>
                                     <dt>미수금</dt>
-                                    <dd id="addlableOverCost">0원</dd>
+                                    <dd id="addlableOutCost">0원</dd>
                                 </dl>
                                 <dl>
                                     <dt>입금금액</dt>
@@ -1093,12 +1324,12 @@ function addExportExcel(){
                         </div>
                         <!-- 보드 영역 admin_dashboard -->
                         <div class="admin_dashboard">
-                            <button type="button" class="stroke left">+ 건물추가</button>
+                            <button type="button" class="stroke left" onClick="addRow('add');">+ 건물추가</button>
                             <div class="btn_wrap">
                                 <button type="button" class="stroke" onClick="_getUserGridLayout('addLayout', addGrid);">칼럼위치저장</button>
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('addLayout', addGrid, addColumns);">칼럼초기화</button>
-                                <button type="button">저장</button>
-                                <button type="button">삭제</button>
+                                <button type="button" onclick="saveGrid('add')">저장</button>
+                            <button type="button" onclick="deleteRows('add')">삭제</button>
                             </div>
                             <div class="grid_wrap">
                                 <div id="addGrid"  style="height:500px;"></div>
@@ -1107,8 +1338,8 @@ function addExportExcel(){
                             <div class="btn_wrap">
                                 <button type="button" class="stroke" onClick="_getUserGridLayout('addLayout', addGrid);">칼럼위치저장</button>
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('addLayout', addGrid, addColumns);">칼럼초기화</button>
-                                <button type="button">저장</button>
-                                <button type="button">삭제</button>
+                                <button type="button" onclick="saveGrid('add')">저장</button>
+                            <button type="button" onclick="deleteRows('add')">삭제</button>
                             </div>
                         </div>
                     </div>

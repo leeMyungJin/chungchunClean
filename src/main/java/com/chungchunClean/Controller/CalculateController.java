@@ -29,19 +29,15 @@ public class CalculateController {
 	CalculateService calculateService;
 	
     @RequestMapping(value = "/process", method = {RequestMethod.POST , RequestMethod.GET})
-    public String moveProcess(Model model) {
-    	
-    	model.addAttribute("totalCost", calculateService.getMonTodayCost());
-    	model.addAttribute("totalAddCost", calculateService.getAddTodayCost());
-    	
+    public String moveProcess() {
         return "calculate/calculate_process";
     }
     
     @RequestMapping(value = "/history", method = {RequestMethod.POST , RequestMethod.GET})
     public String moveHistory(Model model) {
     	
-    	model.addAttribute("totalCost", calculateService.getMonTodayCost());
-    	model.addAttribute("totalAddCost", calculateService.getAddTodayCost());
+    	model.addAttribute("totalCost", calculateService.getMonTotalCost());
+    	model.addAttribute("totalAddCost", calculateService.getAddTotalCost());
     	
         return "calculate/calculate_history";
     }
@@ -62,6 +58,13 @@ public class CalculateController {
     	return calculateService.getMonlableCost(params);
     }
     
+    
+    @RequestMapping(value = "/getMonTotalCost")
+    @ResponseBody
+    public HashMap<String,Object> getMonTotalCost(){
+    	return calculateService.getMonTotalCost();
+    }
+    
     @RequestMapping(value = "/getAddList")
     @ResponseBody
     public List<CalculateVo> getAddList(@RequestParam HashMap<String,Object> params){
@@ -70,12 +73,17 @@ public class CalculateController {
     	
     	return calculateList;
     }
-    
+     
     @RequestMapping(value = "/getAddlableCost")
     @ResponseBody
-    public HashMap<String,Object> getAddlableCost(@RequestParam HashMap<String,Object> params){
-    	
+    public HashMap<String,Object> getAddlableCost(@RequestParam HashMap<String,Object> params,Model model){
     	return calculateService.getAddlableCost(params);
+    }
+    
+    @RequestMapping(value = "/getAddTotalCost")
+    @ResponseBody
+    public HashMap<String,Object> getAddTotalCost(){
+    	return calculateService.getAddTotalCost();
     }
     
     @RequestMapping(value = "/getClassifiList")
@@ -97,11 +105,15 @@ public class CalculateController {
     }
     
     
-    @RequestMapping(value="/deleteMon", method = {RequestMethod.POST , RequestMethod.GET})
+    @RequestMapping(value = "/getBldgList")
     @ResponseBody
-    public void deleteMon(@RequestBody List<CalculateVo> params){
-    	calculateService.deleteMon(params);
+    public List<CalculateVo> getBldgList(@RequestParam HashMap<String,Object> params){
+    	
+    	List<CalculateVo> calculateList = calculateService.getBldgList(params);
+    	
+    	return calculateList;
     }
+    
     
     @RequestMapping(value="/deleteAdd", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
@@ -131,7 +143,15 @@ public class CalculateController {
     @ResponseBody
     public void saveAdd(@RequestBody List<CalculateVo> params){
     	calculateService.saveAdd(params);
+        // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
     }
+
+    @RequestMapping(value="/saveUpdateAdd", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void saveUpdateAdd(@RequestBody List<CalculateVo> params){
+    	calculateService.saveUpdateAdd(params);
+    }
+  
 
     @RequestMapping(value="/saveClassifi", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
