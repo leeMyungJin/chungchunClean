@@ -32,6 +32,11 @@ function pageLoad(){
     loadGridStockList('init');
     getBuildingInfo();
 }
+function loginCheck(){
+     if("<%=session.getAttribute("staff_id")%>"==null){
+        location.href = "/";
+    }
+}
 function getError(item,prop){
         if( prop == "dongNum"){
             const curDong = item[prop];
@@ -547,7 +552,7 @@ function addBuilding(){
             pnum        : form.pnum.value,
             activeYn    : 'Y',
             conCost     : form.conCost.value.split(",").join(""),
-            surtax      : form.surtax.value,
+            surtax      : form.surtax.value.split(",").join(""),
             surtaxYn    : form.surtaxYn.value,
             memo        : form.memo.value,
             clientNm    : form.clientNm.value,
