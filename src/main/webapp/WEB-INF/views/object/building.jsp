@@ -366,7 +366,7 @@ function showPop(pop){
     if(pop == 'new_building'){
         dupCheck = false;
         form = newBuildingForm;
-        bldgDetailView.items.clear;
+        bldgDetailView.items.clear();
         form.clientNm.value="";
         form.areaCd.value="";
         form.areaNm.value="";
@@ -578,7 +578,7 @@ function addBuilding(){
                     dupCheck = false;
                     maxBldgCd ++;
                     bldgDetailGrid.allowAddNew = false;
-                    bldgDetailView.items.clear;
+                    bldgDetailView.items.clear();
                     getBuildingInfo();
                     closePop();
             },
@@ -834,7 +834,7 @@ function modifyBuilding(){
             alert("수정되었습니다.");
             dupCheck = false;
             modifyDetailGrid.allowAddNew = false;
-            modifyDetailView.items.clear;
+            modifyDetailView.items.clear();
             getBuildingInfo();
             closePop();
             getBuildingList();
@@ -1261,7 +1261,7 @@ $(function(){
                                 <option value="N">불포함</option>
                         </select>
                     </div>
-                    <div class="row"id="tax" style="display:none;">
+                    <div class="row" id="tax" name="tax" style="display:none;">
                             <label for="surtax">부가세 금액<i>*</i></label>
                             <input type="text" name="surtax" id="surtax" required placeholder="숫자만 입력하세요" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');">
                     </div>
