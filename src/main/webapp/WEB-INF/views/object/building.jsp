@@ -32,9 +32,11 @@ function pageLoad(){
     loadGridStockList('init');
     getBuildingInfo();
 }
-function loginCheck(){
-     if("<%=session.getAttribute("staff_id")%>"==null){
+function sessionCheck(){
+    if("<%=session.getAttribute("staff_id")%>"=="null"){
+        alert("세션이 종료되어 로그인화면으로 이동합니다.");
         location.href = "/";
+        return false;
     }
 }
 function getError(item,prop){
@@ -520,77 +522,79 @@ function dupBuildingCheck(type){
 }
 
 function addBuilding(){
-    if(buildingValidation('new')){
-        var form = newBuildingForm;
-        var detailParams = [];
-        //그리드 데이터 사전 체크
-        for(var i=0 ; i < bldgDetailView.items.length ; i++){
-            if(bldgDetailView.items[i].dongNum == "" || bldgDetailView.items[i].dongNum == undefined){
-                alert("상세정보 " + (i+1) + "행 동번호를 입력하시기 바랍니다.");
-                return false;
-            }else if(bldgDetailView.items[i].cleanCnt == "" || bldgDetailView.items[i].cleanCnt == undefined){
-                alert("상세정보 " + (i+1) + "행 청소횟수를 입력하시기 바랍니다.");
-                return false;
-            }else if(bldgDetailView.items[i].fromDt == "" || bldgDetailView.items[i].fromDt == undefined){
-                alert("상세정보 " + (i+1) + "행 시작일을 지정하시기 바랍니다.");
-                return false;
-            }else if(bldgDetailView.items[i].toDt == "" || bldgDetailView.items[i].toDt == undefined){
-                alert("상세정보 " + (i+1) + "행 종료일을 지정하시기 바랍니다.");
-                return false;
-            }else{
-                detailParams.push(bldgDetailView.items[i]);
+    if(sessionCheck()){
+        if(buildingValidation('new')){
+            var form = newBuildingForm;
+            var detailParams = [];
+            //그리드 데이터 사전 체크
+            for(var i=0 ; i < bldgDetailView.items.length ; i++){
+                if(bldgDetailView.items[i].dongNum == "" || bldgDetailView.items[i].dongNum == undefined){
+                    alert("상세정보 " + (i+1) + "행 동번호를 입력하시기 바랍니다.");
+                    return false;
+                }else if(bldgDetailView.items[i].cleanCnt == "" || bldgDetailView.items[i].cleanCnt == undefined){
+                    alert("상세정보 " + (i+1) + "행 청소횟수를 입력하시기 바랍니다.");
+                    return false;
+                }else if(bldgDetailView.items[i].fromDt == "" || bldgDetailView.items[i].fromDt == undefined){
+                    alert("상세정보 " + (i+1) + "행 시작일을 지정하시기 바랍니다.");
+                    return false;
+                }else if(bldgDetailView.items[i].toDt == "" || bldgDetailView.items[i].toDt == undefined){
+                    alert("상세정보 " + (i+1) + "행 종료일을 지정하시기 바랍니다.");
+                    return false;
+                }else{
+                    detailParams.push(bldgDetailView.items[i]);
+                }
             }
+                var params = {
+                clientNm    : form.clientNm.value,
+                areaCd      : form.areaCd.value,
+                areaNm      : form.areaNm.value,
+                zone        : form.zone.value,
+                bldgCd      : form.bldgCd.value,
+                bldgNm      : form.bldgNm.value,
+                dtlAddr     : form.dtlAddr.value,
+                pnum        : form.pnum.value,
+                activeYn    : 'Y',
+                conCost     : form.conCost.value.split(",").join(""),
+                surtax      : form.surtax.value.split(",").join(""),
+                surtaxYn    : form.surtaxYn.value,
+                memo        : form.memo.value,
+                clientNm    : form.clientNm.value,
+                conFromDt   : form.conFromDt.value,
+                conToDt     : form.conToDt.value
+            }
+            // 기본정보 저장
+            $.ajax({
+                url : "/object/addBuildingBas",
+                async : false, // 비동기모드 : true, 동기식모드 : false
+                type : 'POST',
+                data : params,
+                success : function(result) {
+                },
+                error : function(request,status,error) {
+                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                }
+            });
+            //상세정보 저장
+            $.ajax({
+                url : "/object/addBuildingDetail",
+                async : false, // 비동기모드 : true, 동기식모드 : false
+                type : 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(detailParams),
+                success : function(result) {
+                        alert("등록되었습니다.");
+                        dupCheck = false;
+                        maxBldgCd ++;
+                        bldgDetailGrid.allowAddNew = false;
+                        bldgDetailView.items.clear();
+                        getBuildingInfo();
+                        closePop();
+                },
+                error : function(request,status,error) {
+                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                }
+            });
         }
-            var params = {
-            clientNm    : form.clientNm.value,
-            areaCd      : form.areaCd.value,
-            areaNm      : form.areaNm.value,
-            zone        : form.zone.value,
-            bldgCd      : form.bldgCd.value,
-            bldgNm      : form.bldgNm.value,
-            dtlAddr     : form.dtlAddr.value,
-            pnum        : form.pnum.value,
-            activeYn    : 'Y',
-            conCost     : form.conCost.value.split(",").join(""),
-            surtax      : form.surtax.value.split(",").join(""),
-            surtaxYn    : form.surtaxYn.value,
-            memo        : form.memo.value,
-            clientNm    : form.clientNm.value,
-            conFromDt   : form.conFromDt.value,
-            conToDt     : form.conToDt.value
-        }
-        // 기본정보 저장
-        $.ajax({
-            url : "/object/addBuildingBas",
-            async : false, // 비동기모드 : true, 동기식모드 : false
-            type : 'POST',
-            data : params,
-            success : function(result) {
-            },
-            error : function(request,status,error) {
-                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-            }
-        });
-        //상세정보 저장
-        $.ajax({
-            url : "/object/addBuildingDetail",
-            async : false, // 비동기모드 : true, 동기식모드 : false
-            type : 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(detailParams),
-            success : function(result) {
-                    alert("등록되었습니다.");
-                    dupCheck = false;
-                    maxBldgCd ++;
-                    bldgDetailGrid.allowAddNew = false;
-                    bldgDetailView.items.clear();
-                    getBuildingInfo();
-                    closePop();
-            },
-            error : function(request,status,error) {
-                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-            }
-        });
     }
 }
 
@@ -726,123 +730,125 @@ function deleteBuilding(){
 }
 
 function modifyBuilding(){
-    if(confirm("수정하시겠습니까?")){
-        if(buildingValidation('modify')){
-            var form = modifyBuildingForm;
-            var detailParams = [];
-            var editItem = modifyDetailView.itemsEdited;
-            var addItem  = modifyDetailView.itemsAdded;
-            var delItem = modifyDetailView.itemsRemoved;
-            var rows = [];
-            var delRows = [];
-            for(var i =0; i< editItem.length ; i++){
-                rows.push(editItem[i]);
-            }
-            for(var i=0; i< addItem.length; i++){
-                rows.push(addItem[i]);
-            }
-            for(var i=0 ; i<delItem.length; i++){
-                delRows.push(delItem[i]);
-            }
-
-            if(delRows.length > 0){
-                $.ajax({
-                    url : "/object/deleteBuildingDetail",
-                    async : false, // 비동기모드 : true, 동기식모드 : false
-                    type : 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(delRows),
-                    success : function(result) {
-                    },
-                    error : function(request,status,error) {
-                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                    }
-                });
-            }
-            //그리드 데이터 사전 체크
-            for(var i=0 ; i < rows.length ; i++){
-                if(rows[i].dongNum == "" || rows[i].dongNum == undefined){
-                    alert("동번호를 입력하시기 바랍니다.");
-                    return false;
-                }else if(rows[i].cleanCnt == "" || rows[i].cleanCnt == undefined){
-                    alert("청소횟수를 입력하시기 바랍니다.");
-                    return false;
-                }else if(rows[i].fromDt == "" || rows[i].fromDt == undefined){
-                    alert("시작일을 지정하시기 바랍니다.");
-                    return false;
-                }else if(rows[i].toDt == "" || rows[i].toDt == undefined){
-                    alert("종료일을 지정하시기 바랍니다.");
-                    return false;
+    if(sessionCheck()){
+        if(confirm("수정하시겠습니까?")){
+            if(buildingValidation('modify')){
+                var form = modifyBuildingForm;
+                var detailParams = [];
+                var editItem = modifyDetailView.itemsEdited;
+                var addItem  = modifyDetailView.itemsAdded;
+                var delItem = modifyDetailView.itemsRemoved;
+                var rows = [];
+                var delRows = [];
+                for(var i =0; i< editItem.length ; i++){
+                    rows.push(editItem[i]);
                 }
-            }
-             var params = {
-                clientNm    : form.clientNm.value,
-                areaCd      : form.areaCd.value,
-                areaNm      : form.areaNm.value,
-                zone        : form.zone.value,
-                bldgCd      : form.bldgCd.value,
-                bldgNm      : form.bldgNm.value,
-                dtlAddr     : form.dtlAddr.value,
-                pnum        : form.pnum.value,
-                activeYn    : form.activeYn.checked == true? 'Y' : 'N',
-                conCost     : form.conCost.value.split(",").join(""),
-                surtax      : form.surtax.value == '' ? 0 :form.surtax.value.split(",").join(""),
-                surtaxYn    : form.surtaxYn.value,
-                memo        : form.memo.value,
-                clientNm    : form.clientNm.value,
-                conFromDt   : form.conFromDt.value,
-                conToDt     : form.conToDt.value
-            }
-            // 기본정보 저장
-            $.ajax({
-                url : "/object/modifyBuilding",
-                async : false, // 비동기모드 : true, 동기식모드 : false
-                type : 'POST',
-                data : params,
-                success : function(result) {
-                },
-                error : function(request,status,error) {
-                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                for(var i=0; i< addItem.length; i++){
+                    rows.push(addItem[i]);
                 }
-            });
+                for(var i=0 ; i<delItem.length; i++){
+                    delRows.push(delItem[i]);
+                }
 
-            if(delRows.length > 0){
+                if(delRows.length > 0){
+                    $.ajax({
+                        url : "/object/deleteBuildingDetail",
+                        async : false, // 비동기모드 : true, 동기식모드 : false
+                        type : 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(delRows),
+                        success : function(result) {
+                        },
+                        error : function(request,status,error) {
+                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        }
+                    });
+                }
+                //그리드 데이터 사전 체크
+                for(var i=0 ; i < rows.length ; i++){
+                    if(rows[i].dongNum == "" || rows[i].dongNum == undefined){
+                        alert("동번호를 입력하시기 바랍니다.");
+                        return false;
+                    }else if(rows[i].cleanCnt == "" || rows[i].cleanCnt == undefined){
+                        alert("청소횟수를 입력하시기 바랍니다.");
+                        return false;
+                    }else if(rows[i].fromDt == "" || rows[i].fromDt == undefined){
+                        alert("시작일을 지정하시기 바랍니다.");
+                        return false;
+                    }else if(rows[i].toDt == "" || rows[i].toDt == undefined){
+                        alert("종료일을 지정하시기 바랍니다.");
+                        return false;
+                    }
+                }
+                var params = {
+                    clientNm    : form.clientNm.value,
+                    areaCd      : form.areaCd.value,
+                    areaNm      : form.areaNm.value,
+                    zone        : form.zone.value,
+                    bldgCd      : form.bldgCd.value,
+                    bldgNm      : form.bldgNm.value,
+                    dtlAddr     : form.dtlAddr.value,
+                    pnum        : form.pnum.value,
+                    activeYn    : form.activeYn.checked == true? 'Y' : 'N',
+                    conCost     : form.conCost.value.split(",").join(""),
+                    surtax      : form.surtax.value == '' ? 0 :form.surtax.value.split(",").join(""),
+                    surtaxYn    : form.surtaxYn.value,
+                    memo        : form.memo.value,
+                    clientNm    : form.clientNm.value,
+                    conFromDt   : form.conFromDt.value,
+                    conToDt     : form.conToDt.value
+                }
+                // 기본정보 저장
                 $.ajax({
-                    url : "/object/deleteBuildingDetail",
+                    url : "/object/modifyBuilding",
                     async : false, // 비동기모드 : true, 동기식모드 : false
                     type : 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(delRows),
+                    data : params,
                     success : function(result) {
                     },
                     error : function(request,status,error) {
                         alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                     }
                 });
+
+                if(delRows.length > 0){
+                    $.ajax({
+                        url : "/object/deleteBuildingDetail",
+                        async : false, // 비동기모드 : true, 동기식모드 : false
+                        type : 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(delRows),
+                        success : function(result) {
+                        },
+                        error : function(request,status,error) {
+                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        }
+                    });
+                }
+                if(rows.length > 0){
+                    //상세정보 저장
+                    $.ajax({
+                        url : "/object/modifyBuildingDetail",
+                        async : false, // 비동기모드 : true, 동기식모드 : false
+                        type : 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(rows),
+                        success : function(result) {
+                                
+                        },
+                        error : function(request,status,error) {
+                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        }
+                    });
+                }
+                alert("수정되었습니다.");
+                dupCheck = false;
+                modifyDetailGrid.allowAddNew = false;
+                modifyDetailView.items.clear();
+                getBuildingInfo();
+                closePop();
+                getBuildingList();
             }
-            if(rows.length > 0){
-                //상세정보 저장
-                $.ajax({
-                    url : "/object/modifyBuildingDetail",
-                    async : false, // 비동기모드 : true, 동기식모드 : false
-                    type : 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(rows),
-                    success : function(result) {
-                            
-                    },
-                    error : function(request,status,error) {
-                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                    }
-                });
-            }
-            alert("수정되었습니다.");
-            dupCheck = false;
-            modifyDetailGrid.allowAddNew = false;
-            modifyDetailView.items.clear();
-            getBuildingInfo();
-            closePop();
-            getBuildingList();
         }
     }
 }
@@ -939,172 +945,174 @@ function _convertHeaderToBinding(header) {
 }
 
 function saveGrid(){
-    if(bldgView.itemCount > 0){ //건물
-            var editItem = bldgView.itemsEdited;
+    if(sessionCheck()){
+        if(bldgView.itemCount > 0){ //건물
+                var editItem = bldgView.itemsEdited;
+                var rows = [];
+                for(var i =0; i< editItem.length ; i++){
+                    if(editItem[i].dtlAddr == "" ||  editItem[i].dtlAddr== null){
+                        alert("상세주소를 입력하세요.");
+                        return false;
+                    }else if(editItem[i].bldgNm == "" || editItem[i].bldgNm== null){
+                        alert("건물명을 입력하세요.");
+                        return false;
+                    }else if(editItem[i].pnum == "" || editItem[i].pnum== null){
+                        alert("전화번호를 입력하세요.");
+                        return false;
+                    }else if(editItem[i].conCost == "" || editItem[i].conCost== null){
+                        alert("계약금액을 입력하세요.");
+                        return false;
+                    }else if(editItem[i].activeYn == "" || editItem[i].activeYn== null){
+                        alert("활성화를 입력하세요.");
+                        return false;
+                    }
+                    rows.push(editItem[i]);
+                }
+                if(confirm("저장하시겠습니까?")){
+                // 기본정보 저장
+                    $.ajax({
+                        url : "/object/updateBuilding",
+                        async : false, // 비동기모드 : true, 동기식모드 : false
+                        type : 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(rows),
+                        success : function(result) {
+                            alert("저장되었습니다.");
+                            getBuildingList();
+                        },
+                        error : function(request,status,error) {
+                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        }
+                    });
+                }
+        }else{ // 엑셀 업로드 저장하기
+            var item  = excelGrid.rows;
             var rows = [];
-            for(var i =0; i< editItem.length ; i++){
-                if(editItem[i].dtlAddr == "" ||  editItem[i].dtlAddr== null){
-                    alert("상세주소를 입력하세요.");
-                    return false;
-                }else if(editItem[i].bldgNm == "" || editItem[i].bldgNm== null){
-                    alert("건물명을 입력하세요.");
-                    return false;
-                }else if(editItem[i].pnum == "" || editItem[i].pnum== null){
-                    alert("전화번호를 입력하세요.");
-                    return false;
-                }else if(editItem[i].conCost == "" || editItem[i].conCost== null){
-                    alert("계약금액을 입력하세요.");
-                    return false;
-                }else if(editItem[i].activeYn == "" || editItem[i].activeYn== null){
-                    alert("활성화를 입력하세요.");
+            var params;
+            for(var i=0; i< item.length; i++){
+                var txt = wijmo.changeType(excelGrid.collectionView.items[i].건물코드, wijmo.DataType.String, null);
+
+                if(!wijmo.isString(txt) || txt.length != 11){
+                    alert("건물코드를 바르게 입력하시기 바랍니다.");
                     return false;
                 }
-                rows.push(editItem[i]);
+                var value = wijmo.changeType(excelGrid.collectionView.items[i].계약금액, wijmo.DataType.Number, null);
+                if(!wijmo.isNumber(value)){
+                    alert("계약금액은 숫자만 입력 가능합니다.");
+                    return false;
+                }
+                value = wijmo.changeType(excelGrid.collectionView.items[i].지역코드, wijmo.DataType.Number, null);
+                txt = wijmo.changeType(excelGrid.collectionView.items[i].지역명, wijmo.DataType.String, null);
+                if(!wijmo.isNumber(value)){
+                    alert("지역코드는 숫자만 입력 가능합니다.");
+                    return false;
+
+                }else if(!(value == 11 || value == 26 || value == 27 || value == 28 || value == 30 || value == 41 || value == 43 
+                    || value == 44 || value == 45 || value == 46 || value == 47 || value == 48 || value == 50)){
+                        alert("지역코드는 코드참고표 시트에 있는 코드만 입력하시기 바랍니다.");
+                        return false;
+                }
+                if( (value == 11 && txt != '서울특별시')|| (value == 26 && txt != '부산광역시') || (value == 27 && txt != '대구광역시') || (value == 28 && txt != '인천광역시') 
+                || (value == 30 && txt != '대전광역시')|| (value == 41 && txt != '경기도')     || (value == 43 && txt != '충청북도')  || (value == 44 && txt != '충청남도')
+                || (value == 45 && txt != '전라북도')  || (value == 46 && txt != '전라남도')   || (value == 47 && txt != '경상북도') || (value == 48 && txt != '경상남도')
+                || (value == 50 && txt != '제주특별자치도')){
+                    alert("지역코드와 지역명이 일치하지 않습니다.");
+                    return false;
+                }
+                var flag = wijmo.changeType(excelGrid.collectionView.items[i].부가세포함여부, wijmo.DataType.String, null);
+                if(flag != 'Y' && flag != 'N'){
+                    alert("부가세포함여부는 Y/N 중 하나를 입력하시기 바랍니다.");
+                    return false;
+                }
+                value = wijmo.changeType(excelGrid.collectionView.items[i].부가세, wijmo.DataType.Number, null);
+                if(flag == 'Y' ){
+                    if(value > 0){
+                        alert("부가세포함여부가 Y인 경우, 부가세를 입력할 수 없습니다.");
+                        return false;
+                    }
+                }
+                if(!wijmo.isNumber(value) && flag == 'N'){
+                    alert("부가세는 숫자만 입력 가능합니다.");
+                    return false;
+                }
+                value = wijmo.changeType(excelGrid.collectionView.items[i].전화번호, wijmo.DataType.String, null);
+                if(value.length != 11){
+                    alert("전화번호는 숫자 11자리까지 입력 가능합니다.");
+                    return false;
+                }
+
+                value = wijmo.changeType(excelGrid.collectionView.items[i].계약시작일, wijmo.DataType.String, null);
+                var dateRegExp = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
+                if(!dateRegExp.test(value)){
+                    alert("계약시작일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
+                    return false;
+                }
+
+                value = wijmo.changeType(excelGrid.collectionView.items[i].계약종료일, wijmo.DataType.String, null);
+                if(!dateRegExp.test(value)){
+                    alert("계약시작일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
+                    return false;
+                }
+
+                flag = wijmo.changeType(excelGrid.collectionView.items[i].활성화, wijmo.DataType.String, null);
+                if(flag != 'Y' && flag != 'N'){
+                    alert("활성화는 Y/N 중 하나를 입력하시기 바랍니다.");
+                    return false;
+                }
+
+                value = wijmo.changeType(excelGrid.collectionView.items[i].시작일, wijmo.DataType.String, null);
+                if(!dateRegExp.test(value)){
+                    alert("시작일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
+                    return false;
+                }
+
+                value = wijmo.changeType(excelGrid.collectionView.items[i].종료일, wijmo.DataType.String, null);
+                if(!dateRegExp.test(value)){
+                    alert("종료일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
+                    return false;
+                }
+
+
+                params={
+                    bldgCd :  excelGrid.collectionView.items[i].건물코드,
+                    bldgNm :  excelGrid.collectionView.items[i].건물명,
+                    areaCd :  excelGrid.collectionView.items[i].지역코드,
+                    areaNm :  excelGrid.collectionView.items[i].지역명,
+                    zone : excelGrid.collectionView.items[i].구역,
+                    clientNm : excelGrid.collectionView.items[i].고객명,
+                    dtlAddr : excelGrid.collectionView.items[i].상세주소,
+                    pnum : excelGrid.collectionView.items[i].전화번호,
+                    conCost : excelGrid.collectionView.items[i].계약금액,
+                    surtax : excelGrid.collectionView.items[i].부가세,
+                    surtaxYn : excelGrid.collectionView.items[i].부가세포함여부,
+                    memo : excelGrid.collectionView.items[i].메모,
+                    conFromDt : excelGrid.collectionView.items[i].계약시작일,
+                    conToDt : excelGrid.collectionView.items[i].계약종료일,
+                    activeYn : excelGrid.collectionView.items[i].활성화,
+                    dongNum : excelGrid.collectionView.items[i].동번호,
+                    cleanCnt : excelGrid.collectionView.items[i].청소횟수,
+                    fromDt : excelGrid.collectionView.items[i].시작일,
+                    toDt : excelGrid.collectionView.items[i].종료일
+                }
+                rows.push(params);
             }
-            if(confirm("저장하시겠습니까?")){
-            // 기본정보 저장
+            if(confirm("저장 하시겠습니까??")){
                 $.ajax({
-                    url : "/object/updateBuilding",
+                    url : "/object/excelUploadBuilding",
                     async : false, // 비동기모드 : true, 동기식모드 : false
                     type : 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(rows),
                     success : function(result) {
-                        alert("저장되었습니다.");
+                        alert("총 " + result + "건이 저장되었습니다.");
+                        getBuildingInfo();
                         getBuildingList();
                     },
                     error : function(request,status,error) {
                         alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                     }
                 });
-             }
-    }else{ // 엑셀 업로드 저장하기
-        var item  = excelGrid.rows;
-        var rows = [];
-        var params;
-        for(var i=0; i< item.length; i++){
-            var txt = wijmo.changeType(excelGrid.collectionView.items[i].건물코드, wijmo.DataType.String, null);
-
-            if(!wijmo.isString(txt) || txt.length != 11){
-                alert("건물코드를 바르게 입력하시기 바랍니다.");
-                return false;
             }
-            var value = wijmo.changeType(excelGrid.collectionView.items[i].계약금액, wijmo.DataType.Number, null);
-            if(!wijmo.isNumber(value)){
-                alert("계약금액은 숫자만 입력 가능합니다.");
-                return false;
-            }
-            value = wijmo.changeType(excelGrid.collectionView.items[i].지역코드, wijmo.DataType.Number, null);
-            txt = wijmo.changeType(excelGrid.collectionView.items[i].지역명, wijmo.DataType.String, null);
-            if(!wijmo.isNumber(value)){
-                alert("지역코드는 숫자만 입력 가능합니다.");
-                return false;
-
-            }else if(!(value == 11 || value == 26 || value == 27 || value == 28 || value == 30 || value == 41 || value == 43 
-                || value == 44 || value == 45 || value == 46 || value == 47 || value == 48 || value == 50)){
-                    alert("지역코드는 코드참고표 시트에 있는 코드만 입력하시기 바랍니다.");
-                    return false;
-            }
-            if( (value == 11 && txt != '서울특별시')|| (value == 26 && txt != '부산광역시') || (value == 27 && txt != '대구광역시') || (value == 28 && txt != '인천광역시') 
-             || (value == 30 && txt != '대전광역시')|| (value == 41 && txt != '경기도')     || (value == 43 && txt != '충청북도')  || (value == 44 && txt != '충청남도')
-             || (value == 45 && txt != '전라북도')  || (value == 46 && txt != '전라남도')   || (value == 47 && txt != '경상북도') || (value == 48 && txt != '경상남도')
-             || (value == 50 && txt != '제주특별자치도')){
-                 alert("지역코드와 지역명이 일치하지 않습니다.");
-                 return false;
-             }
-            var flag = wijmo.changeType(excelGrid.collectionView.items[i].부가세포함여부, wijmo.DataType.String, null);
-            if(flag != 'Y' && flag != 'N'){
-                alert("부가세포함여부는 Y/N 중 하나를 입력하시기 바랍니다.");
-                return false;
-            }
-            value = wijmo.changeType(excelGrid.collectionView.items[i].부가세, wijmo.DataType.Number, null);
-            if(flag == 'Y' ){
-                if(value > 0){
-                    alert("부가세포함여부가 Y인 경우, 부가세를 입력할 수 없습니다.");
-                    return false;
-                }
-            }
-            if(!wijmo.isNumber(value) && flag == 'N'){
-                alert("부가세는 숫자만 입력 가능합니다.");
-                return false;
-            }
-            value = wijmo.changeType(excelGrid.collectionView.items[i].전화번호, wijmo.DataType.String, null);
-            if(value.length != 11){
-                alert("전화번호는 숫자 11자리까지 입력 가능합니다.");
-                return false;
-            }
-
-            value = wijmo.changeType(excelGrid.collectionView.items[i].계약시작일, wijmo.DataType.String, null);
-            var dateRegExp = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
-            if(!dateRegExp.test(value)){
-                alert("계약시작일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
-                return false;
-            }
-
-            value = wijmo.changeType(excelGrid.collectionView.items[i].계약종료일, wijmo.DataType.String, null);
-            if(!dateRegExp.test(value)){
-                alert("계약시작일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
-                return false;
-            }
-
-            flag = wijmo.changeType(excelGrid.collectionView.items[i].활성화, wijmo.DataType.String, null);
-            if(flag != 'Y' && flag != 'N'){
-                alert("활성화는 Y/N 중 하나를 입력하시기 바랍니다.");
-                return false;
-            }
-
-            value = wijmo.changeType(excelGrid.collectionView.items[i].시작일, wijmo.DataType.String, null);
-            if(!dateRegExp.test(value)){
-                alert("시작일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
-                return false;
-            }
-
-            value = wijmo.changeType(excelGrid.collectionView.items[i].종료일, wijmo.DataType.String, null);
-            if(!dateRegExp.test(value)){
-                alert("종료일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
-                return false;
-            }
-
-
-            params={
-                bldgCd :  excelGrid.collectionView.items[i].건물코드,
-                bldgNm :  excelGrid.collectionView.items[i].건물명,
-                areaCd :  excelGrid.collectionView.items[i].지역코드,
-                areaNm :  excelGrid.collectionView.items[i].지역명,
-                zone : excelGrid.collectionView.items[i].구역,
-                clientNm : excelGrid.collectionView.items[i].고객명,
-                dtlAddr : excelGrid.collectionView.items[i].상세주소,
-                pnum : excelGrid.collectionView.items[i].전화번호,
-                conCost : excelGrid.collectionView.items[i].계약금액,
-                surtax : excelGrid.collectionView.items[i].부가세,
-                surtaxYn : excelGrid.collectionView.items[i].부가세포함여부,
-                memo : excelGrid.collectionView.items[i].메모,
-                conFromDt : excelGrid.collectionView.items[i].계약시작일,
-                conToDt : excelGrid.collectionView.items[i].계약종료일,
-                activeYn : excelGrid.collectionView.items[i].활성화,
-                dongNum : excelGrid.collectionView.items[i].동번호,
-                cleanCnt : excelGrid.collectionView.items[i].청소횟수,
-                fromDt : excelGrid.collectionView.items[i].시작일,
-                toDt : excelGrid.collectionView.items[i].종료일
-            }
-            rows.push(params);
-        }
-        if(confirm("저장 하시겠습니까??")){
-            $.ajax({
-                url : "/object/excelUploadBuilding",
-                async : false, // 비동기모드 : true, 동기식모드 : false
-                type : 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(rows),
-                success : function(result) {
-                    alert("총 " + result + "건이 저장되었습니다.");
-                    getBuildingInfo();
-                    getBuildingList();
-                },
-                error : function(request,status,error) {
-                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                }
-            });
         }
     }
 }
