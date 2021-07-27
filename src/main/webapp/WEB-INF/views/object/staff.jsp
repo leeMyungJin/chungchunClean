@@ -71,6 +71,12 @@ function loadGridStaffList(type, result){
 			    itemsSource: staffView
 			  });
 			  
+		   staffGrid.itemFormatter = function (panel, r, c, cell) { 
+	            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+	                cell.textContent = (r + 1).toString();
+	            }
+	        }; 
+		   
 		   	_setUserGridLayout('staffLayout', staffGrid, staffColumns);
 			  
 	  }else{
@@ -153,7 +159,7 @@ function saveNewStaff(){
         return false;
         
     }else if(newStaffForm.password.value == ""){
-    	alert("PW를 입력해주세요.");
+    	alert("비밀번호를 입력해주세요.");
         newStaffForm.password.focus();
         return false;
         
@@ -167,20 +173,21 @@ function saveNewStaff(){
         newStaffForm.telPhone.focus();
         return false;
         
-    }else if(newStaffForm.mail.value == ""){
-    	alert("이메일을 입력해주세요.");
-        newStaffForm.mail.focus();
-        return false;
     }
 	
 	//벨리데이션 체크 
+	var idRule1  = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 	var pwdRule1  = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{10,}$/;
     var pwdRule2  = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{10,}$/;
     var pwdRule3  = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/;
     var emailRule = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
     var telRule   = /^[0-9]{11}$/;
     
-    if(!pwdRule1.test(newStaffForm.password.value) && !pwdRule2.test(newStaffForm.password.value) && !pwdRule3.test(newStaffForm.password.value)){
+    if(!idRule1.test(newStaffForm.id.value)){
+    	alert("ID를 확인하시기 바랍니다.\nID는 영문자(대,소문자), 숫자를 포함하여 최소 6자 이상이어야 합니다.");
+    	newStaffForm.password.focus();
+    	return false;
+    }else if(!pwdRule1.test(newStaffForm.password.value) && !pwdRule2.test(newStaffForm.password.value) && !pwdRule3.test(newStaffForm.password.value)){
     	alert("비밀번호를 확인하시기 바랍니다.\n비밀번호는 영문자(대,소문자), 숫자를 포함하여 최소 10자 이상이어야 합니다.");
     	newStaffForm.password.focus();
     	return false;
@@ -464,7 +471,7 @@ function exportExcel(){
                         <input type="text" id="telPhone" name="telPhone" required>
                     </div>
                     <div class="row">
-                        <label for="mail">이메일<i>*</i></label>
+                        <label for="mail">이메일</label>
                         <input type="text" id="mail" name="downPay" required>
                     </div>
                     <div class="row">
@@ -503,7 +510,7 @@ function exportExcel(){
                     </div>
                     <div class="row">
                         <label for="password">PW<i>*</i></label>
-                        <input type="password" id="password" name="password" required>
+                        <input type="password" id="password" name="password" required placeholder="**********">
                     </div>
                     <div class="row">
                         <label for="name">이름<i>*</i></label>

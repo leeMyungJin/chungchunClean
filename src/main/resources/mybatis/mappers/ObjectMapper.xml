@@ -195,7 +195,7 @@
 	
 	
 	<select id="getBuildingQrList" parameterType="hashMap" resultType="CodeVo">
-	select dtl.dong_qr_url cd, BAS.area_nm || '_' || bas.bldg_nm || '_' || dtl.dong_num as nm
+	select coalesce(dtl.dong_qr_url, BAS.bldg_cd || dtl.dong_num) cd, BAS.area_nm || '_' || bas.bldg_nm || '_' || dtl.dong_num as nm
 	from web.BLDG_DTL DTL left join web.BLDG_BAS BAS on DTL.bldg_cd = BAS.bldg_cd
 	where 1=1	
 	<if test="inq != null">

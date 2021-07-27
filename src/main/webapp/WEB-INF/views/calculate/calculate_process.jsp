@@ -107,7 +107,7 @@ function loadGridList(type, result){
 			      { binding: 'addCost', header: '추가금', isReadOnly: false, width: 150, align:"center", aggregate: 'Sum' },
 			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum'  },
 			      { binding: 'overCost', header: '이월금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
-			      { binding: 'overCostTemp', header: '이월금 Temp', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
+			      { binding: 'overCostTemp', header: '이월금 Temp', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' , visible: false},
 			      { binding: 'depositCost', header: '관리비입금', isReadOnly: false, width: 150, align:"center", aggregate: 'Sum' },
 			      { binding: 'depositDt', header: '입금날짜', isReadOnly: false, width: 150, align:"center" },
 			      { binding: 'depositor', header: '입금자명', isReadOnly: false, width: 100, align:"center" },
@@ -459,9 +459,9 @@ function getMonTotalCost(){
 	      dataType : null,
 	      success : function(result) {
 	      	console.log(result);
-	        $("#totalOutcost").text(result.outcost+ "원");
-	        $("#totalDepositcost").text(result.depositcost+ "원");
-	        $("#totalAddcost").text(result.addcost+ "원");
+	        $("#totalOutcost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
+	        $("#totalDepositcost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
+	        $("#totalAddcost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
 
 	      },
 	      error: function(request, status, error) {
@@ -479,8 +479,8 @@ function getAddTotalCost(){
 	      dataType : null,
 	      success : function(result) {
 	      	console.log(result);
-	        $("#totalAddDepositcost").text(result.depositcost.toLocaleString('ko-KR')+ "원");
-	        $("#totalAddOutcost").text(result.outcost.toLocaleString('ko-KR')+ "원");
+	        $("#totalAddDepositcost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
+	        $("#totalAddOutcost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
 
 	      },
 	      error: function(request, status, error) {
@@ -526,9 +526,9 @@ function getMonList(){
 	      data : param,
 	      success : function(result) {
 	      	console.log(result);
-	        $("#lableAddCost").text(result.addcost.toLocaleString('ko-KR')+ "원");
-	        $("#lableDepositCost").text(result.depositcost.toLocaleString('ko-KR')+ "원");
-	        $("#lableOutCost").text(result.outcost.toLocaleString('ko-KR')+ "원");
+	        $("#lableAddCost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
+	        $("#lableDepositCost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
+	        $("#lableOutCost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
 	        
 	        getMonTotalCost();
 
@@ -571,12 +571,12 @@ function getAddList(){
 	      data : param,
 	      success : function(result) {
 	      	console.log(result);
-	        $("#addlableMaterCost").text(result.matercost.toLocaleString('ko-KR')+ "원");
-	        $("#addlableDepositCost").text(result.depositcost.toLocaleString('ko-KR')+ "원");
-	        $("#addlableOutscCost").text(result.outsccost.toLocaleString('ko-KR')+ "원");
-	        $("#addlableQuoteCost").text(result.quotecost.toLocaleString('ko-KR')+ "원");
-	        $("#addlableAddCost").text(result.addcost.toLocaleString('ko-KR')+ "원");
-	        $("#addlableOutCost").text(result.outcost.toLocaleString('ko-KR')+ "원");
+	        $("#addlableMaterCost").text(Number(result.matercost).toLocaleString('ko-KR')+ "원");
+	        $("#addlableDepositCost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
+	        $("#addlableOutscCost").text(Number(result.outsccost).toLocaleString('ko-KR')+ "원");
+	        $("#addlableQuoteCost").text(Number(result.quotecost).toLocaleString('ko-KR')+ "원");
+	        $("#addlableAddCost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
+	        $("#addlableOutCost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
 	        
 	        getAddTotalCost();
 	      },
@@ -1165,6 +1165,10 @@ function addExportExcel(){
 	 );
 }
 
+function popSpecification(){
+	//var win = window.open("/calcutate/p_specification?bldgCd="+bldgCd, "pop", "with=1000,height=600");
+}
+
 </script>
 
 <body onload="pageLoad()">
@@ -1281,7 +1285,7 @@ function addExportExcel(){
                         <input type="month" id="date2" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey('add');">
                         <button class="admin_utility_btn" onClick="getAddList();">조회</button>
                         <div class="admin_btn">
-                            <button class="btn">거래명세서 출력</button>
+                            <button class="btn" onClick="popSpecification();">거래명세서 출력</button>
                             <button class="btn">엑셀 업로드</button>
                             <button class="btn" onClick="addExportExcel();">엑셀 다운로드</button>
                         </div>

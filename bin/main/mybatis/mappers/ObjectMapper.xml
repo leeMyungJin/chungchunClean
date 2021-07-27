@@ -195,7 +195,7 @@
 	
 	
 	<select id="getBuildingQrList" parameterType="hashMap" resultType="CodeVo">
-	select dtl.dong_qr_url cd, BAS.area_nm || '_' || bas.bldg_nm || '_' || dtl.dong_num as nm
+	select coalesce(dtl.dong_qr_url, BAS.bldg_cd || dtl.dong_num) cd, BAS.area_nm || '_' || bas.bldg_nm || '_' || dtl.dong_num as nm
 	from web.BLDG_DTL DTL left join web.BLDG_BAS BAS on DTL.bldg_cd = BAS.bldg_cd
 	where 1=1	
 	<if test="inq != null">
@@ -353,5 +353,45 @@
 	delete from web.bldg_dtl
 	 where bldg_cd = #{bldgCd}
 	</delete>
+
+	<insert id="excelUploadBuilding" parameterType="BldgVo">
+	insert into web.bldg_Bas 
+	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, con_cost, con_from_dt, con_to_dt,  surtax_yn, surtax, cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
+	values
+	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, #{pnum}, #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxYn}, #{surtax}::numeric, now(), #{cretId}, now(), #{updtId}, #{zone}, #{memo}, #{activeYn})
+	ON CONFLICT(bldg_cd) DO
+	UPDATE SET
+	  client_nm = #{clientNm},
+	  area_cd = #{areaCd},
+	  area_nm = #{areaNm},
+	  bldg_nm = #{bldgNm},
+	  dtl_addr = #{dtlAddr},
+	  pnum = #{pnum},
+	  con_cost = #{conCost}::numeric,
+	  con_from_dt = #{conFromDt},
+	  con_to_dt = #{conToDt},
+	  surtax_yn  =#{surtaxYn},
+	  surtax = #{surtax}::numeric,
+	  updt_dt = now(),
+	  updt_id = #{updtId},
+	  zone = #{zone},
+	  memo = #{memo},
+	  active_yn = #{activeYn}
+	</insert>
+
+	<update id="updateBuilding" parameterType="BldgVo">
+	UPDATE web.BLDG_BAS
+	SET
+	  bldg_nm = #{bldgNm},
+	  dtl_addr = #{dtlAddr},
+	  pnum = #{pnum},
+	  con_cost = #{conCost}::numeric,
+	  updt_dt = now(),
+	  updt_id = #{updtId},
+	  memo = #{memo},
+	  active_yn = #{activeYn}
+	WHERE 1=1
+	  AND bldg_cd = #{bldgCd}
+	</update>
 	
 </mapper>

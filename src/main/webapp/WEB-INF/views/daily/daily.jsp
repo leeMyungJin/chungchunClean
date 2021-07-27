@@ -49,11 +49,11 @@ function loadGridDailyList(type, result){
 		   dailyColumns = [
 			      { binding: 'onWorkDt', header: '출근시각', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'offWorkDt', header: '퇴근시각', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'officerNm', header: '담당자', isReadOnly: true, width: 60, align:"center" },
-			      { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 60, align:"center"  },
-			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 120, align:"center"  },
-			      { binding: 'dongNum', header: '동번호', isReadOnly: true, width: 60, align:"center"  },
-			      { binding: 'cretDt', header: '업로드일자', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'officerNm', header: '담당자', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 150, align:"center"  },
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 150, align:"center"  },
+			      { binding: 'dongNum', header: '동번호', isReadOnly: true, width: 100, align:"center"  },
+			      { binding: 'cretDt', header: '업로드일자', isReadOnly: true, width: 120, align:"center"  },
 			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" },
 			      { binding: 'siteMntrUrl', header: '현장점검 URL', isReadOnly: true, width: 200, align:"center" },
 			      { binding: 'postLocNm', header: '근태위치', isReadOnly: true, width: 200, align:"center" }
@@ -65,6 +65,12 @@ function loadGridDailyList(type, result){
 			    columns: dailyColumns,
 			    itemsSource: dailyView
 			  });
+		   
+		   dailyGrid.itemFormatter = function (panel, r, c, cell) { 
+	            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+	                cell.textContent = (r + 1).toString();
+	            }
+	        }; 
 			  
 		   	_setUserGridLayout('dailyLayout', dailyGrid, dailyColumns);
 			  

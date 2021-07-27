@@ -92,7 +92,7 @@
 </select>
 
 <select id="getMonlableCost" parameterType="hashMap" resultType="HashMap">
-	select coalesce(sum(bb.con_cost), 0) + coalesce(sum(bb.surtax), 0) + coalesce(sum(amm.add_cost), 0) - coalesce(sum(amm.deposit_cost), 0) as outCost -- 금년 미수금
+	select coalesce(sum(bb.con_cost), 0) + coalesce(sum(bb.surtax), 0) + coalesce(sum(amm.add_cost), 0) + coalesce(sum(oc.over_cost), 0) - coalesce(sum(amm.deposit_cost), 0) as outCost -- 미수금
 		,coalesce(sum(amm.deposit_cost), 0) as depositCost -- 금년 입금금액 (부가세포함)
       ,coalesce(sum(amm.add_cost), 0) as addCost --금년 추가금
 	from web.bldg_bas bb left join (select * 
@@ -101,6 +101,15 @@
 										where mon_mt = #{date}
 									</if>
 									) amm on bb.bldg_cd = amm.bldg_cd
+						 left join (select bldg_cd, mon_mt, over_cost 
+									from web.adjust_mt_manage 
+									where ( bldg_cd, mon_mt ) in (select bldg_cd, max(mon_mt)
+																	from web.adjust_mt_manage 
+																	<if test="date != null">
+																		where mon_mt <![CDATA[ <= ]]> #{date}
+																	</if>
+																	group by bldg_cd)
+									) oc on bb.bldg_cd = oc.bldg_cd
 	where bb.active_yn = 'Y'
 		<if test="inq != null">
 		<choose>
