@@ -61,6 +61,7 @@ function pageLoad(){
 	$('#toDate').attr('max',today);
 	
 	loadGridIncomeList('init');
+	getIncomeTodayCost();
 }
 
 function enterkey() {
@@ -84,15 +85,15 @@ function loadGridIncomeList(type, result){
 		    });
 		   
 		   incomeColumns = [
-			      { binding: 'depositDt', header: '일자', isReadOnly: true, width: 100, align:"center", allowMerging: true  },
-			      { binding: 'type', header: '분야', isReadOnly: true, width: 100, align:"center", allowMerging: true },
-			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 100, align:"center", allowMerging: true },
-			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 150, align:"center", allowMerging: false  },
+			      { binding: 'depositDt', header: '일자', isReadOnly: true, width: 150, align:"center", allowMerging: true  },
+			      { binding: 'type', header: '분야', isReadOnly: true, width: 150, align:"center", allowMerging: true },
+			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 150, align:"center", allowMerging: true },
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 200, align:"center", allowMerging: false  },
 			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 150, align:"center" , allowMerging: false  },
 			      { binding: 'conCost', header: '계약금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false  },
 			      { binding: 'addCost', header: '추가금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false   },
 			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false  },
-			      { binding: 'depositCost', header: '입금금액', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false  }
+			      { binding: 'depositCost', header: '입금금액', isReadOnly: true, width: '*', align:"center", aggregate: 'Sum', allowMerging: false  }
 			];
 		    
 		   incomeGrid = new wijmo.grid.FlexGrid('#incomeGrid', {
@@ -160,15 +161,33 @@ function getIncomeList(){
 	      data : param,
 	      success : function(result) {
 	      	console.log(result);
-	        $("#lableAddCost").text(result.addcost+ "원");
-	        $("#lableDepositCost").text(result.depositcost+ "원");
-	        $("#lableOutCost").text(result.outcost+ "원");
-	        $("#labelConCost").text(result.concost+ "원");
+	        $("#lableAddCost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
+	        $("#lableDepositCost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
+	        $("#lableOutCost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
+	        $("#labelConCost").text(Number(result.concost).toLocaleString('ko-KR')+ "원");
 
 	      },
 	      error: function(request, status, error) {
 	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 
+	      }
+	  });
+}
+
+function getIncomeTodayCost(){
+	$.ajax({
+	      type : 'POST',
+	      url : '/income/getIncomeTodayCost',
+	      dataType : null,
+	      success : function(result) {
+	      	console.log(result);
+	        $("#totalCostConcost").text(Number(result.concost).toLocaleString('ko-KR')+ "원");
+	        $("#totalCostDepositcost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
+	        $("#totalCostOutcost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
+	        $("#totalCostAddcost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
+	      },
+	      error: function(request, status, error) {
+	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 	      }
 	  });
 }
@@ -204,19 +223,19 @@ function exportExcel(){
                 <div class="admin_summary">
                     <dl>
                         <dt>금년 매출액(부가세포함)</dt>
-                        <dd>${totalCost.concost}원</dd>
+                        <dd id="totalCostConcost">0원</dd>
                     </dl>
                     <dl>
                         <dt>금년 입금금액</dt>
-                        <dd>${totalCost.depositcost}원</dd>
+                        <dd id="totalCostDepositcost">0원</dd>
                     </dl>
                     <dl>
                         <dt>금년 미수금</dt>
-                        <dd>${totalCost.outcost}원</dd>
+                        <dd id="totalCostOutcost">0원</dd>
                     </dl>
                     <dl>
                         <dt>금년 추가금</dt>
-                        <dd>${totalCost.addcost}원</dd>
+                        <dd id="totalCostAddcost">0원</dd>
                     </dl>
                 </div>
                 <div class="admin_utility">

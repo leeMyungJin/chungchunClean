@@ -33,6 +33,8 @@ function pageLoad(){
 	$('#toDate').attr('max',today);
 	
 	loadGridMonList('init');
+	getMonTotalCost();
+	getAddTotalCost();
 	
 }
 
@@ -72,19 +74,24 @@ function loadGridMonList(type, result){
 		    });
 		   
 		   monColumns = [
-			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'bldgCd', header: '건물코드', isReadOnly: true, width: 0, align:"center"  },
-			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'manageCost', header: '관리비', isReadOnly: true, width: 150, align:"center" },
+			  	  { binding: 'monMt', header: '월', isReadOnly: true, width: 100, align:"center"},
+ 			   	  { binding: 'areaCd', header: '지역', isReadOnly: true, width: 100, align:"center", visible: false },
+ 			   	  { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 100, align:"center" },
+ 			   	  { binding: 'zone', header: '구분', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'bldgCd', header: '건물코드', isReadOnly: true, width: 0, align:"center", visible: false},
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'conCost', header: '관리비', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum'  },
+			      { binding: 'surtax', header: '부가세', isReadOnly: true, width: 150, align:"center" , aggregate: 'Sum' },
 			      { binding: 'taxBill', header: '세금계산서', isReadOnly: true, width: 150, align:"center"  },
-			      { binding: 'overCost', header: '추가금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
+			      { binding: 'addCost', header: '추가금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
 			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum'  },
 			      { binding: 'overCost', header: '이월금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
+			      { binding: 'overCostTemp', header: '이월금 Temp', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' , visible: false},
 			      { binding: 'depositCost', header: '관리비입금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
 			      { binding: 'depositDt', header: '입금날짜', isReadOnly: true, width: 150, align:"center" },
 			      { binding: 'depositor', header: '입금자명', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 150, align:"center" },
-			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" }
+			      { binding: 'memo', header: '비고', isReadOnly: true, width: 200, align:"center" }
 			];
 		    
 		   monGrid = new wijmo.grid.FlexGrid('#monGrid', {
@@ -119,16 +126,19 @@ function loadGridMonList(type, result){
 		    });
 		   
 		   addColumns = [
-			      { binding: 'addDt', header: '일자', isReadOnly: true, width: 150, align:"center" },
-			      { binding: 'classifiNm', header: '분류', isReadOnly: true, width: 100, align:"center"  },
-			      { binding: 'itemNm', header: '내역', isReadOnly: true, width: 150, align:"center" },
-			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 100, align:"center"  },
+			   { binding: 'addSeq', header: '시퀀스', isReadOnly: true, width: 150, align:"center", visible: false},
+			   	  { binding: 'addDt', header: '일자', isReadOnly: true, width: 150, align:"center" },
+			      { binding: 'classifiNm', header: '분류명', isReadOnly: true, width: 100, align:"center"},
+			      { binding: 'itemNm', header: '내역명', isReadOnly: true, width: 150, align:"center"},
+			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 150, align:"center"},
+			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 200, align:"center"},
 			      { binding: 'quoteCost', header: '견적', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum'  },
-			      { binding: 'materCost', header: '재료비', isReadOnly: true, width: 100, align:"center", aggregate: 'Sum'  },
-			      { binding: 'outscCost', header: '외주', isReadOnly: true, width: '*', align:"center", aggregate: 'Sum' },
-			      { binding: 'depositCost', header: '입금', isReadOnly: true, width: '*', align:"center", aggregate: 'Sum' },
-			      { binding: 'depositDt', header: '입금날짜', isReadOnly: true, width: '*', align:"center" },
-			      { binding: 'depositor', header: '입금자명', isReadOnly: true, width: '*', align:"center" }
+			      { binding: 'materCost', header: '재료비', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum'  },
+			      { binding: 'outscCost', header: '외주', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum' },
+			      { binding: 'depositCost', header: '입금', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum' },
+			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum'},
+			      { binding: 'depositDt', header: '입금날짜', isReadOnly: true, width: 150, align:"center" },
+			      { binding: 'depositor', header: '입금자명', isReadOnly: true, width: 100, align:"center" }
 			];
 		  
 		   addGrid = new wijmo.grid.FlexGrid('#addGrid', {
@@ -156,7 +166,7 @@ function loadGridMonList(type, result){
 		//월관리
 		   monView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
-		       ,groupDescriptions: ['bldgNm']
+		       ,groupDescriptions: ['areaNm']
 		   });
 		  monGridPager.cv = monView;
 		  monGrid.itemsSource = monView;
@@ -166,7 +176,7 @@ function loadGridMonList(type, result){
 		  //부가수익 
 		   addView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
-		       ,groupDescriptions: ['bldgNm']
+		       ,groupDescriptions: ['areaNm']
 		   });
 		  addGridPager.cv = addView;
 		  addGrid.itemsSource = addView;
@@ -178,6 +188,45 @@ function loadGridMonList(type, result){
 	  
 }
 
+function getMonTotalCost(){
+	$.ajax({
+	      type : 'POST',
+	      url : '/calculate/getMonTotalCost',
+	      async : false, // 비동기모드 : true, 동기식모드 : false
+	      dataType : null,
+	      success : function(result) {
+	      	console.log(result);
+	        $("#totalOutcost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
+	        $("#totalDepositcost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
+	        $("#totalAddcost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
+
+	      },
+	      error: function(request, status, error) {
+	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+	      }
+	  });
+}
+
+function getAddTotalCost(){
+	$.ajax({
+	      type : 'POST',
+	      url : '/calculate/getAddTotalCost',
+	      async : false, // 비동기모드 : true, 동기식모드 : false
+	      dataType : null,
+	      success : function(result) {
+	      	console.log(result);
+	        $("#totalAddQuotecost").text(Number(result.quotecost).toLocaleString('ko-KR')+ "원");
+	        $("#totalAddDepositcost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
+	        $("#totalAddOutcost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
+
+	      },
+	      error: function(request, status, error) {
+	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+	      }
+	  });
+}
 
 function getMonList(){
 	var param = {
@@ -211,9 +260,11 @@ function getMonList(){
 	      data : param,
 	      success : function(result) {
 	      	console.log(result);
-	        $("#lableAddCost").text(result.addcost+ "원");
-	        $("#lableDepositCost").text(result.depositcost+ "원");
-	        $("#lableOutCost").text(result.outcost+ "원");
+	      	$("#lableAddCost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
+	        $("#lableDepositCost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
+	        $("#lableOutCost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
+	        
+	        getAddTotalCost();
 
 	      },
 	      error: function(request, status, error) {
@@ -256,12 +307,14 @@ function getAddList(){
 		      data : param,
 		      success : function(result) {
 		      	console.log(result);
-		        $("#addlableMaterCost").text(result.matercost+ "원");
-		        $("#addlableDepositCost").text(result.outsccost+ "원");
-		        $("#addlableOutscCost").text(result.depositcost+ "원");
-		        $("#addlableQuoteCost").text(result.quotecost+ "원");
-		        $("#addlableAddCost").text(result.addcost+ "원");
-		        $("#addlableOverCost").text(result.overcost+ "원");
+		      	$("#addlableMaterCost").text(Number(result.matercost).toLocaleString('ko-KR')+ "원");
+		        $("#addlableDepositCost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
+		        $("#addlableOutscCost").text(Number(result.outsccost).toLocaleString('ko-KR')+ "원");
+		        $("#addlableQuoteCost").text(Number(result.quotecost).toLocaleString('ko-KR')+ "원");
+		        $("#addlableAddCost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
+		        $("#addlableOutCost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
+		        
+		        getAddTotalCost();
 		      },
 		      error: function(request, status, error) {
 		      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -325,15 +378,15 @@ function addExportExcel(){
                     <div class="admin_summary">
                         <dl>
                             <dt>금년 누적미수금</dt>
-                            <dd>${totalCost.outcost}원</dd>
+                            <dd id="totalOutcost">0원</dd>
                         </dl>
                         <dl>
                             <dt>금년 입금금액(부가세포함)</dt>
-                            <dd>${totalCost.depositcost}원</dd>
+                            <dd id="totalDepositcost">0원</dd>
                         </dl>
                         <dl>
                             <dt>금년 추가금</dt>
-                            <dd>${totalCost.addcost}원</dd>
+                            <dd id="totalAddcost">0원</dd>
                         </dl>
                     </div>
                     <div class="admin_utility">
@@ -399,19 +452,15 @@ function addExportExcel(){
                     <div class="admin_summary">
                         <dl>
                             <dt>금년 견적(매출)</dt>
-                            <dd>${totalAddCost.quotecost}원</dd>
+                            <dd id="totalAddQuotecost">${totalAddCost.quotecost}원</dd>
                         </dl>
                         <dl>
-                            <dt>금년 입금금액</dt>
-                            <dd>${totalAddCost.depositcost}원</dd>
+                            <dt>총 입금금액</dt>
+                            <dd id="totalAddDepositcost">${totalAddCost.depositcost}원</dd>
                         </dl>
                         <dl>
-                            <dt>금년 이월금</dt>
-                            <dd>${totalAddCost.overcost}원</dd>
-                        </dl>
-                        <dl>
-                            <dt>금년 추가금</dt>
-                            <dd>${totalAddCost.addcost}원</dd>
+                            <dt>총 미수금</dt>
+                            <dd id="totalAddOutcost">${totalAddCost.outcost}원</dd>
                         </dl>
                     </div>
                     <div class="admin_utility">
@@ -442,10 +491,6 @@ function addExportExcel(){
                                 <dl>
                                     <dt>견적금</dt> 
                                     <dd id="addlableQuoteCost">0원</dd>
-                                </dl>
-                                <dl>
-                                    <dt>추가금</dt>
-                                    <dd id="addlableAddCost">0원</dd>
                                 </dl>
                                 <dl>
                                     <dt>재료비</dt>

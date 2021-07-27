@@ -26,7 +26,6 @@ public class IncomeController {
     public String moveHistory(Model model) {
     	
     	model.addAttribute("totalCost", incomeService.getIncomeTodayCost());
-    	
         return "income/income";
     }
     
@@ -37,6 +36,13 @@ public class IncomeController {
     	List<CalculateVo> calculateList = incomeService.getIncomeList(params);
     	
     	return calculateList;
+    }
+    
+    @RequestMapping(value = "/getIncomeTodayCost")
+    @ResponseBody
+    public HashMap<String,Object> getIncomeTodayCost(@RequestParam HashMap<String,Object> params){
+    	
+    	return incomeService.getIncomeTodayCost();
     }
     
     @RequestMapping(value = "/getIncomelableCost")

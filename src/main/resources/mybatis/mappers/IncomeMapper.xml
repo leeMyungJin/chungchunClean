@@ -4,7 +4,7 @@
 <mapper namespace="com.chungchunClean.Mappers.IncomeMapper">
 
 <select id="getIncomeList" parameterType="hashMap" resultType="CalculateVo">
-select type, deposit_dt, area_cd, area_nm, bldg_cd, bldg_nm, pnum
+select type, deposit_dt,  area_nm, bldg_nm, pnum
 		, sum(con_cost) as con_cost
 		, sum(add_cost) as add_cost
 		, sum(out_cost) as out_cost
@@ -14,18 +14,15 @@ select type, deposit_dt, area_cd, area_nm, bldg_cd, bldg_nm, pnum
 from 
 	(select  '부가수익' as type
 			, to_char(aa.add_dt , 'YYYY-MM') as deposit_dt
-			, bb.area_cd 
-			, bb.area_nm 
-			, bb.bldg_cd 
-			, bb.bldg_nm 
-			, bb.pnum
+			, aa.area_nm 
+			, aa.bldg_nm 
+			, null as pnum
 			, aa.quote_cost as con_cost
-			, aa.add_cost 
-			, aa.out_cost 
+			, 0 as add_cost 
+			, coalesce(aa.quote_cost, 0) - coalesce(aa.deposit_cost, 0) as out_cost --금년 미수금 
 			, aa.deposit_cost 
-		--	, to_char(aa.deposit_dt , 'YYYY-MM-DD') as deposit_dt 
-		--	, aa.depositor 
-	from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd 
+			, aa.depositor 
+	from web.adjust_add aa
 	where 1=1
 <if test="inq != null">
 		<choose>
@@ -33,9 +30,9 @@ from
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					bb.area_nm LIKE '%' || #{item} || '%'
+					aa.area_nm LIKE '%' || #{item} || '%'
 					or
-					bb.bldg_nm LIKE '%' || #{item} || '%'
+					aa.bldg_nm LIKE '%' || #{item} || '%'
 					or
 					aa.depositor LIKE '%' || #{item} || '%' 
 				</foreach>
@@ -44,14 +41,14 @@ from
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					bb.area_nm LIKE '%' || #{item} || '%'
+					aa.area_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'building'">
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					bb.bldg_nm LIKE '%' || #{item} || '%'
+					aa.bldg_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 		<when test="con == 'depositor'">
@@ -68,17 +65,14 @@ from
 	
 	select '월관리' as type
 			, to_char(amm.deposit_dt , 'YYYY-MM') as deposit_dt 
-			, bb.area_cd
 			, bb.area_nm
-			, bb.bldg_cd
 			, bb.bldg_nm
 			, amm.pnum
-			, bb.con_cost + bb.surtax as con_cost
+			, coalesce(bb.con_cost, 0) + coalesce(bb.surtax, 0) as con_cost
 			, amm.add_cost
-			, amm.out_cost 	
+			, coalesce(bb.con_cost, 0) + coalesce(bb.surtax, 0) +  coalesce(amm.add_cost, 0) - coalesce(amm.deposit_cost, 0) as out_cost  
 			, amm.deposit_cost 
-			--, to_char(amm.deposit_dt , 'YYYY-MM-DD') as deposit_dt 
-			--, amm.depositor 
+			, amm.depositor 
 		from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
 		where 1=1
 		<if test="inq != null">
@@ -122,30 +116,31 @@ where 1=1
 	<if test="fromDate != null and toDate != null">
 		and deposit_dt between #{fromDate} and #{toDate}
 	</if>
-	group by deposit_dt, type, area_cd, area_nm, bldg_cd, bldg_nm, pnum	
+	group by deposit_dt, type, area_nm, bldg_nm, pnum
+	order by deposit_dt, type, area_nm, bldg_nm, pnum
 </select>
 
 
 <select id="getIncomeTodayCost" resultType="HashMap">
-select sum(con_cost) as conCost
-		, sum(add_cost) as addCost
-		, sum(out_cost) as outCost
-		, sum(deposit_cost)as depositCost
+select sum(conCost) as conCost
+		, sum(addCost) as addCost
+		, sum(outCost) as outCost
+		, sum(depositCost)as depositCost
 from (
-	select coalesce(sum(aa.quote_cost), 0)+coalesce(sum(aa.add_cost), 0) as con_cost --금년 매출액 (견적 + 추가금)
-			, coalesce(sum(aa.add_cost), 0) as add_cost --금년 추가금
-			, coalesce(sum(aa.out_cost), 0) as out_cost --금년 미수금
-			, coalesce(sum(aa.deposit_cost), 0) as deposit_cost --금년 입금금액
-	from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd 
+	select coalesce(sum(aa.quote_cost), 0) as conCost --금년 매출액 (견적 + 추가금)
+			, 0 as addCost --금년 추가금
+			, coalesce(sum(aa.quote_cost), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost --금년 미수금 
+			, coalesce(sum(aa.deposit_cost), 0) as depositCost --금년 입금금액
+	from web.adjust_add aa
 	where 1=1
 	and extract('YEAR' from aa.deposit_dt) = extract('YEAR' from now())
-	
+
 	union all
-	
-	select  coalesce(sum(bb.con_cost), 0)+coalesce(sum(bb.surtax), 0)+coalesce(sum(amm.add_cost), 0) as con_cost
-		,coalesce(sum(amm.add_cost), 0) as add_cost --금년 추가금
-		, coalesce(sum(amm.out_cost), 0) as out_cost -- 금년 미수금
-	   	,coalesce(sum(amm.deposit_cost), 0) as deposit_cost -- 금년 입금금액
+
+	select  coalesce(sum(bb.con_cost), 0)+coalesce(sum(bb.surtax), 0)+coalesce(sum(amm.add_cost), 0) as conCost
+		,coalesce(sum(amm.add_cost), 0) as addCost --금년 추가금
+		,coalesce(sum(bb.con_cost), 0) + coalesce(sum(bb.surtax), 0) + coalesce(sum(amm.add_cost), 0) - coalesce(sum(amm.deposit_cost), 0) as outCost --계약금+부가세+추가금-입금 = 미수금
+	   	,coalesce(sum(amm.deposit_cost), 0) as depositCost -- 금년 입금금액
 	from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
 	where 1=1
 	and extract('YEAR' from deposit_dt) = extract('YEAR' from now())
@@ -154,16 +149,16 @@ from (
 </select>
 
 <select id="getIncomelableCost" parameterType="hashMap" resultType="HashMap">
-select sum(con_cost) as conCost
-		, sum(add_cost) as addCost
-		, sum(out_cost) as outCost
-		, sum(deposit_cost)as depositCost
+select sum(conCost) as conCost
+		, sum(addCost) as addCost
+		, sum(outCost) as outCost
+		, sum(depositCost)as depositCost
 from (
-	select coalesce(sum(aa.quote_cost), 0)+coalesce(sum(aa.add_cost), 0) as con_cost --금년 매출액 (견적 + 추가금)
-			, coalesce(sum(aa.add_cost), 0) as add_cost --금년 추가금
-			, coalesce(sum(aa.out_cost), 0) as out_cost --금년 미수금
-			, coalesce(sum(aa.deposit_cost), 0) as deposit_cost --금년 입금금액
-	from web.adjust_add aa left join web.bldg_bas bb on aa.bldg_cd = bb.bldg_cd 
+	select coalesce(sum(aa.quote_cost), 0) as conCost --금년 매출액 (견적 + 추가금)
+			, 0 as addCost --금년 추가금
+			, coalesce(sum(aa.quote_cost), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost --금년 미수금 
+			, coalesce(sum(aa.deposit_cost), 0) as depositCost --금년 입금금액
+	from web.adjust_add aa
 	where 1=1
 	<if test="inq != null">
 		<choose>
@@ -171,9 +166,9 @@ from (
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					bb.area_nm LIKE '%' || #{item} || '%'
+					aa.area_nm LIKE '%' || #{item} || '%'
 					or
-					bb.bldg_nm LIKE '%' || #{item} || '%'
+					aa.bldg_nm LIKE '%' || #{item} || '%'
 					or
 					aa.depositor LIKE '%' || #{item} || '%' 
 				</foreach>
@@ -182,14 +177,14 @@ from (
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					bb.area_nm LIKE '%' || #{item} || '%'
+					aa.area_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'building'">
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					bb.bldg_nm LIKE '%' || #{item} || '%'
+					aa.bldg_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 		<when test="con == 'depositor'">
@@ -207,10 +202,10 @@ from (
 	
 	union all
 	
-	select  coalesce(sum(bb.con_cost), 0)+coalesce(sum(bb.surtax), 0)+coalesce(sum(amm.add_cost), 0) as con_cost
-		,coalesce(sum(amm.add_cost), 0) as add_cost --금년 추가금
-		, coalesce(sum(amm.out_cost), 0) as out_cost -- 금년 미수금
-	   	,coalesce(sum(amm.deposit_cost), 0) as deposit_cost -- 금년 입금금액
+	select  coalesce(sum(bb.con_cost), 0)+coalesce(sum(bb.surtax), 0)+coalesce(sum(amm.add_cost), 0) as conCost
+		,coalesce(sum(amm.add_cost), 0) as addCost --금년 추가금
+		,coalesce(sum(bb.con_cost), 0) + coalesce(sum(bb.surtax), 0) + coalesce(sum(amm.add_cost), 0) - coalesce(sum(amm.deposit_cost), 0) as outCost --계약금+부가세+추가금-입금 = 미수금
+	   	,coalesce(sum(amm.deposit_cost), 0) as depositCost -- 금년 입금금액
 	from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
 	where 1=1
 	<if test="inq != null">

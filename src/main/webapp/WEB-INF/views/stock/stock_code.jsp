@@ -63,10 +63,10 @@ function loadGridStockList(type, result){
 
         stockColumns =  [
                 { isReadOnly: true, width: 35, align:"center"},
-                { binding: 'lCategyCd', header: '카테고리코드', isReadOnly: true, width: 300, align:"center"},
-                { binding: 'lCategyNm', header: '카테고리명', isReadOnly: true, width: 300, align:"center"},
-                { binding: 'itemCd', header: '물품코드', isReadOnly: false, width: 300, align:"center"  },
-                { binding: 'itemNm', header: '물품명', isReadOnly: false, width: 300, align:"center"  },
+                { binding: 'lCategyCd', header: '카테고리코드', isReadOnly: true, width: 200, align:"center"},
+                { binding: 'lCategyNm', header: '카테고리명', isReadOnly: true, width: 200, align:"center"},
+                { binding: 'itemCd', header: '물품코드', isReadOnly: false, width: 200, align:"center"  },
+                { binding: 'itemNm', header: '물품명', isReadOnly: false, width: 200, align:"center"  },
                 { binding: 'cost', header: '원가', isReadOnly: false, width: '*', align:"center"}
             ]
 		  
@@ -680,20 +680,6 @@ function getError(item,prop){
                             <input type="text" id="inq" placeholder=",로 다중검색 가능" onkeyup="enterkey();">
                             <button type="button" onClick="getStockList();">조회</button>
                         </form>
-                        <div class="summary">
-                            <dl>
-                                <dt>미수금</dt>
-                                <dd>0000원</dd>
-                            </dl>
-                            <dl>
-                                <dt>입금금액</dt>
-                                <dd>0000원</dd>
-                            </dl>
-                            <dl>
-                                <dt>추가금</dt>
-                                <dd>0000원</dd>
-                            </dl>
-                        </div>
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">

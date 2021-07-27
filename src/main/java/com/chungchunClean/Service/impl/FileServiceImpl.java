@@ -13,7 +13,7 @@ public class FileServiceImpl implements FileService{
 
     @Override
     public String uploadFile(MultipartFile file, HashMap<String, String> params) throws Exception {
-        String filePath = "/upload" + params.get("filePath"); // 파일경로 (upload가 기본 경로). 파일경로는 docker-tomcat에 볼륨 지정된 경로로 해야 한다.
+        String filePath = "/var/upload" + params.get("filePath"); // 파일경로 (upload가 기본 경로). 파일경로는 docker-tomcat에 볼륨 지정된 경로로 해야 한다.
         String fileName = params.get("fileName"); // 저장할 파일명
         String result = ""; // 결과 메세지
         try{
