@@ -845,7 +845,6 @@ function modifyBuilding(){
                 alert("수정되었습니다.");
                 dupCheck = false;
                 modifyDetailGrid.allowAddNew = false;
-                modifyDetailView.items.clear();
                 getBuildingInfo();
                 closePop();
                 getBuildingList();
