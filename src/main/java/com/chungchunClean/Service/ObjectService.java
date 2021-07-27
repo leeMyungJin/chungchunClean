@@ -51,5 +51,9 @@ public interface ObjectService {
 
     public void deleteBuildingDetailAll(HashMap<String, String> params);
 
+    public void updateBuilding(BldgVo vo);
+
+    public void excelUploadBuilding(BldgVo vo);
+
 
 }

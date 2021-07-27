@@ -54,4 +54,8 @@ public interface ObjectMapper  {
     public void deleteBuildingBas(HashMap<String, String> params);
 
     public void deleteBuildingDetailAll(HashMap<String, String> params);
+
+    public void updateBuilding(BldgVo vo);
+
+    public void excelUploadBuilding(BldgVo vo);
 }

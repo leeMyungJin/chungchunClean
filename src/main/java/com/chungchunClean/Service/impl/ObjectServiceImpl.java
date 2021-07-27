@@ -164,5 +164,15 @@ public class ObjectServiceImpl implements ObjectService {
 		objectMapper.deleteBuildingDetailAll(params);
 		
 	}
+
+	@Override
+	public void updateBuilding(BldgVo vo) {
+		objectMapper.updateBuilding(vo);
+	}
+
+	@Override
+	public void excelUploadBuilding(BldgVo vo) {
+		objectMapper.excelUploadBuilding(vo);
+	}
 	
 }

@@ -169,7 +169,8 @@ function loadGridStockList(type, result){
     }else if(type == "category"){
         categoryView = new wijmo.collections.CollectionView(result, {
             pageSize: 100,
-            trackChanges: true
+            trackChanges: true,
+            getError
         });
         categoryGridPager.cv = categoryView;
         categoryGrid.itemsSource = categoryView;
@@ -347,9 +348,23 @@ function saveGrid(type){
         var addItem  = categoryView.itemsAdded;
         var rows = [];
         for(var i =0; i< editItem.length ; i++){
+            if(editItem[i].lCategyCd == '' || editItem[i].lCategyCd == undefined ){
+                alert("카테고리코드를 입력하시기 바랍니다.");
+                return false;
+            }else if(editItem[i].lCategyNm == '' || editItem[i].lCategyNm == undefined){
+                alert("카테고리명을 입력하시기 바랍니다.");
+                return false;
+            }
             rows.push(editItem[i]);
         }
         for(var i=0; i< addItem.length; i++){
+            if(addItem[i].lCategyCd == '' || addItem[i].lCategyCd == undefined ){
+                alert("카테고리코드를 입력하시기 바랍니다.");
+                return false;
+            }else if(addItem[i].lCategyNm == '' || addItem[i].lCategyNm == undefined){
+                alert("카테고리명을 입력하시기 바랍니다.");
+                return false;
+            }
             rows.push(addItem[i]);
         }
 
@@ -525,7 +540,7 @@ function exportExcel(){
 	      saved => {
 	    	gridView.pageSize = oldPgSize;
 	    	gridView.moveToPage(oldPgIndex);
-	    	staffGrid.endUpdate();
+	    	bldgGrid.endUpdate();
 	      }, null
 	 );
 }
@@ -609,6 +624,20 @@ function downTemplate(){
 function popStockQrList(){
 	var win = window.open("/stock/getStockQrList?inq="+$("#inq").val()+"&con="+$("#con").val(), "PopupWin", "width=1000,height=600");
 
+}
+
+
+function getError(item,prop){
+    if( prop == "lCategyCd"){
+        const curDong = item[prop];
+        const src = categoryView.sourceCollection;
+        let allSameDong = src.filter((c)=>c.lCategyCd == curDong);
+        if(allSameDong.length > 1){
+            alert("동일한 카테고리코드가 존재합니다.");
+            return "동일한 카테고리코드가 존재합니다.";
+        }
+        return "";
+    }
 }
 
 </script>

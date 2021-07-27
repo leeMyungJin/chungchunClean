@@ -151,8 +151,7 @@ public class ObjectController {
     @RequestMapping(value = "/addBuildingBas")
     @ResponseBody
     public void addBuildingBas(@RequestParam HashMap<String,Object> params, HttpServletRequest req){
-        // params.put("id",req.getSession().getAttribute("id").toString());
-        params.put("id","test");
+        params.put("id",req.getSession().getAttribute("staffId").toString());
         // BLDG_BAS 등록
         objectService.addBuildingBas(params);
     } 
@@ -164,9 +163,9 @@ public class ObjectController {
     @RequestMapping(value = "/addBuildingDetail")
     @ResponseBody
     public void addBuildingDetail(@RequestBody List<BldgVo> detailParams, HttpServletRequest req){
-        //req.getSession().getAttribute("id").toString()
+        
         // BLDG_BAS 등록
-        objectService.addBuildingDetail(detailParams, "test");
+        objectService.addBuildingDetail(detailParams, req. getSession().getAttribute("staffId").toString());
     } 
 
     /**
@@ -184,7 +183,6 @@ public class ObjectController {
     @RequestMapping(value = "/contract")
     public String contract(HttpServletRequest req, Model model){
         String bldgCd = req.getParameter("bldgCd");
-        System.out.println("bldgCd is :" + bldgCd);
         model.addAttribute("bldgContInfo", objectService.getBldgContInfo(bldgCd));
         return "object/p_contract";
     } 
@@ -203,13 +201,13 @@ public class ObjectController {
     @ResponseBody
     public void modifyBuilding(@RequestParam HashMap<String,Object> params, HttpServletRequest req){
         // params.put("id",req.getSession().getAttribute("id").toString());
-        params.put("id","test");
+        params.put("id",req.getSession().getAttribute("staffId").toString());
         // BLDG_BAS 등록
         objectService.modifyBuilding(params);
     }
 
     /**
-     * 건물 마스터 수정 
+     * 건물 상세 수정 
      */
     @RequestMapping(value = "/modifyBuildingDetail")
     @ResponseBody
@@ -218,9 +216,25 @@ public class ObjectController {
         
         // BLDG_BAS 등록
         for(BldgVo vo : params){
-            vo.setCretId("test");
-            vo.setUpdtId("test");
+            vo.setCretId(req.getSession().getAttribute("staffId").toString());
+            vo.setUpdtId(req.getSession().getAttribute("staffId").toString());
             objectService.modifyBuildingDetail(vo);
+        }
+    }
+
+    /**
+     * 건물 저장
+     */
+    @RequestMapping(value = "/updateBuilding")
+    @ResponseBody
+    public void updateBuilding(@RequestBody List<BldgVo> params, HttpServletRequest req){
+        // params.put("id",req.getSession().getAttribute("staffId").toString());
+        
+        // BLDG_BAS 등록
+        for(BldgVo vo : params){
+            vo.setCretId(req.getSession().getAttribute("staffId").toString());
+            vo.setUpdtId(req.getSession().getAttribute("staffId").toString());
+            objectService.updateBuilding(vo);
         }
     }
 
@@ -230,7 +244,7 @@ public class ObjectController {
     @RequestMapping(value = "/deleteBuilding")
     @ResponseBody
     public void deleteBuilding(@RequestParam HashMap<String,String> params, HttpServletRequest req){
-        // params.put("id",req.getSession().getAttribute("id").toString());
+        params.put("id",req.getSession().getAttribute("staffId").toString());
             objectService.deleteBuilding(params);
             objectService.deleteBuildingDetailAll(params);
     }
@@ -245,5 +259,27 @@ public class ObjectController {
             objectService.deleteBuildingDetail(vo);
         }
     }
-  
+
+    /**
+     * 엑셀 업로드 
+     */
+
+    @RequestMapping(value = "/excelUploadBuilding")
+    @ResponseBody
+    public Integer excelUploadBuilding(@RequestBody List<BldgVo> params, HttpServletRequest req){
+        int cnt = 0;
+        // BLDG_BAS 등록
+        for(BldgVo vo : params){
+            vo.setCretId(req.getSession().getAttribute("staffId").toString());
+            vo.setUpdtId(req.getSession().getAttribute("staffId").toString());
+            try {
+                objectService.excelUploadBuilding(vo);
+                objectService.modifyBuildingDetail(vo);
+                cnt++;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return cnt;
+    }
 }

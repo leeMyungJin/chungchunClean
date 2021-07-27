@@ -16,6 +16,7 @@ var bldgSelector;
 var excelGrid;
 var excelView;
 var excelSelector;
+var excelColumns;
 var bldgDetailGrid;
 var bldgDetailView;
 var modifyDetailGrid;
@@ -83,21 +84,19 @@ function loadGridStockList(type, result){
                 { binding: 'areaCd', header: '지역코드', isReadOnly: true, width: 60, visible: false, align:"center"},
                 { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 60, visible: false, align:"center"},
                 { binding: 'clientNm', header: '고객명', isReadOnly: true, width: 60, visible: false, align:"center"},
-                { binding: 'conFromDt', header: '계약시작일', isReadOnly: true, width: 60, visible: false, align:"center"},
-                { binding: 'conToDt', header: '계약종료일', isReadOnly: true, width: 60, visible: false, align:"center"},
                 { binding: 'zone', header: '구역', isReadOnly: true, width: 60, visible: false, align:"center"},                
-                { binding: 'dtlAddr', header: '상세주소', isReadOnly: true, width: 300, align:"center"},
+                { binding: 'dtlAddr', header: '상세주소', isReadOnly: false, width: 300, align:"center"},
                 { binding: 'bldgCd', header: '건물코드', isReadOnly: true, width: 60, visible: false,align:"center"},
-                { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 150, align:"center"},
-                { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 120, align:"center"},
-                { binding: 'conCost', header: '계약금액', isReadOnly: true,  width: 150, align:"center"},
+                { binding: 'bldgNm', header: '건물명', isReadOnly: false, width: 150, align:"center"},
+                { binding: 'pnum', header: '전화번호', isReadOnly: false, width: 120, align:"center"},
+                { binding: 'conCost', header: '계약금액', isReadOnly: false,  width: 150, align:"center"},
                 { binding: 'conFromDt', header: '계약시작일', isReadOnly: true, width: 60, visible: false,align:"center"},
                 { binding: 'conToDt', header: '계약종료일', isReadOnly: true, width: 60, visible: false,align:"center"},
-                { binding: 'surtaxYn', header: '부가세여부', isReadOnly: true, width: 60, visible: false,align:"center"},
+                { binding: 'surtaxYn', header: '부가세여부', isReadOnly: true, width: 60, visible: false,align:"center" },
                 { binding: 'surtax', header: '부가세', isReadOnly: true, visible: false, width: 150, align:"center"},
                 { binding: 'dongNum', header: '동번호', isReadOnly: true, width: 60, align:"center"},
-                { binding: 'memo', header: '메모', isReadOnly: true, width: 280, align:"center"  },
-                { binding: 'activeYn', header: '활성화', isReadOnly: true, width: 80, align:"center"},
+                { binding: 'memo', header: '메모', isReadOnly: false, width: 280, align:"center"  },
+                { binding: 'activeYn', header: '활성화', isReadOnly: false, width: 80, align:"center", dataMap: activeList, dataMapEditor: 'DropDownList'},
                 { binding: 'cretDt', header: '계정생성일', isReadOnly: true, width: 175, align:"center"},
                 { binding: 'edit', header: '정보수정', isReadOnly: true, width: "*", align:"center",
                     cellTemplate: wijmo.grid.cellmaker.CellMaker.makeButton({
@@ -292,6 +291,18 @@ function loadGridStockList(type, result){
 		// hostElement에 Wijmo의 FlexGird 생성
         // itemsSource: data - CollectionView로 데이터를 그리드에 바인딩
         // autoGenerateColumns: false >> 컬럼 사용자 정의 
+
+        excelColumns =  [
+                { binding: 'bldgCd', header: '건물코드', isReadOnly: true, visible : false, width: 80, align:"center"},
+                { binding: 'bldg', header: '건물코드', isReadOnly: true, visible : false, width: 80, align:"center"},
+                { binding: 'dongNum', header: '동번호', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'cleanCnt', header: '청소횟수', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'fromDt', header: '시작일', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'toDt', header: '종료일', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'cretDt', header: '생성일', isReadOnly: false, visible : false, width: "*", align:"center"},
+                { binding: 'dongQrUrl', header: 'QrUrl', isReadOnly: false, visible : false,width: "*", align:"center"}
+
+            ];
         excelGrid = new wijmo.grid.FlexGrid('#excelGrid', {
             autoGenerateColumns: false,
             alternatingRowStep: 0,
@@ -311,7 +322,8 @@ function loadGridStockList(type, result){
     }else{
         bldgView = new wijmo.collections.CollectionView(result, {
             pageSize: 100,
-            groupDescriptions: ['areaNm', 'bldgCd']
+            groupDescriptions: ['areaNm', 'bldgNm'],
+            trackChanges : true
         });
         bldgGrid.columns[0].width = 50;
         bldgGridPager.cv = bldgView;
@@ -745,16 +757,16 @@ function modifyBuilding(){
             //그리드 데이터 사전 체크
             for(var i=0 ; i < rows.length ; i++){
                 if(rows[i].dongNum == "" || rows[i].dongNum == undefined){
-                    alert("상세정보 " + (i+1) + "행 동번호를 입력하시기 바랍니다.");
+                    alert("동번호를 입력하시기 바랍니다.");
                     return false;
                 }else if(rows[i].cleanCnt == "" || rows[i].cleanCnt == undefined){
-                    alert("상세정보 " + (i+1) + "행 청소횟수를 입력하시기 바랍니다.");
+                    alert("청소횟수를 입력하시기 바랍니다.");
                     return false;
                 }else if(rows[i].fromDt == "" || rows[i].fromDt == undefined){
-                    alert("상세정보 " + (i+1) + "행 시작일을 지정하시기 바랍니다.");
+                    alert("시작일을 지정하시기 바랍니다.");
                     return false;
                 }else if(rows[i].toDt == "" || rows[i].toDt == undefined){
-                    alert("상세정보 " + (i+1) + "행 종료일을 지정하시기 바랍니다.");
+                    alert("종료일을 지정하시기 바랍니다.");
                     return false;
                 }
             }
@@ -829,6 +841,269 @@ function modifyBuilding(){
         }
     }
 }
+function downTemplate(){
+    window.location.assign("<%=request.getContextPath()%>" + "/template/건물관리양식.xlsx");
+}
+
+function exportExcel(){
+	
+	var gridView = bldgGrid.collectionView;
+	var oldPgSize = gridView.pageSize;
+	var oldPgIndex = gridView.pageIndex;
+
+    //전체 데이터를 엑셀다운받기 위해서는 페이징 제거 > 엑셀 다운 > 페이징 재적용 하여야 함.
+    bldgGrid.beginUpdate();
+    bldgView.pageSize = 0;
+
+    wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(bldgGrid, {includeCellStyles: true, includeColumnHeaders: true}, 'bldgList.xlsx',
+	      saved => {
+	    	gridView.pageSize = oldPgSize;
+	    	gridView.moveToPage(oldPgIndex);
+	    	bldgGrid.endUpdate();
+	      }, null
+	 );
+}
+//업로드 파일 찾기
+function findFile(){
+    $("#importFile").val("");
+    document.all.importFile.click();
+}
+
+//엑셀 업로드
+function importExcel(){
+    $("#bldgDiv").hide();
+    bldgView = new wijmo.collections.CollectionView(null, {
+            pageSize: 100
+    });
+    $("#excelDiv").show();
+        var inputEle =  document.querySelector('#importFile');
+        if (inputEle.files[0]) {
+            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(excelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
+        // 데이터 바인딩할 함수 호출
+        bindImportedDataIntoModel();
+        excelGrid.columns.forEach(col => {
+          col.width = 160,
+          col.align = "center"
+        })
+      });
+    }
+         // 체크박스 생성
+        excelSelector = new wijmo.grid.selector.Selector(excelGrid);
+        excelSelector.column = excelGrid.columns[0];
+}
+
+function bindImportedDataIntoModel() {
+    const newData = (getImportedCVData());
+    excelGrid.columns.clear();
+    data = new wijmo.collections.CollectionView(newData);
+    excelGrid.autoGenerateColumns = true;
+    excelGrid.itemsSource = data;
+}
+
+function getImportedCVData() {
+    const arr = [];
+    let nullRow = true;
+    for (let row = 0; row < excelGrid.rows.length; row++) {
+        const item = {};
+        for (let column = 0; column < excelGrid.columns.length; column++) {
+            const cellValue = excelGrid.getCellData(row, column, false);
+            //병합된 헤더 처리 
+            // let header = grid.columns[column].header ? grid.columns[column].header : grid.columns[column - 1].header + '-2';
+        // 만약 열 헤더가 있으면
+            if (excelGrid.columns[column].header){
+            var header =  excelGrid.columns[column].header
+            } else{
+    //           만약 열 헤더가 없으면 본래 병합된 값으로 판단
+                for(var i = column-1; i >= 0; i--){
+                    if (excelGrid.columns[i].header){
+                        var header =  excelGrid.columns[i].header + " - "+column+" index"
+                        break;
+                    }
+                }
+            }
+        var binding = _convertHeaderToBinding(header);
+        item[binding] = cellValue;
+        }
+      arr.push(item);
+    }
+    return arr;
+}
+
+function _convertHeaderToBinding(header) {
+    return header.replace(/\s/, '').toLowerCase();
+}
+
+function saveGrid(){
+    if(bldgView.itemCount > 0){ //건물
+            var editItem = bldgView.itemsEdited;
+            var rows = [];
+            for(var i =0; i< editItem.length ; i++){
+                if(editItem[i].dtlAddr == "" ||  editItem[i].dtlAddr== null){
+                    alert("상세주소를 입력하세요.");
+                    return false;
+                }else if(editItem[i].bldgNm == "" || editItem[i].bldgNm== null){
+                    alert("건물명을 입력하세요.");
+                    return false;
+                }else if(editItem[i].pnum == "" || editItem[i].pnum== null){
+                    alert("전화번호를 입력하세요.");
+                    return false;
+                }else if(editItem[i].conCost == "" || editItem[i].conCost== null){
+                    alert("계약금액을 입력하세요.");
+                    return false;
+                }else if(editItem[i].activeYn == "" || editItem[i].activeYn== null){
+                    alert("활성화를 입력하세요.");
+                    return false;
+                }
+                rows.push(editItem[i]);
+            }
+            if(confirm("저장하시겠습니까?")){
+            // 기본정보 저장
+                $.ajax({
+                    url : "/object/updateBuilding",
+                    async : false, // 비동기모드 : true, 동기식모드 : false
+                    type : 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(rows),
+                    success : function(result) {
+                        alert("저장되었습니다.");
+                        getBuildingList();
+                    },
+                    error : function(request,status,error) {
+                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+             }
+    }else{ // 엑셀 업로드 저장하기
+        var item  = excelGrid.rows;
+        var rows = [];
+        var params;
+        for(var i=0; i< item.length; i++){
+            var txt = wijmo.changeType(excelGrid.collectionView.items[i].건물코드, wijmo.DataType.String, null);
+
+            if(!wijmo.isString(txt) || txt.length != 11){
+                alert("건물코드를 바르게 입력하시기 바랍니다.");
+                return false;
+            }
+            var value = wijmo.changeType(excelGrid.collectionView.items[i].계약금액, wijmo.DataType.Number, null);
+            if(!wijmo.isNumber(value)){
+                alert("계약금액은 숫자만 입력 가능합니다.");
+                return false;
+            }
+            value = wijmo.changeType(excelGrid.collectionView.items[i].지역코드, wijmo.DataType.Number, null);
+            txt = wijmo.changeType(excelGrid.collectionView.items[i].지역명, wijmo.DataType.String, null);
+            if(!wijmo.isNumber(value)){
+                alert("지역코드는 숫자만 입력 가능합니다.");
+                return false;
+
+            }else if(!(value == 11 || value == 26 || value == 27 || value == 28 || value == 30 || value == 41 || value == 43 
+                || value == 44 || value == 45 || value == 46 || value == 47 || value == 48 || value == 50)){
+                    alert("지역코드는 코드참고표 시트에 있는 코드만 입력하시기 바랍니다.");
+                    return false;
+            }
+            if( (value == 11 && txt != '서울특별시')|| (value == 26 && txt != '부산광역시') || (value == 27 && txt != '대구광역시') || (value == 28 && txt != '인천광역시') 
+             || (value == 30 && txt != '대전광역시')|| (value == 41 && txt != '경기도')     || (value == 43 && txt != '충청북도')  || (value == 44 && txt != '충청남도')
+             || (value == 45 && txt != '전라북도')  || (value == 46 && txt != '전라남도')   || (value == 47 && txt != '경상북도') || (value == 48 && txt != '경상남도')
+             || (value == 50 && txt != '제주특별자치도')){
+                 alert("지역코드와 지역명이 일치하지 않습니다.");
+                 return false;
+             }
+            var flag = wijmo.changeType(excelGrid.collectionView.items[i].부가세포함여부, wijmo.DataType.String, null);
+            if(flag != 'Y' && flag != 'N'){
+                alert("부가세포함여부는 Y/N 중 하나를 입력하시기 바랍니다.");
+                return false;
+            }
+            value = wijmo.changeType(excelGrid.collectionView.items[i].부가세, wijmo.DataType.Number, null);
+            if(flag == 'Y' ){
+                if(value > 0){
+                    alert("부가세포함여부가 Y인 경우, 부가세를 입력할 수 없습니다.");
+                    return false;
+                }
+            }
+            if(!wijmo.isNumber(value) && flag == 'N'){
+                alert("부가세는 숫자만 입력 가능합니다.");
+                return false;
+            }
+            value = wijmo.changeType(excelGrid.collectionView.items[i].전화번호, wijmo.DataType.String, null);
+            if(value.length != 11){
+                alert("전화번호는 숫자 11자리까지 입력 가능합니다.");
+                return false;
+            }
+
+            value = wijmo.changeType(excelGrid.collectionView.items[i].계약시작일, wijmo.DataType.String, null);
+            var dateRegExp = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
+            if(!dateRegExp.test(value)){
+                alert("계약시작일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
+                return false;
+            }
+
+            value = wijmo.changeType(excelGrid.collectionView.items[i].계약종료일, wijmo.DataType.String, null);
+            if(!dateRegExp.test(value)){
+                alert("계약시작일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
+                return false;
+            }
+
+            flag = wijmo.changeType(excelGrid.collectionView.items[i].활성화, wijmo.DataType.String, null);
+            if(flag != 'Y' && flag != 'N'){
+                alert("활성화는 Y/N 중 하나를 입력하시기 바랍니다.");
+                return false;
+            }
+
+            value = wijmo.changeType(excelGrid.collectionView.items[i].시작일, wijmo.DataType.String, null);
+            if(!dateRegExp.test(value)){
+                alert("시작일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
+                return false;
+            }
+
+            value = wijmo.changeType(excelGrid.collectionView.items[i].종료일, wijmo.DataType.String, null);
+            if(!dateRegExp.test(value)){
+                alert("종료일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
+                return false;
+            }
+
+
+            params={
+                bldgCd :  excelGrid.collectionView.items[i].건물코드,
+                bldgNm :  excelGrid.collectionView.items[i].건물명,
+                areaCd :  excelGrid.collectionView.items[i].지역코드,
+                areaNm :  excelGrid.collectionView.items[i].지역명,
+                zone : excelGrid.collectionView.items[i].구역,
+                clientNm : excelGrid.collectionView.items[i].고객명,
+                dtlAddr : excelGrid.collectionView.items[i].상세주소,
+                pnum : excelGrid.collectionView.items[i].전화번호,
+                conCost : excelGrid.collectionView.items[i].계약금액,
+                surtax : excelGrid.collectionView.items[i].부가세,
+                surtaxYn : excelGrid.collectionView.items[i].부가세포함여부,
+                memo : excelGrid.collectionView.items[i].메모,
+                conFromDt : excelGrid.collectionView.items[i].계약시작일,
+                conToDt : excelGrid.collectionView.items[i].계약종료일,
+                activeYn : excelGrid.collectionView.items[i].활성화,
+                dongNum : excelGrid.collectionView.items[i].동번호,
+                cleanCnt : excelGrid.collectionView.items[i].청소횟수,
+                fromDt : excelGrid.collectionView.items[i].시작일,
+                toDt : excelGrid.collectionView.items[i].종료일
+            }
+            rows.push(params);
+        }
+        if(confirm("저장 하시겠습니까??")){
+            $.ajax({
+                url : "/object/excelUploadBuilding",
+                async : false, // 비동기모드 : true, 동기식모드 : false
+                type : 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(rows),
+                success : function(result) {
+                    alert("총 " + result + "건이 저장되었습니다.");
+                    getBuildingInfo();
+                    getBuildingList();
+                },
+                error : function(request,status,error) {
+                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                }
+            });
+        }
+    }
+}
+
 // 이벤트 처리 
 $(function(){
     $("[name=surtaxYn]").change(function(){
@@ -838,6 +1113,10 @@ $(function(){
             $("[name=tax]").hide();
             $("[name=surtax]").val("");
         }
+    });
+
+     $("#importFile").on('change', function (params) {
+        importExcel();
     });
 });
 </script>
@@ -863,10 +1142,11 @@ $(function(){
                 </div>
                 <div class="admin_utility">
                     <div class="admin_btn">
-                        <button class="btn" onClick="popContract()">계약서 출력</button>
-                        <button class="btn">엑셀 템플릿</button>
-                        <button class="btn">엑셀 업로드</button>
-                        <button class="btn">엑셀 다운로드</button>
+                        <input type="file" class="form-control" style="display:none" id="importFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12" />
+                        <button class="btn" onClick="popContract();">계약서 출력</button>
+                        <button class="btn" onClick="downTemplate();">엑셀 템플릿</button>
+                        <button class="btn" onClick="findFile();">엑셀 업로드</button>
+                        <button class="btn" onClick="exportExcel();">엑셀 다운로드</button>
                     </div>
                 </div>
                 <div class="admin_content">
@@ -891,7 +1171,7 @@ $(function(){
                             <button type="button" class="stroke" onClick="_getUserGridLayout('bldgLayout', bldgGrid);">칼럼위치저장</button>
                             <button type="button" class="stroke" onClick="_resetUserGridLayout('bldgLayout', bldgGrid,bldgColumns);">칼럼초기화</button>
                             <button type="button" onClick="popBuildingQrList();">QR출력</button>
-                            <button type="button">저장</button>
+                            <button type="button" onClick="saveGrid();">저장</button>
                         </div>
                         <div class="grid_wrap" id="bldgDiv" style="position:relative;">
                         	<div id="bldgGrid"  style="height:500px;"></div>
@@ -903,8 +1183,8 @@ $(function(){
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('bldgLayout', bldgGrid);">칼럼위치저장</button>
                             <button type="button" class="stroke" onClick="_resetUserGridLayout('bldgLayout', bldgGrid,bldgColumns);">칼럼초기화</button>
-                            <button type="button">QR출력</button>
-                            <button type="button">저장</button>
+                            <button type="button" onClick="popBuildingQrList();">QR출력</button>
+                            <button type="button" onClick="saveGrid();">저장</button>
                         </div>
                     </div>
                 </div>

@@ -222,7 +222,7 @@ function exportExcel(){
 	      saved => {
 	    	gridView.pageSize = oldPgSize;
 	    	gridView.moveToPage(oldPgIndex);
-	    	staffGrid.endUpdate();
+	    	stockMngGrid.endUpdate();
 	      }, null
 	 );
 }
