@@ -166,7 +166,7 @@ function loadGridMonList(type, result){
 		//월관리
 		   monView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
-		       ,groupDescriptions: ['areaNm']
+		       ,groupDescriptions: ['monMt','areaNm']
 		   });
 		  monGridPager.cv = monView;
 		  monGrid.itemsSource = monView;
