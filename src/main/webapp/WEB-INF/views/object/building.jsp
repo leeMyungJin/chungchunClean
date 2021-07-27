@@ -37,7 +37,8 @@ function sessionCheck(){
         alert("세션이 종료되어 로그인화면으로 이동합니다.");
         location.href = "/";
         return false;
-    }
+    }else
+        return true;
 }
 function getError(item,prop){
         if( prop == "dongNum"){
