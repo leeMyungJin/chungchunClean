@@ -797,7 +797,7 @@ function modifyBuilding(){
                     memo        : form.memo.value,
                     clientNm    : form.clientNm.value,
                     conFromDt   : form.conFromDt.value,
-                    conToDt     : form.conToDt.value
+                    conToDt     : form.conToDt.value,
                 }
                 // 기본정보 저장
                 $.ajax({
@@ -1092,7 +1092,8 @@ function saveGrid(){
                     dongNum : excelGrid.collectionView.items[i].동번호,
                     cleanCnt : excelGrid.collectionView.items[i].청소횟수,
                     fromDt : excelGrid.collectionView.items[i].시작일,
-                    toDt : excelGrid.collectionView.items[i].종료일
+                    toDt : excelGrid.collectionView.items[i].종료일,
+                    dongQrUrl : excelGrid.collectionView.items[i].건물코드+excelGrid.collectionView.items[i].동번호
                 }
                 rows.push(params);
             }
