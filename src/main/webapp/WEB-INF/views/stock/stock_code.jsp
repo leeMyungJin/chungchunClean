@@ -38,7 +38,14 @@ function pageLoad(){
         importExcel();
     });
 }
-
+function sessionCheck(){
+    if("<%=session.getAttribute("staffId")%>"=="null"){
+        alert("세션이 종료되어 로그인화면으로 이동합니다.");
+        location.href = "/";
+        return false;
+    }else
+        return true;
+}
 function enterkey() {
     if (window.event.keyCode == 13) {
     	getStockList();
@@ -343,111 +350,116 @@ function getCategoryDtl() {
     
 //데이터 저장
 function saveGrid(type){
-    if(type == "category"){
-        var editItem = categoryView.itemsEdited;
-        var addItem  = categoryView.itemsAdded;
-        var rows = [];
-        for(var i =0; i< editItem.length ; i++){
-            if(editItem[i].lCategyCd == '' || editItem[i].lCategyCd == undefined ){
-                alert("카테고리코드를 입력하시기 바랍니다.");
-                return false;
-            }else if(editItem[i].lCategyNm == '' || editItem[i].lCategyNm == undefined){
-                alert("카테고리명을 입력하시기 바랍니다.");
-                return false;
-            }
-            rows.push(editItem[i]);
-        }
-        for(var i=0; i< addItem.length; i++){
-            if(addItem[i].lCategyCd == '' || addItem[i].lCategyCd == undefined ){
-                alert("카테고리코드를 입력하시기 바랍니다.");
-                return false;
-            }else if(addItem[i].lCategyNm == '' || addItem[i].lCategyNm == undefined){
-                alert("카테고리명을 입력하시기 바랍니다.");
-                return false;
-            }
-            rows.push(addItem[i]);
-        }
-
-        wijmo.Control.getControl("#editGrid").refresh(true);
-        if(confirm("변경한 내용을 저장 하시겠습니까??")){
-            $.ajax({
-                url : "/stock/saveCategory",
-                async : false, // 비동기모드 : true, 동기식모드 : false
-                type : 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(rows),
-                success : function(result) {
-                    alert("저장되었습니다.");
-                    loadGridStockList('category', result);
-                },
-                error : function(request,status,error) {
-                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                }
-            });
-        }
-    }else if(type == 'stock'){
-        if(stockView.itemCount > 0){
-            var editItem = stockView.itemsEdited;
-            var addItem  = stockView.itemsAdded;
+    if(sessionCheck()){
+        if(type == "category"){
+            var editItem = categoryView.itemsEdited;
+            var addItem  = categoryView.itemsAdded;
             var rows = [];
             for(var i =0; i< editItem.length ; i++){
-                    rows.push(editItem[i]);
+                if(editItem[i].lCategyCd == '' || editItem[i].lCategyCd == undefined ){
+                    alert("카테고리코드를 입력하시기 바랍니다.");
+                    return false;
+                }else if(editItem[i].lCategyNm == '' || editItem[i].lCategyNm == undefined){
+                    alert("카테고리명을 입력하시기 바랍니다.");
+                    return false;
+                }
+                rows.push(editItem[i]);
             }
             for(var i=0; i< addItem.length; i++){
+                if(addItem[i].lCategyCd == '' || addItem[i].lCategyCd == undefined ){
+                    alert("카테고리코드를 입력하시기 바랍니다.");
+                    return false;
+                }else if(addItem[i].lCategyNm == '' || addItem[i].lCategyNm == undefined){
+                    alert("카테고리명을 입력하시기 바랍니다.");
+                    return false;
+                }
                 rows.push(addItem[i]);
             }
-            if(confirm("저장 하시겠습니까??")){
+
+            wijmo.Control.getControl("#editGrid").refresh(true);
+            if(confirm("변경한 내용을 저장 하시겠습니까??")){
                 $.ajax({
-                    url : "/stock/saveStock",
+                    url : "/stock/saveCategory",
                     async : false, // 비동기모드 : true, 동기식모드 : false
                     type : 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(rows),
                     success : function(result) {
                         alert("저장되었습니다.");
-                        getStockList();
+                        loadGridStockList('category', result);
                     },
                     error : function(request,status,error) {
                         alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                     }
                 });
             }
-        }else{ // 엑셀 업로드 저장하기
-            var item  = excelGrid.rows;
-            var rows = [];
-            var params;
-            for(var i=0; i< item.length; i++){
-                var value = wijmo.changeType(excelGrid.collectionView.items[i].원가, wijmo.DataType.Number, null);
-                if(!wijmo.isNumber(value)){
-                    alert("원가는 숫자만 입력 가능합니다.");
-                    return false;
+        }else if(type == 'stock'){
+            if(stockView.itemCount > 0){
+                var editItem = stockView.itemsEdited;
+                var addItem  = stockView.itemsAdded;
+                var rows = [];
+                for(var i =0; i< editItem.length ; i++){
+                        rows.push(editItem[i]);
                 }
-                params={
-                    lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,3),
-                    itemCd : excelGrid.collectionView.items[i].물품코드,
-                    itemNm : excelGrid.collectionView.items[i].물품명,
-                    cost : excelGrid.collectionView.items[i].원가
+                for(var i=0; i< addItem.length; i++){
+                    rows.push(addItem[i]);
                 }
-                rows.push(params);
-            }
-            if(confirm("저장 하시겠습니까??")){
-                $.ajax({
-                    url : "/stock/saveStock",
-                    async : false, // 비동기모드 : true, 동기식모드 : false
-                    type : 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(rows),
-                    success : function(result) {
-                        alert("총 " + result + "건이 저장되었습니다.");
-                        getStockList();
-                    },
-                    error : function(request,status,error) {
-                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                if(confirm("저장 하시겠습니까??")){
+                    $.ajax({
+                        url : "/stock/saveStock",
+                        async : false, // 비동기모드 : true, 동기식모드 : false
+                        type : 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(rows),
+                        success : function(result) {
+                            alert("저장되었습니다.");
+                            getStockList();
+                        },
+                        error : function(request,status,error) {
+                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        }
+                    });
+                }
+            }else{ // 엑셀 업로드 저장하기
+                var item  = excelGrid.rows;
+                var rows = [];
+                var params;
+                for(var i=0; i< item.length; i++){
+                    var value = wijmo.changeType(excelGrid.collectionView.items[i].원가, wijmo.DataType.Number, null);
+                    if(!wijmo.isNumber(value) && (excelGrid.collectionView.items[i].물품명 != undefined && excelGrid.collectionView.items[i].물품코드 != undefined)){
+                        alert("원가는 숫자만 입력 가능합니다.");
+                        return false;
                     }
-                });
+                    if(excelGrid.collectionView.items[i].원가 != undefined && excelGrid.collectionView.items[i].물품명 != undefined && excelGrid.collectionView.items[i].물품코드 != undefined){
+                        params={
+                            lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,3),
+                            itemCd : excelGrid.collectionView.items[i].물품코드,
+                            itemNm : excelGrid.collectionView.items[i].물품명,
+                            cost : excelGrid.collectionView.items[i].원가
+                        }
+                        rows.push(params);
+                    }
+                    
+                }
+                if(confirm("저장 하시겠습니까??")){
+                    $.ajax({
+                        url : "/stock/saveStock",
+                        async : false, // 비동기모드 : true, 동기식모드 : false
+                        type : 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(rows),
+                        success : function(result) {
+                            alert("총 " + result + "건이 저장되었습니다.");
+                            getStockList();
+                        },
+                        error : function(request,status,error) {
+                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        }
+                    });
+                }
             }
+            
         }
-        
     }
 }
 

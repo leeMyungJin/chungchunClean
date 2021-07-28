@@ -122,7 +122,7 @@ FROM WEB.CATEGORY_DTL
 <insert id="saveStock" parameterType="StockVo">
 INSERT INTO WEB.CATEGORY_DTL 
   (l_categy_cd,   item_cd, item_nm, cost, cret_dt, cret_id, updt_dt, updt_id, qr_url)
-  VALUES (#{lCategyCd},#{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId}, 'QR'||#{itemCd})
+  VALUES (#{lCategyCd},#{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId}, #{itemCd})
 ON CONFLICT( l_categy_cd, item_cd) DO
 UPDATE
 	SET l_categy_cd = #{lCategyCd},
@@ -130,7 +130,7 @@ UPDATE
 		item_nm		= #{itemNm},
 		cost		=  #{cost}::numeric,
 		updt_dt		= now(),
-		updt_id		= #{updtId}
+		updt_id		= #{updtId},
 		qr_url 		= #{itemCd}
 </insert>
 

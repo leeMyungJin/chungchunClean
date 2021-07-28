@@ -87,7 +87,11 @@ public class StockController {
      */
     @RequestMapping(value="/saveCategory", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public List<StockVo> saveCategory(@RequestBody List<StockVo> params){
+    public List<StockVo> saveCategory(@RequestBody List<StockVo> params, HttpServletRequest req){
+        for(StockVo vo : params){
+            vo.setCretId(req.getSession().getAttribute("staffId").toString());
+            vo.setUpdtId(req.getSession().getAttribute("staffId").toString());
+        }
         stockService.saveCategory(params);
         return stockService.getCategoryList(); // 카테고리 저장 후 다시 조회
     }
@@ -124,7 +128,9 @@ public class StockController {
      */
     @RequestMapping(value="/addItem", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void addItem(@RequestBody StockVo params){
+    public void addItem(@RequestBody StockVo params, HttpServletRequest req){
+        params.setCretId(req.getSession().getAttribute("staffId").toString());
+        params.setUpdtId(req.getSession().getAttribute("staffId").toString());
         stockService.addItem(params); // 카테고리 저장 후 다시 조회
     }
 
@@ -146,7 +152,12 @@ public class StockController {
      */
     @RequestMapping(value="/saveStock", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public Integer saveStock(@RequestBody List<StockVo> params){
+    public Integer saveStock(@RequestBody List<StockVo> params, HttpServletRequest req){
+        for(StockVo vo : params){
+            vo.setCretId(req.getSession().getAttribute("staffId").toString());
+            vo.setUpdtId(req.getSession().getAttribute("staffId").toString());
+        }
+
         return stockService.saveStock(params);
         // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
     }
@@ -158,7 +169,9 @@ public class StockController {
      */
     @RequestMapping(value="/saveQuantity", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void saveQuantity(@RequestBody StockVo params){
+    public void saveQuantity(@RequestBody StockVo params , HttpServletRequest req){
+        params.setCretId(req.getSession().getAttribute("staffId").toString());
+        params.setUpdtId(req.getSession().getAttribute("staffId").toString());
         stockService.saveQuantity(params);
     }
 
@@ -169,7 +182,11 @@ public class StockController {
      */
     @RequestMapping(value="/saveQuantityList", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public Integer saveQuantityList(@RequestBody List<StockVo> params){
+    public Integer saveQuantityList(@RequestBody List<StockVo> params, HttpServletRequest req){
+            for(StockVo vo : params){
+                vo.setCretId(req.getSession().getAttribute("staffId").toString());
+                vo.setUpdtId(req.getSession().getAttribute("staffId").toString());
+            }
             return stockService.saveQuantityList(params);
     }
 

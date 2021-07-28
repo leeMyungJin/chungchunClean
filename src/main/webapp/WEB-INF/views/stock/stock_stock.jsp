@@ -26,6 +26,15 @@ function pageLoad(){
     $("#essential").trigger("click");
 }
 
+function sessionCheck(){
+    if("<%=session.getAttribute("staffId")%>"=="null"){
+        alert("세션이 종료되어 로그인화면으로 이동합니다.");
+        location.href = "/";
+        return false;
+    }else
+        return true;
+}
+
 function enterkey() {
     if (window.event.keyCode == 13) {
     	getStockList();
@@ -67,50 +76,50 @@ function loadGridStockList(type, result){
             columns : stockMngColumns,
             itemsSource: stockMngView,
             cellEditEnding: function (s, e) {
-                var col = s.columns[e.col];
-                var inven = s.columns[e.col - 1];
-                if (col.binding == 'add') {
-                    var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
-                    if( !wijmo.isNumber(value)){
-                        e.cancel = true;
-                        e.stayInEditMode = false;
-                        alert('숫자로만 입력 가능합니다.');
-                        return false;
-                    }else{
-                        if(e.getRow().dataItem.quantity + value >= 0){
-                            e.getRow().dataItem.quantity += value;// 입력값 재고수량에 계산
-                            if(e.getRow().dataItem.quantity > 10){
-                                e.getRow().dataItem.status = 'O';
-                            }else{
-                                e.getRow().dataItem.status = 'X';
-                            }
-                            var params = {
-                                lCategyCd   : e.getRow().dataItem.lCategyCd,
-                                itemCd      : e.getRow().dataItem.itemCd,
-                                quantity    : e.getRow().dataItem.quantity ,
-                            }
-                            $.ajax({
-                                url : "/stock/saveQuantity",
-                                async : false, // 비동기모드 : true, 동기식모드 : false
-                                type : 'POST',
-                                contentType: 'application/json',
-                                data: JSON.stringify(params),
-                                success : function(result) {
-                                    getQuantityInfo();
-                                },
-                                error : function(request,status,error) {
-                                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                                }
-                            });
-                            s.activeEditor.value = 0; // 입력값 0으로 초기화
-                         }else{
-                            alert("재고수량은 0보다 커야 합니다.");
-                            s.activeEditor.value = 0; // 입력값 0으로 초기화
+                if(sessionCheck()){
+                    var col = s.columns[e.col];
+                    var inven = s.columns[e.col - 1];
+                    if (col.binding == 'add') {
+                        var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
+                        if( !wijmo.isNumber(value)){
+                            e.cancel = true;
+                            e.stayInEditMode = false;
+                            alert('숫자로만 입력 가능합니다.');
                             return false;
-                         }
-
+                        }else{
+                            if(e.getRow().dataItem.quantity + value >= 0){
+                                e.getRow().dataItem.quantity += value;// 입력값 재고수량에 계산
+                                if(e.getRow().dataItem.quantity > 10){
+                                    e.getRow().dataItem.status = 'O';
+                                }else{
+                                    e.getRow().dataItem.status = 'X';
+                                }
+                                var params = {
+                                    lCategyCd   : e.getRow().dataItem.lCategyCd,
+                                    itemCd      : e.getRow().dataItem.itemCd,
+                                    quantity    : e.getRow().dataItem.quantity ,
+                                }
+                                $.ajax({
+                                    url : "/stock/saveQuantity",
+                                    async : false, // 비동기모드 : true, 동기식모드 : false
+                                    type : 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify(params),
+                                    success : function(result) {
+                                        getQuantityInfo();
+                                    },
+                                    error : function(request,status,error) {
+                                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                                    }
+                                });
+                                s.activeEditor.value = 0; // 입력값 0으로 초기화
+                            }else{
+                                alert("재고수량은 0보다 커야 합니다.");
+                                s.activeEditor.value = 0; // 입력값 0으로 초기화
+                                return false;
+                            }
+                        }
                     }
-
                 }
             }
         });
@@ -324,7 +333,8 @@ function getQuantityInfo(){
 
 //엑셀 업로드 저장
 function saveGrid(){
-    if(confirm("저장 하시겠습니까?")){
+    
+    if(sessionCheck() && confirm("저장 하시겠습니까?")){
         var item  = excelGrid.rows;
             var rows = [];
             var params;
