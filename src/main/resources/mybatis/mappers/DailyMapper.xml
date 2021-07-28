@@ -104,9 +104,11 @@
 				, dm.cret_id 
 				, to_char(dm.updt_dt, 'YYYY-MM-DD') as updt_dt 
 				, dm.updt_id
+				, dm.img_path
 		from web.daily_mntr dm left join web.bldg_bas bb on dm.bldg_cd = bb.bldg_cd 
 		where 1=1
-		and dm.daily_mntr_cd = #{dailyMntrCd}
+		and dm.daily_mntr_cd = #{dailyMntrCd}::numeric 
+		and dm.bldg_cd = #{bldgCd}
 	</select>	
 	
 	

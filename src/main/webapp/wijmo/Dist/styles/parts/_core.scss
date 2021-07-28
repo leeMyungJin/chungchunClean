@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -48,7 +48,7 @@
 
         &:-ms-input-placeholder {
             // set IE placeholder opacity (like Firefox, need single colon): TFS 457902
-            opacity: 0.7; // C1WEB-26755
+            opacity: 0.5;
         }        
 
         &[type=number] {

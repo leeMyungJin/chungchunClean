@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -111,7 +111,7 @@ declare module wijmo.grid.pdf {
     interface IFlexGridDrawSettings {
         /**
          * Indicates whether custom cell content and style should be evaluated and exported.
-         * If set to true then export logic will retrieve cell content using cell.innerText property,
+         * If set to true then export logic will retrieve cell content using cell.textContent property,
          * and cell style using getComputedStyle(cell).
          * Default is 'undefined' (i.e. false).
          */
@@ -273,8 +273,6 @@ declare module wijmo.grid.pdf {
         isNewRow(row: _IRow): boolean;
         isDetailRow(row: _IRow): boolean;
         isExpandableGroupRow(row: _IRow): boolean;
-        isRenderableRow(row: _IRow): boolean;
-        isRenderableColumn(col: _IColumn): boolean;
     }
     interface _IGridPanel {
         columns: _IColumnCollection;
@@ -300,7 +298,6 @@ declare module wijmo.grid.pdf {
         visibleIndex: number;
         renderWidth: number;
         wordWrap: boolean;
-        multiLine: boolean;
         getAlignment(row?: _IRow): string;
     }
     interface _ICellRange {
@@ -316,7 +313,7 @@ declare module wijmo.grid.pdf {
         rowSpan: number;
         columnSpan: number;
         isSingleCell: boolean;
-        getRenderSize(flex: _IFlexGridAdapter, panel: _IGridPanel): wijmo.Size;
+        getRenderSize(panel: _IGridPanel): wijmo.Size;
         clone(): _ICellRange;
     }
     interface _IRowCollection {
@@ -328,7 +325,6 @@ declare module wijmo.grid.pdf {
         level?: number;
         renderHeight: number;
         wordWrap: boolean;
-        multiLine: boolean;
     }
     enum _CellType {
         None = 0,
@@ -343,7 +339,6 @@ declare module wijmo.grid.pdf {
 declare module wijmo.grid.pdf {
     function _merge(dst: any, src: any, overwrite?: boolean): any;
     function _combineColumns(regCol: _IColumn, bndCol: _IColumn): _IColumn;
-    function _cloneStyle(val: CSSStyleDeclaration): any;
 }
 declare module wijmo.grid.pdf {
     /**
@@ -511,7 +506,6 @@ declare module wijmo.grid.pdf {
         constructor(flex: _IFlexGridAdapter, settings: IFlexGridExportSettings, range: RowRange, borderWidth: number, lastPage: boolean);
         readonly settings: IFlexGridExportSettings;
         isRenderableRow(row: _IRow): boolean;
-        isRenderableColumn(col: _IColumn): boolean;
         getCellsCount(): number;
         render(doc: wijmo.pdf.PdfDocument, cellRendered?: () => void): void;
         readonly flex: _IFlexGridAdapter;
@@ -532,20 +526,22 @@ declare module wijmo.grid.pdf {
         private _range;
         private _panel;
         private _flex;
-        private _renderableRowsCnt;
-        private _renderableColumnsCnt;
+        private _visibleRows;
+        private _visibleColumns;
         private _size;
-        constructor(flex: _IFlexGridAdapter, panel: _IGridPanel, range: RowRange);
-        readonly renderableRowsCount: number;
-        readonly renderableColumnsCount: number;
+        constructor(panel: _IGridPanel, range: RowRange);
+        readonly visibleRows: number;
+        readonly visibleColumns: number;
         readonly size: wijmo.Size;
         readonly range: RowRange;
         readonly panel: _IGridPanel;
+        protected isRenderableRow(row: _IRow): boolean;
     }
     class PanelSectionRenderer extends PanelSection {
         private _borderWidth;
         private _gr;
         private _renderSize;
+        private _cvtHtml;
         constructor(gr: FlexGridRenderer, panel: _IGridPanel, range: RowRange, borderWidth: number);
         readonly gr: FlexGridRenderer;
         readonly renderSize: wijmo.Size;
@@ -553,6 +549,7 @@ declare module wijmo.grid.pdf {
         getRangeHeight(topRow: number, bottomRow: number): number;
         getCellsCount(): number;
         render(doc: wijmo.pdf.PdfDocument, x: number, y: number, cellRendered?: () => void): void;
+        protected isRenderableRow(row: _IRow): boolean;
     }
     class _CellRenderer {
         private _pr;
@@ -595,7 +592,7 @@ declare module wijmo.grid.pdf {
         readonly isSingleCell: boolean;
         copyFrom(cr: _CellRange): void;
         clone(): _CellRange;
-        getRenderSize(flex: _IFlexGridAdapter, p: _IGridPanel): wijmo.Size;
+        getRenderSize(p: _IGridPanel): wijmo.Size;
         setRange(r?: number, c?: number, r2?: number, c2?: number): void;
     }
     class _CellRangeExt extends _CellRange {
@@ -614,7 +611,7 @@ declare module wijmo.grid.pdf {
         readonly leftCol: number;
         readonly rightCol: number;
         clone(leftCol?: number, rightCol?: number): RowRange;
-        getRenderSize(flex: _IFlexGridAdapter, panel: _IGridPanel): wijmo.Size;
+        getRenderSize(panel: _IGridPanel): wijmo.Size;
         find(panel: _IGridPanel, fn: (row: _IRow) => boolean): _IRow | null;
         forEach(panel: _IGridPanel, fn: (row: _IRow, range?: _ICellRange, rowIdx?: number, seqIdx?: number) => void | boolean): void;
         subrange(from: number, count: number, leftCol?: number, rightCol?: number): RowRange;
@@ -636,11 +633,11 @@ declare module wijmo.grid.pdf {
         * Draws the {@link FlexGrid} to an existing {@link PdfDocument} at the
         * (0, @wijmo.pdf.PdfDocument.y) coordinates.
         *
-        * If both, **width** and **height** are determined, then grid will be scaled to fit the
-        * specified rectangle without any page breaks.
-        * If only **width** is specifed, then grid will be scaled to fit the width, breaking
-        * into pages vertically as needed.
-        * Otherwise grid will be rendered in actual size, breaking into pages as needed.
+        * If width is not specified, then grid will be rendered in actual size,
+        * breaking into pages as needed. If height is not specified, then grid will be
+        * scaled to fit the width, breaking into pages vertically as needed.
+        * If both, width and height are determined, then grid will be scaled to fit
+        * the specified rectangle without any page breaks.
         *
         * <pre>
         * var doc = new wijmo.pdf.PdfDocument({
@@ -674,11 +671,12 @@ declare module wijmo.grid.pdf {
         * Draws the {@link FlexGrid} to an existing {@link PdfDocument} instance at the
         * specified coordinates.
         *
-        * If both, **width** and **height** are determined, then grid will be scaled to fit
+        * If width is not specified, then grid will be rendered in actual size
+        * without any page breaks.
+        * If height is not specified, then grid will be scaled to fit the width
+        * without any page breaks.
+        * If both, width and height are determined, then grid will be scaled to fit
         * the specified rectangle without any page breaks.
-        * If only **width** is specified, then grid will be scaled to fit the width without
-        * any page breaks.
-        * Othwerwise grid will be rendered in actual size without any page breaks.
         *
         * <pre>
         * var doc = new wijmo.pdf.PdfDocument({
@@ -748,21 +746,21 @@ declare module wijmo.grid.pdf {
         constructor(flex: G, settings: IFlexGridDrawSettings);
         protected readonly flex: G;
         protected readonly settings: IFlexGridDrawSettings;
-        readonly columns: _IColumnCollection;
-        readonly rows: _IRowCollection;
-        readonly bottomLeftCells: _IGridPanel;
-        readonly cells: _IGridPanel;
-        readonly columnFooters: _IGridPanel;
-        readonly columnHeaders: _IGridPanel;
-        readonly rowHeaders: _IGridPanel;
-        readonly topLeftCells: _IGridPanel;
+        readonly columns: ColumnCollection;
+        readonly rows: RowCollection;
+        readonly bottomLeftCells: GridPanel;
+        readonly cells: GridPanel;
+        readonly columnFooters: GridPanel;
+        readonly columnHeaders: GridPanel;
+        readonly rowHeaders: GridPanel;
+        readonly topLeftCells: GridPanel;
         readonly treeIndent: number;
         getSelection(): _ICellRange[];
         getCell(panel: _IGridPanel, row: number, column: number, updateContent: boolean): HTMLElement;
         private _defBorderColor;
         getComputedDefBorderColor(): string;
         getComputedStyle(panel: _IGridPanel, cell: HTMLElement): CSSStyleDeclaration;
-        getMergedRange(p: _IGridPanel, r: number, c: number): _ICellRange;
+        getMergedRange(p: _IGridPanel, r: number, c: number): CellRange;
         readonly showColumnHeader: boolean;
         readonly showRowHeader: boolean;
         readonly showColumnFooter: boolean;
@@ -776,14 +774,12 @@ declare module wijmo.grid.pdf {
         isNewRow(row: _IRow): boolean;
         isDetailRow(row: _IRow): boolean;
         isExpandableGroupRow(row: _IRow): boolean;
-        isRenderableRow(row: _IRow): boolean;
-        isRenderableColumn(col: _IColumn): boolean;
         getCellStyle(panel: _IGridPanel, row: _IRow, column: _IColumn): ICellStyle;
         private _extractCheckboxValue;
     }
     class _TransposedGridAdapter extends FlexGridAdapter<wijmo.grid.transposed.TransposedGrid> {
         static getBindingColumn(panel: wijmo.grid.GridPanel, row: number): wijmo.grid.Column;
-        getColumn(panel: _IGridPanel, row: number, col: number): _IColumn;
+        getColumn(panel: wijmo.grid.GridPanel, row: number, col: number): _IColumn;
     }
 }
 declare module wijmo.grid.pdf {

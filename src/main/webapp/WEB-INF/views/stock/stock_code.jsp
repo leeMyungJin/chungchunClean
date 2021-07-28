@@ -27,7 +27,11 @@ var addGrid;
 var editGrid;
 var editGridView;
 
+var staffId = "<%=session.getAttribute("staffId")%>";
+
 function pageLoad(){
+	sessionCheck(staffId);
+	
 	$('#stock').addClass("current");
 	$('#stock_code').addClass("current");
     loadGridStockList('init');

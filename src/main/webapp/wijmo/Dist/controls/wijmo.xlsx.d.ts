@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -233,7 +233,6 @@ declare module wijmo.xlsx {
          * in case the passed Excel format is empty.
          */
         static fromXlsxFormat(xlsxFormat: string): string[];
-        static _fromXlsxDateFormat(format: string): string;
         static _parseCellFormat(format: string, isDate: boolean): string;
         static _parseExcelFormat(item: IWorkbookCell): string;
         /**

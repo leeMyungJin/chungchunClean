@@ -20,7 +20,11 @@ var itemList;
 var lCategyList;
 var classifiList;
 
+var staffId = "<%=session.getAttribute("staffId")%>";
+
 function pageLoad(){
+	sessionCheck(staffId);
+	
 	$('#stock').addClass("current");
 	$('#stock_current').addClass("current");
 	

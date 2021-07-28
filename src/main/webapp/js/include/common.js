@@ -281,3 +281,15 @@ function refreshPaging(totalData, currentPage, grid, gridId) {
 function _fillZero(width, str) {
     return str.length >= width ? str : new Array(width - str.length + 1).join('0') + str;
 }
+
+function sessionCheck(staffId){
+    if(staffId=="null"){
+        alert("세션이 종료되어 로그인화면으로 이동합니다.");
+        location.href = "/";
+        return false;
+        
+    }else{
+    	return true;
+    	
+    }
+}

@@ -51,7 +51,11 @@ var incomeGridPager;
 var incomeGrid;
 var incomeColumns;
 
+var staffId = "<%=session.getAttribute("staffId")%>";
+
 function pageLoad(){
+	sessionCheck(staffId);
+	
 	$('#income').addClass("current");
 	
 	var today = _getFormatDate(new Date());

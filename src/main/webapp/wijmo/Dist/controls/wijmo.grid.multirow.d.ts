@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -435,7 +435,6 @@ declare module wijmo.grid.multirow {
         _updateColumnTypes(): void;
         _getBindingColumn(p: wijmo.grid.GridPanel, r: number, c: wijmo.grid.Column): wijmo.grid.Column;
         _getBindingColumns(): wijmo.grid.Column[];
-        _getRowsPerItem(): number;
         _cvCollectionChanged(sender: any, e: wijmo.collections.NotifyCollectionChangedEventArgs): void;
         _getGroupByColumn(c: number, hdr: boolean): MultiRowCellGroup;
         private _onLayoutChanged;

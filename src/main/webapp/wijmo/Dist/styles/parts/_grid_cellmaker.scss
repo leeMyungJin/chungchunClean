@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -21,8 +21,7 @@
     }
 
     // maker buttons
-    &:not([wj-state-measuring]) // WJM19444: no absolute positioning while measuring
-    button.wj-cell-maker { 
+    button.wj-cell-maker {
         position: absolute;
         left: 0;
         top: 0;

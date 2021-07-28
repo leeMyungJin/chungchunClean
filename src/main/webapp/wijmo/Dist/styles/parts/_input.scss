@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -266,7 +266,6 @@
 .wj-calendar {
 
     max-width: 100vw; // make sure it fits on mobile devices (TFS 390662)
-    overflow: auto; // do not overflow the container/page (WJM-19509)
 
     .wj-header {
         font-size: 90%;

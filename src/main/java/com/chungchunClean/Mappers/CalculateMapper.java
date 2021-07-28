@@ -33,4 +33,7 @@ public interface CalculateMapper  {
     public void saveUpdateAdd(CalculateVo params);
     public void saveClassifi(CalculateVo params);
     public void saveItem(CalculateVo params);
+    
+    public List<CalculateVo> getPopSpecification(String bldgNm);
 }
+

@@ -150,5 +150,12 @@ public class CalculateServiceImpl implements CalculateService{
 			calculateMapper.saveItem(vo);
 		}
 	}
+	
+	@Override
+	public List<CalculateVo> getPopSpecification(String bldgNm){
+
+		List<CalculateVo> calculateList = calculateMapper.getPopSpecification(bldgNm);
+		return calculateList;
+	}
 
 }

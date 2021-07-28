@@ -482,5 +482,20 @@ UPDATE
 
 </insert>
 
+<select id="getPopSpecification" parameterType="String" resultType="CalculateVo">
+select  (ROW_NUMBER() OVER()) AS rownum
+	, to_char(NOW() , 'YYYY년 MM월 DD일') as cret_dt
+	, aa.bldg_nm
+	, aa.classifi_nm 
+	, aa.item_nm 
+	, TO_CHAR(aa.quote_cost , 'FM999,999,999,999,999') as quote_cost
+	, (select TO_CHAR(sum(quote_cost) , 'FM999,999,999,999,999') as total_cost 
+		from web.adjust_add 
+		where bldg_nm = #{bldgNm}
+		group by bldg_nm
+	) as total_cost
+from web.adjust_add aa 
+where aa.bldg_nm = #{bldgNm}
+</select>
 	
 </mapper>

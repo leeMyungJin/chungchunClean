@@ -165,6 +165,19 @@ public class CalculateController {
     	calculateService.saveItem(params);
     }
 
+    @RequestMapping(value = "/getPopSpecification")
+    public String getPopSpecification(HttpServletRequest req, Model model){
+    	String bldgNm = req.getParameter("bldgNm");
+    	
+    	List<CalculateVo> calculateList = calculateService.getPopSpecification(bldgNm);
+    	model.addAttribute("cretDt", calculateList.get(0).getCretDt());
+    	model.addAttribute("totalCost", calculateList.get(0).getTotalCost());
+    	model.addAttribute("bldgNm", calculateList.get(0).getBldgNm());
+    	model.addAttribute("addSpecInfo", calculateList);
+    	
+    	return "calculate/p_specification";
+    }
+    
 
 
 }

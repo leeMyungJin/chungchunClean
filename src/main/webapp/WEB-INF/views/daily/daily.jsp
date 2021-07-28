@@ -14,7 +14,11 @@ var dailyGridPager;
 var dailyGrid;
 var dailyColumns;
 
+var staffId = "<%=session.getAttribute("staffId")%>";
+
 function pageLoad(){
+	sessionCheck(staffId);
+	
 	$('#daily').addClass("current");
 	
 	var today = _getFormatDate(new Date());

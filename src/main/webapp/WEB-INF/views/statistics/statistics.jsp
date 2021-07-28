@@ -8,10 +8,14 @@
 </head>
 
 <script type="text/javascript">
+var staffId = "<%=session.getAttribute("staffId")%>";
+
 function pageLoad(){
+	sessionCheck(staffId);
+	
 	$('#statistics').addClass("current");
 }
-</script	w	>
+</script>
 
 <body onload="pageLoad()">
     <div class="admin_wrap">

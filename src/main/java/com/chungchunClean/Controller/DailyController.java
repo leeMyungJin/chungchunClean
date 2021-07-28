@@ -48,6 +48,7 @@ public class DailyController {
     	DailyVo dailyInfo = dailyService.getDailyInfo(params);
     	
     	model.addAttribute("dailyInfo", dailyInfo);
+    	model.addAttribute("imgPath", dailyInfo.getImgPath());
     	
     	return "daily/p_site";
     }
