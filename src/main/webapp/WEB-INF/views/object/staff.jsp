@@ -15,8 +15,11 @@ var staffGrid;
 var dupCheckIdFlag = false;
 var staffColumns;
 
-//onload
+var staffId = "<%=session.getAttribute("staffId")%>";
+
 function pageLoad(){
+	sessionCheck(staffId);
+	
 	$('#object').addClass("current");
 	$('#staff').addClass("current");
 	

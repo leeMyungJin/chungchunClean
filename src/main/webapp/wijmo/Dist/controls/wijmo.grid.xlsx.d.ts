@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -193,7 +193,6 @@ declare module wijmo.grid.xlsx {
         private static _parseToTextRunFont;
         static _getMeasureCell(panel: wijmo.grid.GridPanel, colIndex: number, patternCell: HTMLDivElement, cellsCache: _CellsCache): HTMLDivElement;
         private static _getColumnSetting;
-        private static _getPerRowColumnsSettings;
         private static _toExcelHAlign;
         private static _getColumnCount;
         private static _getRowCount;

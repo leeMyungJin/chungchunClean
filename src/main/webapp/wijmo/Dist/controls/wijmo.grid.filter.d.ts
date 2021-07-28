@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -580,12 +580,12 @@ declare module wijmo.grid.filter {
          * Gets or sets a value that determines whether the filter should
          * include only values selected by the {@link filterText} property.
          *
-         * The default value for this property is **true**, which matches
-         * Excel's behavior.
+         * This property is set to true by default, which matches Excel's
+         * behavior.
          *
-         * Set it to **false** to disable this behavior, so searching only
-         * affects which items are displayed on the list and not which items
-         * are included in the filter.
+         * Set it to false to disable this behavior, so searching only affects
+         * which items are displayed on the list and not which items are
+         * included in the filter.
          */
         exclusiveValueSearch: boolean;
         /**
@@ -596,7 +596,7 @@ declare module wijmo.grid.filter {
          * but users can still use the search box to filter the items they are
          * interested in.
          *
-         * The default value for this property is **250**.
+         * This property is set to 250 by default.
          *
          * This code changes the value to 1,000,000, effectively listing all unique
          * values for the field:

@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -687,9 +687,6 @@ declare module wijmo.grid {
         _setSelectionMode(value: SelectionMode): void;
         _expandSelection(): void;
         _deselectRange(rng: CellRange): boolean;
-        private _expandSelectedRows;
-        private _expandSelectionRange;
-        private _selectRows;
         private _showSelection;
         private _adjustReferenceCell;
     }
@@ -2189,8 +2186,8 @@ declare module wijmo.grid {
          * theGrid.virtualizationThreshold = [0, 10000];
          * ```
          *
-         * The default value for this property is **0**, which causes the grid to
-         * virtualize all rows and columns.
+         * The default value for this property is **0**, which virtualizes all
+         * rows and columns.
          */
         virtualizationThreshold: number | number[];
         /**
@@ -3046,11 +3043,6 @@ declare module wijmo.grid {
          *
          * Hidden rows and columns are not included in the clip string.
          *
-         * Invalid (with negative indexes) row or column ranges can be specified in CellRange,
-         * which indicates that data rows or columns are not included in the result.
-         * In conjunction with **colHeaders** or **rowHeaders** parameters set to true, this makes
-         * it possible to export colum or row headers only, without the corresponding data cells.
-         *
          * @param rng {@link CellRange} to copy. If omitted, the current selection is used.
          * @param options A boolean value that specifies the clip string should be a CSV string
          * or a {@link ClipStringOptions} value that specifies options for the clip string.
@@ -3879,7 +3871,7 @@ declare module wijmo.grid {
          *       newVal = flex.activeEditor.value;
          *
          *   // cancel edits if newVal doesn't contain 'a'
-         *   e.cancel = newVal.indexOf('a') < 0;
+         *   e.cancel = newVal.indexOf('a') &lt; 0;
          * }
          * ```
          *
@@ -4211,7 +4203,6 @@ declare module wijmo.grid {
         _getMapEditor(row: Row, col: Column): DataMapEditor;
         _getBindingColumn(p: GridPanel, r: Number, c: Column): Column;
         _getBindingColumns(): Column[];
-        _getRowsPerItem(): number;
         _getRowHeaderPath(): wijmo.Binding;
         _bindRows(): void;
         _addBoundRow(items: any[], index: number): void;
@@ -4514,18 +4505,15 @@ declare module wijmo.grid {
         _g: FlexGrid;
         _rng: CellRange;
         _edt: HTMLInputElement;
-        _edtValue: string;
         _edItem: any;
-        _edtCanceled: boolean;
         _lbx: wijmo.input.ListBox;
-        _list: any;
         _fullEdit: boolean;
+        _list: any;
         _evtInput: any;
         _evtChange: any;
+        _edtValue: string;
         _cstEdtValue: any;
-        _validating: boolean;
         static _msgRequired: string;
-        static _msgBadInput: string;
         /**
          * Initializes a new instance of the {@link _EditHandler} class.
          *
@@ -4596,7 +4584,6 @@ declare module wijmo.grid {
         private _updateCell;
         private _getValidationError;
         _getRequiredMsg(): string;
-        _getBadInputMsg(): string;
         _allowEdit(r?: number, c?: number): boolean;
         _commitRowEdits(): void;
         _keydown(e: KeyboardEvent): boolean;

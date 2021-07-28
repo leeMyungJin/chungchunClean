@@ -31,4 +31,6 @@ public interface CalculateService {
     public void saveClassifi(List<CalculateVo> params);
     public void saveItem(List<CalculateVo> params);
     
+    public List<CalculateVo> getPopSpecification(String bldgNm);
+    
 }

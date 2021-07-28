@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>청춘클린</title>
     <link rel="stylesheet" href="../css/reset.css">
+    <script src="../js/include/common.js"></script>
     <style>
         body{padding:35px; font-size:13px; line-height:1.5; max-width:1000px;}
         .btn_wrap{text-align:right; margin:5px 45px;}
@@ -24,6 +25,13 @@
     </style>
 </head>
 <script type="text/javascript">
+
+var staffId = "<%=session.getAttribute("staffId")%>";
+
+function pageLoad(){
+	sessionCheck(staffId);
+}
+
 function viewKorean(num) { 
     num = parseInt(num) + '';
     var hanA = new Array("","일","이","삼","사","오","육","칠","팔","구","십"); 
@@ -78,7 +86,7 @@ function getToday(){
 
 }
 </script>
-<body onload = pageLoad()>
+<body onload = "pageLoad()">
     <div class="wrap">
         <div class="btn_wrap"><a href="javascript:window.print()">출력하기</a></div>
         <h2>청춘클린 (주) 청소 용역 계약서</h2>

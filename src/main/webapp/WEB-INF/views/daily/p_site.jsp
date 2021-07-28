@@ -17,13 +17,29 @@
     <title>청춘클린</title>
     <link rel="stylesheet" href="css/reset.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+	<script src="../js/include/common.js"></script>
     <script>
-        $( document ).ready( function() {
-            AOS.init();
-        } );
-      </script>
+    
+    var staffId = "<%=session.getAttribute("staffId")%>";
+    
+     $( document ).ready( function() {
+         AOS.init();
+         
+         sessionCheck(staffId);
+         
+         var imgPath = '${imgPath}'.split(',');
+       
+         if(imgPath.length > 0){
+         	for(var i=0; i<imgPath.length; i++){
+         		console.log(imgPath[i]);
+         		$('#site_img').append('<li class="aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out"><img src="'+imgPath[i]+'" alt="현장점검이미지" height="400" width="400"></li>');
+         	}
+         }
+     } );
+   </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
         body{font-family: 'Montserrat', sans-serif; background-color:#f7f7f7;}
@@ -113,18 +129,8 @@
         </header>
         <div class="site_content">
             <h3 class="aos-init aos-animate" data-aos="fade-down" data-aos-offset="300" data-aos-duration="1100">깨끗해진 공간을<br> 직접 확인해보세요.</h3>
-            <ul class="site_img">
-                <li class="aos-init aos-animate" data-aos="fade-up" data-aos-duration="950" data-aos-easing="ease-in-out"><img src="image/site1.jpeg" alt="현장점검이미지" height="400" width="400"></li>
-                <li class="aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out"><img src="image/site2.jpeg" alt="현장점검이미지" height="400" width="400"></li>
-                <li class="aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out"><img src="image/site3.jpeg" alt="현장점검이미지" height="400" width="400"></li>
-                <li class="aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out"><img src="image/site4.jpeg" alt="현장점검이미지" height="400" width="400"></li>
-                <li class="aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out"><img src="image/site5.jpeg" alt="현장점검이미지" height="400" width="400"></li>
-                <li class="aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out"><img src="image/site6.jpeg" alt="현장점검이미지" height="400" width="400"></li>
-                <li class="aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out"><img src="image/site7.jpeg" alt="현장점검이미지" height="400" width="400"></li>
-                <li class="aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out"><img src="image/site8.jpeg" alt="현장점검이미지" height="400" width="400"></li>
-                <li class="aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out"><img src="image/site9.jpeg" alt="현장점검이미지" height="400" width="400"></li>
-                <li class="aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out"><img src="image/site10.jpeg" alt="현장점검이미지" height="400" width="400"></li>
-            </ul>
+            <ul class="site_img" id="site_img">
+           </ul>
         </div>
         <footer class="site_footer">
             <p>본 내용의 저작권은 (주)청춘클린사에 있습니다. <br>무단으로 사용할 경우 법적 처벌을 받을 수 있습니다.</p>

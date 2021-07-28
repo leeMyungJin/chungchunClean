@@ -39,8 +39,11 @@ var excelSelector;
 var editGrid;
 var editGridView;
 
+var staffId = "<%=session.getAttribute("staffId")%>";
 
 function pageLoad(){
+	sessionCheck(staffId);
+	
 	$('#calculate').addClass("current");
 	$('#calculate_process').addClass("current");
 	
@@ -1166,7 +1169,22 @@ function addExportExcel(){
 }
 
 function popSpecification(){
-	//var win = window.open("/calcutate/p_specification?bldgCd="+bldgCd, "pop", "with=1000,height=600");
+	var idx = addView._idx;
+    var bldgNm;
+    if(idx == null || idx == undefined){
+        alert("거래명세서를 출력할 건물을 선택하시기 바랍니다.");
+        return false;
+        
+    }else{
+        if(addView.items[addView._idx] == undefined){
+            alert("거래명세서를 출력할 건물을 선택하시기 바랍니다.");
+            return false;
+        }
+        bldgNm = addView.items[addView._idx].bldgNm;
+        
+    }
+    
+    var win = window.open("/calculate/getPopSpecification?bldgNm="+bldgNm, "pop", "width=830,height=630");
 }
 
 </script>

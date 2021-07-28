@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -305,7 +305,7 @@
 }
 
 .wj-control input:-ms-input-placeholder {
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 .wj-control input[type=number]::-webkit-inner-spin-button, .wj-control input[type=number]::-webkit-outer-spin-button {
@@ -644,7 +644,6 @@
 
 .wj-calendar {
   max-width: 100vw;
-  overflow: auto;
 }
 
 .wj-calendar .wj-header {
@@ -1608,10 +1607,6 @@
   opacity: 1;
 }
 
-.wj-flexgrid .wj-cell.wj-hasdropdown {
-  display: flex;
-}
-
 .wj-flexgrid .wj-cell.wj-hasdropdown .wj-btn.wj-btn-glyph.wj-right, .wj-flexgrid .wj-cell.wj-hasdropdown .wj-viewer .wj-control .wj-btn-glyph.wj-right.wj-applybutton, .wj-viewer .wj-control .wj-flexgrid .wj-cell.wj-hasdropdown .wj-btn-glyph.wj-right.wj-applybutton {
   height: 100%;
 }
@@ -1798,10 +1793,6 @@
   text-overflow: clip;
 }
 
-.wj-cell.wj-align-left {
-  text-align: left;
-}
-
 .wj-cell.wj-align-right {
   text-align: right;
 }
@@ -1983,7 +1974,7 @@
   height: 100%;
 }
 
-.wj-flexgrid .wj-cell:not([wj-state-measuring]) button.wj-cell-maker {
+.wj-flexgrid .wj-cell button.wj-cell-maker {
   position: absolute;
   left: 0;
   top: 0;
@@ -2936,44 +2927,9 @@
   font-weight: bold;
 }
 
-.wj-detaildialog {
-  min-width: 15em;
-  min-height: 20em;
+.wj-detaildialog .wj-flexgrid {
   width: 60vw;
-  height: 55vh;
-}
-
-.wj-detaildialog > div {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.wj-detaildialog > div .wj-dialog-header,
-.wj-detaildialog > div .wj-dialog-footer {
-  flex-grow: 0;
-  flex-shrink: 0;
-  flex-basis: auto;
-}
-
-.wj-detaildialog > div .wj-dialog-body {
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.wj-detaildialog > div .wj-dialog-body .wj-summary {
-  flex-grow: 0;
-  flex-shrink: 0;
-  flex-basis: auto;
-}
-
-.wj-detaildialog > div .wj-dialog-body .wj-flexgrid {
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: 0;
+  height: 40vh;
 }
 
 .wj-pivotgrid .wj-cell.wj-aggregate {

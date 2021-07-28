@@ -31,7 +31,7 @@ public class FileServiceImpl implements FileService{
 
     @Override
     public String deleteFile(HashMap<String, String> params) throws Exception {
-        String filePath = "/upload" + params.get("filePath");  // 삭제할 파일 경로
+        String filePath = "/var/upload" + params.get("filePath");  // 삭제할 파일 경로
         String fileName = params.get("fileName"); // 삭제할 파일명
         String result ; // 결과 메세지
         try{

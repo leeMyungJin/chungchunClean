@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -870,7 +870,6 @@ declare module wijmo.grid.sheet {
         private _clearCalcCacheOnRefresh;
         private _copyingTo;
         private _ignoreBindGrid;
-        private _loadingFromWorkbook;
         /**
          * Overrides the template used to instantiate {@link FlexSheet} control.
          */
@@ -920,10 +919,10 @@ declare module wijmo.grid.sheet {
          */
         showFilterIcons: boolean;
         /**
-             * Gets an array the {@link DefinedName} objects representing named ranges/expressions
+         * Gets an array the {@link IDefinedName} objects representing named ranges/expressions
          * defined in the <b>FlexSheet</b>.
          */
-        readonly definedNames: wijmo.collections.ObservableArray<DefinedName>;
+        readonly definedNames: wijmo.collections.ObservableArray;
         /**
          * Gets or sets the value to indicates whether enable drag and drop rows or columns in FlexSheet.
          */
@@ -1533,7 +1532,6 @@ declare module wijmo.grid.sheet {
         _scanFormulas(): any[];
         _resetFormulas(formulas: any[]): void;
         _getCellStyle(rowIndex: number, colIndex: number, sheet?: Sheet): ICellStyle;
-        _getSheet(name: string): Sheet;
         _validateSheetName(sheetName: string): boolean;
         _checkExistDefinedName(name: string, sheetName: string, ignoreIndex?: number): boolean;
         private _updateDefinedNameWithSheetRefUpdating;
@@ -2187,7 +2185,6 @@ declare module wijmo.grid.sheet {
          */
         getColumnFilter(col: string | number | wijmo.grid.Column, create?: boolean): FlexSheetColumnFilter;
         _isActive(): boolean;
-        _isEditorOpened(): boolean;
         private _checkGroupVisible;
     }
 }
@@ -2357,7 +2354,7 @@ declare module wijmo.grid.sheet {
         /**
          * Occurs after the sheet name has changed.
          */
-        readonly nameChanged: Event<Sheet, PropertyChangedEventArgs>;
+        readonly nameChanged: Event<Sheet, EventArgs>;
         /**
          * Raises the {@link nameChanged} event.
          */
@@ -2460,6 +2457,14 @@ declare module wijmo.grid.sheet {
          */
         onSelectedSheetChanged(e: wijmo.PropertyChangedEventArgs): void;
         /**
+         * Inserts an item at a specific position in the array.
+         * Overrides the insert method of its base class {@link ObservableArray}.
+         *
+         * @param index Position where the item will be added.
+         * @param item Item to add to the array.
+         */
+        insert(index: number, item: T): void;
+        /**
          * Adds one or more items to the end of the array.
          * Overrides the push method of its base class {@link ObservableArray}.
          *
@@ -2542,8 +2547,6 @@ declare module wijmo.grid.sheet {
         private _moveCurrentTo;
         _getSheetIndexFrom(sheetName: string): number;
         private _postprocessSheet;
-        private _shNameChanged;
-        private _shVisibleChanged;
         private _getUniqueName;
     }
     class _SheetTabs extends wijmo.Control {
@@ -2703,7 +2706,7 @@ declare module wijmo.grid.sheet {
         _inGroup: boolean;
         constructor(arg?: any);
         readonly token: _Token;
-        evaluate(rowIndex: number, columnIndex: number, sheet?: Sheet, strictStringCmp?: boolean, throwOnError?: boolean): any;
+        evaluate(rowIndex: number, columnIndex: number, sheet?: Sheet, throwOnError?: boolean): any;
         static toString(x: _Expression, rowIndex: number, columnIndex: number, sheet?: Sheet): string;
         static toNumber(x: _Expression, rowIndex: number, columnIndex: number, sheet?: Sheet): number;
         static toBoolean(x: _Expression, rowIndex: number, columnIndex: number, sheet?: Sheet): any;
@@ -2719,7 +2722,7 @@ declare module wijmo.grid.sheet {
     class _UnaryExpression extends _Expression {
         private _expr;
         constructor(arg: any, expr: _Expression);
-        evaluate(rowIndex: number, columnIndex: number, sheet?: Sheet, strictStringCmp?: boolean, throwOnError?: boolean): any;
+        evaluate(rowIndex: number, columnIndex: number, sheet?: Sheet, throwOnError?: boolean): any;
         _refersTo(rng: wijmo.grid.CellRange): boolean;
         _updateCellRangeExp(sheetIndex: number, index: number, count: number, isAdding: boolean, isRow: boolean, affectRange?: wijmo.grid.CellRange): boolean;
         _moveCellRangeExp(sheetIndex: number, srcRange: wijmo.grid.CellRange, dstRange: wijmo.grid.CellRange, isChangePos?: boolean, isCopying?: boolean): boolean;
@@ -2730,7 +2733,7 @@ declare module wijmo.grid.sheet {
         private _leftExpr;
         private _rightExpr;
         constructor(arg: any, leftExpr: _Expression, rightExpr: _Expression);
-        evaluate(rowIndex: number, columnIndex: number, sheet?: Sheet, strictStringCmp?: boolean, throwOnError?: boolean): any;
+        evaluate(rowIndex: number, columnIndex: number, sheet?: Sheet, throwOnError?: boolean): any;
         _refersTo(rng: wijmo.grid.CellRange): boolean;
         _updateCellRangeExp(sheetIndex: number, index: number, count: number, isAdding: boolean, isRow: boolean, affectRange?: wijmo.grid.CellRange): boolean;
         _moveCellRangeExp(sheetIndex: number, srcRange: wijmo.grid.CellRange, dstRange: wijmo.grid.CellRange, isChangePos?: boolean, isCopying?: boolean): boolean;
@@ -2751,7 +2754,7 @@ declare module wijmo.grid.sheet {
         _tableName: string;
         _tableParams: string[];
         constructor(cells: wijmo.grid.CellRange, sheetRef: string, flex: FlexSheet, isCellRange?: boolean, absRow?: boolean, absCol?: boolean, absRow2?: boolean, absCol2?: boolean, isWholeRow?: boolean);
-        evaluate(rowIndex: number, columnIndex: number, sheet?: Sheet, strictStringCmp?: boolean, throwOnError?: boolean): any;
+        evaluate(rowIndex: number, columnIndex: number, sheet?: Sheet, throwOnError?: boolean): any;
         getValues(isGetHiddenValue?: boolean, columnIndex?: number, sheet?: Sheet, throwOnError?: boolean): any[];
         getValuesWithTwoDimensions(isGetHiddenValue?: boolean, sheet?: Sheet): any[];
         readonly cells: wijmo.grid.CellRange;
@@ -2764,7 +2767,6 @@ declare module wijmo.grid.sheet {
         _updateCellRangeExpForReorderingRows(rowDiff: number): boolean;
         _updateCellBoundary(row: number, col: number): boolean;
         _getStringExpression(): string;
-        private _quoteName;
         private _getTableParamsStringExpression;
     }
     class _FunctionExpression extends _Expression {
@@ -2803,7 +2805,7 @@ declare module wijmo.grid.sheet {
         constructor(owner: FlexSheet);
         readonly unknownFunction: Event<_CalcEngine, UnknownFunctionEventArgs>;
         onUnknownFunction(funcName: string, params: Array<_Expression>): _Expression;
-        evaluate(expression: string, format?: string, sheet?: Sheet, rowIndex?: number, columnIndex?: number, strictStringCmp?: boolean): any;
+        evaluate(expression: string, format?: string, sheet?: Sheet, rowIndex?: number, columnIndex?: number): any;
         addCustomFunction(name: string, func: Function, minParamsCount?: number, maxParamsCount?: number): void;
         addFunction(name: string, func: Function, minParamsCount?: number, maxParamsCount?: number): void;
         _clearExpressionCache(): void;
@@ -2840,7 +2842,6 @@ declare module wijmo.grid.sheet {
         private _getTableReference;
         private _getTableParameter;
         private _getTableRange;
-        private _getAggregate;
         private _getAggregateResult;
         private _getFlexSheetAggregateResult;
         private _getItemList;
@@ -2858,6 +2859,7 @@ declare module wijmo.grid.sheet {
         private _getColumnIndexByField;
         private _getSumProduct;
         private _getItemListForSumProduct;
+        private _getSheet;
         private _parseRightExpr;
         private _combineExpr;
         private _parseRegCriteria;
@@ -2868,7 +2870,7 @@ declare module wijmo.grid.sheet {
         private _exactMatch;
         private _approximateMatch;
         private _parseToScientificValue;
-        _checkCache(expression: string, strictStringCmp?: boolean, sheetIndex?: number, rowIndex?: number, columnIndex?: number): _Expression;
+        _checkCache(expression: string, sheetIndex?: number, rowIndex?: number, columnIndex?: number): _Expression;
         private _ensureNonFunctionExpression;
         private _getDefinedName;
         private _numAlpha;

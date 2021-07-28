@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -616,34 +616,21 @@ declare module wijmo.input {
      */
     class ListBox extends wijmo.Control {
         _items: any;
-        _cv: wijmo.collections.ICollectionView | null;
-        _itemFormatter: IItemFormatter | null;
+        _cv: wijmo.collections.ICollectionView;
+        _itemFormatter: IItemFormatter;
         _pathDisplay: Binding;
         _pathValue: Binding;
         _pathChecked: Binding;
         _html: boolean;
         _shGroups: boolean;
-        _checkedItems: any[] | null;
+        _checkedItems: any[];
         _itemRole: string;
-        _caseSensitive: boolean;
-        _vThreshold: number;
-        _isVirtual: boolean;
-        _children: HTMLElement[];
-        _clientHeight: number;
-        _itemHeight: number;
-        _itemsAbove: number;
-        _itemsBelow: number;
-        _eSizer: HTMLDivElement;
-        _ePadTop: HTMLDivElement;
-        _ePadBot: HTMLDivElement;
         _checking: boolean;
         _search: string;
+        _caseSensitive: boolean;
         _toSearch: any;
         _fmtItemHandlers: number;
         _itemCount: number;
-        _oldSel: HTMLElement | null;
-        static _DIDX_KEY: string;
-        static _VTHRESH: number;
         /**
          * Initializes a new instance of the {@link ListBox} class.
          *
@@ -660,22 +647,6 @@ declare module wijmo.input {
          * Gets the {@link ICollectionView} object used as the item source.
          */
         readonly collectionView: wijmo.collections.ICollectionView;
-        /**
-         * Gets or sets the minimum number of rows and/or columns required to enable
-         * virtualization.
-         *
-         * When the {@link ListBox} is virtualized, only the items that are currently
-         * visible are added to the DOM. This makes a huge difference in performance
-         * when the {@link ListBox} contains a large number of items (say 1,000 or so).
-         *
-         * The default value for this property is a very big number, meaning virtualization is
-         * disabled. To enable virtualization, set its value to 0 or a positive number.
-         *
-         * Virtualization assumes a vertically stacked layout, so it is automatically
-         * disabled if the {@link ListBox} uses a multi-column display (such as a
-         * flexbox or grid layout).
-         */
-        virtualizationThreshold: number;
         /**
          * Gets or sets a value that determines whether the {@link ListBox} should
          * include group header items to delimit data groups.
@@ -735,7 +706,7 @@ declare module wijmo.input {
          * Gets or sets the name of the property used to control
          * check boxes placed next to each item.
          *
-         * Use this property to create multi-select ListBoxes.
+         * Use this property to create multi-select LisBoxes.
          *
          * When an item is checked or unchecked, the control raises the
          * {@link itemChecked} event.
@@ -834,7 +805,7 @@ declare module wijmo.input {
          * @param index Item index.
          * @param checked Item's new checked state.
          */
-        setItemChecked(index: number, checked: boolean | null): void;
+        setItemChecked(index: number, checked: boolean): void;
         /**
          * Toggles the checked state of an item on the list.
          * This method is applicable only to multi-select ListBoxes
@@ -918,19 +889,6 @@ declare module wijmo.input {
          * This event can be used to format list items for display. It is similar
          * in purpose to the {@link itemFormatter} property, but has the advantage
          * of allowing multiple independent handlers.
-         *
-         * The {@link FormatItemEventArgs} object passed as a parameter has
-         * a **data** property that refers to the data item bound to the
-         * item and an **index** property that provides the item index into
-         * the current view.
-         *
-         * If the {@link showGroups} property is set to **true** and
-         * the item represents a group header, then the **data** property
-         * contains a reference to a {@link CollectionViewGroup} object
-         * represents the group. This object contains the group's **name**,
-         * **items**, and **groupDescription**.
-         * Since group headers do not correspond to actual data items,
-         * the **index** property in this case is set to **-1**.
          */
         readonly formatItem: Event<ListBox, FormatItemEventArgs>;
         /**
@@ -945,8 +903,6 @@ declare module wijmo.input {
          * @param fullUpdate Whether to update the control layout as well as the content.
          */
         refresh(fullUpdate?: boolean): void;
-        _getBoundingClientRect(e: HTMLElement): Rect;
-        _updateItemAttributes(e: HTMLElement | null, selected: boolean): void;
         _getCheckedItems(): any[];
         _arrayEquals(arr1: any[], arr2: any[]): boolean;
         _getChild(index: number): HTMLElement;
@@ -955,14 +911,8 @@ declare module wijmo.input {
         private _cvCollectionChanged;
         private _cvCurrentChanged;
         protected _populateList(): void;
-        _getCanvasContext(): CanvasRenderingContext2D;
-        _getVirtual(): boolean;
-        _getMaxSupportedCssHeight(): number;
-        _updateViewRange(): boolean;
-        _getSelectedElement(visible: boolean): HTMLElement | null;
-        _handleResize(): void;
         _createItem(i: number): string;
-        _getAriaSelected(isSelected: boolean, isChecked: boolean | null): boolean;
+        _getAriaSelected(isSelected: boolean, isChecked: boolean): boolean;
         _createHeaderItem(group: wijmo.collections.CollectionViewGroup): string;
         private _click;
         private _keydown;
@@ -1051,17 +1001,6 @@ declare module wijmo.input {
          * Gets the {@link ICollectionView} object used as the item source.
          */
         readonly collectionView: wijmo.collections.ICollectionView;
-        /**
-         * Gets or sets the minimum number of rows and/or columns required to enable
-         * virtualization in the drop-down {@link ListBox}.
-         *
-         * The default value for this property is a very big number, meaning virtualization is
-         * disabled. To enable virtualization, set its value to 0 or a positive number.
-         *
-         * For more detals, please see the {@link ListBox.virtializationThreshold}
-         * property.
-         */
-        virtualizationThreshold: number;
         /**
          * Gets or sets the name of the property to use as the visual
          * representation of the items.
@@ -1925,7 +1864,7 @@ declare module wijmo.input {
         protected _setText(text: string, fullMatch: boolean): void;
         protected _updateBtn(): void;
         protected _createDropDown(): void;
-        protected _commitText(noFocus?: boolean): void;
+        protected _commitText(): void;
         _updateDropDown(): void;
     }
 }
@@ -2955,12 +2894,12 @@ declare module wijmo.input {
         protected _keydown(e: KeyboardEvent): void;
         protected _expandSelection(): void;
         _refreshText(): void;
-        protected _selectAll(): void;
+        _selectAll(): void;
         _closeOnChange(): void;
         private _tryFocus;
         protected _clamp(value: Date): Date;
         protected _getText(): string;
-        protected _commitText(noFocus?: boolean): void;
+        protected _commitText(): void;
         protected _fromDateTime(value: Date): Date;
         private _canChangeValue;
         protected _isValidDate(value: Date): boolean;
@@ -3139,17 +3078,6 @@ declare module wijmo.input {
          * Gets the {@link ICollectionView} object used as the item source.
          */
         readonly collectionView: wijmo.collections.ICollectionView;
-        /**
-         * Gets or sets the minimum number of rows and/or columns required to enable
-         * virtualization in the drop-down {@link ListBox}.
-         *
-         * The default value for this property is a very big number, meaning virtualization is
-         * disabled. To enable virtualization, set its value to 0 or a positive number.
-         *
-         * For more detals, please see the {@link ListBox.virtializationThreshold}
-         * property.
-         */
-        virtualizationThreshold: number;
         /**
          * Gets or sets a value that determines whether the drop-down {@link ListBox}
          * should include group header items to delimit data groups.

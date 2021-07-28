@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -1999,7 +1999,6 @@ declare module wijmo.olap {
         _updatingView(): void;
         _viewDefinitionChanged(): void;
         onLoadedRows(e?: wijmo.EventArgs): void;
-        private _generateColumns;
         _updateFixedCounts(): void;
         _updateFixedContent(): void;
         _formatItem(s: any, e: wijmo.grid.FormatItemEventArgs): void;

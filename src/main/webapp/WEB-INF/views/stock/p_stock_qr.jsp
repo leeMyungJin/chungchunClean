@@ -26,7 +26,12 @@
 </head>
 
 <script type="text/javascript">
+
+var staffId = "<%=session.getAttribute("staffId")%>";
+
 function setStockQr(){
+	sessionCheck(staffId);
+	
 	var qrList = "${qrCnt}";
 	console.log("${qrList}");
 	 for(var i =1; i<=qrList; i++){

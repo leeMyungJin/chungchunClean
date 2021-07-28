@@ -18,8 +18,10 @@ var addGridPager;
 var addGrid;
 var addColumns;
 
+var staffId = "<%=session.getAttribute("staffId")%>";
+
 function pageLoad(){
-	console.log("${totalAddCost}");
+	sessionCheck(staffId);
 	
 	$('#calculate').addClass("current");
 	$('#calculate_history').addClass("current");

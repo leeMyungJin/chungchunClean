@@ -15,7 +15,11 @@ var stockMngColumns;
 var excelGrid;
 var excelView;
 
+var staffId = "<%=session.getAttribute("staffId")%>";
+
 function pageLoad(){
+	sessionCheck(staffId);
+	
 	$('#stock').addClass("current");
 	$('#stock_stock').addClass("current");
     loadGridStockList('init');

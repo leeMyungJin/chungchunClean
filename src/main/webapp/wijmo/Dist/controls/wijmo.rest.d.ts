@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -142,7 +142,6 @@ declare module wijmo.rest {
          * @param e @see:ErrorEventArgs that contains information about the error.
          */
         onError(e: RESTErrorEventArgs): boolean;
-        _performRefresh(): void;
         /**
          * Gets the total number of items in the view before paging is applied.
          */

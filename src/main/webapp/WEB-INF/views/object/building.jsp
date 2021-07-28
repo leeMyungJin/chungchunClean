@@ -25,21 +25,18 @@ var maxBldgCd;
 var dupCheck = false;
 var activeList = ['Y', 'N'];
 
+var staffId = "<%=session.getAttribute("staffId")%>";
+
 function pageLoad(){
+	sessionCheck(staffId);
+	
 	$('#object').addClass("current");
 	$('#building').addClass("current");
     maxBldgCd = parseInt("${fn:substring(maxBldgCd,1,11)}");
     loadGridStockList('init');
     getBuildingInfo();
 }
-function sessionCheck(){
-    if("<%=session.getAttribute("staffId")%>"=="null"){
-        alert("세션이 종료되어 로그인화면으로 이동합니다.");
-        location.href = "/";
-        return false;
-    }else
-        return true;
-}
+
 function getError(item,prop){
         if( prop == "dongNum"){
             const curDong = item[prop];
@@ -523,7 +520,7 @@ function dupBuildingCheck(type){
 }
 
 function addBuilding(){
-    if(sessionCheck()){
+    if(sessionCheck(staffId)){
         if(buildingValidation('new')){
             var form = newBuildingForm;
             var detailParams = [];
@@ -731,7 +728,7 @@ function deleteBuilding(){
 }
 
 function modifyBuilding(){
-    if(sessionCheck()){
+    if(sessionCheck(staffId)){
         if(confirm("수정하시겠습니까?")){
             if(buildingValidation('modify')){
                 var form = modifyBuildingForm;
@@ -945,7 +942,7 @@ function _convertHeaderToBinding(header) {
 }
 
 function saveGrid(){
-    if(sessionCheck()){
+    if(sessionCheck(staffId)){
         if(bldgView.itemCount > 0){ //건물
                 var editItem = bldgView.itemsEdited;
                 var rows = [];

@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -1777,12 +1777,6 @@ declare module wijmo.viewer {
         private _updateActivePageView;
         private _initPageView;
         private _addPageViewHandlers;
-        private _handlerPageIndexChanged;
-        private _handlerZoomFactorChanged;
-        private _handlerZoomModeChanged;
-        private _handlerPositionChanged;
-        private _handlerRotateAngleChanged;
-        private _handlerPageLoaded;
         private _removePageViewHandlers;
         private _updatePageViewsVisible;
         moveToPage(pageIndex: number): IPromise;

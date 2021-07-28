@@ -1,6 +1,6 @@
 /*!
     *
-    * Wijmo Library 5.20211.794
+    * Wijmo Library 5.20211.781
     * http://wijmo.com/
     *
     * Copyright(c) GrapeCity, Inc.  All rights reserved.
@@ -146,7 +146,7 @@ declare module wijmo {
          * Removes a handler from this event.
          *
          * @param handler Function invoked when the event is raised.
-         * @param self Object that owns the event handler (accessible as 'this' from the handler code).
+         * @param self Object that defines the event handler (accessible as 'this' from the handler code).
          */
         removeHandler(handler: IEventHandler<S, T>, self?: any): void;
         /**
@@ -610,7 +610,7 @@ declare module wijmo.collections {
         /**
          * Gets the total number of items in the view before paging is applied.
          *
-         * To get the number of items in the current view taking paging into
+         * To get the number of items in the current view not taking paging into
          * account, use the {@link itemCount} property.
          *
          * Notice that this is different from the .NET <b>IPagedCollectionView</b>,
@@ -3473,7 +3473,7 @@ declare module wijmo.collections {
          */
         removeAt(index: number): void;
         _trackItemChanged(item: T, clone?: any): void;
-        _extend(dst: any, src: any, level?: number): any;
+        _extend(dst: any, src: any, level?: number): void;
         _getChangedFields(dst: any, src: any, level?: number): string[] | null;
         _sameValue(v1: any, v2: any, level?: number): boolean;
         _sameContent(dst: any, src: any): boolean;
