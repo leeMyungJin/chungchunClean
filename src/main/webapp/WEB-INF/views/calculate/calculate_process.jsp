@@ -32,9 +32,13 @@ var itemGridPager;
 var itemSelector;
 var classifiList;
 
-var excelGrid;
-var excelView;
-var excelSelector;
+var monExcelGrid;
+var monExcelView;
+var monExcelSelector;
+
+var addExcelGrid;
+var addExcelView;
+var addExcelSelector;
 
 var editGrid;
 var editGridView;
@@ -404,6 +408,37 @@ function loadGridList(type, result){
 	            itemsSource: classifiView.itemsEdited,
 	            isReadOnly: true
 	        });
+	        
+	        //**********엑셀그리드 월관리청소********************
+	        monExcelGrid = new wijmo.grid.FlexGrid('#monExcelGrid', {
+	            autoGenerateColumns: false,
+	            alternatingRowStep: 0,
+	            columns : monColumns,
+	            itemsSource: monExcelView
+	        });
+
+	        //행번호 표시하기
+	        monExcelGrid.itemFormatter = function (panel, r, c, cell) { 
+	            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+	                cell.textContent = (r + 1).toString();
+	            }
+	        };
+	        
+	        //***********엑셀그리드 부가수익*******************
+	        addExcelGrid = new wijmo.grid.FlexGrid('#addExcelGrid', {
+	            autoGenerateColumns: false,
+	            alternatingRowStep: 0,
+	            columns : addColumns,
+	            itemsSource: addExcelView
+	        });
+
+	        //행번호 표시하기
+	        addExcelGrid.itemFormatter = function (panel, r, c, cell) { 
+	            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+	                cell.textContent = (r + 1).toString();
+	            }
+	        };
+	        
 	        
 			  
 	  }else if(type == "mon"){
@@ -867,7 +902,7 @@ function saveGrid(type){
               }
     	  	}
       }else if(type == 'monExcel'){// 엑셀 업로드 저장하기
-         var item  = monGrid.rows;
+         var item  = monExcelGrid.rows;
          var rows = [];
          var params;
          for(var i=0; i< item.length; i++){
@@ -1132,40 +1167,41 @@ function closePop(type){
 	$('.popup').removeClass('is-visible');
 }
 
-function monExportExcel(){
-	var gridView = monGrid.collectionView;
-	var oldPgSize = gridView.pageSize;
-	var oldPgIndex = gridView.pageIndex;
+function exportExcel(){
+	if(type == 'mon'){
+		var gridView = monGrid.collectionView;
+		var oldPgSize = gridView.pageSize;
+		var oldPgIndex = gridView.pageIndex;
 
-  //전체 데이터를 엑셀다운받기 위해서는 페이징 제거 > 엑셀 다운 > 페이징 재적용 하여야 함.
-  monGrid.beginUpdate();
-  monView.pageSize = 0;
+	  //전체 데이터를 엑셀다운받기 위해서는 페이징 제거 > 엑셀 다운 > 페이징 재적용 하여야 함.
+	  monGrid.beginUpdate();
+	  monView.pageSize = 0;
 
-  wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(monGrid, {includeCellStyles: true, includeColumnHeaders: true}, '월관리청소.xlsx',
-	      saved => {
-	    	gridView.pageSize = oldPgSize;
-	    	gridView.moveToPage(oldPgIndex);
-	    	monGrid.endUpdate();
-	      }, null
-	 );
-}
+	  wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(monGrid, {includeCellStyles: true, includeColumnHeaders: true}, '월관리청소.xlsx',
+		      saved => {
+		    	gridView.pageSize = oldPgSize;
+		    	gridView.moveToPage(oldPgIndex);
+		    	monGrid.endUpdate();
+		      }, null
+		 );
+		
+	}else if(type == 'add'){
+		var gridView = addGrid.collectionView;
+		var oldPgSize = gridView.pageSize;
+		var oldPgIndex = gridView.pageIndex;
 
-function addExportExcel(){
-	var gridView = addGrid.collectionView;
-	var oldPgSize = gridView.pageSize;
-	var oldPgIndex = gridView.pageIndex;
+	  //전체 데이터를 엑셀다운받기 위해서는 페이징 제거 > 엑셀 다운 > 페이징 재적용 하여야 함.
+	  addGrid.beginUpdate();
+	  addView.pageSize = 0;
 
-  //전체 데이터를 엑셀다운받기 위해서는 페이징 제거 > 엑셀 다운 > 페이징 재적용 하여야 함.
-  addGrid.beginUpdate();
-  addView.pageSize = 0;
-
-  wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(addGrid, {includeCellStyles: true, includeColumnHeaders: true}, '부가수익.xlsx',
-	      saved => {
-	    	gridView.pageSize = oldPgSize;
-	    	gridView.moveToPage(oldPgIndex);
-	    	addGrid.endUpdate();
-	      }, null
-	 );
+	  wijmo.grid.xlsx.FlexGridXlsxConverter.saveAsync(addGrid, {includeCellStyles: true, includeColumnHeaders: true}, '부가수익.xlsx',
+		      saved => {
+		    	gridView.pageSize = oldPgSize;
+		    	gridView.moveToPage(oldPgIndex);
+		    	addGrid.endUpdate();
+		      }, null
+		 );
+	}
 }
 
 function popSpecification(){
@@ -1186,6 +1222,16 @@ function popSpecification(){
     
     var win = window.open("/calculate/getPopSpecification?bldgNm="+bldgNm, "pop", "width=830,height=630");
 }
+
+function downTemplate(type){
+    if(type == 'mon'){
+    	window.location.assign("<%=request.getContextPath()%>" + "/template/월관리청소양식.xlsx");
+    	
+	}else if(type == 'add'){
+		window.location.assign("<%=request.getContextPath()%>" + "/template/부가수익양식.xlsx");
+	}
+}
+
 
 </script>
 
@@ -1227,8 +1273,10 @@ function popSpecification(){
                         <input type="month" id="date" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey('mon');">
                         <button class="admin_utility_btn"  onClick="getMonList();">조회</button>
                         <div class="admin_btn">
-                            <button class="btn">엑셀 업로드</button>
-                            <button class="btn" onClick="monExportExcel();">엑셀 다운로드</button>
+                        	<input type="file" class="form-control" style="display:none" id="monImportFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12" />
+                        	<button class="btn" onClick="downTemplate('mon');">엑셀 템플릿</button>
+                            <button class="btn" onClick="findFile('mon');">엑셀 업로드</button>
+                            <button class="btn" onClick="exportExcel('mon');">엑셀 다운로드</button>
                         </div>
                     </div>
                     <div class="admin_content">
@@ -1270,10 +1318,13 @@ function popSpecification(){
                                 <button type="button">문자발송</button>
                                 <button type="button" onClick="saveGrid('mon')">저장</button>
                             </div>
-                            <div class="grid_wrap">
+                            <div class="grid_wrap" id="monDiv" style="position:relative;">
                                 <div id="monGrid"  style="height:500px;"></div>
                         		<div id="monGridPager" class="pager"></div>
                             </div>
+	                        <div class="grid_wrap" id="monExcelDiv" style="position:relative;">
+	                        	<div id="monExcelGrid"  style="height:500px;"></div>
+	                        </div>
                             <div class="btn_wrap">
                                 <button type="button" class="stroke"  onClick="_getUserGridLayout('monLayout', monGrid);">칼럼위치저장</button>
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('monLayout', monGrid, monColumns);">칼럼초기화</button>
@@ -1303,9 +1354,11 @@ function popSpecification(){
                         <input type="month" id="date2" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey('add');">
                         <button class="admin_utility_btn" onClick="getAddList();">조회</button>
                         <div class="admin_btn">
+                            <input type="file" class="form-control" style="display:none" id="addImportFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12" />
                             <button class="btn" onClick="popSpecification();">거래명세서 출력</button>
-                            <button class="btn">엑셀 업로드</button>
-                            <button class="btn" onClick="addExportExcel();">엑셀 다운로드</button>
+                        	<button class="btn" onClick="downTemplate('add');">엑셀 템플릿</button>
+                            <button class="btn" onClick="findFile('add');">엑셀 업로드</button>
+                            <button class="btn" onClick="exportExcel('add');">엑셀 다운로드</button>
                         </div>
                     </div>
                     <div class="admin_content">
@@ -1353,15 +1406,18 @@ function popSpecification(){
                                 <button type="button" onclick="saveGrid('add')">저장</button>
                             <button type="button" onclick="deleteRows('add')">삭제</button>
                             </div>
-                            <div class="grid_wrap">
+                            <div class="grid_wrap" id="addDiv" style="position:relative;">
                                 <div id="addGrid"  style="height:500px;"></div>
                         		<div id="addGridPager" class="pager"></div>
                             </div>
+	                        <div class="grid_wrap" id="addExcelDiv" style="position:relative;">
+	                        	<div id="addExcelGrid"  style="height:500px;"></div>
+	                        </div>
                             <div class="btn_wrap">
                                 <button type="button" class="stroke" onClick="_getUserGridLayout('addLayout', addGrid);">칼럼위치저장</button>
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('addLayout', addGrid, addColumns);">칼럼초기화</button>
                                 <button type="button" onclick="saveGrid('add')">저장</button>
-                            <button type="button" onclick="deleteRows('add')">삭제</button>
+                            	<button type="button" onclick="deleteRows('add')">삭제</button>
                             </div>
                         </div>
                     </div>
