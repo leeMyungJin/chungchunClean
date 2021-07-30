@@ -293,3 +293,45 @@ function sessionCheck(staffId){
     	
     }
 }
+
+//엑셀 업로드
+function bindImportedDataIntoModel() {
+    const newData = (getImportedCVData());
+    excelGrid.columns.clear();
+    data = new wijmo.collections.CollectionView(newData);
+    excelGrid.autoGenerateColumns = true;
+    excelGrid.itemsSource = data;
+}
+
+function getImportedCVData() {
+    const arr = [];
+    let nullRow = true;
+    for (let row = 0; row < excelGrid.rows.length; row++) {
+        const item = {};
+        for (let column = 0; column < excelGrid.columns.length; column++) {
+            const cellValue = excelGrid.getCellData(row, column, false);
+            //병합된 헤더 처리 
+            // let header = grid.columns[column].header ? grid.columns[column].header : grid.columns[column - 1].header + '-2';
+        // 만약 열 헤더가 있으면
+            if (excelGrid.columns[column].header){
+            var header =  excelGrid.columns[column].header
+            } else{
+    //           만약 열 헤더가 없으면 본래 병합된 값으로 판단
+                for(var i = column-1; i >= 0; i--){
+                    if (excelGrid.columns[i].header){
+                        var header =  excelGrid.columns[i].header + " - "+column+" index"
+                        break;
+                    }
+                }
+            }
+        var binding = _convertHeaderToBinding(header);
+        item[binding] = cellValue;
+        }
+      arr.push(item);
+    }
+    return arr;
+}
+
+function _convertHeaderToBinding(header) {
+    return header.replace(/\s/, '').toLowerCase();
+}
