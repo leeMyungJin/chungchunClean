@@ -302,31 +302,31 @@ function sessionCheck(staffId){
 }
 
 //엑셀 업로드
-function bindImportedDataIntoModel() {
-    const newData = (getImportedCVData());
-    excelGrid.columns.clear();
+function bindImportedDataIntoModel(grid) {
+    const newData = (getImportedCVData(grid));
+    grid.columns.clear();
     data = new wijmo.collections.CollectionView(newData);
-    excelGrid.autoGenerateColumns = true;
-    excelGrid.itemsSource = data;
+    grid.autoGenerateColumns = true;
+    grid.itemsSource = data;
 }
 
-function getImportedCVData() {
+function getImportedCVData(grid) {
     const arr = [];
     let nullRow = true;
-    for (let row = 0; row < excelGrid.rows.length; row++) {
+    for (let row = 0; row < grid.rows.length; row++) {
         const item = {};
-        for (let column = 0; column < excelGrid.columns.length; column++) {
-            const cellValue = excelGrid.getCellData(row, column, false);
+        for (let column = 0; column < grid.columns.length; column++) {
+            const cellValue = grid.getCellData(row, column, false);
             //병합된 헤더 처리 
             // let header = grid.columns[column].header ? grid.columns[column].header : grid.columns[column - 1].header + '-2';
         // 만약 열 헤더가 있으면
-            if (excelGrid.columns[column].header){
-            var header =  excelGrid.columns[column].header
+            if (grid.columns[column].header){
+            var header =  grid.columns[column].header
             } else{
     //           만약 열 헤더가 없으면 본래 병합된 값으로 판단
                 for(var i = column-1; i >= 0; i--){
-                    if (excelGrid.columns[i].header){
-                        var header =  excelGrid.columns[i].header + " - "+column+" index"
+                    if (grid.columns[i].header){
+                        var header =  grid.columns[i].header + " - "+column+" index"
                         break;
                     }
                 }

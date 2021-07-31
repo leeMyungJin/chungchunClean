@@ -40,6 +40,9 @@ public class CalculateVo {
 	
 	private String rownum;
 	private String totalCost;
+	private String quoteTotalCost;
+	private String surtaxTotalCost;
+
 	public String getAreaCd() {
 		return areaCd;
 	}
@@ -262,6 +265,18 @@ public class CalculateVo {
 	public void setTotalCost(String totalCost) {
 		this.totalCost = totalCost;
 	}
+	public String getQuoteTotalCost() {
+		return quoteTotalCost;
+	}
+	public void setQuoteTotalCost(String quoteTotalCost) {
+		this.quoteTotalCost = quoteTotalCost;
+	}
+	public String getSurtaxTotalCost() {
+		return surtaxTotalCost;
+	}
+	public void setSurtaxTotalCost(String surtaxTotalCost) {
+		this.surtaxTotalCost = surtaxTotalCost;
+	}
 	@Override
 	public String toString() {
 		return "CalculateVo [areaCd=" + areaCd + ", areaNm=" + areaNm + ", bldgNm=" + bldgNm + ", bldgCd=" + bldgCd
@@ -273,7 +288,8 @@ public class CalculateVo {
 				+ ", materCost=" + materCost + ", quoteCost=" + quoteCost + ", addDt=" + addDt + ", classifiCd="
 				+ classifiCd + ", classifiNm=" + classifiNm + ", itemCd=" + itemCd + ", itemNm=" + itemNm + ", type="
 				+ type + ", conCost=" + conCost + ", addSeq=" + addSeq + ", zone=" + zone + ", monMt=" + monMt
-				+ ", rownum=" + rownum + ", totalCost=" + totalCost + "]";
+				+ ", rownum=" + rownum + ", totalCost=" + totalCost + ", quoteTotalCost=" + quoteTotalCost
+				+ ", surtaxTotalCost=" + surtaxTotalCost + "]";
 	}
 	
 	

@@ -136,6 +136,7 @@ function loadGridMonList(type, result){
 			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 150, align:"center"},
 			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 200, align:"center"},
 			      { binding: 'quoteCost', header: '견적', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum'  },
+			      { binding: 'surtax', header: '부가세', isReadOnly: true, width: 150, align:"center" , aggregate: 'Sum' },
 			      { binding: 'materCost', header: '재료비', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum'  },
 			      { binding: 'outscCost', header: '외주', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum' },
 			      { binding: 'depositCost', header: '입금', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum' },

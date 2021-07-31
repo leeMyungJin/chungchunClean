@@ -581,7 +581,7 @@ function importExcel(){
         if (inputEle.files[0]) {
             wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(excelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
         // 데이터 바인딩할 함수 호출
-        bindImportedDataIntoModel()
+        bindImportedDataIntoModel(excelGrid)
         excelGrid.columns.forEach(col => {
           col.width = 300,
           col.align = "center"

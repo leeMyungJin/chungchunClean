@@ -125,6 +125,18 @@ public class CalculateServiceImpl implements CalculateService{
 		}
 	}	
 	
+	
+	@Override
+	public void saveMonExcel(CalculateVo params) {
+		calculateMapper.saveMonExcel(params);
+	}	
+	
+	@Override
+	public void saveAddExcel(CalculateVo params) {
+		calculateMapper.saveAddExcel(params);
+	}	
+	
+	
 	@Override
 	public void saveUpdateAdd(List<CalculateVo> params) {
 		for(CalculateVo vo : params){

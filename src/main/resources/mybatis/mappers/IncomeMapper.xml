@@ -17,9 +17,9 @@ from
 			, aa.area_nm 
 			, aa.bldg_nm 
 			, null as pnum
-			, aa.quote_cost as con_cost
+			, coalesce(aa.quote_cost, 0) + coalesce(aa.surtax, 0) as con_cost
 			, 0 as add_cost 
-			, coalesce(aa.quote_cost, 0) - coalesce(aa.deposit_cost, 0) as out_cost --금년 미수금 
+			, coalesce(aa.quote_cost, 0) + coalesce(aa.surtax, 0) - coalesce(aa.deposit_cost, 0) as out_cost --금년 미수금 
 			, aa.deposit_cost 
 			, aa.depositor 
 	from web.adjust_add aa
@@ -127,9 +127,9 @@ select sum(conCost) as conCost
 		, sum(outCost) as outCost
 		, sum(depositCost)as depositCost
 from (
-	select coalesce(sum(aa.quote_cost), 0) as conCost --금년 매출액 (견적 + 추가금)
+	select coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) as conCost --금년 매출액 (견적 + 추가금)
 			, 0 as addCost --금년 추가금
-			, coalesce(sum(aa.quote_cost), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost --금년 미수금 
+			, coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost --금년 미수금 
 			, coalesce(sum(aa.deposit_cost), 0) as depositCost --금년 입금금액
 	from web.adjust_add aa
 	where 1=1
@@ -154,9 +154,9 @@ select sum(conCost) as conCost
 		, sum(outCost) as outCost
 		, sum(depositCost)as depositCost
 from (
-	select coalesce(sum(aa.quote_cost), 0) as conCost --금년 매출액 (견적 + 추가금)
+	select coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) as conCost --금년 매출액 (견적 + 추가금)
 			, 0 as addCost --금년 추가금
-			, coalesce(sum(aa.quote_cost), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost --금년 미수금 
+			, coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost --금년 미수금 
 			, coalesce(sum(aa.deposit_cost), 0) as depositCost --금년 입금금액
 	from web.adjust_add aa
 	where 1=1

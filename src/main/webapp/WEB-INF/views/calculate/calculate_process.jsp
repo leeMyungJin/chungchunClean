@@ -164,7 +164,7 @@ function loadGridList(type, result){
 	                    							- Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost));
 	                	
 	                	//이월금 = 누적미수금
-	                    e.getRow().dataItem.overCost = eNumber((e.getRow().dataItem.overCostTemp == null ? 0 : e.getRow().dataItem.overCostTemp))
+	                    e.getRow().dataItem.overCost = Number((e.getRow().dataItem.overCostTemp == null ? 0 : e.getRow().dataItem.overCostTemp))
 														+ Number((e.getRow().dataItem.outCost == null ? 0 : e.getRow().dataItem.outCost))
 						
 	                    if(e.getRow().dataItem.outCost < 0)e.getRow().dataItem.outCost = 0;
@@ -234,6 +234,7 @@ function loadGridList(type, result){
 			      { binding: 'areaNm', header: '지역', isReadOnly: false, width: 150, align:"center"},
 			      { binding: 'bldgNm', header: '건물명', isReadOnly: false, width: 200, align:"center"},
 			      { binding: 'quoteCost', header: '견적', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum'  },
+			      { binding: 'surtax', header: '부가세', isReadOnly: true, width: 150, align:"center" , aggregate: 'Sum' },
 			      { binding: 'materCost', header: '재료비', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum'  },
 			      { binding: 'outscCost', header: '외주', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum' },
 			      { binding: 'depositCost', header: '입금', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum' },
@@ -258,7 +259,7 @@ function loadGridList(type, result){
 	            cellEditEnding: function (s, e) {
 	                var col = s.columns[e.col];
 	                var inven = s.columns[e.col - 1];
-	                if (col.binding == 'quoteCost' || col.binding == 'materCost' || col.binding == 'outscCost' || col.binding == 'add') {
+	                if (col.binding == 'quoteCost' || col.binding == 'materCost' || col.binding == 'outscCost' || col.binding == 'add' || col.binding == 'surtax') {
 	                    var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
 	                    if( !wijmo.isNumber(value)){
 	                        e.cancel = true;
@@ -270,16 +271,24 @@ function loadGridList(type, result){
 	                   //미수금 
 	                   if (col.binding == 'quoteCost') {
 	                	   e.getRow().dataItem.outCost = Number((s.activeEditor.value == null ? 0 : s.activeEditor.value))
-														- Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost))
+	                	   								+ Number((e.getRow().dataItem.surtax == null ? 0 : e.getRow().dataItem.surtax))
+														- Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost));
 	                	   
 	                	   if(isNaN(e.getRow().dataItem.outCost)) e.getRow().dataItem.outCost = 0;
 	                	   
-	                   }else if(col.binding == 'add'){
+	                   }else if(col.binding == 'surtax'){
+	                	   e.getRow().dataItem.outCost = Number((e.getRow().dataItem.quoteCost == null ? 0 : e.getRow().dataItem.quoteCost))
+	                		   							+ Number((s.activeEditor.value == null ? 0 : s.activeEditor.value))
+														- Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost));
+
+							if(isNaN(e.getRow().dataItem.outCost)) e.getRow().dataItem.outCost = 0;
+	                	   
+						}else if(col.binding == 'add'){
 	                	   e.getRow().dataItem.depositCost = Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost))
-															+ Number((s.activeEditor.value == null ? 0 : s.activeEditor.value))
+															+ Number((s.activeEditor.value == null ? 0 : s.activeEditor.value));
 	                	   
 	                	   e.getRow().dataItem.outCost = Number((e.getRow().dataItem.quoteCost == null ? 0 : e.getRow().dataItem.quoteCost))
-														- Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost))
+														- Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost));
 	                	   
 	                	   if(isNaN(e.getRow().dataItem.outCost)) e.getRow().dataItem.outCost = 0;
 	                	   s.activeEditor.value = null;
@@ -383,7 +392,7 @@ function loadGridList(type, result){
 	            autoGenerateColumns: false,
 	            alternatingRowStep: 0,
 	            columns: [
-	            	{ binding: 'classifiCd', header: '내역코드', isReadOnly: false, width: 230, align:"center" , dataMap: classifiList, dataMapEditor: 'DropDownList'},
+	            	{ binding: 'classifiCd', header: '분류코드', isReadOnly: false, width: 230, align:"center" , dataMap: classifiList, dataMapEditor: 'DropDownList'},
 	            	{ binding: 'itemCd', header: '내역코드', isReadOnly: false, width: 230, align:"center"},
 	                { binding: 'itemNm', header: '내역명', isReadOnly: false,  width: '*', align:"center"},
 	                { binding: 'cretDt', header: '등록일시', isReadOnly: true, width: 230, align:"center"  }
@@ -459,9 +468,9 @@ function loadGridList(type, result){
 	            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
 	                cell.textContent = (r + 1).toString();
 	            }
-	        };
-	        
-	        
+	        };	        
+	      
+  
 			  
 	  }else if(type == "mon"){
 		//월관리
@@ -551,6 +560,14 @@ function getAddTotalCost(){
 }
 
 function getMonList(){
+	$("#monDiv").show();
+	$("#saveMonTop").show();
+	$("#saveMonBottom").show();
+	 
+    $("#monExcelDiv").hide();
+	$("#saveMonTopExcel").hide();
+	$("#saveMonBottomExcel").hide();
+	
 	var param = {
 		con 	: $('#con').val()
 		, inq 	: $('#inq').val()
@@ -601,6 +618,16 @@ function getMonList(){
 }
 
 function getAddList(){
+	$("#addDiv").show();
+	$("#saveAddTop").show();
+	$("#saveAddBottom").show();
+	$("#saveAddTopDelete").show();
+	$("#saveAddBottomDelete").show();
+	 
+    $("#addExcelDiv").hide();
+	$("#saveAddTopExcel").hide();
+	$("#saveAddBottomExcel").hide();
+	
 	var param = {
 		con 	: $('#con2').val()
 		, inq 	: $('#inq2').val()
@@ -927,30 +954,90 @@ function saveGrid(type){
          var item  = monExcelGrid.rows;
          var rows = [];
          var params;
+         var bldgList = getBldgList();
+         
          for(var i=0; i< item.length; i++){
-             var value = wijmo.changeType(excelGrid.collectionView.items[i].원가, wijmo.DataType.Number, null);
-             if(!wijmo.isNumber(value)){
-                 alert("원가는 숫자만 입력 가능합니다.");
+        	 var value = wijmo.changeType(monExcelGrid.collectionView.items[i].월, wijmo.DataType.String, null);
+             var dateRegExpMonth = /^(19|20)\d{2}-(0[1-9]|1[012])$/;
+             if(!dateRegExpMonth.test(value)){
+                 alert("월은 YYYY-MM 형태로 입력하시기 바랍니다.");
                  return false;
              }
+             
+             value = wijmo.changeType(monExcelGrid.collectionView.items[i].지역코드, wijmo.DataType.Number, null);
+             if(!wijmo.isNumber(value)){
+                 alert("지역코드는 숫자만 입력 가능합니다.");
+                 return false;
+
+             }else if(!(value == 11 || value == 26 || value == 27 || value == 28 || value == 30 || value == 41 || value == 43 
+                 || value == 44 || value == 45 || value == 46 || value == 47 || value == 48 || value == 50)){
+                     alert("지역코드는 코드참고표 시트에 있는 코드만 입력하시기 바랍니다.");
+                     return false;
+             }
+        	 
+             txt = wijmo.changeType(monExcelGrid.collectionView.items[i].건물코드, wijmo.DataType.String, null);
+             if(!wijmo.isString(txt) || txt.length != 11){
+                 alert("건물코드를 바르게 입력하시기 바랍니다.");
+                 return false;
+             }
+             
+             
+             var bldgItem = bldgList.filter(item => item.id == monExcelGrid.collectionView.items[i].건물코드);
+             if(bldgItem.length <= 0){
+            	 alert("정산처리가 불가능한 건물이 존재합니다. - "+monExcelGrid.collectionView.items[i].건물코드);
+                 return false;
+             }
+             
+             value = wijmo.changeType(monExcelGrid.collectionView.items[i].추가금, wijmo.DataType.Number, null);
+             if(!wijmo.isNumber(value)){
+                 alert("추가금은 숫자만 입력 가능합니다.");
+                 return false;
+             }
+             
+             value = wijmo.changeType(monExcelGrid.collectionView.items[i].관리비입금, wijmo.DataType.Number, null);
+             if(!wijmo.isNumber(value)){
+                 alert("관리비입금은 숫자만 입력 가능합니다.");
+                 return false;
+             }
+             
+             var dateRegExp = /^(19|20)\d{2}.(0[1-9]|1[012]).(0[1-9]|[12][0-9]|3[0-1])$/;
+             value = wijmo.changeType(monExcelGrid.collectionView.items[i].입금날짜, wijmo.DataType.String, null);
+             if(!dateRegExp.test(value)){
+                 alert("입금날짜는 YYYY.MM.DD 형태로 입력하시기 바랍니다.");
+                 return false;
+             }
+             
+             value = monExcelGrid.collectionView.items[i].입금자명;
+             if(value == null && value == ''){
+                 alert("입금자명은 필수입력사항입니다.");
+                 return false;
+             }
+         
              params={
-                 lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,3),
-                 itemCd : excelGrid.collectionView.items[i].물품코드,
-                 itemNm : excelGrid.collectionView.items[i].물품명,
-                 cost : excelGrid.collectionView.items[i].원가
+            	 monMt :  monExcelGrid.collectionView.items[i].월
+            	 , areaCd : monExcelGrid.collectionView.items[i].지역코드
+            	 , zone : monExcelGrid.collectionView.items[i].구분
+            	 , bldgCd : monExcelGrid.collectionView.items[i].건물코드
+            	 , taxBill : monExcelGrid.collectionView.items[i].세금계산
+            	 , addCost : monExcelGrid.collectionView.items[i].추가금
+            	 , depositCost : monExcelGrid.collectionView.items[i].관리비입금
+            	 , depositDt : monExcelGrid.collectionView.items[i].입금날짜
+            	 , depositor : monExcelGrid.collectionView.items[i].입금자명
+            	 , pnum : monExcelGrid.collectionView.items[i].전화번호
+                 , memo : monExcelGrid.collectionView.items[i].비고
              }
              rows.push(params);
          }
          if(confirm("저장 하시겠습니까?")){
              $.ajax({
-                 url : "/stock/saveStock",
+                 url : "/calculate/saveMonExcel",
                  async : false, // 비동기모드 : true, 동기식모드 : false
                  type : 'POST',
                  contentType: 'application/json',
                  data: JSON.stringify(rows),
                  success : function(result) {
                      alert("총 " + result + "건이 저장되었습니다.");
-                     getStockList();
+                     getMonList();
                  },
                  error : function(request,status,error) {
                      alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -958,33 +1045,117 @@ function saveGrid(type){
              });
          }
      }else if(type == 'addExcel'){// 엑셀 업로드 저장하기
-         var item  = monGrid.rows;
+         var item  = addExcelGrid.rows;
          var rows = [];
          var params;
+         var classifiL = getClassifiList('drop');
+         var itemL = getItemList('drop');
+         
          for(var i=0; i< item.length; i++){
-             var value = wijmo.changeType(excelGrid.collectionView.items[i].원가, wijmo.DataType.Number, null);
+        	 
+        	 var classifiLItem = classifiL.filter(item => item.id == addExcelGrid.collectionView.items[i].분류);
+             if(classifiLItem.length <= 0){
+            	 alert("등록되지 않은 뷴류가 존재합니다. - "+addExcelGrid.collectionView.items[i].분류);
+                 return false;
+             }
+             
+             var itemLItem = itemL.filter(item => item.id == addExcelGrid.collectionView.items[i].내역);
+            console.log(itemLItem);
+             if(itemLItem.length <= 0){
+            	 alert("등록되지 않은 내역이 존재합니다. - "+addExcelGrid.collectionView.items[i].내역);
+                 return false;
+                 
+             }else if(itemLItem[0].classifiCd != addExcelGrid.collectionView.items[i].분류){
+            	 alert("해당 분류에 존재하지 않는 내역입니다. - 분류 : "+addExcelGrid.collectionView.items[i].분류 +", 내역 : "+addExcelGrid.collectionView.items[i].내역);
+                 return false;
+             }
+        	 
+        	 var value = wijmo.changeType(addExcelGrid.collectionView.items[i].일자, wijmo.DataType.String, null);
+             var dateRegExp = /^(19|20)\d{2}.(0[1-9]|1[012]).(0[1-9]|[12][0-9]|3[0-1])$/;
+             if(!dateRegExp.test(value)){
+                 alert("일자는 YYYY.MM.DD 형태로 입력하시기 바랍니다.");
+                 return false;
+             }
+             
+             value = wijmo.changeType(addExcelGrid.collectionView.items[i].입금날짜, wijmo.DataType.String, null);
+             if(!dateRegExp.test(value)){
+                 alert("입금날짜는 YYYY.MM.DD 형태로 입력하시기 바랍니다.");
+                 return false;
+             }
+        	 
+             value = wijmo.changeType(addExcelGrid.collectionView.items[i].견적, wijmo.DataType.Number, null);
              if(!wijmo.isNumber(value)){
-                 alert("원가는 숫자만 입력 가능합니다.");
+                 alert("견적은 숫자만 입력 가능합니다.");
+                 return false;
+             }
+             
+             value = wijmo.changeType(addExcelGrid.collectionView.items[i].재료비, wijmo.DataType.Number, null);
+             if(!wijmo.isNumber(value)){
+                 alert("재료비는 숫자만 입력 가능합니다.");
+                 return false;
+             }
+             
+             value = wijmo.changeType(addExcelGrid.collectionView.items[i].외주, wijmo.DataType.Number, null);
+             if(!wijmo.isNumber(value)){
+                 alert("외주는 숫자만 입력 가능합니다.");
+                 return false;
+             }
+             
+             value = wijmo.changeType(addExcelGrid.collectionView.items[i].입금, wijmo.DataType.Number, null);
+             if(!wijmo.isNumber(value)){
+                 alert("입금은 숫자만 입력 가능합니다.");
+                 return false;
+             }
+             
+             value = wijmo.changeType(addExcelGrid.collectionView.items[i].부가세, wijmo.DataType.Number, null);
+             if(!wijmo.isNumber(value)){
+                 alert("부가세는 숫자만 입력 가능합니다.");
+                 return false;
+             }
+             
+             value = addExcelGrid.collectionView.items[i].지역;
+             if(value == null && value == ''){
+                 alert("지역은 필수입력사항입니다.");
+                 return false;
+             }
+             
+             value = addExcelGrid.collectionView.items[i].건물;
+             if(value == null && value == ''){
+                 alert("건물은 필수입력사항입니다.");
+                 return false;
+             }
+             
+             value = addExcelGrid.collectionView.items[i].입금자명;
+             if(value == null && value == ''){
+                 alert("입금자명은 필수입력사항입니다.");
                  return false;
              }
              params={
-                 lCategyCd :  excelGrid.collectionView.items[i].물품코드.substring(0,3),
-                 itemCd : excelGrid.collectionView.items[i].물품코드,
-                 itemNm : excelGrid.collectionView.items[i].물품명,
-                 cost : excelGrid.collectionView.items[i].원가
+            	 addDt :  addExcelGrid.collectionView.items[i].일자,
+            	 classifiCd : addExcelGrid.collectionView.items[i].분류,
+            	 itemCd : addExcelGrid.collectionView.items[i].내역,
+            	 areaNm : addExcelGrid.collectionView.items[i].지역, 
+            	 bldgNm : addExcelGrid.collectionView.items[i].건물, 
+            	 quoteCost : addExcelGrid.collectionView.items[i].견적, 
+            	 surtax : addExcelGrid.collectionView.items[i].부가세, 
+            	 materCost : addExcelGrid.collectionView.items[i].재료비, 
+            	 outscCost : addExcelGrid.collectionView.items[i].외주, 
+            	 depositCost : addExcelGrid.collectionView.items[i].입금, 
+            	 depositDt : addExcelGrid.collectionView.items[i].입금날짜, 
+            	 depositor : addExcelGrid.collectionView.items[i].입금자명
              }
              rows.push(params);
          }
          if(confirm("저장 하시겠습니까?")){
              $.ajax({
-                 url : "/stock/saveStock",
+                 url : "/calculate/saveAddExcel",
                  async : false, // 비동기모드 : true, 동기식모드 : false
                  type : 'POST',
                  contentType: 'application/json',
                  data: JSON.stringify(rows),
                  success : function(result) {
                      alert("총 " + result + "건이 저장되었습니다.");
-                     getStockList();
+                     getAddList();
                  },
                  error : function(request,status,error) {
                      alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -1254,11 +1425,11 @@ function downTemplate(type){
 //업로드 파일 찾기
 function findFile(type){
 	if(type == 'mon'){
-		$("#monIimportFile").val("");
+		$("#monImportFile").val("");
 	    document.all.monImportFile.click();
 	    
 	}else if(type == 'add'){
-		$("#addIimportFile").val("");
+		$("#addImportFile").val("");
 	    document.all.addImportFile.click();	
 	}
 }
@@ -1266,34 +1437,46 @@ function findFile(type){
 //엑셀 업로드
 function importExcel(type){
 	if(type == 'mon'){
-		 $("#monDiv").hide();
-		   	monView = new wijmo.collections.CollectionView(null, {
-		            pageSize: 999
-		    });
-		    $("#monExcelDiv").show();
-		        var inputEle =  document.querySelector('#monImportFile');
-		        if (inputEle.files[0]) {
-		            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(monExcelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
-		        // 데이터 바인딩할 함수 호출
-		        bindImportedDataIntoModel();
-		        monExcelGrid.columns.forEach(col => {
-		          col.width = 120,
-		          col.align = "center"
-		        })
-		      });
-		    }
+		$("#monDiv").hide();
+		$("#saveMonTop").hide();
+		$("#saveMonBottom").hide();
+		 
+	    $("#monExcelDiv").show();
+		$("#saveMonTopExcel").show();
+		$("#saveMonBottomExcel").show();
+	   	monView = new wijmo.collections.CollectionView(null, {
+	            pageSize: 999
+	    });
+	        var inputEle =  document.querySelector('#monImportFile');
+	        if (inputEle.files[0]) {
+	            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(monExcelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
+	        // 데이터 바인딩할 함수 호출
+	        bindImportedDataIntoModel(monExcelGrid);
+	        monExcelGrid.columns.forEach(col => {
+	          col.width = 120,
+	          col.align = "center"
+	        })
+	      });
+	    }
 	        
 	}else if(type == 'add'){
 		$("#addDiv").hide();
+		$("#saveAddTop").hide();
+		$("#saveAddBottom").hide();
+		$("#saveAddTopDelete").hide();
+		$("#saveAddBottomDelete").hide();
+		 
+	    $("#addExcelDiv").show();
+		$("#saveAddTopExcel").show();
+		$("#saveAddBottomExcel").show();
 	    addView = new wijmo.collections.CollectionView(null, {
 	            pageSize: 999
 	    });
-	    $("#addExcelDiv").show();
-	        var inputEle =  document.querySelector('#addImportFile');
-	        if (inputEle.files[0]) {
-	            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(addExcelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
+	    var inputEle =  document.querySelector('#addImportFile');
+	    if (inputEle.files[0]) {
+	        wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(addExcelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
 	        // 데이터 바인딩할 함수 호출
-	        bindImportedDataIntoModel();
+	        bindImportedDataIntoModel(addExcelGrid);
 	        addExcelGrid.columns.forEach(col => {
 	          col.width = 120,
 	          col.align = "center"
@@ -1400,7 +1583,8 @@ $(function(){
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('monLayout', monGrid, monColumns);">칼럼초기화</button>
                                 <button type="button">문구수정</button>
                                 <button type="button">문자발송</button>
-                                <button type="button" onClick="saveGrid('mon')">저장</button>
+                                <button type="button" id="saveMonTop" onClick="saveGrid('mon')">저장</button>
+                                <button type="button" id="saveMonTopExcel" onClick="saveGrid('monExcel')">저장</button>
                             </div>
                             <div class="grid_wrap" id="monDiv" style="position:relative;">
                                 <div id="monGrid"  style="height:500px;"></div>
@@ -1414,7 +1598,8 @@ $(function(){
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('monLayout', monGrid, monColumns);">칼럼초기화</button>
                                 <button type="button">문구수정</button>
                                 <button type="button">문자발송</button>
-                                <button type="button" onClick="saveGrid('mon')">저장</button>
+                                <button type="button" id="saveMonBottom" onClick="saveGrid('mon')">저장</button>
+                                <button type="button" id="saveMonBottomExcel" onClick="saveGrid('monExcel')">저장</button>
                             </div>
                         </div>
                     </div>
@@ -1487,8 +1672,9 @@ $(function(){
                             <div class="btn_wrap">
                                 <button type="button" class="stroke" onClick="_getUserGridLayout('addLayout', addGrid);">칼럼위치저장</button>
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('addLayout', addGrid, addColumns);">칼럼초기화</button>
-                                <button type="button" onclick="saveGrid('add')">저장</button>
-                            <button type="button" onclick="deleteRows('add')">삭제</button>
+                                <button type="button" id="saveAddTop" onClick="saveGrid('add')">저장</button>
+                                <button type="button" id="saveAddTopExcel" onClick="saveGrid('addExcel')">저장</button>
+                                <button type="button" id="saveAddTopDelete" onclick="deleteRows('add')">삭제</button>
                             </div>
                             <div class="grid_wrap" id="addDiv" style="position:relative;">
                                 <div id="addGrid"  style="height:500px;"></div>
@@ -1500,8 +1686,9 @@ $(function(){
                             <div class="btn_wrap">
                                 <button type="button" class="stroke" onClick="_getUserGridLayout('addLayout', addGrid);">칼럼위치저장</button>
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('addLayout', addGrid, addColumns);">칼럼초기화</button>
-                                <button type="button" onclick="saveGrid('add')">저장</button>
-                            	<button type="button" onclick="deleteRows('add')">삭제</button>
+                                <button type="button" id="saveAddBottom" onClick="saveGrid('add')">저장</button>
+                                <button type="button" id="saveAddBottomExcel" onClick="saveGrid('addExcel')">저장</button>
+                            	<button type="button" id="saveAddBottomDelete" onclick="deleteRows('add')">삭제</button>
                             </div>
                         </div>
                     </div>

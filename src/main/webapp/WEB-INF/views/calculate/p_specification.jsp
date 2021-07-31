@@ -37,6 +37,8 @@ function pageLoad(){
 	
 	$('#cretDt').text('${cretDt}');
 	$('#totalCost').text('${totalCost}');
+	$('#quoteTotalCost').text('${quoteTotalCost}');
+	$('#surtaxTotalCost').text('${surtaxTotalCost}');
 	$('#totalCost2').text('₩'+'${totalCost}'+" 원정");
 	$('#bldgNm').text('${bldgNm}');
 
@@ -70,7 +72,7 @@ function pageLoad(){
                         <td>상호</td>
                         <td>청춘클린</td>
                         <td>성명</td>
-                        <td>김도</td>
+                        <td>김도엽</td>
                     </tr>
                     <tr>
                         <td>사업장소재지</td>
@@ -91,42 +93,50 @@ function pageLoad(){
         </div>
         <table>
             <colgroup>
-                <col width="10%">
+                <col width="7%">
+                <col width="13%">
                 <col width="30%">
-                <col width="30%">
-                <col width="30%">
+                <col width="16%">
+                <col width="16%">
+                <col width="18%">
             </colgroup>
             <thead>
                 <tr>
                     <td>합계<br>금액</td>
-                    <td colspan="3" id="totalCost2"></td>
+                    <td colspan="6" id="totalCost2"></td>
                 </tr>
                 <tr>
                     <th>NO.</th>
                     <th>분류</th>
                     <th>내역</th>
                     <th>공급가액</th>
+                    <th>부가세액</th>
+                    <th>합계액</th>
                 </tr>
             </thead>
             <tbody id="infoTable">
-            <c:forEach var="vo" items="${addSpecInfo}">
-			    <tr>
-			    	<td><c:out value="${vo.rownum}"/></td>
-			        <td><c:out value="${vo.classifiNm}"/></td>
-			        <td><c:out value="${vo.itemNm}"/></td>
-			        <td><c:out value="${vo.quoteCost}"/></td>
-			    </tr>
-			</c:forEach>
+            	<c:forEach var="vo" items="${addSpecInfo}">
+				    <tr>
+				    	<td><c:out value="${vo.rownum}"/></td>
+				        <td><c:out value="${vo.classifiNm}"/></td>
+				        <td><c:out value="${vo.itemNm}"/></td>
+				        <td><c:out value="${vo.quoteCost}"/></td>
+				        <td><c:out value="${vo.surtax}"/></td>
+				        <td><c:out value="${vo.conCost}"/></td>
+				    </tr>
+				</c:forEach>
             </tbody>
             <tfoot>
                 <tr>
                     <td colspan="3">계</td>
+                    <td id="quoteTotalCost"></td>
+                    <td id="surtaxTotalCost"></td>
                     <td id="totalCost"></td>
                 </tr>
                 <tr>
-                    <td>비고</td>
+                    <td colspan="2">비고</td>
                     <td></td>
-                    <td>인수자</td>
+                    <td colspan="2">인수자</td>
                     <td></td>
                 </tr>
             </tfoot>
