@@ -27,6 +27,8 @@ public interface CalculateService {
     
     public void saveMon(List<CalculateVo> params);
     public void saveAdd(List<CalculateVo> params);
+    public void saveMonExcel(CalculateVo params);
+    public void saveAddExcel(CalculateVo params);
     public void saveUpdateAdd(List<CalculateVo> params);
     public void saveClassifi(List<CalculateVo> params);
     public void saveItem(List<CalculateVo> params);

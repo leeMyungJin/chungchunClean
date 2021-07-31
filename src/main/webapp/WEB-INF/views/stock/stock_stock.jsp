@@ -28,6 +28,8 @@ function pageLoad(){
         importExcel();
     });
     $("#essential").trigger("click");
+    
+    getStockList();
 }
 
 function sessionCheck(){
@@ -259,7 +261,7 @@ function importExcel(){
         if (inputEle.files[0]) {
             wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(excelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
                 // 데이터 바인딩할 함수 호출
-                bindImportedDataIntoModel()
+                bindImportedDataIntoModel(excelGrid)
                 excelGrid.columns.forEach(col => {
                 col.width = 300,
                 col.align = "center"
@@ -271,46 +273,6 @@ function importExcel(){
         excelSelector.column = excelGrid.columns[0];
 }
 
-function bindImportedDataIntoModel() {
-    const newData = (getImportedCVData());
-    excelGrid.columns.clear();
-    data = new wijmo.collections.CollectionView(newData);
-    excelGrid.autoGenerateColumns = true;
-    excelGrid.itemsSource = data;
-}
-
-function getImportedCVData() {
-    const arr = [];
-    let nullRow = true;
-    for (let row = 0; row < excelGrid.rows.length; row++) {
-        const item = {};
-        for (let column = 0; column < excelGrid.columns.length; column++) {
-            const cellValue = excelGrid.getCellData(row, column, false);
-            //병합된 헤더 처리 
-            // let header = grid.columns[column].header ? grid.columns[column].header : grid.columns[column - 1].header + '-2';
-        // 만약 열 헤더가 있으면
-            if (excelGrid.columns[column].header){
-            var header =  excelGrid.columns[column].header
-            } else{
-    //           만약 열 헤더가 없으면 본래 병합된 값으로 판단
-                for(var i = column-1; i >= 0; i--){
-                    if (excelGrid.columns[i].header){
-                        var header =  excelGrid.columns[i].header + " - "+column+" index"
-                        break;
-                    }
-                }
-            }
-        var binding = _convertHeaderToBinding(header);
-        item[binding] = cellValue;
-        }
-      arr.push(item);
-    }
-    return arr;
-}
-
-function _convertHeaderToBinding(header) {
-    return header.replace(/\s/, '').toLowerCase();
-}
 //엑셀 양식 다운로드
 function downTemplate(){
     window.location.assign("<%=request.getContextPath()%>" + "/template/재고현황양식.xlsx");
@@ -407,7 +369,7 @@ function saveGrid(){
                 <div class="admin_content">
                     <!-- 필터 영역 admin_filter-->
                     <div class="admin_filter">
-                        <form action="#" id="search_form" name="search_form">
+                        <form action="#" id="search_form" name="search_form" onsubmit="return false;">
                             <label for="con">검색조건</label>
                             <select name="con" id="con">
                                 <option value="all" selected="selected">전체</option>
@@ -415,7 +377,7 @@ function saveGrid(){
                                 <option value="item">물품명</option>
                             </select>
                             <label for="inq"></label>
-                            <input type="text" id="inq" placeholder=",로 다중검색 가능" onclick="enterkey()">
+                            <input type="text" id="inq" placeholder=",로 다중검색 가능" onkeyup="enterkey();">
                             <button type="button" onclick ="getStockList();">조회</button>
                             <input type="checkbox" id="essential" name="essential" onChange = "getStockList();">
                             <label for="essential">추가입고 필요항목만 보기</label>

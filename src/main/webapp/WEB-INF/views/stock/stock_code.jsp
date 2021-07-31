@@ -41,6 +41,8 @@ function pageLoad(){
     $("#importFile").on('change', function (params) {
         importExcel();
     });
+    
+    getStockList();
 }
 function sessionCheck(){
     if("<%=session.getAttribute("staffId")%>"=="null"){
@@ -579,7 +581,7 @@ function importExcel(){
         if (inputEle.files[0]) {
             wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(excelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
         // 데이터 바인딩할 함수 호출
-        bindImportedDataIntoModel()
+        bindImportedDataIntoModel(excelGrid)
         excelGrid.columns.forEach(col => {
           col.width = 300,
           col.align = "center"
@@ -644,7 +646,7 @@ function getError(item,prop){
                 <div class="admin_content">
                     <!-- 필터 영역 admin_filter-->
                     <div class="admin_filter">
-                        <form action="#" id="search_form" name="search_form">
+                        <form action="#" id="search_form" name="search_form" onsubmit="return false;">
                             <label for="con">검색조건</label>
                             <select name="con" id="con">
                                 <option value="all" selected="selected">전체</option>
@@ -726,7 +728,7 @@ function getError(item,prop){
             </div>
             <div class="popup_inner">
                 <dfn>필수항목 *</dfn>
-                <form action="#" method="post">
+                <form action="#" method="post" onsubmit="return false;">
                     <div class="row">
                         <label for="category1">카테고리<i>*</i></label>
                             <select name="category1" id="category1">

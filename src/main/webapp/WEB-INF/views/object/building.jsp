@@ -35,6 +35,7 @@ function pageLoad(){
     maxBldgCd = parseInt("${fn:substring(maxBldgCd,1,11)}");
     loadGridStockList('init');
     getBuildingInfo();
+    getBuildingList();
 }
 
 function getError(item,prop){
@@ -455,7 +456,21 @@ function findAddr(){
         $("#dtlAddr").val(roadAddrPart1 + " " + addrDetail);
 }
 function popBuildingQrList(){
-	var win = window.open("/object/getBuildingQrList?inq="+$("#inq").val()+"&con="+$("#con").val(), "PopupWin", "with=1000,height=600");
+	var item = bldgGrid.rows.filter(r => r.isSelected);
+	var selectBldg;
+	
+	if(item.length == 0){
+        alert("선택된 행이 없습니다.");
+        return false;
+    }else{
+    	selectBldg = item[0].dataItem.bldgCd + item[0].dataItem.dongNum;
+    	for(var i =1; i< item.length ; i++){
+    		selectBldg += ','+item[i].dataItem.bldgCd + item[i].dataItem.dongNum;
+        }
+    	
+    	var win = window.open("/object/getBuildingQrList?selectBldg="+selectBldg, "PopupWin", "with=1000,height=600");
+
+    }
 }
 
 function popContract(){
@@ -888,7 +903,7 @@ function importExcel(){
         if (inputEle.files[0]) {
             wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(excelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
         // 데이터 바인딩할 함수 호출
-        bindImportedDataIntoModel();
+        bindImportedDataIntoModel(excelGrid);
         excelGrid.columns.forEach(col => {
           col.width = 160,
           col.align = "center"
@@ -1090,6 +1105,13 @@ $(function(){
         importExcel();
     });
 });
+
+function enterkey() {
+    if (window.event.keyCode == 13) {
+    	getBuildingList();
+    }
+}
+
 </script>
 
 <body onload="pageLoad()">
@@ -1123,7 +1145,7 @@ $(function(){
                 <div class="admin_content">
                     <!-- 필터 영역 admin_filter-->
                     <div class="admin_filter">
-                        <form action="#" id="search_form" name="search_form">
+                        <form action="#" id="search_form" name="search_form" onsubmit="return false;">
                             <label for="con">검색조건</label>
                             <select name="con" id="con">
                                 <option value="all" selected="selected">전체</option>
@@ -1132,7 +1154,7 @@ $(function(){
                                 <option value="building">건물명</option>
                             </select>
                             <label for="inq"></label>
-                            <input type="text" id="inq" placeholder=",로 다중검색 가능">
+                            <input type="text" id="inq" placeholder=",로 다중검색 가능"  onkeyup="enterkey();">
                             <button type="button" id="search" onClick="getBuildingList();">조회</button>
                         </form>
                     </div>
@@ -1172,7 +1194,7 @@ $(function(){
             </div>
             <div class="popup_inner">
                 <dfn>필수항목 *</dfn>
-                <form id="newBuildingForm">
+                <form id="newBuildingForm"  onsubmit="return false;">
                     <div class="row">
                         <label for="clientNm">고객명<i>*</i></label>
                         <input type="text" id="clientNm" name="clientNm" required>
@@ -1257,7 +1279,7 @@ $(function(){
             </div>
             <div class="popup_inner">
                 <dfn>필수항목 *</dfn>
-                <form id="modifyBuildingForm" method="post">
+                <form id="modifyBuildingForm" method="post"  onsubmit="return false;">
                     <div class="row">
                         <label for="activeYn">활성화</label>
                         <input type="checkbox" id="activeYn" name="activeYn">체크 시, 활성화

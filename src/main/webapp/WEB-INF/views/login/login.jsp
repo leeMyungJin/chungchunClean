@@ -93,6 +93,13 @@ function login()
     });
 }
 
+function enterkey() {
+    if (window.event.keyCode == 13) {
+    	login();
+    }
+}
+
+
 </script>
     
 </head>
@@ -105,8 +112,8 @@ function login()
             <form id="login_form" name="login_form">
                 <fieldset class="login_fld">
                     <legend class="blind">로그인</legend>
-                    <input type="text" id="staffId" name="staffId" placeholder="아이디">
-                    <input type="password" id="staffPass" name="staffPass" placeholder="비밀번호">
+                    <input type="text" id="staffId" name="staffId" placeholder="아이디" onkeyup="enterkey();">
+                    <input type="password" id="staffPass" name="staffPass" placeholder="비밀번호" onkeyup="enterkey();">
                     <div class="login_check">
                         <input type="checkbox" id="auto-login" name="auto-login" value="off" onchange="autoLoginCheck()">
                         <label for="auto-login">자동 로그인</label>

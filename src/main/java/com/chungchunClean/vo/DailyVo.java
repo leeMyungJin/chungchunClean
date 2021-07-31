@@ -17,7 +17,8 @@ public class DailyVo {
 	private String siteMntrUrl;	//현장점검 URL
 	private String postLocNm; 	//근태위치 
 	private String dongNum;		//동번호
-	private String memo; 		//비고
+	private String memo; 		//근태특이사항
+	private String dmamo;		//점검특이사항
 	private String imgPath; 	//현장점검사
 	private String cretDt;		//등록일자
 	private String cretId;		//등록자 
@@ -155,14 +156,21 @@ public class DailyVo {
 	public void setImgPath(String imgPath) {
 		this.imgPath = imgPath;
 	}
+	public String getDmamo() {
+		return dmamo;
+	}
+	public void setDmamo(String dmamo) {
+		this.dmamo = dmamo;
+	}
 	@Override
 	public String toString() {
 		return "DailyVo [dailyMntrCd=" + dailyMntrCd + ", areaCd=" + areaCd + ", areaNm=" + areaNm + ", bldgCd="
 				+ bldgCd + ", bldgNm=" + bldgNm + ", dtlAddr=" + dtlAddr + ", clientNm=" + clientNm + ", onWorkDt="
 				+ onWorkDt + ", offWorkDt=" + offWorkDt + ", officerNm=" + officerNm + ", visitDt=" + visitDt
 				+ ", garbgCnt=" + garbgCnt + ", foodChipCnt=" + foodChipCnt + ", siteMntrUrl=" + siteMntrUrl
-				+ ", postLocNm=" + postLocNm + ", dongNum=" + dongNum + ", memo=" + memo + ", imgPath=" + imgPath
-				+ ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt=" + updtDt + ", updtId=" + updtId + "]";
+				+ ", postLocNm=" + postLocNm + ", dongNum=" + dongNum + ", memo=" + memo + ", dmamo=" + dmamo
+				+ ", imgPath=" + imgPath + ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt=" + updtDt
+				+ ", updtId=" + updtId + "]";
 	}
 	
 	

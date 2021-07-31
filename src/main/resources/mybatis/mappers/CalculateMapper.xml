@@ -15,7 +15,7 @@
 		, amm.tax_bill
 		, amm.add_cost  
 		, coalesce(bb.con_cost, 0) + coalesce(bb.surtax, 0) + coalesce(amm.add_cost, 0) - coalesce(amm.deposit_cost, 0) as out_cost --계약금+부가세+추가금-입금 = 미수금
-		, coalesce(amm.over_cost, bb.con_cost) as over_cost 
+		, coalesce(oc.over_cost, 0)+ coalesce(bb.con_cost, 0) + coalesce(bb.surtax, 0) + coalesce(amm.add_cost, 0) - coalesce(amm.deposit_cost, 0) as over_cost		
 		, oc.over_cost as over_cost_temp 
 		, amm.deposit_cost 
 		, to_char(amm.deposit_dt , 'YYYY-MM-DD') as deposit_dt 
@@ -78,7 +78,7 @@
 	<if test="fromDate != null and toDate != null">
 		and amm.cret_dt between #{fromDate}::timestamp and (to_date(#{toDate}, 'YYYY-MM-DD')+1)::timestamp
 	</if>
-	ORDER BY amm.mon_mt, bb.area_cd, bb.area_nm, amm.deposit_dt
+	ORDER BY amm.mon_mt, bb.area_cd, bb.bldg_cd
 </select>
 
 
@@ -163,12 +163,13 @@
 			, aa.area_nm
 			, aa.bldg_nm 
 			, aa.quote_cost 
+			, aa.surtax
 			, aa.mater_cost 
 			, aa.outsc_cost 
 			, aa.deposit_cost 
 			, to_char(aa.deposit_dt , 'YYYY-MM-DD') as deposit_dt 
 			, aa.depositor 
-			, aa.quote_cost - aa.deposit_cost as out_cost
+			, coalesce(aa.quote_cost, 0) + coalesce(aa.surtax, 0) - coalesce(aa.deposit_cost, 0) as out_cost
 			, aa.cret_dt 
 			, aa.cret_id 
 			, aa.updt_dt 
@@ -220,8 +221,8 @@
 </select>
 
 <select id="getAddTotalCost" resultType="HashMap">
-select coalesce(sum(aa.quote_cost), 0) as quoteCost --금년 견적
-		, coalesce(sum(aa.quote_cost), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost --금년 누적미수금 
+select coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) as quoteCost --금년 견적
+		, coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost --금년 누적미수금 
 		, coalesce(sum(aa.deposit_cost), 0) as depositCost --금년 입금금액
 from web.adjust_add aa
 where extract('YEAR' from aa.deposit_dt) = extract('YEAR' from now())	
@@ -231,8 +232,8 @@ where extract('YEAR' from aa.deposit_dt) = extract('YEAR' from now())
 select coalesce(sum(aa.mater_cost), 0) as materCost --재료비
 		, coalesce(sum(aa.outsc_cost), 0) as outscCost --외주비
 		, coalesce(sum(aa.deposit_cost), 0) as depositCost  --입금
-		, coalesce(sum(aa.quote_cost), 0) as quoteCost -- 견적금
-		, coalesce(sum(aa.quote_cost), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost  --미수금
+		, coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) as quoteCost -- 견적금
+		, coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost  --미수금
 from web.adjust_add aa
 	where 1=1
 	<if test="inq != null">
@@ -387,7 +388,6 @@ ON CONFLICT(mon_mt , bldg_cd) DO
 UPDATE
 	SET tax_bill = #{taxBill},
 		add_cost = #{addCost},
-		out_cost = #{outCost},
 		over_cost = #{overCost},
 		deposit_cost = #{depositCost},
 		deposit_dt = #{depositDt}::timestamp,
@@ -409,6 +409,7 @@ insert into web.adjust_add (
 	,item_nm
 	,add_dt
 	,quote_cost
+	,surtax
 	,mater_cost
 	,outsc_cost
 	,deposit_cost
@@ -428,6 +429,7 @@ insert into web.adjust_add (
 	,#{itemNm}
 	,NOW()
 	,#{quoteCost}
+	,#{surtax}
 	,#{materCost}
 	,#{outscCost}
 	,#{depositCost}
@@ -449,6 +451,7 @@ update web.adjust_add set
 	, item_cd = #{itemCd}
 	, item_nm = #{itemNm}
 	, quote_cost = #{quoteCost}
+	, surtax = #{surtax}
 	, mater_Cost = #{materCost}
 	, outsc_cost = #{outscCost}
 	, deposit_cost = #{depositCost}
@@ -489,13 +492,151 @@ select  (ROW_NUMBER() OVER()) AS rownum
 	, aa.classifi_nm 
 	, aa.item_nm 
 	, TO_CHAR(aa.quote_cost , 'FM999,999,999,999,999') as quote_cost
-	, (select TO_CHAR(sum(quote_cost) , 'FM999,999,999,999,999') as total_cost 
-		from web.adjust_add 
-		where bldg_nm = #{bldgNm}
-		group by bldg_nm
-	) as total_cost
-from web.adjust_add aa 
+	, TO_CHAR(aa.surtax, 'FM999,999,999,999,999') as surtax
+	, TO_CHAR(coalesce(aa.quote_cost, 0)+coalesce(aa.surtax, 0) , 'FM999,999,999,999,999') as con_cost 
+	, aa2.quote_total_cost
+	, aa2.surtax_total_cost
+	, aa2.total_cost
+from web.adjust_add aa left join (select bldg_nm
+										, TO_CHAR(coalesce(sum(quote_cost), 0) , 'FM999,999,999,999,999') as quote_total_cost 
+										, TO_CHAR(coalesce(sum(surtax), 0) , 'FM999,999,999,999,999') as surtax_total_cost 
+										, TO_CHAR(coalesce(sum(quote_cost), 0)+coalesce(sum(surtax), 0) , 'FM999,999,999,999,999') as total_cost 
+										from web.adjust_add 
+										group by bldg_nm
+									) aa2 on aa2.bldg_nm = aa.bldg_nm 
 where aa.bldg_nm = #{bldgNm}
 </select>
+
+<insert id="saveMonExcel" parameterType="CalculateVo">
+INSERT INTO WEB.adjust_mt_manage 
+(area_cd
+  , area_nm 
+  , bldg_cd 
+  , bldg_nm 
+  , mon_mt 
+  , "zone" 
+  , surtax 
+  , tax_bill 
+  , over_cost 
+  , add_cost 
+  , con_cost
+  , deposit_cost 
+  , deposit_dt 
+  , depositor 
+  , pnum 
+  , memo 
+  , cret_dt
+  , cret_id
+  , updt_dt
+  , updt_id
+)
+select bb.area_cd
+	, bb.area_nm
+	, bb.bldg_cd
+	, bb.bldg_nm
+	, #{monMt}
+	, bb.zone
+	, bb.surtax
+	, #{taxBill}
+	, coalesce(oc.over_cost, 0)+ coalesce(bb.con_cost, 0) + coalesce(bb.surtax, 0) + coalesce(#{addCost}, 0) - coalesce(#{depositCost}, 0) as over_cost
+	, #{addCost} 
+	, bb.con_cost
+	, #{depositCost}
+	, #{depositDt}::timestamp
+	, #{depositor}
+	, #{pnum}
+	, #{memo}
+	, now()
+	, #{cretId}
+	, now()
+	, #{updtId}
+from web.bldg_bas bb left join (select * 
+								from web.adjust_mt_manage 
+									where mon_mt = #{monMt}
+								) amm on bb.bldg_cd = amm.bldg_cd
+					 left join (select bldg_cd, mon_mt, over_cost 
+								from web.adjust_mt_manage 
+								where ( bldg_cd, mon_mt ) in (select bldg_cd, max(mon_mt)
+																from web.adjust_mt_manage 
+																	where mon_mt <![CDATA[ < ]]> #{monMt}
+																group by bldg_cd)
+								) oc on bb.bldg_cd = oc.bldg_cd
+where bb.active_yn = 'Y'
+and bb.area_cd = #{areaCd}
+and bb.bldg_cd = #{bldgCd}
+ON CONFLICT(mon_mt , bldg_cd) DO
+UPDATE
+	SET tax_bill = #{taxBill},
+		add_cost = #{addCost},
+		over_cost = (select coalesce(oc.over_cost, 0)+ coalesce(bb.con_cost, 0) + coalesce(bb.surtax, 0) + coalesce(#{addCost}, 0) - coalesce(#{depositCost}, 0)
+					from web.bldg_bas bb left join (select * 
+													from web.adjust_mt_manage 
+														where mon_mt = #{monMt}
+													) amm on bb.bldg_cd = amm.bldg_cd
+										 left join (select bldg_cd, mon_mt, over_cost 
+													from web.adjust_mt_manage 
+													where ( bldg_cd, mon_mt ) in (select bldg_cd, max(mon_mt)
+																					from web.adjust_mt_manage 
+																						where mon_mt <![CDATA[ < ]]> #{monMt}
+																					group by bldg_cd)
+													) oc on bb.bldg_cd = oc.bldg_cd
+					where bb.active_yn = 'Y'
+					and bb.area_cd = #{areaCd}
+					and bb.bldg_cd = #{bldgCd}
+		),
+		deposit_cost = #{depositCost},
+		deposit_dt = #{depositDt}::timestamp,
+		depositor = #{depositor},
+		pnum = #{pnum},
+		memo = #{memo},
+		updt_dt		= now(),
+		updt_id		= #{updtId}
+</insert>
+
+<insert id="saveAddExcel" parameterType="CalculateVo">
+insert into web.adjust_add (
+	add_seq
+	,area_nm
+	,bldg_nm
+	,classifi_cd
+	,classifi_nm
+	,item_cd
+	,item_nm
+	,add_dt
+	,quote_cost
+	,surtax
+	,mater_cost
+	,outsc_cost
+	,deposit_cost
+	,deposit_dt
+	,depositor
+	,cret_dt
+	,cret_id 
+	,updt_dt
+	,updt_id
+)values(
+	(select max(add_seq)+1 from WEB.adjust_add) -- 시퀀스
+	,#{areaNm}
+	,#{bldgNm}
+	,#{classifiCd}
+	,(select classifi_nm from web.adjust_add_cd_bas where classifi_cd = #{classifiCd})
+	,#{itemCd}
+	,(select item_nm from web.adjust_add_cd_dtl where classifi_cd = #{classifiCd} and item_cd = #{itemCd})
+	,NOW()
+	,#{quoteCost}
+	,#{surtax}
+	,#{materCost}
+	,#{outscCost}
+	,#{depositCost}
+	,#{depositDt}::timestamp
+	,#{depositor}
+	,NOW()
+	,#{cretId}
+	,NOW()
+	,#{updtId}
+)
+</insert>
+
+
 	
 </mapper>

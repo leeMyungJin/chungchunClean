@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.chungchunClean.Service.CalculateService;
 import com.chungchunClean.Service.DailyService;
+import com.chungchunClean.vo.BldgVo;
 import com.chungchunClean.vo.CalculateVo;
 import com.chungchunClean.vo.DailyVo;
 import com.chungchunClean.vo.StockVo;
@@ -145,7 +146,43 @@ public class CalculateController {
     	calculateService.saveAdd(params);
         // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
     }
-
+    
+    @RequestMapping(value="/saveMonExcel", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public Integer saveMonExcel(@RequestBody List<CalculateVo> params, HttpServletRequest req){
+    	int cnt = 0;
+        for(CalculateVo vo : params){
+            vo.setCretId(req.getSession().getAttribute("staffId").toString());
+            vo.setUpdtId(req.getSession().getAttribute("staffId").toString());
+            try {
+            	calculateService.saveMonExcel(vo);
+                cnt++;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return cnt;
+    	
+    }
+    
+    @RequestMapping(value="/saveAddExcel", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public Integer saveAddExcel(@RequestBody List<CalculateVo> params, HttpServletRequest req){
+    	int cnt = 0;
+        for(CalculateVo vo : params){
+            vo.setCretId(req.getSession().getAttribute("staffId").toString());
+            vo.setUpdtId(req.getSession().getAttribute("staffId").toString());
+            try {
+            	calculateService.saveAddExcel(vo);
+                cnt++;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return cnt;
+    	
+    }
+  
     @RequestMapping(value="/saveUpdateAdd", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
     public void saveUpdateAdd(@RequestBody List<CalculateVo> params){
@@ -172,6 +209,8 @@ public class CalculateController {
     	List<CalculateVo> calculateList = calculateService.getPopSpecification(bldgNm);
     	model.addAttribute("cretDt", calculateList.get(0).getCretDt());
     	model.addAttribute("totalCost", calculateList.get(0).getTotalCost());
+    	model.addAttribute("quoteTotalCost", calculateList.get(0).getQuoteTotalCost());
+    	model.addAttribute("surtaxTotalCost", calculateList.get(0).getSurtaxTotalCost());
     	model.addAttribute("bldgNm", calculateList.get(0).getBldgNm());
     	model.addAttribute("addSpecInfo", calculateList);
     	

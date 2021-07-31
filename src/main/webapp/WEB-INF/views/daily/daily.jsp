@@ -29,6 +29,8 @@ function pageLoad(){
 	
 	
 	loadGridDailyList('init');
+	
+	getDailyList();
 }
 
 function enterkey() {
@@ -58,8 +60,9 @@ function loadGridDailyList(type, result){
 			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 150, align:"center"  },
 			      { binding: 'dongNum', header: '동번호', isReadOnly: true, width: 100, align:"center"  },
 			      { binding: 'cretDt', header: '업로드일자', isReadOnly: true, width: 120, align:"center"  },
-			      { binding: 'memo', header: '비고', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'memo', header: '근태특이사항', isReadOnly: true, width: '*', align:"center" },
 			      { binding: 'siteMntrUrl', header: '현장점검 URL', isReadOnly: true, width: 200, align:"center" },
+			      { binding: 'dmemo', header: '점검특이사항', isReadOnly: true, width: '*', align:"center" },
 			      { binding: 'postLocNm', header: '근태위치', isReadOnly: true, width: 200, align:"center" }
 			];
 		  
@@ -184,7 +187,7 @@ function copyUrl(){
             <section class="admin_section">
                 <h2 class="admin_title">일일점검</h2>
                 <div class="admin_utility">
-                    <form action="#" method="post">
+                    <form action="#" method="post" onsubmit="return false;">
                         <label for>조회일</label>
                         <input type="date" id="fromDate" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey();">
                         -
@@ -198,7 +201,7 @@ function copyUrl(){
                 <div class="admin_content">
                     <!-- 필터 영역 admin_filter-->
                     <div class="admin_filter">
-                        <form action="#" id="search_form" name="search_form">
+                        <form action="#" id="search_form" name="search_form" onsubmit="return false;">
                             <label for="con">검색조건</label>
                             <select name="con" id="con">
                                 <option value="all" selected="selected">전체</option>

@@ -30,6 +30,8 @@ public interface CalculateMapper  {
     
     public void saveMon(CalculateVo params);
     public void saveAdd(CalculateVo params);
+    public void saveMonExcel(CalculateVo params);
+    public void saveAddExcel(CalculateVo params);
     public void saveUpdateAdd(CalculateVo params);
     public void saveClassifi(CalculateVo params);
     public void saveItem(CalculateVo params);

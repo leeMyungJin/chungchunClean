@@ -25,6 +25,7 @@
 				, dm.updt_id
 				, dm.dong_num
 				, dm.post_loc_nm
+				, dm.dmemo
 		from web.daily_mntr dm left join web.bldg_bas bb on dm.bldg_cd = bb.bldg_cd 
 		where 1=1
 		<if test="inq != null">
