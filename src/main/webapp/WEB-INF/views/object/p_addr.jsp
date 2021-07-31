@@ -66,7 +66,7 @@ function init(){
 }
 </script>
 <body onload="init();">
-	<form id="form" name="form" method="post">
+	<form id="form" name="form" method="post" onsubmit="return false;">
 		<input type="hidden" id="confmKey" name="confmKey" value=""/>
 		<input type="hidden" id="returnUrl" name="returnUrl" value=""/>
 		<input type="hidden" id="resultType" name="resultType" value=""/>

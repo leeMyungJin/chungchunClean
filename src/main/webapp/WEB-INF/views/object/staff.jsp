@@ -24,6 +24,8 @@ function pageLoad(){
 	$('#staff').addClass("current");
 	
 	loadGridStaffList('init');
+	
+	getStaffList();
 }
 
 function enterkey() {
@@ -181,8 +183,8 @@ function saveNewStaff(){
 	//벨리데이션 체크 
 	var idRule1  = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 	var pwdRule1  = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{10,}$/;
-    var pwdRule2  = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{10,}$/;
-    var pwdRule3  = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/;
+    var pwdRule2  = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
+    var pwdRule3  = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     var emailRule = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
     var telRule   = /^[0-9]{11}$/;
     
@@ -191,7 +193,7 @@ function saveNewStaff(){
     	newStaffForm.password.focus();
     	return false;
     }else if(!pwdRule1.test(newStaffForm.password.value) && !pwdRule2.test(newStaffForm.password.value) && !pwdRule3.test(newStaffForm.password.value)){
-    	alert("비밀번호를 확인하시기 바랍니다.\n비밀번호는 영문자(대,소문자), 숫자를 포함하여 최소 10자 이상이어야 합니다.");
+    	alert("비밀번호를 확인하시기 바랍니다.\n비밀번호는 영문자(대,소문자), 숫자를 포함하여 최소 10자 이상,\n 혹은 영문자(대,소문자), 숫자, 특수문자를 포함하여 최소 8자 이상이어야 합니다.");
     	newStaffForm.password.focus();
     	return false;
     }else if(!emailRule.test(newStaffForm.mail.value)){ //이메일
@@ -315,13 +317,13 @@ function updateStaff(){
 	
 	//벨리데이션 체크 
 	var pwdRule1  = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{10,}$/;
-    var pwdRule2  = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{10,}$/;
-    var pwdRule3  = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/;
+    var pwdRule2  = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
+    var pwdRule3  = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     var emailRule = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
     var telRule   = /^[0-9]{11}$/;
     
     if(updateStaffForm.password.value != '' && !pwdRule1.test(updateStaffForm.password.value) && !pwdRule2.test(updateStaffForm.password.value) && !pwdRule3.test(updateStaffForm.password.value)){
-    	alert("비밀번호를 확인하시기 바랍니다.\n비밀번호는 영문자(대,소문자), 숫자를 포함하여 최소 10자 이상이어야 합니다.");
+    	alert("비밀번호를 확인하시기 바랍니다.\n비밀번호는 영문자(대,소문자), 숫자를 포함하여 최소 10자 이상,\n 혹은 영문자(대,소문자), 숫자, 특수문자를 포함하여 최소 8자 이상이어야 합니다.");
     	updateStaffForm.password.focus();
     	return false;
     }else if(!emailRule.test(updateStaffForm.mail.value)){ //이메일
@@ -412,7 +414,7 @@ function exportExcel(){
                 <div class="admin_content">
                     <!-- 필터 영역 admin_filter-->
                     <div class="admin_filter">
-                        <form action="#" id="search_form" name="search_form">
+                        <form action="#" id="search_form" name="search_form" onsubmit="return false;">
                             <label for="con">검색조건</label>
                             <select name="con" id="con">
                                 <option value="all" selected="selected">전체</option>
@@ -455,7 +457,7 @@ function exportExcel(){
             </div>
             <div class="popup_inner">
                 <dfn>필수항목 *</dfn>
-                <form id="newStaffForm">
+                <form id="newStaffForm" onsubmit="return false;">
                     <div class="row">
                         <label for="id">ID<i>*</i></label>
                         <input type="text" id="id" name="id" required onchange="dupCheckIdFlag = false;">
@@ -498,7 +500,7 @@ function exportExcel(){
             </div>
             <div class="popup_inner">
                 <dfn>필수항목 *</dfn>
-                <form id="updateStaffForm">
+                <form id="updateStaffForm" onsubmit="return false;">
                     <div class="row">
                         <label for="active">활성화</label>
                         <input type="checkbox" id="active" name="active">체크 시, 활성화

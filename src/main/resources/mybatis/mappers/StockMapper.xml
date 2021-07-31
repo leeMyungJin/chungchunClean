@@ -231,16 +231,16 @@ set quantity = (select quantity
 				and item_cd = #{itemCd} ) 
 				<choose>
 					<when test='classifiCd == "S"'>
-						- #{sarQuantity}::numeric
+						- #{sarQuantity}
 					</when>
 					<when test='classifiCd == "R"'>
-						+ #{sarQuantity}::numeric
+						+ #{sarQuantity}
 					</when>
 					<when test="classifiCd == 'RS'">
-						- #{returnQuantity}::numeric
+						- #{returnQuantity}
 					</when>
 					<when test="classifiCd == 'RR'">
-						+ #{returnQuantity}::numeric
+						+ #{returnQuantity}
 					</when>
 				</choose>
 				
@@ -280,13 +280,13 @@ values(
 			and item_cd = #{itemCd}) -- 물품재고
 		, #{classifiCd} -- 분류코드
 		, (select code_dtl_nm from WEB.code where code_cd = 'classifi' and code_dtl_cd = #{classifiCd})-- 분류명
-		, replace(#{sarQuantity}, '', null)::numeric -- 입출고수량
-		, replace(#{returnQuantity}, '', null)::numeric -- 반품입출고수량
+		, #{sarQuantity} -- 입출고수량
+		, #{returnQuantity} -- 반품입출고수량
 		, NOW() -- 등록일자
 		, #{cretId} -- 등록자
 		, NOW() -- 수정일자
 		, #{updtId} -- 수정자
-		, #{cretId} -- 등록자명
+		, #{cretId} -- 등록자명 
 )
 </insert>
 
@@ -296,8 +296,8 @@ UPDATE web.category_dtl_sar
 					from web.category_dtl 
 					where l_categy_cd = #{lCategyCd}
 					and item_cd = #{itemCd}) -- 물품재고
-		, sar_quantity = replace(#{sarQuantity}, '', null)::numeric -- 입출고수량
-		, return_quantity = replace(#{returnQuantity}, '', null)::numeric -- 반품입출고수량
+		, sar_quantity = #{sarQuantity} -- 입출고수량
+		, return_quantity = #{returnQuantity} -- 반품입출고수량
 		, updt_dt		= now()
 		, updt_id		= #{updtId}
 WHERE cate_sar_seq = #{cateSarSeq}::numeric
@@ -311,18 +311,20 @@ set quantity = (select quantity
 				and item_cd = #{itemCd} ) 
 				<choose>
 					<when test='classifiCd == "S"'>
-						+ #{sarQuantity}::numeric
+						+ #{sarQuantity} - (select sar_quantity
 					</when>
 					<when test='classifiCd == "R"'>
-						- #{sarQuantity}::numeric
+						- #{sarQuantity} + (select sar_quantity
 					</when>
 					<when test="classifiCd == 'RS'">
-						+ #{returnQuantity}::numeric
+						+ #{returnQuantity} - (select return_quantity
 					</when>
 					<when test="classifiCd == 'RR'">
-						- #{returnQuantity}::numeric
+						- #{returnQuantity} + (select return_quantity
 					</when>
 				</choose>
+				from web.category_dtl_sar 
+				where cate_sar_seq = #{cateSarSeq}::numeric )
 				
 where l_categy_cd = #{lCategyCd}
 and item_cd = #{itemCd}

@@ -53,15 +53,16 @@ function pageLoad(){
 	
 	tab_panel('panel_mon','panel_add');
 	
-	var today = _getFormatDate(new Date());
-	$('#fromDate').val(today);
-	$('#toDate').val(today);
-	$('#fromDate').attr('max',today);
-	$('#toDate').attr('max',today);
+	var today = _getFormatDate(new Date(), 'm');
+	$('#date').val(today);
+	$('#date2').val(today);
 	
 	loadGridList('init');
 	getMonTotalCost();
 	getAddTotalCost();
+	
+	getMonList();
+	getAddList();
 }
 
 function tab_panel(showTab, hideTab){
@@ -114,8 +115,9 @@ function loadGridList(type, result){
 			      { binding: 'addCost', header: '추가금', isReadOnly: false, width: 150, align:"center", aggregate: 'Sum' },
 			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum'  },
 			      { binding: 'overCost', header: '이월금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
-			      { binding: 'overCostTemp', header: '이월금 Temp', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' , visible: false},
-			      { binding: 'depositCost', header: '관리비입금', isReadOnly: false, width: 150, align:"center", aggregate: 'Sum' },
+			      { binding: 'overCostTemp', header: '이월금 Temp', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', visible: false},
+			      { binding: 'depositCost', header: '관리비입금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
+			      { binding: 'add', header: '추가입금', isReadOnly: false, width: 150, align:"center" },
 			      { binding: 'depositDt', header: '입금날짜', isReadOnly: false, width: 150, align:"center" },
 			      { binding: 'depositor', header: '입금자명', isReadOnly: false, width: 100, align:"center" },
 			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 150, align:"center" },
@@ -150,16 +152,24 @@ function loadGridList(type, result){
 	                    
 	                }
 	                
-	                if(col.binding == "depositCost"){
+	                if(col.binding == "add"){
+	                	//관리비입금
+	                	e.getRow().dataItem.depositCost = Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost))
+	                									  + Number((s.activeEditor.value  == null ? 0 : s.activeEditor.value));
+	                	
 	                	//미수금 = 관리비(계약금) + 부가세 +  추가금 - 관리비입금
 	                    e.getRow().dataItem.outCost = Number((e.getRow().dataItem.conCost == null ? 0 : e.getRow().dataItem.conCost))
 	                    							+ Number((e.getRow().dataItem.surtax == null ? 0 : e.getRow().dataItem.surtax))
 	                    							+ Number((e.getRow().dataItem.addCost == null ? 0 : e.getRow().dataItem.addCost))
-	                    							- Number((s.activeEditor.value == null ? 0 : s.activeEditor.value));
+	                    							- Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost));
 	                	
 	                	//이월금 = 누적미수금
-	                    e.getRow().dataItem.overCost = e.getRow().dataItem.overCostTemp + e.getRow().dataItem.outCost;
+	                    e.getRow().dataItem.overCost = eNumber((e.getRow().dataItem.overCostTemp == null ? 0 : e.getRow().dataItem.overCostTemp))
+														+ Number((e.getRow().dataItem.outCost == null ? 0 : e.getRow().dataItem.outCost))
+						
 	                    if(e.getRow().dataItem.outCost < 0)e.getRow().dataItem.outCost = 0;
+	                    
+	                    s.activeEditor.value = null;
 	                	
 	                }else if(col.binding == "addCost"){
 	                	//미수금 = 관리비(계약금) + 부가세 + 추가금 - 관리비입금
@@ -169,7 +179,9 @@ function loadGridList(type, result){
 													- Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost));
 	                	
 	                	//이월금 = 누적미수금
-	                    e.getRow().dataItem.overCost = e.getRow().dataItem.overCostTemp + e.getRow().dataItem.outCost;
+	                    e.getRow().dataItem.overCost = Number((e.getRow().dataItem.overCostTemp == null ? 0 : e.getRow().dataItem.overCostTemp))
+														+ Number((e.getRow().dataItem.outCost == null ? 0 : e.getRow().dataItem.outCost))
+	                	
 	                    if(e.getRow().dataItem.outCost < 0)e.getRow().dataItem.outCost = 0;
 	                	
 	                }else if(col.binding == "depositDt"){
@@ -224,7 +236,8 @@ function loadGridList(type, result){
 			      { binding: 'quoteCost', header: '견적', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum'  },
 			      { binding: 'materCost', header: '재료비', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum'  },
 			      { binding: 'outscCost', header: '외주', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum' },
-			      { binding: 'depositCost', header: '입금', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum' },
+			      { binding: 'depositCost', header: '입금', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum' },
+			      { binding: 'add', header: '추가입금', isReadOnly: false, width: 150, align:"center" },
 			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum'},
 			      { binding: 'depositDt', header: '입금날짜', isReadOnly: false, width: 150, align:"center" },
 			      { binding: 'depositor', header: '입금자명', isReadOnly: false, width: 100, align:"center" }
@@ -245,7 +258,7 @@ function loadGridList(type, result){
 	            cellEditEnding: function (s, e) {
 	                var col = s.columns[e.col];
 	                var inven = s.columns[e.col - 1];
-	                if (col.binding == 'quoteCost' || col.binding == 'materCost' || col.binding == 'outscCost' || col.binding == 'depositCost') {
+	                if (col.binding == 'quoteCost' || col.binding == 'materCost' || col.binding == 'outscCost' || col.binding == 'add') {
 	                    var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
 	                    if( !wijmo.isNumber(value)){
 	                        e.cancel = true;
@@ -256,11 +269,20 @@ function loadGridList(type, result){
 	                    
 	                   //미수금 
 	                   if (col.binding == 'quoteCost') {
-	                	   e.getRow().dataItem.outCost = s.activeEditor.value - e.getRow().dataItem.depositCost;
+	                	   e.getRow().dataItem.outCost = Number((s.activeEditor.value == null ? 0 : s.activeEditor.value))
+														- Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost))
+	                	   
 	                	   if(isNaN(e.getRow().dataItem.outCost)) e.getRow().dataItem.outCost = 0;
-	                   }else if(col.binding == 'depositCost'){
-	                	   e.getRow().dataItem.outCost = e.getRow().dataItem.quoteCost - s.activeEditor.value;
+	                	   
+	                   }else if(col.binding == 'add'){
+	                	   e.getRow().dataItem.depositCost = Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost))
+															+ Number((s.activeEditor.value == null ? 0 : s.activeEditor.value))
+	                	   
+	                	   e.getRow().dataItem.outCost = Number((e.getRow().dataItem.quoteCost == null ? 0 : e.getRow().dataItem.quoteCost))
+														- Number((e.getRow().dataItem.depositCost == null ? 0 : e.getRow().dataItem.depositCost))
+	                	   
 	                	   if(isNaN(e.getRow().dataItem.outCost)) e.getRow().dataItem.outCost = 0;
+	                	   s.activeEditor.value = null;
 	                   }
 	                   
 	                }else if(col.binding == "depositDt"){
@@ -990,9 +1012,6 @@ function saveVal(type, item){
 		}
 	}else if(type == "add"){
 		
-		console.log(item.depositCost );
-		console.log(item);
-		
 		if(item.classifiCd == null || item.classifiCd == ''){
 			alert("분류를 입력해주세요.");
 			return false;
@@ -1167,7 +1186,7 @@ function closePop(type){
 	$('.popup').removeClass('is-visible');
 }
 
-function exportExcel(){
+function exportExcel(type){
 	if(type == 'mon'){
 		var gridView = monGrid.collectionView;
 		var oldPgSize = gridView.pageSize;
@@ -1232,6 +1251,71 @@ function downTemplate(type){
 	}
 }
 
+//업로드 파일 찾기
+function findFile(type){
+	if(type == 'mon'){
+		$("#monIimportFile").val("");
+	    document.all.monImportFile.click();
+	    
+	}else if(type == 'add'){
+		$("#addIimportFile").val("");
+	    document.all.addImportFile.click();	
+	}
+}
+
+//엑셀 업로드
+function importExcel(type){
+	if(type == 'mon'){
+		 $("#monDiv").hide();
+		   	monView = new wijmo.collections.CollectionView(null, {
+		            pageSize: 999
+		    });
+		    $("#monExcelDiv").show();
+		        var inputEle =  document.querySelector('#monImportFile');
+		        if (inputEle.files[0]) {
+		            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(monExcelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
+		        // 데이터 바인딩할 함수 호출
+		        bindImportedDataIntoModel();
+		        monExcelGrid.columns.forEach(col => {
+		          col.width = 120,
+		          col.align = "center"
+		        })
+		      });
+		    }
+	        
+	}else if(type == 'add'){
+		$("#addDiv").hide();
+	    addView = new wijmo.collections.CollectionView(null, {
+	            pageSize: 999
+	    });
+	    $("#addExcelDiv").show();
+	        var inputEle =  document.querySelector('#addImportFile');
+	        if (inputEle.files[0]) {
+	            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(addExcelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
+	        // 데이터 바인딩할 함수 호출
+	        bindImportedDataIntoModel();
+	        addExcelGrid.columns.forEach(col => {
+	          col.width = 120,
+	          col.align = "center"
+	        })
+	      });
+	    }
+         // 체크박스 생성
+        addExcelSelector = new wijmo.grid.selector.Selector(addExcelGrid);
+        addExcelSelector.column = addExcelGrid.columns[0];	
+	}
+}
+
+//이벤트 처리 
+$(function(){
+    $("#monImportFile").on('change', function (params) {
+        importExcel('mon');
+    });
+    
+    $("#addImportFile").on('change', function (params) {
+        importExcel('add');
+    });
+});
 
 </script>
 
@@ -1282,7 +1366,7 @@ function downTemplate(type){
                     <div class="admin_content">
                         <!-- 필터 영역 admin_filter-->
                         <div class="admin_filter">
-                            <form action="#" id="search_form" name="search_form">
+                            <form action="#" id="search_form" name="search_form" onsubmit="return false;">
                                 <label for="con">검색조건</label>
                                 <select name="con" id="con">
                                     <option value="all" selected="selected">전체</option>

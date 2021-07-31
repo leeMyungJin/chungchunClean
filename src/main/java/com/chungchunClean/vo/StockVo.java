@@ -19,8 +19,8 @@ public class StockVo {
     private String cateSarSeq; 				//입출이력 시퀀스
     private String classifiCd; 			//분류코드
 	private String classifiNm; 			//분류명
-	private String sarQuantity; 		//입출고수량
-	private String returnQuantity; 	//반품입출고수량
+	private Integer sarQuantity; 		//입출고수량
+	private Integer returnQuantity; 	//반품입출고수량
 	private String cretNm; 				//등록자명
 	public String getlCategyCd() {
 		return lCategyCd;
@@ -118,16 +118,16 @@ public class StockVo {
 	public void setClassifiNm(String classifiNm) {
 		this.classifiNm = classifiNm;
 	}
-	public String getSarQuantity() {
+	public Integer getSarQuantity() {
 		return sarQuantity;
 	}
-	public void setSarQuantity(String sarQuantity) {
+	public void setSarQuantity(Integer sarQuantity) {
 		this.sarQuantity = sarQuantity;
 	}
-	public String getReturnQuantity() {
+	public Integer getReturnQuantity() {
 		return returnQuantity;
 	}
-	public void setReturnQuantity(String returnQuantity) {
+	public void setReturnQuantity(Integer returnQuantity) {
 		this.returnQuantity = returnQuantity;
 	}
 	public String getCretNm() {
@@ -145,5 +145,7 @@ public class StockVo {
 				+ classifiNm + ", sarQuantity=" + sarQuantity + ", returnQuantity=" + returnQuantity + ", cretNm="
 				+ cretNm + "]";
 	}
+	
+	
 	
 }

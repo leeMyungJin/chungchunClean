@@ -58,7 +58,7 @@ function pageLoad(){
 	
 	$('#income').addClass("current");
 	
-	var today = _getFormatDate(new Date());
+	var today = _getFormatDate(new Date(), 'm');
 	$('#fromDate').val(today);
 	$('#toDate').val(today);
 	$('#fromDate').attr('max',today);
@@ -66,6 +66,8 @@ function pageLoad(){
 	
 	loadGridIncomeList('init');
 	getIncomeTodayCost();
+	
+	getIncomeList();
 }
 
 function enterkey() {
@@ -89,7 +91,7 @@ function loadGridIncomeList(type, result){
 		    });
 		   
 		   incomeColumns = [
-			      { binding: 'depositDt', header: '일자', isReadOnly: true, width: 150, align:"center", allowMerging: true  },
+			      { binding: 'depositDt', header: '일자', isReadOnly: true, width: 220, align:"center", allowMerging: true  },
 			      { binding: 'type', header: '분야', isReadOnly: true, width: 150, align:"center", allowMerging: true },
 			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 150, align:"center", allowMerging: true },
 			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 200, align:"center", allowMerging: false  },
@@ -127,6 +129,7 @@ function loadGridIncomeList(type, result){
 		  //월관리
 		   incomeView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
+		       ,groupDescriptions: ['depositDt']
 		   });
 		  incomeGridPager.cv = incomeView;
 		  incomeGrid.itemsSource = incomeView;
@@ -243,7 +246,7 @@ function exportExcel(){
                     </dl>
                 </div>
                 <div class="admin_utility">
-                    <form action="#" method="post">
+                    <form action="#" method="post" onsubmit="return false;">
                         <label for>조회월</label>
                         <input type="month" id="fromDate" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey();">
                      	   	-
@@ -257,7 +260,7 @@ function exportExcel(){
                 <div class="admin_content">
                     <!-- 필터 영역 admin_filter-->
                     <div class="admin_filter">
-                        <form action="#" id="search_form" name="search_form">
+                        <form action="#" id="search_form" name="search_form" onsubmit="return false;">
                             <label for="con">검색조건</label>
                             <select name="con" id="con">
                                 <option value="all" selected="selected">전체</option>

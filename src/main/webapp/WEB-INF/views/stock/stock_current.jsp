@@ -35,6 +35,7 @@ function pageLoad(){
 	$('#toDate').attr('max',today);
 	
 	loadGridCurrentList('init');
+	getCurrentList();
 }
 
 function enterkey() {
@@ -163,22 +164,22 @@ function loadGridCurrentList(type, result){
 		                    //재고수량 계산
 		                    var quantity = s.getCellData(e.row, 'quantity');
 		                	if(classifiCd == "S" || classifiCd == "RS"){
-		                		if(e.getRow().dataItem.quantity + Number(value) < 0){
-			                    	alert("재고수량은 0보다 커야 합니다.");
-		                            s.activeEditor.value = s.getCellData(e.row, e.col); // 입력값 old값으로 초기화
-		                            return false;
-			                    }else{
-			                    	s.setCellData(e.row, 'quantity', Number(quantity) + Number(value));
-			                    }
+		                		if(s.getCellData(e.row, e.col) != '' && s.getCellData(e.row, e.col) != null){
+		                			s.setCellData(e.row, 'quantity', Number(quantity) - s.getCellData(e.row, e.col) + Number(value));
+		                			
+		                		}else{
+		                			s.setCellData(e.row, 'quantity', Number(quantity) + Number(value));
+		                			
+		                		}
 		                		
 		                    }else if(classifiCd == "R" || classifiCd == "RR"){
-		                    	if(e.getRow().dataItem.quantity - Number(value) < 0){
-			                    	alert("재고수량은 0보다 커야 합니다.");
-		                            s.activeEditor.value = s.getCellData(e.row, e.col); // 입력값 old값으로 초기화
-		                            return false;
-			                    }else{
-			                    	s.setCellData(e.row, 'quantity', Number(quantity) - Number(value));
-			                    }
+		                    	if(s.getCellData(e.row, e.col) != '' && s.getCellData(e.row, e.col) != null){
+		                    		s.setCellData(e.row, 'quantity', Number(quantity) + s.getCellData(e.row, e.col) - Number(value));
+		                			
+		                		}else{
+		                			s.setCellData(e.row, 'quantity', Number(quantity) - Number(value));
+		                			
+		                		}
 		                    }
 		                	
 		                //카테고리 변경시 이하 값 초기화
@@ -418,6 +419,10 @@ function saveGrid(){
     var addRows = [];
 	var editRows = [];
 	var rows = [];
+	
+	console.log("saveGrid");
+	console.log(addItem);
+	console.log(editItem);
 
     for(var i=0; i< addItem.length; i++){
     	if(!saveVal(addItem[i])) return false;
@@ -427,11 +432,13 @@ function saveGrid(){
     }
 	
 	for(var i =0; i< editItem.length; i++){
-		if(!saveVal(addItem[i])) return false;
+		if(!saveVal(editItem[i])) return false;
 		
     	editRows.push(editItem[i]);
     	rows.push(editItem[i]);
     }
+	
+	console.log(rows);
     
 	wijmo.Control.getControl("#editGrid").refresh(true);
     if(confirm("변경한 내용을 저장 하시겠습니까??")){
@@ -442,6 +449,8 @@ function saveGrid(){
             contentType: 'application/json',
             data: JSON.stringify(rows),
             success : function(result) {
+            	console.log('saveStockCurrentQuantity');
+            	console.log(rows);
             	insertUpdateGrid(addRows, editRows);
             },
             error : function(request,status,error) {
@@ -481,6 +490,8 @@ function insertUpdateGrid(addRows, editRows){
         contentType: 'application/json',
         data: JSON.stringify(addRows),
         success : function(result) {
+           	console.log('saveStockCurrent');
+           	console.log(addRows);
             saveUpdateGrid(editRows);
         },
         error : function(request,status,error) {
@@ -497,6 +508,8 @@ function saveUpdateGrid(editRows){
         contentType: 'application/json',
         data: JSON.stringify(editRows),
         success : function(result) {
+        	console.log('saveUpdateStockCurrent');
+        	console.log(editRows);
             alert("저장되었습니다.");
             getCurrentList();
         },
@@ -535,7 +548,7 @@ function saveUpdateGrid(editRows){
                     </dl>
                 </div>
                 <div class="admin_utility">
-                    <form action="#" method="post">
+                    <form action="#" method="post" onsubmit="return false;">
                         <label for>조회일</label>
                          <input type="date" id="fromDate" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey();">
                         -
@@ -549,7 +562,7 @@ function saveUpdateGrid(editRows){
                 <div class="admin_content">
                     <!-- 필터 영역 admin_filter-->
                     <div class="admin_filter">
-                        <form action="#" id="search_form" name="search_form">
+                        <form action="#" id="search_form" name="search_form" onsubmit="return false;">
                             <label for="con">검색조건</label>
                             <select name="con" id="con">
                                 <option value="all" selected="selected">전체</option>
@@ -557,8 +570,8 @@ function saveUpdateGrid(editRows){
                                 <option value="product">물품명</option>
                                 <option value="person">담당자</option>
                             </select>
-                            <label for="inq" onkeyup="enterkey();"></label>
-                            <input type="text" id="inq" placeholder=",로 다중검색 가능">
+                            <label for="inq"></label>
+                            <input type="text" id="inq" placeholder=",로 다중검색 가능"  onkeyup="enterkey();">
                             <button type="button" onClick="getCurrentList();">조회</button>
                         </form>
                     </div>

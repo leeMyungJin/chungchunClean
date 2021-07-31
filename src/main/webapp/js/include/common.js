@@ -198,12 +198,19 @@ function _chFutureDate(date) {
 
 //날짜포맷 yyyy-MM-dd 변환
 //input : date 포맷 
-function _getFormatDate(date) {
-    var year = date.getFullYear();
-    var month = ("0" + (1 + date.getMonth())).slice(-2);
-    var day = ("0" + date.getDate()).slice(-2);
+function _getFormatDate(date, type) {
+	if(type == 'm'){
+		var year = date.getFullYear();
+	    var month = ("0" + (1 + date.getMonth())).slice(-2);
 
-    return year + "-" + month + "-" + day;
+	    return year + "-" + month;
+	}else{
+		var year = date.getFullYear();
+	    var month = ("0" + (1 + date.getMonth())).slice(-2);
+	    var day = ("0" + date.getDate()).slice(-2);
+
+	    return year + "-" + month + "-" + day;
+	}
 }
 
 //페이지 클릭이벤트 

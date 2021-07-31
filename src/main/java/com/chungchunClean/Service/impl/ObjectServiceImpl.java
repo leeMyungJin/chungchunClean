@@ -84,8 +84,8 @@ public class ObjectServiceImpl implements ObjectService {
 	
 	@Override
 	public List<CodeVo> getBuildingQrList(HashMap<String, Object> params) {
-		if(params.get("inq") != null)
-			params.replace("inq", Util.makeForeach((String)params.get("inq"), ","));
+		if(params.get("selectBldg") != null)
+			params.replace("selectBldg", Util.makeForeach((String)params.get("selectBldg"), ","));
 		return objectMapper.getBuildingQrList(params);
 	}
 

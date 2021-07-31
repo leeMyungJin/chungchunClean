@@ -28,6 +28,8 @@ function pageLoad(){
         importExcel();
     });
     $("#essential").trigger("click");
+    
+    getStockList();
 }
 
 function sessionCheck(){
@@ -407,7 +409,7 @@ function saveGrid(){
                 <div class="admin_content">
                     <!-- 필터 영역 admin_filter-->
                     <div class="admin_filter">
-                        <form action="#" id="search_form" name="search_form">
+                        <form action="#" id="search_form" name="search_form" onsubmit="return false;">
                             <label for="con">검색조건</label>
                             <select name="con" id="con">
                                 <option value="all" selected="selected">전체</option>
@@ -415,7 +417,7 @@ function saveGrid(){
                                 <option value="item">물품명</option>
                             </select>
                             <label for="inq"></label>
-                            <input type="text" id="inq" placeholder=",로 다중검색 가능" onclick="enterkey()">
+                            <input type="text" id="inq" placeholder=",로 다중검색 가능" onkeyup="enterkey();">
                             <button type="button" onclick ="getStockList();">조회</button>
                             <input type="checkbox" id="essential" name="essential" onChange = "getStockList();">
                             <label for="essential">추가입고 필요항목만 보기</label>

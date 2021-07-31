@@ -15,7 +15,7 @@
 		, amm.tax_bill
 		, amm.add_cost  
 		, coalesce(bb.con_cost, 0) + coalesce(bb.surtax, 0) + coalesce(amm.add_cost, 0) - coalesce(amm.deposit_cost, 0) as out_cost --계약금+부가세+추가금-입금 = 미수금
-		, coalesce(amm.over_cost, bb.con_cost) as over_cost 
+		, coalesce(oc.over_cost, 0)+ coalesce(bb.con_cost, 0) + coalesce(bb.surtax, 0) + coalesce(amm.add_cost, 0) - coalesce(amm.deposit_cost, 0) as over_cost		
 		, oc.over_cost as over_cost_temp 
 		, amm.deposit_cost 
 		, to_char(amm.deposit_dt , 'YYYY-MM-DD') as deposit_dt 
@@ -78,7 +78,7 @@
 	<if test="fromDate != null and toDate != null">
 		and amm.cret_dt between #{fromDate}::timestamp and (to_date(#{toDate}, 'YYYY-MM-DD')+1)::timestamp
 	</if>
-	ORDER BY amm.mon_mt, bb.area_cd, bb.area_nm, amm.deposit_dt
+	ORDER BY amm.mon_mt, bb.area_cd, bb.bldg_cd
 </select>
 
 

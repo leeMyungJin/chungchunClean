@@ -28,15 +28,16 @@ function pageLoad(){
 	
 	tab_panel('panel_mon','panel_add');
 	
-	var today = _getFormatDate(new Date());
-	$('#fromDate').val(today);
-	$('#toDate').val(today);
-	$('#fromDate').attr('max',today);
-	$('#toDate').attr('max',today);
+	var today = _getFormatDate(new Date(), 'm');
+	$('#date').val(today);
+	$('#date2').val(today);
 	
 	loadGridMonList('init');
 	getMonTotalCost();
 	getAddTotalCost();
+	
+	getMonList();
+	getAddList();
 	
 }
 
@@ -234,8 +235,7 @@ function getMonList(){
 	var param = {
 		con 	: $('#con').val()
 		, inq 	: $('#inq').val()
-		, fromDate : $('#fromDate').val()
-		, toDate : $('#toDate').val()
+		, date : $('#date').val()
 	};
 	
 	$.ajax({
@@ -280,7 +280,7 @@ function getAddList(){
 	var param = {
 		con 	: $('#con2').val()
 		, inq 	: $('#inq2').val()
-		, date : $('#date').val()
+		, date : $('#date2').val()
 	};
 	
 	console.log(param);
@@ -392,10 +392,8 @@ function addExportExcel(){
                         </dl>
                     </div>
                     <div class="admin_utility">
-                         <label for>조회일</label>
-                         <input type="date" id="fromDate" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey('mon');">
-                  	   	-
-                    	 <input type="date" id="toDate" onfocusout="_fnisDate(this.value, this.id)" onkeyup="enterkey('mon');">
+                         <label for="date">조회월</label>
+                         <input type="month" id="date" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey('mon');">
                          <button type="button" class="admin_utility_btn" onClick="getMonList();">조회</button>
                         
                         <div class="admin_btn">
@@ -405,7 +403,7 @@ function addExportExcel(){
                     <div class="admin_content">
                         <!-- 필터 영역 admin_filter-->
                         <div class="admin_filter">
-                            <form action="#" id="search_form" name="search_form">
+                            <form action="#" id="search_form" name="search_form" onsubmit="return false;">
                                 <label for="con">검색조건</label>
                                 <select name="con" id="con">
                                     <option value="all" selected="selected">전체</option>
@@ -466,8 +464,8 @@ function addExportExcel(){
                         </dl>
                     </div>
                     <div class="admin_utility">
-                        <label for="Date">조회월</label>
-                        <input type="month" id="date" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey('add');">
+                        <label for="date2">조회월</label>
+                        <input type="month" id="date2" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey('add');">
                         <button class="admin_utility_btn" onClick="getAddList();">조회</button>
                         
                         <div class="admin_btn">
@@ -477,7 +475,7 @@ function addExportExcel(){
                     <div class="admin_content">
                         <!-- 필터 영역 admin_filter-->
                         <div class="admin_filter">
-                            <form action="#" id="search_form" name="search_form">
+                            <form action="#" id="search_form" name="search_form" onsubmit="return false;">
                                 <label for="con2">검색조건</label>
                                 <select name="con2" id="con2">
                                     <option value="all" selected="selected">전체</option>
@@ -503,8 +501,8 @@ function addExportExcel(){
                                     <dd id="addlableOutscCost">0원</dd>
                                 </dl>
                                 <dl>
-                                    <dt>이월금</dt>
-                                    <dd id="addlableOverCost">0원</dd>
+                                    <dt>미수금</dt>
+                                    <dd id="addlableOutCost">0원</dd>
                                 </dl>
                                 <dl>
                                     <dt>입금금액</dt>
