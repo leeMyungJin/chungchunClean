@@ -15,6 +15,7 @@ public class StaffVo {
 	private String updtDt;		//수정일 
 	private String updtId;		//수정자 
 	private String passwordKey; //비밀번호 솔트
+	private String position; //직급 
 	public String getStaffId() {
 		return staffId;
 	}
@@ -99,15 +100,19 @@ public class StaffVo {
 	public void setPasswordKey(String passwordKey) {
 		this.passwordKey = passwordKey;
 	}
-	
+	public String getPosition() {
+		return position;
+	}
+	public void setPosition(String position) {
+		this.position = position;
+	}
 	@Override
 	public String toString() {
 		return "StaffVo [staffId=" + staffId + ", staffPass=" + staffPass + ", staffName=" + staffName + ", staffPnum="
 				+ staffPnum + ", staffEmail=" + staffEmail + ", memo=" + memo + ", activeYn=" + activeYn + ", adminYn="
 				+ adminYn + ", lateassDt=" + lateassDt + ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt="
-				+ updtDt + ", updtId=" + updtId + ", passwordKey=" + passwordKey + "]";
+				+ updtDt + ", updtId=" + updtId + ", passwordKey=" + passwordKey + ", position=" + position + "]";
 	}
-	
 	
 	
 	

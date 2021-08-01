@@ -78,6 +78,7 @@ public class ObjectController {
         staffInfo.setStaffPnum(req.getParameter("telPhone"));
         staffInfo.setStaffEmail((req.getParameter("mail")));
         staffInfo.setMemo(req.getParameter("memo"));
+        staffInfo.setPosition(req.getParameter("position"));
         staffInfo.setPasswordKey(password_key);
        // staffInfo.setCretId(session.getAttribute("id").toString());
         staffInfo.setCretId("testUser");

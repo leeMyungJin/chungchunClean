@@ -45,6 +45,9 @@
 <script src="../wijmo/Dist/controls/wijmo.grid.grouppanel.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.barcode.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.barcode.common.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.chart.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.chart.interaction.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.chart.animation.min.js"></script>
 <script src="../wijmo/Dist/jszip.min.js"></script>
 
 <!-- Wijmo custom culture (옵션, 원하는 문화권을 추가) -->

@@ -55,6 +55,7 @@ function loadGridStaffList(type, result){
 		      { binding: 'activeYn', header: '활성화', isReadOnly: true, width: 60, align:"center"  },
 		      { binding: 'staffPnum', header: '전화번호', isReadOnly: true, width: 120, align:"center"  },
 		      { binding: 'staffEmail', header: '이메일', isReadOnly: true, width: 200, align:"center"  },
+		      { binding: 'position', header: '직급', isReadOnly: true, width: 100, align:"center" },
 		      { binding: 'memo', header: '메모', isReadOnly: true, width: '*', align:"center" },
 		      { binding: 'lateassDt', header: '최근접속일', isReadOnly: true, width: 100 , align:"center" },
 		      { binding: 'cretDt', header: '계정생성일', isReadOnly: true, width: 100 , align:"center" },
@@ -133,6 +134,7 @@ function showPop(pop){
 		newStaffForm.telPhone.value = "";
 		newStaffForm.mail.value = "";
 		newStaffForm.memo.value = "";
+		newStaffForm.position.value = "";
 		
 	}else if(pop == "modify_staff"){
 		
@@ -144,6 +146,7 @@ function showPop(pop){
 		updateStaffForm.telPhone.value = staffGrid.collectionView.currentItem["staffPnum"];
 		updateStaffForm.mail.value = staffGrid.collectionView.currentItem["staffEmail"];
 		updateStaffForm.memo.value = staffGrid.collectionView.currentItem["memo"];
+		updateStaffForm.position.value = staffGrid.collectionView.currentItem["position"];
 		
 	}
 	
@@ -219,6 +222,7 @@ function saveNewStaff(){
     		,telPhone:	newStaffForm.telPhone.value
     		,mail	:	newStaffForm.mail.value
     		,memo	:	newStaffForm.memo.value
+    		,position : newStaffForm.position.value
     	}
     	
     	$.ajax({
@@ -345,6 +349,7 @@ function updateStaff(){
        	, telPhone 	: updateStaffForm.telPhone.value	
        	, mail 		: updateStaffForm.mail.value	
        	, memo 		: updateStaffForm.memo.value	
+       	, position 	: updateStaffForm.position.value	
     }
     
     $.ajax({
@@ -472,6 +477,10 @@ function exportExcel(){
                         <input type="text" id="name" name="name" required>
                     </div>
                     <div class="row">
+                        <label for="name">직급</label>
+                        <input type="text" id="position" name="position" required>
+                    </div>
+                    <div class="row">
                         <label for="telPhone">전화번호<i>*</i></label>
                         <input type="text" id="telPhone" name="telPhone" required>
                     </div>
@@ -520,6 +529,10 @@ function exportExcel(){
                     <div class="row">
                         <label for="name">이름<i>*</i></label>
                         <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="row">
+                        <label for="name">직급</label>
+                        <input type="text" id="position" name="position" required>
                     </div>
                     <div class="row">
                         <label for="telPhone">전화번호<i>*</i></label>
