@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chungchunClean.Mappers.StatisticsMapper">
+
+	<select id="getStatisticsTotal" resultType="StatisticsVo">
+		--1. 월관리 + 부가수익의 금년 매출액, 누적 미수금, 금년 입금금액
+		select sum(conCost) as con_cost
+				, sum(outCost) as out_cost
+				, sum(depositCost)as deposit_cost
+		from (
+			select coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) as conCost --금년 매출액
+					, coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost --금년 미수금 
+					, coalesce(sum(aa.deposit_cost), 0) as depositCost --금년 입금금액
+			from web.adjust_add aa
+			where 1=1
+			and extract('YEAR' from aa.deposit_dt) = extract('YEAR' from now())
+		
+			union all
+		
+			select  coalesce(sum(bb.con_cost), 0)+coalesce(sum(bb.surtax), 0)+coalesce(sum(amm.add_cost), 0) as conCost
+				,coalesce(sum(bb.con_cost), 0) + coalesce(sum(bb.surtax), 0) + coalesce(sum(amm.add_cost), 0) - coalesce(sum(amm.deposit_cost), 0) as outCost --계약금+부가세+추가금-입금 = 미수금
+			   	,coalesce(sum(amm.deposit_cost), 0) as depositCost -- 금년 입금금액
+			from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
+			where 1=1
+			and extract('YEAR' from deposit_dt) = extract('YEAR' from now())
+		) as a
+	</select>
+	
+	<select id="getStatisticsTotalPercent" resultType="StatisticsVo">
+	--2. 금년 매출비율 (전체 매출에 대한 월관리, 부가수익 비중)
+	--getStatisticsTotalPercent
+	
+	select round(sum(ammCost) / sum(conCost)*100, 0) as amm_percent, round((sum(aaCost) / sum(conCost))*100, 0) as aa_percent
+	from (
+		select coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) as conCost --금년 매출액
+				, 0 as ammCost
+				, coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) as aaCost
+		from web.adjust_add aa
+		where 1=1
+		and extract('YEAR' from aa.deposit_dt) = extract('YEAR' from now())
+		
+		union all
+		
+		select coalesce(sum(bb.con_cost), 0)+coalesce(sum(bb.surtax), 0)+coalesce(sum(amm.add_cost), 0) as conCost
+				, coalesce(sum(bb.con_cost), 0)+coalesce(sum(bb.surtax), 0)+coalesce(sum(amm.add_cost), 0) as ammCost
+				, 0 as aaCostfrom 
+	 	from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
+		where 1=1
+		and extract('YEAR' from deposit_dt) = extract('YEAR' from now())
+	) as a
+
+	</select>
+	
+	<select id="getStatisticsTotal3Month" resultType="StatisticsVo">
+	--3. 월관리, 부가수익 매출액 3개월분
+	--getStatisticsTotal3Month
+	
+	select mon_mt, sum(conCost) as con_cost
+	from (
+		select to_char(aa.add_dt, 'YYYY-MM') as mon_mt, coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) as conCost --금년 매출액
+		from web.adjust_add aa
+		where 1=1
+		and extract('YEAR' from aa.deposit_dt) = extract('YEAR' from now())
+		group by to_char(aa.add_dt, 'YYYY-MM')
+		
+		union all
+		
+		select mon_mt as mon_mt, coalesce(sum(amm.con_cost), 0)+coalesce(sum(amm.surtax), 0)+coalesce(sum(amm.add_cost), 0) as conCost
+		from web.adjust_mt_manage amm
+		where 1=1
+		and extract('YEAR' from deposit_dt) = extract('YEAR' from now())
+		group by amm.mon_mt
+	) as a
+	group by mon_mt
+	order by mon_mt desc
+	limit 3
+	</select>
+	
+	<select id="getStatisticsTotalCost" resultType="StatisticsVo">
+	--4. 금년 월관리 매출액, 부가수익 매출액
+	--getStatisticsTotalCost
+	
+	select '부가수익' as type, coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) as con_cost --금년 매출액
+	from web.adjust_add aa
+	where 1=1
+	and extract('YEAR' from aa.deposit_dt) = extract('YEAR' from now())
+	
+	union all
+	
+	select '월관리' as type, coalesce(sum(bb.con_cost), 0)+coalesce(sum(bb.surtax), 0)+coalesce(sum(amm.add_cost), 0) as conCost
+	from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
+	where 1=1
+	and extract('YEAR' from deposit_dt) = extract('YEAR' from now())
+	</select>
+	
+	<select id="getStatisticsAddSubCost" resultType="StatisticsVo">
+	--5. 부가수익 세부 분류별 매출액
+	--getStatisticsAddSubCost
+	
+	select aa.classifi_nm, coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) as conCost --금년 매출액
+	from web.adjust_add aa
+	where 1=1
+	and extract('YEAR' from aa.deposit_dt) = extract('YEAR' from now())
+	group by aa.classifi_cd, aa.classifi_nm 
+	</select>
+	
+</mapper>

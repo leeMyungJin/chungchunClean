@@ -20,6 +20,7 @@
 			   , memo
 			   , active_yn
 			   , admin_yn
+			   , position
 			   , to_char(cret_dt, 'YYYY-MM-DD') as cret_dt 
 			   , cret_id
 			   , to_char(updt_dt, 'YYYY-MM-DD') as updt_dt 
@@ -70,6 +71,7 @@
 			   , memo
 			   , active_yn
 			   , admin_yn
+			   , position
 			   , to_char(cret_dt, 'YYYY-MM-DD') as cret_dt 
 			   , cret_id
 			   , to_char(updt_dt, 'YYYY-MM-DD') as updt_dt 
@@ -94,6 +96,7 @@
 			   , staff_pnum
 			   , staff_email
 			   , memo
+			   , position
 			   , password_key
 			   , cret_dt
 			   , cret_id
@@ -106,6 +109,7 @@
 			   , #{staffPnum}
 			   , #{staffEmail}
 			   , #{memo}
+			   , #{position}
 			   , #{passwordKey}
 			   , NOW()
 			   , #{cretId}
@@ -128,6 +132,7 @@
 		   staff_pnum=#{telPhone}, 
 		   staff_email=#{mail}, 
 		   memo=#{memo}, 
+		   position=#{position},
 		   active_yn=#{active}, 
 		   admin_yn=#{admin}, 
 		   updt_dt=NOW(),
