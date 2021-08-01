@@ -118,7 +118,7 @@ function enterkey() {
                         <input type="checkbox" id="auto-login" name="auto-login" value="off" onchange="autoLoginCheck()">
                         <label for="auto-login">자동 로그인</label>
                     </div>
-                    <button type="button" class="login_btn"  onClick="login()">login</button>
+                    <button type="button" class="login_btn" onClick="login()">login</button>
                 </fieldset>
             </form>
             <p>아이디 / 비밀번호 찾기는 관리자에게 문의바랍니다</p>

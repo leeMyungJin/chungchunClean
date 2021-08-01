@@ -13,9 +13,9 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="이용해주셔서 감사합니다">
     <meta property="og:description" content="청춘클린 현장 점검 결과보고 입니다">
-    <meta property="og:image" content="image/og_site.png">
+    <meta property="og:image" content="../image/og_site.png">
     <title>청춘클린</title>
-    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="../css/reset.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> 
@@ -44,7 +44,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
         body{font-family: 'Montserrat', sans-serif; background-color:#f7f7f7;}
         h2, h3{font-weight:700;}
-        .site_header{position:relative; height:680px; color:#fff; background:url(image/bg_site.png) center / cover no-repeat;  }
+        .site_header{position:relative; height:680px; color:#fff; background:url(../image/bg_site.png) center / cover no-repeat;  }
         .site_header .title{padding-top:180px; font-size:40px; font-weight:700; text-align: center; text-shadow: 3px 10px 12px rgba(39, 39, 39, 0.366);}
         .site_header .title span{display:block; font-size:24px;}
         .site_header .title strong{color:#ffbb00;}
