@@ -12,4 +12,9 @@
     <session-config>
         <session-timeout>1440</session-timeout>
     </session-config>
+    <error-page>
+	    <error-code>404</error-code>
+	    <location>/p_error.html</location>
+	</error-page>
+
 </web-app>
