@@ -99,7 +99,8 @@ public class ObjectController {
     /* 직원 수정 */
     @RequestMapping(value = "/updateStaff")
     @ResponseBody
-    public void updateStaff(@RequestParam HashMap<String,String> params){
+    public void updateStaff(@RequestParam HashMap<String,String> params, HttpServletRequest req){
+    	params.put("updtId",req.getSession().getAttribute("staffId").toString());
     	objectService.updateStaff(params);
     }    
     
@@ -166,7 +167,7 @@ public class ObjectController {
     public void addBuildingDetail(@RequestBody List<BldgVo> detailParams, HttpServletRequest req){
         
         // BLDG_BAS 등록
-        objectService.addBuildingDetail(detailParams, req. getSession().getAttribute("staffId").toString());
+        objectService.addBuildingDetail(detailParams, req.getSession().getAttribute("staffId").toString());
     } 
 
     /**

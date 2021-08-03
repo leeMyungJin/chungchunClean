@@ -199,7 +199,7 @@ function saveNewStaff(){
     	alert("비밀번호를 확인하시기 바랍니다.\n비밀번호는 영문자(대,소문자), 숫자를 포함하여 최소 10자 이상,\n 혹은 영문자(대,소문자), 숫자, 특수문자를 포함하여 최소 8자 이상이어야 합니다.");
     	newStaffForm.password.focus();
     	return false;
-    }else if(!emailRule.test(newStaffForm.mail.value)){ //이메일
+    }else if(newStaffForm.mail.value != null && newStaffForm.mail.value != "" && !emailRule.test(newStaffForm.mail.value)){ //이메일
     	alert("이메일을 확인하시기 바랍니다.");
     	newStaffForm.mail.focus();
         return false;
@@ -330,7 +330,7 @@ function updateStaff(){
     	alert("비밀번호를 확인하시기 바랍니다.\n비밀번호는 영문자(대,소문자), 숫자를 포함하여 최소 10자 이상,\n 혹은 영문자(대,소문자), 숫자, 특수문자를 포함하여 최소 8자 이상이어야 합니다.");
     	updateStaffForm.password.focus();
     	return false;
-    }else if(!emailRule.test(updateStaffForm.mail.value)){ //이메일
+    }else if(updateStaffForm.mail.value != null && updateStaffForm.mail.value != "" && !emailRule.test(updateStaffForm.mail.value)){ //이메일
     	alert("이메일을 확인하시기 바랍니다.");
     	updateStaffForm.mail.focus();
         return false;

@@ -136,7 +136,7 @@
 		   active_yn=#{active}, 
 		   admin_yn=#{admin}, 
 		   updt_dt=NOW(),
-		   updt_id='test'
+		   updt_id=#{updtId}
 		WHERE staff_id=#{id}
 	</update>
 

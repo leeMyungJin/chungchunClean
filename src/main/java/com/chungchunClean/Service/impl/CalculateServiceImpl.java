@@ -2,6 +2,7 @@ package com.chungchunClean.Service.impl;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,41 +87,41 @@ public class CalculateServiceImpl implements CalculateService{
 	}
 	
 	@Override
-	public void deleteAdd(List<CalculateVo> params) {
+	public void deleteAdd(List<CalculateVo> params, String id) {
 		for(CalculateVo vo : params)
 			calculateMapper.deleteAdd(vo);
 	}
 	
 	@Override
-	public void deleteClassifi(List<CalculateVo> params) {
+	public void deleteClassifi(List<CalculateVo> params, String id) {
 		for(CalculateVo vo : params) {
-			vo.setUpdtId("testId");
+			vo.setUpdtId(id);
 			calculateMapper.deleteClassifi(vo);
 		}
 	}
 	
 	@Override
-	public void deleteItem(List<CalculateVo> params) {
+	public void deleteItem(List<CalculateVo> params, String id) {
 		for(CalculateVo vo : params) {
-			vo.setUpdtId("testId");
+			vo.setUpdtId(id);
 			calculateMapper.deleteItem(vo);
 		}
 	}
 	
 	@Override
-	public void saveMon(List<CalculateVo> params) {
+	public void saveMon(List<CalculateVo> params, String id) {
 		for(CalculateVo vo : params){
-			vo.setUpdtId("testId");
-			vo.setCretId("testId");
+			vo.setUpdtId(id);
+			vo.setCretId(id);
 			calculateMapper.saveMon(vo);
 		}
 	}	
 	
 	@Override
-	public void saveAdd(List<CalculateVo> params) {
+	public void saveAdd(List<CalculateVo> params, String id) {
 		for(CalculateVo vo : params){
-			vo.setUpdtId("testId");
-			vo.setCretId("testId");
+			vo.setUpdtId(id);
+			vo.setCretId(id);
 			calculateMapper.saveAdd(vo);
 		}
 	}	
@@ -138,35 +139,40 @@ public class CalculateServiceImpl implements CalculateService{
 	
 	
 	@Override
-	public void saveUpdateAdd(List<CalculateVo> params) {
+	public void saveUpdateAdd(List<CalculateVo> params, String id) {
 		for(CalculateVo vo : params){
-			vo.setUpdtId("testId");
+			vo.setUpdtId(id);
 			calculateMapper.saveUpdateAdd(vo);
 		}	
 	}
 	
 	@Override
-	public void saveClassifi(List<CalculateVo> params) {
+	public void saveClassifi(List<CalculateVo> params, String id) {
 		for(CalculateVo vo : params){
-			vo.setUpdtId("testId");
-			vo.setCretId("testId");
+			vo.setUpdtId(id);
+			vo.setCretId(id);
 			calculateMapper.saveClassifi(vo);
 		}
 	}	
 	
 	@Override
-	public void saveItem(List<CalculateVo> params) {
+	public void saveItem(List<CalculateVo> params, String id) {
 		for(CalculateVo vo : params){
-			vo.setUpdtId("testId");
-			vo.setCretId("testId");
+			vo.setUpdtId(id);
+			vo.setCretId(id);
 			calculateMapper.saveItem(vo);
 		}
 	}
 	
 	@Override
-	public List<CalculateVo> getPopSpecification(String bldgNm){
+	public List<CalculateVo> getPopSpecification(String bldgNm, String addMt){
+		
+		HashMap<String,Object> params = new HashMap<String,Object>();
+		
+		params.put("bldgNm", bldgNm);
+		params.put("addMt", addMt);
 
-		List<CalculateVo> calculateList = calculateMapper.getPopSpecification(bldgNm);
+		List<CalculateVo> calculateList = calculateMapper.getPopSpecification(params);
 		return calculateList;
 	}
 

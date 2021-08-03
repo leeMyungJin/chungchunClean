@@ -21,18 +21,18 @@ public interface CalculateService {
 	public List<CalculateVo> getItemList(HashMap<String,Object> params);
 	public List<CalculateVo> getBldgList(HashMap<String,Object> params);
 	
-    public void deleteAdd(List<CalculateVo> params);
-    public void deleteClassifi(List<CalculateVo> params);
-    public void deleteItem(List<CalculateVo> params);
+    public void deleteAdd(List<CalculateVo> params, String id);
+    public void deleteClassifi(List<CalculateVo> params, String id);
+    public void deleteItem(List<CalculateVo> params, String id);
     
-    public void saveMon(List<CalculateVo> params);
-    public void saveAdd(List<CalculateVo> params);
+    public void saveMon(List<CalculateVo> params, String id);
+    public void saveAdd(List<CalculateVo> params, String id);
     public void saveMonExcel(CalculateVo params);
     public void saveAddExcel(CalculateVo params);
-    public void saveUpdateAdd(List<CalculateVo> params);
-    public void saveClassifi(List<CalculateVo> params);
-    public void saveItem(List<CalculateVo> params);
+    public void saveUpdateAdd(List<CalculateVo> params, String id);
+    public void saveClassifi(List<CalculateVo> params, String id);
+    public void saveItem(List<CalculateVo> params, String id);
     
-    public List<CalculateVo> getPopSpecification(String bldgNm);
+    public List<CalculateVo> getPopSpecification(String bldgNm, String addMt);
     
 }

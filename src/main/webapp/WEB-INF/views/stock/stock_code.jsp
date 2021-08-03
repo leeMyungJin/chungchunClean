@@ -475,7 +475,7 @@ function dupCheckItem() {
         alert("카테고리를 선택하시기 바랍니다.");
         return false;
     }else if($("#product").val().trim().length == 0){
-        alert("상품명을 입력하시기 바랍니다.");
+        alert("물품명을 입력하시기 바랍니다.");
         return false;
     }else if($("#code").val().length < 4){
         alert("코드는 4자리 입니다.ex)0001");
@@ -599,7 +599,21 @@ function downTemplate(){
 }
 
 function popStockQrList(){
-	var win = window.open("/stock/getStockQrList?inq="+$("#inq").val()+"&con="+$("#con").val(), "PopupWin", "width=1000,height=600");
+	var item = stockGrid.rows.filter(r => r.isSelected);
+	var selectStock;
+	
+	if(item.length == 0){
+        alert("선택된 행이 없습니다.");
+        return false;
+    }else{
+    	selectStock = item[0].dataItem.itemCd;
+    	for(var i =1; i< item.length ; i++){
+    		selectStock += ','+item[i].dataItem.itemCd;
+        }
+    	
+    	var win = window.open("/stock/getStockQrList?selectStock="+selectStock, "PopupWin", "width=1000,height=600");
+
+    }
 
 }
 
@@ -735,7 +749,7 @@ function getError(item,prop){
                             </select>
                     </div>
                     <div class="row">
-                        <label for="product">상품명<i>*</i></label>
+                        <label for="product">물품명<i>*</i></label>
                         <input type="text" id="product" name="product" required>
                     </div>
                     <div class="row">

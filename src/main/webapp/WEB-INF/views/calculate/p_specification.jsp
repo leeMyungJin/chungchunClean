@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -120,9 +121,12 @@ function pageLoad(){
 				    	<td><c:out value="${vo.rownum}"/></td>
 				        <td><c:out value="${vo.classifiNm}"/></td>
 				        <td><c:out value="${vo.itemNm}"/></td>
-				        <td><c:out value="${vo.quoteCost}"/></td>
-				        <td><c:out value="${vo.surtax}"/></td>
-				        <td><c:out value="${vo.conCost}"/></td>
+				        <td><fmt:formatNumber value="${vo.quoteCost}" pattern="#,###" /></td>
+				        <td><fmt:formatNumber value="${vo.surtax}" pattern="#,###" /></td>
+				        <td><fmt:formatNumber value="${vo.conCost}" pattern="#,###" /></td>
+
+<fmt:formatNumber value="${price }" pattern="#,###" />
+
 				    </tr>
 				</c:forEach>
             </tbody>

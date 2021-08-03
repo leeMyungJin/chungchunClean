@@ -78,6 +78,7 @@ function loadGridCurrentList(type, result){
 			      { binding: 'sarQuantity', header: '입출고수량', isReadOnly: false, width: 120, align:"center"},
 			      { binding: 'quantity', header: '재고수량', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'returnQuantity', header: '반품수량', isReadOnly: false, width: 120, align:"center" },
+			      { binding: 'activeYn', header: '카테고리활성화여부', isReadOnly: false, visible : false, width: 120, align:"center" },
 			      { binding: 'updtDt', header: '수정일자', isReadOnly: true, width: 100, align:"center" }
 			];
 			 
@@ -126,19 +127,28 @@ function loadGridCurrentList(type, result){
 		                    }
 		                }
 		                
-		                var quantity = s.getCellData(e.row, 'quantity');
 		                if (col.binding == 'sarQuantity') {
-		                	classifiCd = s.getCellData(e.row, 'classifiCd');
-		                	if(classifiCd == "RS" || classifiCd == "RR"){
+		                	if(item.activeYn == 'N'){
 		                		e.cancel = true;
-		                		alert("분류가 입고/출고일 경우에만 입력 가능합니다.");
+		                		alert("삭제 된 물품의 이력은 수정이 불가능합니다.");
+		                	}else{
+		                		classifiCd = s.getCellData(e.row, 'classifiCd');
+			                	if(classifiCd == "RS" || classifiCd == "RR"){
+			                		e.cancel = true;
+			                		alert("분류가 입고/출고일 경우에만 입력 가능합니다.");
+			                	}
 		                	}
 		                	
 		                }else if(col.binding == 'returnQuantity'){
-		                	classifiCd = s.getCellData(e.row, 'classifiCd');
-		                	if(classifiCd == "S" || classifiCd == "R"){
+		                	if(item.activeYn == 'N'){
 		                		e.cancel = true;
-		                		alert("분류가 반품입고/반품출고일 경우에만 입력 가능합니다.");
+		                		alert("삭제 된 물품의 이력은 수정이 불가능합니다.");
+		                	}else{
+		                		classifiCd = s.getCellData(e.row, 'classifiCd');
+			                	if(classifiCd == "S" || classifiCd == "R"){
+			                		e.cancel = true;
+			                		alert("분류가 반품입고/반품출고일 경우에만 입력 가능합니다.");
+			                	}
 		                	}
 		                	
 		                }
