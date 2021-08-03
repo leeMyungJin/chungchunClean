@@ -136,8 +136,10 @@ UPDATE
 
 <update id="saveQuantity" parameterType="StockVo">
 
-UPDATE WEB.CATEGORY_DTL 
-	SET quantity = #{quantity}
+UPDATE WEB.CATEGORY_DTL SET 
+	quantity = #{quantity}
+	updt_dt		= now(),
+	updt_id		= #{updtId}
 WHERE 1=1
   AND l_categy_cd  	= #{lCategyCd}
   AND item_cd		= #{itemCd}
@@ -161,23 +163,24 @@ FROM
 
 <!-- 재고관리 - 입출내역 화면 -->
 <select id="getStockCurrentList" parameterType="hashMap" resultType="StockVo">
-	select cate_sar_seq
-			,l_categy_cd 
-			, l_categy_nm 
-			, item_cd 
-			, item_nm 
-			, "cost" 
-			, quantity 
-			, classifi_cd 
-			, classifi_nm 
-			, sar_quantity 
-			, return_quantity 
-			, to_char(cret_dt, 'YYYY-MM-DD') as cret_dt 
-			, cret_id 
-			, cret_nm
-			, to_char(updt_dt, 'YYYY-MM-DD') as updt_dt 
-			, updt_id 
-	from web.category_dtl_sar								 
+select cate_sar_seq
+			,cds.l_categy_cd 
+			, cds.l_categy_nm 
+			, cds.item_cd 
+			, cds.item_nm 
+			, cds."cost" 
+			, cds.quantity 
+			, cds.classifi_cd 
+			, cds.classifi_nm 
+			, cds.sar_quantity 
+			, cds.return_quantity 
+			, to_char(cds.cret_dt, 'YYYY-MM-DD') as cret_dt 
+			, cds.cret_id 
+			, cds.cret_nm
+			, to_char(cds.updt_dt, 'YYYY-MM-DD') as updt_dt 
+			, cds.updt_id 
+			, CASE WHEN cd.item_cd IS NULL THEN 'N' ELSE 'Y' END as active_yn
+	from web.category_dtl_sar cds left join web.category_dtl cd on cds.l_categy_cd = cd.l_categy_cd and cds.item_cd = cd.item_cd 						 
 	where 1 = 1
 	<if test="inq != null">
 	AND 
@@ -185,37 +188,37 @@ FROM
 			<when test="con == 'all'">
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					l_categy_nm LIKE '%' || #{item} || '%'
+					cds.l_categy_nm LIKE '%' || #{item} || '%'
 					or
-					item_nm LIKE '%' || #{item} || '%'
+					cds.item_nm LIKE '%' || #{item} || '%'
 					or
-					cret_nm LIKE '%' || #{item} || '%'
+					cds.cret_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'category'">
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					l_categy_nm LIKE '%' || #{item} || '%'
+					cds.l_categy_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'product'">
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					item_nm LIKE '%' || #{item} || '%'
+					cds.item_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'person'">
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					cret_nm LIKE '%' || #{item} || '%'
+					cds.cret_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 		</choose>
 	</if>
 	<if test="fromDate != null and toDate != null">
-		and cret_dt between #{fromDate}::timestamp and (to_date(#{toDate}, 'YYYY-MM-DD')+1)::timestamp
+		and cds.cret_dt between #{fromDate}::timestamp and (to_date(#{toDate}, 'YYYY-MM-DD')+1)::timestamp
 	</if>
-	ORDER BY cate_sar_seq
+	ORDER BY cds.cate_sar_seq
 </select>
 
 <delete id="deleteStockCurrent" parameterType="StockVo">
@@ -376,38 +379,14 @@ and item_cd = #{itemCd}
 	from web.category_bas ctg_bas left outer join WEB.category_dtl ctg_dtl on ctg_bas.l_categy_cd = ctg_dtl.l_categy_cd
 	where
 		1 = 1
-	<if test="inq != null">
-		<choose>
-			<when test="con == 'all'">
-			AND 
-				<foreach collection="inq" item="item"
-					index="index" open="(" close=")" separator="or">
-					ctg_bas.l_categy_nm LIKE '%' || #{item} || '%'
-					or
-					ctg_dtl.item_nm LIKE '%' || #{item} || '%'
-				</foreach>
-			</when>
-			<when test="con == 'category'">
-			AND 
-				<foreach collection="inq" item="item"
-					index="index" open="(" close=")" separator="or">
-					ctg_bas.l_categy_nm LIKE '%' || #{item} || '%'
-				</foreach>
-			</when>
-			<when test="con == 'item'">
-			AND 
-				<foreach collection="inq" item="item"
-					index="index" open="(" close=")" separator="or">
-					ctg_dtl.item_nm LIKE '%' || #{item} || '%'
-				</foreach>
-			</when>
-		</choose>
-	</if>
-	<if test="esn == 'true'">
-		AND ctg_dtl.quantity <![CDATA[<=]]> 10
-	</if>
+	<if test="selectStock != null">
+	AND ctg_dtl.qr_url in 
+		<foreach collection="selectStock" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</if>	
 	AND ctg_dtl.item_cd is not null
-		ORDER BY ctg_bas.l_categy_cd, ctg_dtl.item_cd
+	ORDER BY ctg_bas.l_categy_cd, ctg_dtl.item_cd
 </select>
 
 

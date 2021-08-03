@@ -118,32 +118,32 @@ public class CalculateController {
     
     @RequestMapping(value="/deleteAdd", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void deleteAdd(@RequestBody List<CalculateVo> params){
-    	calculateService.deleteAdd(params);
+    public void deleteAdd(@RequestBody List<CalculateVo> params, HttpServletRequest req){
+    	calculateService.deleteAdd(params, req.getSession().getAttribute("staffId").toString());
     }
     
     @RequestMapping(value="/deleteClassifi", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void deleteClassifi(@RequestBody List<CalculateVo> params){
-    	calculateService.deleteClassifi(params);
+    public void deleteClassifi(@RequestBody List<CalculateVo> params, HttpServletRequest req){
+    	calculateService.deleteClassifi(params, req.getSession().getAttribute("staffId").toString());
     }
     
     @RequestMapping(value="/deleteItem", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void deleteItem(@RequestBody List<CalculateVo> params){
-    	calculateService.deleteItem(params);
+    public void deleteItem(@RequestBody List<CalculateVo> params, HttpServletRequest req){
+    	calculateService.deleteItem(params, req.getSession().getAttribute("staffId").toString());
     }
     
     @RequestMapping(value="/saveMon", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void saveMon(@RequestBody List<CalculateVo> params){
-    	calculateService.saveMon(params);
+    public void saveMon(@RequestBody List<CalculateVo> params, HttpServletRequest req){
+    	calculateService.saveMon(params, req.getSession().getAttribute("staffId").toString());
     }
     
     @RequestMapping(value="/saveAdd", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void saveAdd(@RequestBody List<CalculateVo> params){
-    	calculateService.saveAdd(params);
+    public void saveAdd(@RequestBody List<CalculateVo> params, HttpServletRequest req){
+    	calculateService.saveAdd(params, req.getSession().getAttribute("staffId").toString());
         // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
     }
     
@@ -185,28 +185,29 @@ public class CalculateController {
   
     @RequestMapping(value="/saveUpdateAdd", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void saveUpdateAdd(@RequestBody List<CalculateVo> params){
-    	calculateService.saveUpdateAdd(params);
+    public void saveUpdateAdd(@RequestBody List<CalculateVo> params, HttpServletRequest req){
+    	calculateService.saveUpdateAdd(params, req.getSession().getAttribute("staffId").toString());
     }
   
 
     @RequestMapping(value="/saveClassifi", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void saveClassifi(@RequestBody List<CalculateVo> params){
-    	calculateService.saveClassifi(params);
+    public void saveClassifi(@RequestBody List<CalculateVo> params, HttpServletRequest req){
+    	calculateService.saveClassifi(params, req.getSession().getAttribute("staffId").toString());
     }
     
     @RequestMapping(value="/saveItem", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public void saveItem(@RequestBody List<CalculateVo> params){
-    	calculateService.saveItem(params);
+    public void saveItem(@RequestBody List<CalculateVo> params, HttpServletRequest req){
+    	calculateService.saveItem(params, req.getSession().getAttribute("staffId").toString());
     }
 
     @RequestMapping(value = "/getPopSpecification")
     public String getPopSpecification(HttpServletRequest req, Model model){
     	String bldgNm = req.getParameter("bldgNm");
+    	String addMt = req.getParameter("addMt");
     	
-    	List<CalculateVo> calculateList = calculateService.getPopSpecification(bldgNm);
+    	List<CalculateVo> calculateList = calculateService.getPopSpecification(bldgNm, addMt);
     	model.addAttribute("cretDt", calculateList.get(0).getCretDt());
     	model.addAttribute("totalCost", calculateList.get(0).getTotalCost());
     	model.addAttribute("quoteTotalCost", calculateList.get(0).getQuoteTotalCost());

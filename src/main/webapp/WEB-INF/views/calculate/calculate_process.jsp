@@ -1002,14 +1002,8 @@ function saveGrid(type){
              
              var dateRegExp = /^(19|20)\d{2}.(0[1-9]|1[012]).(0[1-9]|[12][0-9]|3[0-1])$/;
              value = wijmo.changeType(monExcelGrid.collectionView.items[i].입금날짜, wijmo.DataType.String, null);
-             if(!dateRegExp.test(value)){
+             if(value != null && value != '' && !dateRegExp.test(value)){
                  alert("입금날짜는 YYYY.MM.DD 형태로 입력하시기 바랍니다.");
-                 return false;
-             }
-             
-             value = monExcelGrid.collectionView.items[i].입금자명;
-             if(value == null && value == ''){
-                 alert("입금자명은 필수입력사항입니다.");
                  return false;
              }
          
@@ -1078,7 +1072,7 @@ function saveGrid(type){
              }
              
              value = wijmo.changeType(addExcelGrid.collectionView.items[i].입금날짜, wijmo.DataType.String, null);
-             if(!dateRegExp.test(value)){
+             if(value != null && value != '' && !dateRegExp.test(value)){
                  alert("입금날짜는 YYYY.MM.DD 형태로 입력하시기 바랍니다.");
                  return false;
              }
@@ -1195,15 +1189,14 @@ function saveVal(type, item){
 		}else if(item.quoteCost == null || item.quoteCost == ''){
 			alert("견적비를 입력해주세요.");
 			return false;
-		}else if(item.depositCost == null || item.depositCost == ''){
-			alert("입금비를 입력해주세요.");
-			return false;
-		}else if(item.depositDt == null || item.depositDt == ''){
-			alert("입금날짜를 입력해주세요.");
-			return false;
-		}else if(item.depositor == null || item.depositor == ''){
-			alert("입금자명을 입력해주세요.");
-			return false;
+		}else if(item.depositCost != null && item.depositCost != ''){
+			if(item.depositDt == null || item.depositDt == ''){
+				alert("입금날짜를 입력해주세요.");
+				return false;
+			}else if(item.depositor == null || item.depositor == ''){
+				alert("입금자명을 입력해주세요.");
+				return false;
+			}
 		}
 		
 	}else if(type == "classifi"){
@@ -1410,7 +1403,7 @@ function popSpecification(){
         
     }
     
-    var win = window.open("/calculate/getPopSpecification?bldgNm="+bldgNm, "pop", "width=830,height=630");
+    var win = window.open("/calculate/getPopSpecification?bldgNm="+bldgNm+"&addMt="+$('#date2').val(), "pop", "width=830,height=630");
 }
 
 function downTemplate(type){

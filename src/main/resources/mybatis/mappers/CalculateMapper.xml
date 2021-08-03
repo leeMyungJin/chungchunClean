@@ -485,15 +485,15 @@ UPDATE
 
 </insert>
 
-<select id="getPopSpecification" parameterType="String" resultType="CalculateVo">
+<select id="getPopSpecification" parameterType="hashMap" resultType="CalculateVo">
 select  (ROW_NUMBER() OVER()) AS rownum
 	, to_char(NOW() , 'YYYY년 MM월 DD일') as cret_dt
 	, aa.bldg_nm
 	, aa.classifi_nm 
 	, aa.item_nm 
-	, TO_CHAR(aa.quote_cost , 'FM999,999,999,999,999') as quote_cost
-	, TO_CHAR(aa.surtax, 'FM999,999,999,999,999') as surtax
-	, TO_CHAR(coalesce(aa.quote_cost, 0)+coalesce(aa.surtax, 0) , 'FM999,999,999,999,999') as con_cost 
+	, aa.quote_cost as quote_cost
+	, aa.surtax as surtax
+	, coalesce(aa.quote_cost, 0)+coalesce(aa.surtax, 0) as con_cost 
 	, aa2.quote_total_cost
 	, aa2.surtax_total_cost
 	, aa2.total_cost
@@ -502,9 +502,11 @@ from web.adjust_add aa left join (select bldg_nm
 										, TO_CHAR(coalesce(sum(surtax), 0) , 'FM999,999,999,999,999') as surtax_total_cost 
 										, TO_CHAR(coalesce(sum(quote_cost), 0)+coalesce(sum(surtax), 0) , 'FM999,999,999,999,999') as total_cost 
 										from web.adjust_add 
+										where to_char(cret_dt, 'YYYY-MM') = #{addMt}
 										group by bldg_nm
 									) aa2 on aa2.bldg_nm = aa.bldg_nm 
 where aa.bldg_nm = #{bldgNm}
+and to_char(aa.cret_dt, 'YYYY-MM') = #{addMt}
 </select>
 
 <insert id="saveMonExcel" parameterType="CalculateVo">

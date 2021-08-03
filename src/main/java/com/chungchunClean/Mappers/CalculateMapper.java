@@ -2,6 +2,7 @@ package com.chungchunClean.Mappers;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.chungchunClean.vo.CalculateVo;
 import com.chungchunClean.vo.DailyVo;
@@ -36,6 +37,6 @@ public interface CalculateMapper  {
     public void saveClassifi(CalculateVo params);
     public void saveItem(CalculateVo params);
     
-    public List<CalculateVo> getPopSpecification(String bldgNm);
+    public List<CalculateVo> getPopSpecification(HashMap<String,Object> params);
 }
 

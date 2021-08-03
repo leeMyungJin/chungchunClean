@@ -37,9 +37,10 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public void saveCategory(List<StockVo> params) {
+	public void saveCategory(List<StockVo> params, String id) {
 		for(StockVo vo : params){
-			// 임시로 testid로 셋팅. 추후 session에서 가져오도록 변경
+			vo.setUpdtId(id);
+			vo.setCretId(id);
 			stockMapper.saveCategory(vo);
 		}
 	}
@@ -76,9 +77,11 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public Integer saveStock(List<StockVo> params) {
+	public Integer saveStock(List<StockVo> params, String id) {
 		int cnt = 0;
 		for(StockVo vo : params){
+			vo.setUpdtId(id);
+			
 			if(vo.getItemCd().length() == 7 && stockMapper.checkCategory(vo) > 0){
 				stockMapper.saveStock(vo);
 				cnt++;
@@ -95,10 +98,12 @@ public class StockServiceImpl implements StockService {
 
 	
 	@Override
-	public Integer saveQuantityList(List<StockVo> params) {
+	public Integer saveQuantityList(List<StockVo> params, String id) {
 		int cnt = 0;
 		HashMap<String, String> item = new HashMap<String,String>();
 		for(StockVo vo : params){
+			vo.setUpdtId(id);
+			
 			item.clear();
 			item.put("lCategyCd", vo.getlCategyCd());
 			item.put("itemCd", vo.getItemCd());
@@ -134,25 +139,25 @@ public class StockServiceImpl implements StockService {
 	}
 	
 	@Override
-	public void saveStockCurrent(List<StockVo> params) {
+	public void saveStockCurrent(List<StockVo> params, String id) {
 		for(StockVo vo : params){
-			vo.setCretId("testId");
+			vo.setCretId(id);
 			stockMapper.saveStockCurrent(vo);
 		}
 		
 	}	
 	@Override
-	public void saveUpdateStockCurrent(List<StockVo> params) {
+	public void saveUpdateStockCurrent(List<StockVo> params, String id) {
 		for(StockVo vo : params){
-			vo.setUpdtId("testId");
+			vo.setUpdtId(id);
 			stockMapper.saveUpdateStockCurrent(vo);
 		}	
 	}
 	
 	@Override
-	public void saveStockCurrentQuantity(List<StockVo> params) {
+	public void saveStockCurrentQuantity(List<StockVo> params, String id) {
 		for(StockVo vo : params){
-			vo.setUpdtId("testId");
+			vo.setUpdtId(id);
 			stockMapper.saveStockCurrentQuantity(vo);
 		}
 		
@@ -190,8 +195,8 @@ public class StockServiceImpl implements StockService {
 	
 	@Override
 	public List<CodeVo> getStockQrList(HashMap<String, Object> params) {
-		if(params.get("inq") != null)
-			params.replace("inq", Util.makeForeach((String)params.get("inq"), ","));
+		if(params.get("selectStock") != null)
+			params.replace("selectStock", Util.makeForeach((String)params.get("selectStock"), ","));
 		return stockMapper.getStockQrList(params);
 	}
 	

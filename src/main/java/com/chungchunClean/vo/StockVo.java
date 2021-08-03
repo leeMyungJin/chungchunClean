@@ -22,6 +22,8 @@ public class StockVo {
 	private Integer sarQuantity; 		//입출고수량
 	private Integer returnQuantity; 	//반품입출고수량
 	private String cretNm; 				//등록자명
+	private String activeYn;			//입출이력 수정가능여부
+	
 	public String getlCategyCd() {
 		return lCategyCd;
 	}
@@ -136,6 +138,12 @@ public class StockVo {
 	public void setCretNm(String cretNm) {
 		this.cretNm = cretNm;
 	}
+	public String getActiveYn() {
+		return activeYn;
+	}
+	public void setActiveYn(String activeYn) {
+		this.activeYn = activeYn;
+	}
 	@Override
 	public String toString() {
 		return "StockVo [lCategyCd=" + lCategyCd + ", lCategyNm=" + lCategyNm + ", cost=" + cost + ", itemCd=" + itemCd
@@ -143,8 +151,9 @@ public class StockVo {
 				+ ", regDate=" + regDate + ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt=" + updtDt
 				+ ", updtId=" + updtId + ", cateSarSeq=" + cateSarSeq + ", classifiCd=" + classifiCd + ", classifiNm="
 				+ classifiNm + ", sarQuantity=" + sarQuantity + ", returnQuantity=" + returnQuantity + ", cretNm="
-				+ cretNm + "]";
+				+ cretNm + ", activeYn=" + activeYn + "]";
 	}
+	
 	
 	
 	
