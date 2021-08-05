@@ -269,6 +269,7 @@ insert into web.category_dtl_sar (
 		, updt_dt -- 수정일자
 		, updt_id -- 수정자
 		, cret_nm -- 등록자명
+		, updt_nm -- 등록자명
 )
 values(
 		(select max(cate_sar_seq)+1 from WEB.category_dtl_sar) -- 시퀀스
@@ -289,7 +290,8 @@ values(
 		, #{cretId} -- 등록자
 		, NOW() -- 수정일자
 		, #{updtId} -- 수정자
-		, #{cretId} -- 등록자명 
+		, #{updtNm} -- 등록자명 
+		, #{updtNm} -- 등록자명 
 )
 </insert>
 
@@ -303,6 +305,7 @@ UPDATE web.category_dtl_sar
 		, return_quantity = #{returnQuantity} -- 반품입출고수량
 		, updt_dt		= now()
 		, updt_id		= #{updtId}
+		, updt_nm		= #{updtNm}
 WHERE cate_sar_seq = #{cateSarSeq}::numeric
 </update>
 
@@ -312,23 +315,48 @@ set quantity = (select quantity
 				from web.category_dtl 
 				where l_categy_cd = #{lCategyCd}
 				and item_cd = #{itemCd} ) 
+		<choose>
+			<when test="cateSarSeq != null">
 				<choose>
 					<when test='classifiCd == "S"'>
 						+ #{sarQuantity} - (select sar_quantity
+											from web.category_dtl_sar 
+											where cate_sar_seq = #{cateSarSeq}::numeric )
 					</when>
 					<when test='classifiCd == "R"'>
 						- #{sarQuantity} + (select sar_quantity
+											from web.category_dtl_sar 
+											where cate_sar_seq = #{cateSarSeq}::numeric )
 					</when>
 					<when test="classifiCd == 'RS'">
 						+ #{returnQuantity} - (select return_quantity
+											from web.category_dtl_sar 
+											where cate_sar_seq = #{cateSarSeq}::numeric )
 					</when>
 					<when test="classifiCd == 'RR'">
 						- #{returnQuantity} + (select return_quantity
+											from web.category_dtl_sar 
+											where cate_sar_seq = #{cateSarSeq}::numeric )
 					</when>
 				</choose>
-				from web.category_dtl_sar 
-				where cate_sar_seq = #{cateSarSeq}::numeric )
-				
+			</when>
+			<otherwise>
+				<choose>
+					<when test='classifiCd == "S"'>
+						+ #{sarQuantity}
+					</when>
+					<when test='classifiCd == "R"'>
+						- #{sarQuantity}
+					</when>
+					<when test="classifiCd == 'RS'">
+						+ #{returnQuantity}
+					</when>
+					<when test="classifiCd == 'RR'">
+						- #{returnQuantity}
+					</when>
+				</choose>
+			</otherwise>
+		</choose>
 where l_categy_cd = #{lCategyCd}
 and item_cd = #{itemCd}
 </update>

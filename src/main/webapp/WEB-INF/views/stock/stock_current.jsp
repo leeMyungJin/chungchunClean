@@ -28,8 +28,12 @@ function pageLoad(){
 	$('#stock').addClass("current");
 	$('#stock_current').addClass("current");
 	
+	
+	var fromDate = new Date()
+	fromDate.setDate(fromDate.getDate() - 7);
+	var fromday = _getFormatDate(fromDate);
 	var today = _getFormatDate(new Date());
-	$('#fromDate').val(today);
+	$('#fromDate').val(fromday);
 	$('#toDate').val(today);
 	$('#fromDate').attr('max',today);
 	$('#toDate').attr('max',today);
@@ -130,7 +134,7 @@ function loadGridCurrentList(type, result){
 		                if (col.binding == 'sarQuantity') {
 		                	if(item.activeYn == 'N'){
 		                		e.cancel = true;
-		                		alert("삭제 된 물품의 이력은 수정이 불가능합니다.");
+		                		alert("해당 이력은 물품이 삭제(혹은 비활성화)되어 수정이 불가능합니다.");
 		                	}else{
 		                		classifiCd = s.getCellData(e.row, 'classifiCd');
 			                	if(classifiCd == "RS" || classifiCd == "RR"){

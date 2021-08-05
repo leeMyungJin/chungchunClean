@@ -139,17 +139,19 @@ public class StockServiceImpl implements StockService {
 	}
 	
 	@Override
-	public void saveStockCurrent(List<StockVo> params, String id) {
+	public void saveStockCurrent(List<StockVo> params, String id, String name) {
 		for(StockVo vo : params){
 			vo.setCretId(id);
+			vo.setUpdtNm(name);
 			stockMapper.saveStockCurrent(vo);
 		}
 		
 	}	
 	@Override
-	public void saveUpdateStockCurrent(List<StockVo> params, String id) {
+	public void saveUpdateStockCurrent(List<StockVo> params, String id, String name) {
 		for(StockVo vo : params){
 			vo.setUpdtId(id);
+			vo.setUpdtNm(name);
 			stockMapper.saveUpdateStockCurrent(vo);
 		}	
 	}

@@ -234,7 +234,7 @@ function loadGridList(type, result){
 			      { binding: 'areaNm', header: '지역', isReadOnly: false, width: 150, align:"center"},
 			      { binding: 'bldgNm', header: '건물명', isReadOnly: false, width: 200, align:"center"},
 			      { binding: 'quoteCost', header: '견적', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum'  },
-			      { binding: 'surtax', header: '부가세', isReadOnly: true, width: 150, align:"center" , aggregate: 'Sum' },
+			      { binding: 'surtax', header: '부가세', isReadOnly: false, width: 150, align:"center" , aggregate: 'Sum' },
 			      { binding: 'materCost', header: '재료비', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum'  },
 			      { binding: 'outscCost', header: '외주', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum' },
 			      { binding: 'depositCost', header: '입금', isReadOnly: true, width: 120, align:"center", aggregate: 'Sum' },
@@ -1706,7 +1706,7 @@ $(function(){
                 </div>
                 <div class="popup_grid_area">
                    <button class="btn" onclick="addRow('classifi');">+ 행 추가</button>
-                    <div id="classifiGrid"></div>
+                    <div id="classifiGrid" style="width:860px; height:300px;"></div>
                     <div id="classifiGridPager" class="pager"></div>
                     <button class="btn" onclick="addRow('classifi');">+ 행 추가</button>
                 </div>
@@ -1736,7 +1736,7 @@ $(function(){
                 </div>
                 <div class="popup_grid_area">
                    <button class="btn" onclick="addRow('item');">+ 행 추가</button>
-                    <div id="itemGrid"></div>
+                    <div id="itemGrid" style="width:860px; height:300px;"></div>
                     <div id="itemGridPager" class="pager"></div>
                     <button class="btn" onclick="addRow('item');">+ 행 추가</button>
                 </div>

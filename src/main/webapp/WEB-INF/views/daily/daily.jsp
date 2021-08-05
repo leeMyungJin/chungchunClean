@@ -21,8 +21,12 @@ function pageLoad(){
 	
 	$('#daily').addClass("current");
 	
+	var fromDate = new Date()
+	fromDate.setDate(fromDate.getDate() - 7);
+	var fromday = _getFormatDate(fromDate);
 	var today = _getFormatDate(new Date());
-	$('#fromDate').val(today);
+	$('#fromDate').val(fromday);
+	$('#toDate').val(today);
 	$('#toDate').val(today);
 	$('#fromDate').attr('max',today);
 	$('#toDate').attr('max',today);

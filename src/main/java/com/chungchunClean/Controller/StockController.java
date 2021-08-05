@@ -219,7 +219,7 @@ public class StockController {
     @RequestMapping(value="/saveStockCurrent", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
     public void saveStockCurrent(@RequestBody List<StockVo> params, HttpServletRequest req){
-        stockService.saveStockCurrent(params, req.getSession().getAttribute("staffId").toString());
+        stockService.saveStockCurrent(params, req.getSession().getAttribute("staffId").toString(), req.getSession().getAttribute("staffName").toString());
         // return stockService.getStockList(params); // 카테고리 저장 후 다시 조회
     }
     
@@ -231,7 +231,7 @@ public class StockController {
     @RequestMapping(value="/saveUpdateStockCurrent", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
     public void saveUpdateStockCurrent(@RequestBody List<StockVo> params, HttpServletRequest req){
-        stockService.saveUpdateStockCurrent(params, req.getSession().getAttribute("staffId").toString());
+        stockService.saveUpdateStockCurrent(params, req.getSession().getAttribute("staffId").toString(), req.getSession().getAttribute("staffName").toString());
     }
     
     /**
