@@ -126,7 +126,7 @@ function loadGridStockList(type, result){
             cellEditEnding: function (s, e) {
                 var col = s.columns[e.col];
                 var inven = s.columns[e.col - 1];
-                if (col.binding == 'add') {
+                if (col.binding == 'add' || col.binding == 'pnum' || col.binding == 'conCost' || col.binding == 'surtax') {
                     var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
                     if( !wijmo.isNumber(value)){
                         e.cancel = true;
@@ -468,7 +468,7 @@ function popBuildingQrList(){
     		selectBldg += ','+item[i].dataItem.bldgCd + item[i].dataItem.dongNum;
         }
     	
-    	var win = window.open("/object/getBuildingQrList?selectBldg="+selectBldg, "PopupWin", "with=1000,height=600");
+    	var win = window.open("/object/getBuildingQrList?selectBldg="+selectBldg, "PopupWin", "width=1000,height=600");
 
     }
 }
@@ -488,7 +488,7 @@ function popContract(){
         
 
     }
-	var win = window.open("/object/contract?bldgCd="+bldgCd, "pop", "with=1000,height=600");
+	var win = window.open("/object/contract?bldgCd="+bldgCd, "pop", "width=920,height=830");
 }
 
 function dupBuildingCheck(type){

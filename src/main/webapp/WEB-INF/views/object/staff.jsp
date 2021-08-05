@@ -184,15 +184,16 @@ function saveNewStaff(){
     }
 	
 	//벨리데이션 체크 
-	var idRule1  = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+	var idRule1  = /^(?=.*[A-Za-z])[A-Za-z\d]{6,}$/;
+	var idRule2  = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
 	var pwdRule1  = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{10,}$/;
     var pwdRule2  = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/;
     var pwdRule3  = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     var emailRule = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
     var telRule   = /^[0-9]{11}$/;
     
-    if(!idRule1.test(newStaffForm.id.value)){
-    	alert("ID를 확인하시기 바랍니다.\nID는 영문자(대,소문자), 숫자를 포함하여 최소 6자 이상이어야 합니다.");
+    if(!idRule1.test(newStaffForm.id.value) && !idRule2.test(newStaffForm.id.value)){
+    	alert("ID를 확인하시기 바랍니다.\nID는 영문자(대,소문자) 6자 이상 혹은 \n영문자(대,소문자), 숫자를 포함하여 6자 이상이어야 합니다.");
     	newStaffForm.password.focus();
     	return false;
     }else if(!pwdRule1.test(newStaffForm.password.value) && !pwdRule2.test(newStaffForm.password.value) && !pwdRule3.test(newStaffForm.password.value)){

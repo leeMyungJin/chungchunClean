@@ -26,8 +26,8 @@ public interface StockService {
     // 재고관리 - 입출관리 화면
     public List<StockVo> getStockCurrentList(HashMap<String,Object> params);
     public void deleteStockCurrent(List<StockVo> params);
-    public void saveStockCurrent(List<StockVo> params, String id);
-    public void saveUpdateStockCurrent(List<StockVo> params, String id);
+    public void saveStockCurrent(List<StockVo> params, String id, String name);
+    public void saveUpdateStockCurrent(List<StockVo> params, String id, String name);
     public void saveStockCurrentQuantity(List<StockVo> params, String id);
     public int getTodayStore();
 	public int getTodayRelease();
