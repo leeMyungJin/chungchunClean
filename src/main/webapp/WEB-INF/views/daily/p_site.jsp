@@ -28,8 +28,6 @@
      $( document ).ready( function() {
          AOS.init();
          
-         sessionCheck(staffId);
-         
          var imgPath = '${imgPath}'.split(',');
        
          if(imgPath.length > 0){
