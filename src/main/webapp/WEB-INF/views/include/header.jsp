@@ -10,14 +10,14 @@
 <meta property="og:title" content="청춘클린">
 <meta property="og:description" content="청춘클린">
 <title>청춘클린</title>
-<link rel="shortcut icon" type="image/x-icon" href="image/favico.ico">
+<link rel="shortcut icon" type="image/x-icon" href="../image/favicon.ico">
 
 <script src="../js/include/common.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" /> 
-<link rel="icon" href="image/icon_favicon.ico" type="image/ico"> 
-<link rel="shortcut icon" href="image/icon_favicon.ico"/>
+<link rel="icon" href="../image/icon_favicon.ico" type="image/ico"> 
+<!-- <link rel="shortcut icon" href="../image/icon_favicon.ico"/> -->
 
 <!-- wijmo 그리드 -->
 <!-- Wijmo 레퍼런스 (필수) -->

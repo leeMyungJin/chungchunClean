@@ -11,6 +11,7 @@ import com.chungchunClean.Mappers.CalculateMapper;
 import com.chungchunClean.Service.CalculateService;
 import com.chungchunClean.Util.Util;
 import com.chungchunClean.vo.CalculateVo;
+import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.StockVo;
 
 @Service
@@ -175,5 +176,16 @@ public class CalculateServiceImpl implements CalculateService{
 		List<CalculateVo> calculateList = calculateMapper.getPopSpecification(params);
 		return calculateList;
 	}
+	
+	@Override
+	public List<CodeVo> getMsgTemplate() {
+		return calculateMapper.getMsgTemplate();
+	}
+	
+	public void saveMsgTemplate(HashMap<String,Object> params, String id) {
+		params.put("updtId", id);
+		calculateMapper.saveMsgTemplate(params);
+	}
+	
 
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.chungchunClean.vo.CalculateVo;
+import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.StockVo;
 
 
@@ -34,5 +35,6 @@ public interface CalculateService {
     public void saveItem(List<CalculateVo> params, String id);
     
     public List<CalculateVo> getPopSpecification(String bldgNm, String addMt);
-    
+    public List<CodeVo> getMsgTemplate();
+    public void saveMsgTemplate(HashMap<String,Object> params, String id);
 }
