@@ -19,6 +19,7 @@ import com.chungchunClean.Service.CalculateService;
 import com.chungchunClean.Service.DailyService;
 import com.chungchunClean.vo.BldgVo;
 import com.chungchunClean.vo.CalculateVo;
+import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.DailyVo;
 import com.chungchunClean.vo.StockVo;
 
@@ -218,6 +219,18 @@ public class CalculateController {
     	return "calculate/p_specification";
     }
     
+    @RequestMapping(value="/getMsgTemplate", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public List<CodeVo> getMsgTemplate(){
+        return calculateService.getMsgTemplate(); // 카테고리 저장 후 다시 조회
+    }
+    
+    @RequestMapping(value = "/saveMsgTemplate")
+    @ResponseBody
+    public void saveMsgTemplate(@RequestParam HashMap<String,Object> params, HttpServletRequest req){
+    	
+    	calculateService.saveMsgTemplate(params, req.getSession().getAttribute("staffId").toString());
+    }
 
 
 }

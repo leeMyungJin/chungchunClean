@@ -639,6 +639,20 @@ insert into web.adjust_add (
 )
 </insert>
 
+<select id="getMsgTemplate" resultType="CodeVo">
+	SELECT code_dtl_cd as cd, code_dtl_nm as nm
+	FROM WEB.code
+	where code_cd = 'msgTemplate'
+	ORDER BY code_dtl_nm
+</select>
+
+<update id="saveMsgTemplate" parameterType="hashMap" >
+update WEB.code set
+	code_dtl_nm = #{nm}
+	, updt_dt = NOW()
+	, updt_id = #{updtId}
+where code_cd = 'msgTemplate'
+</update>
 
 	
 </mapper>

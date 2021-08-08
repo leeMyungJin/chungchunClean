@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.chungchunClean.vo.CalculateVo;
+import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.DailyVo;
 import com.chungchunClean.vo.StaffVo;
 
@@ -38,5 +39,7 @@ public interface CalculateMapper  {
     public void saveItem(CalculateVo params);
     
     public List<CalculateVo> getPopSpecification(HashMap<String,Object> params);
+    public List<CodeVo> getMsgTemplate();
+    public void saveMsgTemplate(HashMap<String,Object> params);
 }
 

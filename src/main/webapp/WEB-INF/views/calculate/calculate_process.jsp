@@ -60,6 +60,8 @@ function pageLoad(){
 	loadGridList('init');
 	getMonTotalCost();
 	getAddTotalCost();
+	getMsgremainCash();
+	getMsgTemplate();
 	
 	getMonList();
 	getAddList();
@@ -527,7 +529,6 @@ function getMonTotalCost(){
 	      async : false, // 비동기모드 : true, 동기식모드 : false
 	      dataType : null,
 	      success : function(result) {
-	      	console.log(result);
 	        $("#totalOutcost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
 	        $("#totalDepositcost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
 	        $("#totalAddcost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
@@ -547,7 +548,6 @@ function getAddTotalCost(){
 	      async : false, // 비동기모드 : true, 동기식모드 : false
 	      dataType : null,
 	      success : function(result) {
-	      	console.log(result);
 	        $("#totalAddDepositcost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
 	        $("#totalAddOutcost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
 
@@ -586,7 +586,6 @@ function getMonList(){
       dataType : null,
       data : param,
       success : function(result) {
-	      	console.log("getMonList success");
 	      	loadGridList('mon', result);
       },
       error: function(request, status, error) {
@@ -595,6 +594,7 @@ function getMonList(){
       }
   	});
 	
+	
 	$.ajax({
 	      type : 'POST',
 	      url : '/calculate/getMonlableCost',
@@ -602,7 +602,6 @@ function getMonList(){
 	      dataType : null,
 	      data : param,
 	      success : function(result) {
-	      	console.log(result);
 	        $("#lableAddCost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
 	        $("#lableDepositCost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
 	        $("#lableOutCost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
@@ -641,7 +640,6 @@ function getAddList(){
 	      dataType : null,
 	      data : param,
 	      success : function(result) {
-	      	console.log("getAddList success");
 	      	loadGridList('add', result);
 	      },
 	      error: function(request, status, error) {
@@ -657,7 +655,6 @@ function getAddList(){
 	      dataType : null,
 	      data : param,
 	      success : function(result) {
-	      	console.log(result);
 	        $("#addlableMaterCost").text(Number(result.matercost).toLocaleString('ko-KR')+ "원");
 	        $("#addlableDepositCost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
 	        $("#addlableOutscCost").text(Number(result.outsccost).toLocaleString('ko-KR')+ "원");
@@ -1054,7 +1051,6 @@ function saveGrid(type){
              }
              
              var itemLItem = itemL.filter(item => item.id == addExcelGrid.collectionView.items[i].내역);
-            console.log(itemLItem);
              if(itemLItem.length <= 0){
             	 alert("등록되지 않은 내역이 존재합니다. - "+addExcelGrid.collectionView.items[i].내역);
                  return false;
@@ -1246,7 +1242,6 @@ function getClassifiList(type){
 	                   	for(var i =0; i<result.length; i++){
 	                   		classifi[i] = { id: result[i].classifiCd, name: result[i].classifiNm };	
 	                   	}
-	                   	console.log(classifi);
 	                   	returnVal = classifi;
 	                   	
                    }
@@ -1316,7 +1311,6 @@ function getBldgList() {
                 		bldg[i] = { id: result[i].bldgCd, name: result[i].bldgNm,  areaCd: result[i].areaCd,  areaNm: result[i].areaNm, zone: result[i].zone };	
                 	}
                 	returnVal = bldg;
-                	console.log(returnVal);
                 }
             },
             error : function(request,status,error) {
@@ -1335,6 +1329,9 @@ function showPop(pop){
 		
 	}else if(pop == "add_breakdown"){
 		getItemList('list');
+	
+	}else if(pop == "pop_sendMsgUpdate"){
+		getMsgTemplate();
 	}
 	
 	$('#'+pop).addClass('is-visible');
@@ -1482,6 +1479,151 @@ function importExcel(type){
 	}
 }
 
+//알리미톡
+function getMsgremainCash(){
+	var param = {
+			api_key 	: "DCTMVYLLNTM0621"
+		};
+	
+	//임시 
+	var result = { "remainCash":"1000"};
+	$("#msgRemainCash").text(Number(result.remainCash).toLocaleString('ko-KR')+ "원");
+	
+	/* $.ajax({
+	      type : 'POST',
+	      url : 'http://221.139.14.189/API/remainCash',
+	      async : false, // 비동기모드 : true, 동기식모드 : false
+	      dataType : null,
+	      data : param,
+	      success : function(result) {
+	      	console.log(result);
+	        $("#lableAddCost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
+	        $("#lableDepositCost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
+	        $("#lableOutCost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
+	        
+	        getMonTotalCost();
+
+	      },
+	      error: function(request, status, error) {
+	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+	      }
+	  }); */
+}
+
+function getMsgTemplate(){
+	$.ajax({
+        url : "/calculate/getMsgTemplate",
+        async : false, // 비동기모드 : true, 동기식모드 : false
+        type : 'POST',
+        success : function(result) {
+            if(result.length > 0){
+            	$("#msgUpdate").val(result[0].nm);
+            }
+        },
+        error : function(request,status,error) {
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+	});
+}
+
+function saveMsgTemplate(){
+	var param = {
+		nm : $("#msgUpdate").val()
+	};
+	
+	$.ajax({
+        url : "/calculate/saveMsgTemplate",
+        async : false, // 비동기모드 : true, 동기식모드 : false
+        type : 'POST',
+        data : param,
+        success : function(result) {
+            alert("발신메세지가 수정되었습니다.");
+            closePop();
+        },
+        error : function(request,status,error) {
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+	}); 
+}
+
+function sendMsg(){
+	var param;
+	var msg;
+	var conCost;
+	var addCost;
+	var totalCost;
+	var msgError = "[ 발신메세지 오류 내역 ]\n세부오류는 http://www.alimtalkme.com 의 <발송 및 예약 내역> 메뉴에서 확인 할 수 있습니다.\n\n";
+	
+	var item = monGrid.rows.filter(r => r.isSelected);
+	if(item.length == 0){
+        alert("선택된 행이 없습니다.");
+        return false;
+        
+    }else{
+    	//문자발송 시작
+    	for(var i =0; i< item.length; i++){
+    		conCost = (Number((item[i].dataItem.conCost == null ? 0 : item[i].dataItem.conCost))
+						+ Number((item[i].dataItem.surtax == null ? 0 : item[i].dataItem.surtax))
+					  ).toLocaleString('ko-KR');
+    		
+    		addCost = Number((item[i].dataItem.addCost == null ? 0 : item[i].dataItem.addCost)).toLocaleString('ko-KR');
+    		
+    		totalCost = (Number((item[i].dataItem.conCost == null ? 0 : item[i].dataItem.conCost))
+						  + Number((item[i].dataItem.surtax == null ? 0 : item[i].dataItem.surtax))
+						  + Number((item[i].dataItem.addCost == null ? 0 : item[i].dataItem.addCost))
+						//+ Number((item[i].overCost == null ? 0 : item[i].overCost)) //이월금
+						).toLocaleString('ko-KR');
+    		
+    		
+    		msg = "[ "+item[i].dataItem.bldgNm+" ]\n"
+    			  +"월관리비 "+conCost.toLocaleString('ko-KR')+"원\n"
+    			  +"추가금액 "+addCost+"원\n"
+    			  +"총 "+totalCost+"원\n\n"
+    			  +$("#msgUpdate").val();
+    		
+    		param = {
+        			api_key 	: "DCTMVYLLNTM0621"
+        			, msg : msg
+        			, subject : "[청춘클린 "+item[i].dataItem.monMt+"월 정산 안내]"	//lms 제목
+        			, callback : "01058743499"							//-를 제외한 발신번호 
+        			, dstaddr : item[i].dataItem.pnum					// -를 제외한 수신번호
+        			, send_reserve : 0 									//즉시발송 0, 예약발송 1
+        		};
+    		
+    		console.log(param);
+    	/* 	
+        	$.ajax({
+                url : "http://221.139.14.189/API/sms_send",
+                async : false, // 비동기모드 : true, 동기식모드 : false
+                type : 'POST',
+                data : param,
+                success : function(result) {
+                },
+                error : function(request,status,error) {
+                    alert("code:"+request.result+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    msgError += item[i].bldgNm+" :"+request.result;
+                    
+                }
+        	});  */
+        }
+    	
+    }
+	
+	/* var item = bldgGrid.rows.filter(r => r.isSelected);
+	var selectBldg;
+	
+	if(item.length == 0){
+        alert("선택된 행이 없습니다.");
+        return false;
+    }else{
+    	selectBldg = item[0].dataItem.bldgCd + item[0].dataItem.dongNum; */
+	
+	
+	
+
+}
+
 //이벤트 처리 
 $(function(){
     $("#monImportFile").on('change', function (params) {
@@ -1525,7 +1667,7 @@ $(function(){
                         </dl>
                         <dl>
                             <dt>문자 잔액</dt>
-                            <dd>0000원</dd>
+                            <dd id="msgRemainCash">0원</dd>
                         </dl>
                     </div>
                     <div class="admin_utility">
@@ -1574,8 +1716,8 @@ $(function(){
                             <div class="btn_wrap">
                                 <button type="button" class="stroke"  onClick="_getUserGridLayout('monLayout', monGrid);">칼럼위치저장</button>
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('monLayout', monGrid, monColumns);">칼럼초기화</button>
-                                <button type="button">문구수정</button>
-                                <button type="button">문자발송</button>
+                                <button type="button" onClick="showPop('pop_sendMsgUpdate');">문구수정</button>
+                                <button type="button" onClick="sendMsg();">문자발송</button>
                                 <button type="button" id="saveMonTop" onClick="saveGrid('mon')">저장</button>
                                 <button type="button" id="saveMonTopExcel" onClick="saveGrid('monExcel')">저장</button>
                             </div>
@@ -1589,8 +1731,8 @@ $(function(){
                             <div class="btn_wrap">
                                 <button type="button" class="stroke"  onClick="_getUserGridLayout('monLayout', monGrid);">칼럼위치저장</button>
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('monLayout', monGrid, monColumns);">칼럼초기화</button>
-                                <button type="button">문구수정</button>
-                                <button type="button">문자발송</button>
+                                <button type="button" onClick="showPop('pop_sendMsgUpdate');">문구수정</button>
+                                <button type="button" onClick="sendMsg();">문자발송</button>
                                 <button type="button" id="saveMonBottom" onClick="saveGrid('mon')">저장</button>
                                 <button type="button" id="saveMonBottomExcel" onClick="saveGrid('monExcel')">저장</button>
                             </div>
@@ -1749,36 +1891,38 @@ $(function(){
             </div>
         </div>
     </div>
+    <!--내역생성 팝업 영역 끝 -->
     
-    
-    
-   <!--  <div class="popup" id="add_breakdown">
-        <div class="popup_container" > 
+    <!-- 팝업 : 문자수정 -->
+    <div class="popup" id="pop_sendMsgUpdate">
+        <div class="popup_container">
             <div class="popup_head">
-                <p class="popup_title">내역추가</p>
-                <button type="button" class="popup_close" onClick="closePop('item');">x</button>
+                <p class="popup_title">발신메세지 수정</p>
+                <button type="button" class="popup_close" onClick="closePop('sendMsgUpdate');">x</button>
             </div>
             <div class="popup_inner">
-                <dfn>필수항목 *</dfn>
-                <form action="#" method="post">
-                    <div class="row">
-                        <label for="classifi1">분류명<i>*</i></label>
-                        <select name="classifi1" id="classifi1">
-                        </select>
-                    </div>
-                    <div class="row" id = "itemInput">
-                    </div>
-                </form>
-                <div class="popup_btn_area">
-                    <button type="button" class="popup_btn confirm" onClick="saveClassifiItem();">추가</button>
+            	<div class="row">
+                    <label for="msgFix" style="vertical-align:top;">고정</label>
+                    <textarea name="msgFix" id="msgFix" cols="60" rows="10" readonly>
+[ 건물명 ] 
+월관리비 000원
+추가금액 000원
+총 000원</textarea>
                 </div>
+                <div class="row">
+                    <label for="msgUpdate" style="vertical-align:top;">수정</label>
+                    <textarea name="msgUpdate" id="msgUpdate" cols="60" rows="10"></textarea>
+                </div>
+                <div class="popup_btn_area">
+	                <div class="right">
+	                    <button type="button" class="popup_btn" onclick="saveMsgTemplate();">문구수정</button>
+	                </div>
+	            </div>
             </div>
         </div>
     </div>
-     -->
+    <!--문자수정 팝업 영역 끝 -->
     
-    <!--내역생성 팝업 영역 끝 -->
-        <!--물품추가 팝업 영역 끝-->
     <!-- 추가된 행 / 수정된 행 처리용 그리드 -->
     <div class="grid_wrap" id="editDiv" style="display:none;">
         <div id="editGrid"  style="height:500px;"></div>
