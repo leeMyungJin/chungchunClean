@@ -220,7 +220,7 @@ function clickPager(idx, grid, gridId) {
 }
 
 //페이징 html 셋팅
-function refreshPaging(totalData, currentPage, grid, gridId) {
+function refreshPaging(totalData, currentPage, grid, gridId, gridView, gridPager) {
     //페이지 사이즈
     const dataPerPage = grid.collectionView.pageSize; // 그리드의 한 페이지당 보여지는 행의 개수
     // 페이지 숫자 목록
@@ -274,11 +274,30 @@ function refreshPaging(totalData, currentPage, grid, gridId) {
         pages.append('<span onClick="clickPager(' + totalPage + ', ' + gridId + ', ' + "'" + gridId + "'" + ')" >  ' + '>' + ' </span>');
     }
     pages.append('<span onClick="clickPager(' + totalPage + ', ' + gridId + ', ' + "'" + gridId + "'" + ')" > >> </span>');
-
+    
+    
+//    var selectBox = '<select name="'+gridId+'pageCount" id="'+gridId+'pageCount" onchange="pagingCountChange( monGrid, monView, monGridPager)">'
+//    	//'<select name="'+gridId+'pageCount" id="'+gridId+'pageCount" onchange="pagingCountChange('+grid+', '+gridView+', '+gridPager+')">'
+//				    +'<option value="30">30</option>'
+//				    +'<option value="50">50</option>'
+//				    +'<option value="100" selected="selected">100</option>'
+//				    +'</select>';
+//
+//    pages.append(selectBox);
 
     $(".pager").removeClass('wj-control wj-content wj-pager wj-collectionview-navigator wj-state-empty wj-state-readonly');
 }
 
+function pagingCountChange(grid, gridView, gridPager){
+	console.log("pagingCountChange");
+	
+	gridView = new wijmo.collections.CollectionView(result, {
+        pageSize: 100,
+        trackChanges: true
+    });
+	gridPager.cv = gridView;
+	grid.itemsSource = gridView;
+}
 /**
  *  0으로 채우기
  * @param  width  : 자릿수

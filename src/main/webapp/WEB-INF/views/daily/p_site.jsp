@@ -121,7 +121,7 @@
                 </p>
                 <p>
                     <strong>비고</strong>
-                    <span>${dailyInfo.memo}</span>
+                    <span>${dailyInfo.dmemo}</span>
                 </p>
             </div>
         </header>

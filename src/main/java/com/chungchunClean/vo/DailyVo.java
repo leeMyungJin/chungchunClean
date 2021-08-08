@@ -18,7 +18,7 @@ public class DailyVo {
 	private String postLocNm; 	//근태위치 
 	private String dongNum;		//동번호
 	private String memo; 		//근태특이사항
-	private String dmamo;		//점검특이사항
+	private String dmemo;		//점검특이사항
 	private String imgPath; 	//현장점검사
 	private String cretDt;		//등록일자
 	private String cretId;		//등록자 
@@ -156,11 +156,11 @@ public class DailyVo {
 	public void setImgPath(String imgPath) {
 		this.imgPath = imgPath;
 	}
-	public String getDmamo() {
-		return dmamo;
+	public String getDmemo() {
+		return dmemo;
 	}
-	public void setDmamo(String dmamo) {
-		this.dmamo = dmamo;
+	public void setDmemo(String dmemo) {
+		this.dmemo = dmemo;
 	}
 	@Override
 	public String toString() {
@@ -168,7 +168,7 @@ public class DailyVo {
 				+ bldgCd + ", bldgNm=" + bldgNm + ", dtlAddr=" + dtlAddr + ", clientNm=" + clientNm + ", onWorkDt="
 				+ onWorkDt + ", offWorkDt=" + offWorkDt + ", officerNm=" + officerNm + ", visitDt=" + visitDt
 				+ ", garbgCnt=" + garbgCnt + ", foodChipCnt=" + foodChipCnt + ", siteMntrUrl=" + siteMntrUrl
-				+ ", postLocNm=" + postLocNm + ", dongNum=" + dongNum + ", memo=" + memo + ", dmamo=" + dmamo
+				+ ", postLocNm=" + postLocNm + ", dongNum=" + dongNum + ", memo=" + memo + ", dmemo=" + dmemo
 				+ ", imgPath=" + imgPath + ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt=" + updtDt
 				+ ", updtId=" + updtId + "]";
 	}

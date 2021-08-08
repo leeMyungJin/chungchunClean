@@ -519,6 +519,11 @@ function loadGridList(type, result){
 	  refreshPaging(classifiGrid.collectionView.totalItemCount, 1, classifiGrid, 'classifiGrid');  
 	  refreshPaging(itemGrid.collectionView.totalItemCount, 1, itemGrid, 'itemGrid'); 
 	  
+/* 	  refreshPaging(monGrid.collectionView.totalItemCount, 1, monGrid, 'monGrid', monView, monGridPager);  
+	  refreshPaging(addGrid.collectionView.totalItemCount, 1, addGrid, 'addGrid', addView, addGridPager);  
+	  refreshPaging(classifiGrid.collectionView.totalItemCount, 1, classifiGrid, 'classifiGrid', classifiView, classifiGridPager);  
+	  refreshPaging(itemGrid.collectionView.totalItemCount, 1, itemGrid, 'itemGrid', itemView, itemGridPager);  */
+	  
 }
 
 
