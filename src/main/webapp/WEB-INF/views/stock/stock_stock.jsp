@@ -347,15 +347,15 @@ function saveGrid(){
                 <div class="admin_summary">
                     <dl>
                         <dt>총 재고수량</dt>
-                        <dd id="tot_quantity">00개</dd>
+                        <dd id="tot_quantity">0개</dd>
                     </dl>
                     <dl>
                         <dt>추가입고 필요항목</dt>
-                        <dd id="add_warehousing">00개</dd>
+                        <dd id="add_warehousing">0개</dd>
                     </dl>
                     <dl>
                         <dt>총 재고자산</dt>
-                        <dd id="tot_asset">0000원</dd>
+                        <dd id="tot_asset">0원</dd>
                     </dl>
                 </div>
                 <div class="admin_utility">

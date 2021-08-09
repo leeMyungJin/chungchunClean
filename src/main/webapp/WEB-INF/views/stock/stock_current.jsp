@@ -62,6 +62,8 @@ function loadGridCurrentList(type, result){
 		        cv: currentView
 		    });
 		   
+		   console.log(getCategoryList());
+		   
 		   lCategyList = new wijmo.grid.DataMap(getCategoryList(), 'id', 'name');
 		   classifiList = new wijmo.grid.DataMap(getClassifiList(), 'id', 'name');
 		   itemList = new wijmo.grid.DataMap(getItemList(), 'id', 'name');
@@ -72,13 +74,13 @@ function loadGridCurrentList(type, result){
 		    
 		   currentColumns = [
 			      { isReadOnly: true, width: 35, align:"center"},
-			      { binding: 'cateSarSeq', header: '시퀀스', isReadOnly: true, width: 0, align:"center" },
+			      { binding: 'cateSarSeq', header: '시퀀스', isReadOnly: true, width: 0, align:"center", visible: false },
 			      { binding: 'cretDt', header: '일자', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'cretNm', header: '담당자', isReadOnly: true, width: 100, align:"center" },
-			      { binding: 'classifiCd', header: '분류', isReadOnly: false, width: 120, align:"center", dataMap: classifiList, dataMapEditor: 'DropDownList' },
-			      { binding: 'lCategyCd', header: '카테고리', isReadOnly: false, width: 150, align:"center", dataMap: lCategyList, dataMapEditor: 'DropDownList' },
-			      { binding: 'itemCd', header: '물품', isReadOnly: false, width: '*', align:"center", dataMap: itemList, dataMapEditor: 'DropDownList'},
-			      { binding: 'cost', header: '원가', isReadOnly: true, width: 100, align:"center" },
+			      { binding: 'classifiCd', header: '분류', isReadOnly: false, width: 200, align:"center", dataMap: classifiList, dataMapEditor: 'DropDownList' },
+			      { binding: 'lCategyCd', header: '카테고리', isReadOnly: false, width: 200, align:"center", dataMap: lCategyList, dataMapEditor: 'DropDownList' },
+			      { binding: 'itemCd', header: '물품', isReadOnly: false, width: 200, align:"center", dataMap: itemList, dataMapEditor: 'DropDownList'},
+			      { binding: 'cost', header: '원가', isReadOnly: true, width: 200, align:"center" },
 			      { binding: 'sarQuantity', header: '입출고수량', isReadOnly: false, width: 120, align:"center"},
 			      { binding: 'quantity', header: '재고수량', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'returnQuantity', header: '반품수량', isReadOnly: false, width: 120, align:"center" },
@@ -270,15 +272,17 @@ function getCategoryList() {
             async : false, // 비동기모드 : true, 동기식모드 : false
             type : 'POST',
             success : function(result) {
+            	var gategory = [];
                 if(result.length > 0){
-                	var gategory = [];
                 	
                 	for(var i =0; i<result.length; i++){
                 		gategory[i] = { id: result[i].lCategyCd, name: result[i].lCategyNm };	
                 	}
-                	returnVal = gategory;
                 	
+                }else{
+                	gategory[0] = { id: null, name: null };	
                 }
+                returnVal = gategory;
             },
             error : function(request,status,error) {
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -297,9 +301,8 @@ function getItemList() {
             async : false, // 비동기모드 : true, 동기식모드 : false
             type : 'POST',
             success : function(result) {
+            	var item = [];
                 if(result.length > 0){
-                	console.log(result);
-                	var item = [];
                 	
                 	for(var i =0; i<result.length; i++){
                 		item[i] = { id: result[i].itemCd
@@ -308,10 +311,15 @@ function getItemList() {
                 				, cost: result[i].cost
                 				, quantity: result[i].quantity };	
                 	}
-                	console.log(item);
-                	returnVal = item;
                 	
+                }else{
+                	item[0] = { id: null
+            				, name: null
+            				, lCategyCd: null
+            				, cost: null
+            				, quantity: null };	
                 }
+                returnVal = item;
             },
             error : function(request,status,error) {
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -330,16 +338,17 @@ function getClassifiList() {
             async : false, // 비동기모드 : true, 동기식모드 : false
             type : 'POST',
             success : function(result) {
+            	var classifi = [];
                 if(result.length > 0){
-                	var classifi = [];
                 	
                 	for(var i =0; i<result.length; i++){
                 		classifi[i] = { id: result[i].cd, name: result[i].nm };	
                 	}
-                	console.log(classifi);
-                	returnVal = classifi;
                 	
+                }else{
+                	classifi[0] = { id: null, name: null };	
                 }
+                returnVal = classifi;
             },
             error : function(request,status,error) {
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

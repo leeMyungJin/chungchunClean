@@ -31,7 +31,8 @@
 	--2. 금년 매출비율 (전체 매출에 대한 월관리, 부가수익 비중)
 	--getStatisticsTotalPercent
 	
-	select round(sum(ammCost) / sum(conCost)*100, 0) as amm_percent, round((sum(aaCost) / sum(conCost))*100, 0) as aa_percent
+	select CASE WHEN sum(conCost) = 0 THEN 0 ELSE round(sum(ammCost) / sum(conCost)*100, 0) end as amm_percent,
+			CASE WHEN sum(conCost) = 0 THEN 0 ELSE round((sum(aaCost) / sum(conCost))*100, 0) end as aa_percent
 	from (
 		select coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) as conCost --금년 매출액
 				, 0 as ammCost

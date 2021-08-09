@@ -104,7 +104,7 @@ function loadGridStockList(type, result){
                 { binding: 'memo', header: '메모', isReadOnly: false, width: 280, align:"center"  },
                 { binding: 'activeYn', header: '활성화', isReadOnly: false, width: 80, align:"center", dataMap: activeList, dataMapEditor: 'DropDownList'},
                 { binding: 'cretDt', header: '계정생성일', isReadOnly: true, width: 175, align:"center"},
-                { binding: 'edit', header: '정보수정', isReadOnly: true, width: "*", align:"center",
+                { binding: 'edit', header: '정보수정', isReadOnly: true, width: 150, align:"center",
                     cellTemplate: wijmo.grid.cellmaker.CellMaker.makeButton({
                         text: '<b>수정</b>',
                         click: (e, ctx) => {

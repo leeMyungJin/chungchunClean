@@ -64,9 +64,9 @@ function loadGridDailyList(type, result){
 			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 150, align:"center"  },
 			      { binding: 'dongNum', header: '동번호', isReadOnly: true, width: 100, align:"center"  },
 			      { binding: 'cretDt', header: '업로드일자', isReadOnly: true, width: 200, align:"center"  },
-			      { binding: 'memo', header: '근태특이사항', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'memo', header: '근태특이사항', isReadOnly: true, width: 300, align:"center" },
 			      { binding: 'siteMntrUrl', header: '현장점검 URL', isReadOnly: true, width: 200, align:"center" },
-			      { binding: 'dmemo', header: '점검특이사항', isReadOnly: true, width: '*', align:"center" },
+			      { binding: 'dmemo', header: '점검특이사항', isReadOnly: true, width: 300, align:"center" },
 			      { binding: 'postLocNm', header: '근태위치', isReadOnly: true, width: 200, align:"center" }
 			];
 		  
