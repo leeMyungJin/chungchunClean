@@ -79,7 +79,7 @@
 			</choose>
 		</if>
 		<if test="fromDate != null and toDate != null">
-			and dm.cret_dt between #{fromDate}::timestamp and #{toDate}::timestamp 
+			and dm.cret_dt between #{fromDate}::timestamp and (to_date(#{toDate}, 'YYYY-MM-DD')+1)::timestamp
 		</if>
 		order by dm.daily_mntr_cd
 	</select>	
@@ -171,7 +171,7 @@
 					</choose>
 				</if>
 				<if test="fromDate != null and toDate != null">
-					and dm.cret_dt between #{fromDate}::timestamp and #{toDate}::timestamp 
+					and dm.cret_dt between #{fromDate}::timestamp and (to_date(#{toDate}, 'YYYY-MM-DD')+1)::timestamp 
 				</if>
 			) as workBldg
 		from (	select dm.officer_nm
