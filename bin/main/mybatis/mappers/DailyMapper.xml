@@ -11,15 +11,15 @@
 				, dm.bldg_cd
 				, bb.dtl_addr 
 				, bb.client_nm
-				, to_char(dm.on_work_dt, 'YYYY-MM-DD') as on_work_dt
-				, to_char(dm.off_work_dt, 'YYYY-MM-DD') as off_work_dt
+				, to_char(dm.on_work_dt, 'YYYY-MM-DD HH24:MI') as on_work_dt
+				, to_char(dm.off_work_dt, 'YYYY-MM-DD HH24:MI') as off_work_dt
 				, dm.officer_nm 
 				, dm.site_mntr_url 
 				, to_char(dm.visit_dt, 'YYYY-MM-DD') as visit_dt
 				, dm.garbg_cnt 
 				, dm.food_chip_cnt 
 				, dm.memo
-				, to_char(dm.cret_dt, 'YYYY-MM-DD') as cret_dt
+				, to_char(dm.cret_dt, 'YYYY-MM-DD HH24:MI') as cret_dt
 				, dm.cret_id 
 				, to_char(dm.updt_dt, 'YYYY-MM-DD') as updt_dt 
 				, dm.updt_id
@@ -79,7 +79,7 @@
 			</choose>
 		</if>
 		<if test="fromDate != null and toDate != null">
-			and dm.cret_dt between #{fromDate}::timestamp and #{toDate}::timestamp 
+			and dm.cret_dt between #{fromDate}::timestamp and (to_date(#{toDate}, 'YYYY-MM-DD')+1)::timestamp
 		</if>
 		order by dm.daily_mntr_cd
 	</select>	
@@ -171,7 +171,7 @@
 					</choose>
 				</if>
 				<if test="fromDate != null and toDate != null">
-					and dm.cret_dt between #{fromDate}::timestamp and #{toDate}::timestamp 
+					and dm.cret_dt between #{fromDate}::timestamp and (to_date(#{toDate}, 'YYYY-MM-DD')+1)::timestamp 
 				</if>
 			) as workBldg
 		from (	select dm.officer_nm

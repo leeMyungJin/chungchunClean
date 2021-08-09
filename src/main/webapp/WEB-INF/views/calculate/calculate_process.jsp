@@ -1241,15 +1241,15 @@ function getClassifiList(type){
         		   loadGridList('classifi', result);
         		   
         	   }else if(type == 'itemPop' || type == 'drop'){
+        		   var classifi = [];
         		   if(result.length > 0){
-	                   	var classifi = [];
-	                   	
 	                   	for(var i =0; i<result.length; i++){
 	                   		classifi[i] = { id: result[i].classifiCd, name: result[i].classifiNm };	
 	                   	}
-	                   	returnVal = classifi;
-	                   	
+                   }else{
+                	   classifi[0] = { id: null, name: null };	
                    }
+        		   returnVal = classifi;
         		   
         	   }else if(type == 'dupChk'){
         		   returnVal = result;
@@ -1283,10 +1283,13 @@ function getItemList(type){
         	   
         	   }else if(type == 'drop'){
         		   var item = [];
-               	
-	               for(var i =0; i<result.length; i++){
-	            	   item[i] = { id: result[i].itemCd, name: result[i].itemNm, classifiCd: result[i].classifiCd };	
-	               }
+        		   if(result.length > 0){
+		               for(var i =0; i<result.length; i++){
+		            	   item[i] = { id: result[i].itemCd, name: result[i].itemNm, classifiCd: result[i].classifiCd };	
+		               }
+        		   }else{
+        			   item[0] = { id: null, name: null, classifiCd: null };
+        		   }
 	               returnVal = item;
         	   }
 
@@ -1315,8 +1318,10 @@ function getBldgList() {
                 	for(var i =0; i<result.length; i++){
                 		bldg[i] = { id: result[i].bldgCd, name: result[i].bldgNm,  areaCd: result[i].areaCd,  areaNm: result[i].areaNm, zone: result[i].zone };	
                 	}
-                	returnVal = bldg;
+                }else{
+                	bldg[0] = { id: null, name: null,  areaCd: null,  areaNm: null, zone: null };	
                 }
+                returnVal = bldg;
             },
             error : function(request,status,error) {
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

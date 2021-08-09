@@ -99,7 +99,7 @@ function loadGridIncomeList(type, result){
 			      { binding: 'conCost', header: '계약금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false  },
 			      { binding: 'addCost', header: '추가금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false   },
 			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false  },
-			      { binding: 'depositCost', header: '입금금액', isReadOnly: true, width: '*', align:"center", aggregate: 'Sum', allowMerging: false  }
+			      { binding: 'depositCost', header: '입금금액', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false  }
 			];
 		    
 		   incomeGrid = new wijmo.grid.FlexGrid('#incomeGrid', {

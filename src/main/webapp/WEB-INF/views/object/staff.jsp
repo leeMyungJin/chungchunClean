@@ -56,7 +56,7 @@ function loadGridStaffList(type, result){
 		      { binding: 'staffPnum', header: '전화번호', isReadOnly: true, width: 120, align:"center"  },
 		      { binding: 'staffEmail', header: '이메일', isReadOnly: true, width: 200, align:"center"  },
 		      { binding: 'position', header: '직급', isReadOnly: true, width: 100, align:"center" },
-		      { binding: 'memo', header: '메모', isReadOnly: true, width: '*', align:"center" },
+		      { binding: 'memo', header: '메모', isReadOnly: true, width: 400, align:"center" },
 		      { binding: 'lateassDt', header: '최근접속일', isReadOnly: true, width: 100 , align:"center" },
 		      { binding: 'cretDt', header: '계정생성일', isReadOnly: true, width: 100 , align:"center" },
 		      { binding: 'edit', header: '정보수정', width: 100, align:"center",
