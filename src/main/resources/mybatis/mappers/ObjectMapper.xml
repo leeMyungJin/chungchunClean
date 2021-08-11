@@ -233,7 +233,16 @@
 	insert into web.bldg_Bas 
 	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, con_cost, con_from_dt, con_to_dt,  surtax_yn, surtax ,cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
 	values
-	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, #{pnum}, #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxYn}, #{surtax}::numeric, now(), #{id}, now(), #{id}, #{zone}, #{memo}, #{activeYn})
+	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, #{pnum}, #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxYn}
+	<choose>
+		<when test="surtax != null and surtax != ''">
+			, #{surtax}::numeric
+		</when>
+		<otherwise>
+			, null
+		</otherwise>
+	</choose>
+	, now(), #{id}, now(), #{id}, #{zone}, #{memo}, #{activeYn})
 	</insert>
 	<insert id="addBuildingDetail" parameterType="hashMap">
 	insert into web.bldg_dtl
@@ -274,9 +283,9 @@
 		bldg_cd,
 		dong_num,
 		clean_cnt,
-		to_char(from_dt::date,'yyyy-mm-dd') from_dt,
-		to_char(to_dt::date,'yyyy-mm-dd') to_dt,
-		to_char(cret_dt, 'yyyy-mm-dd') cret_dt
+		CASE WHEN from_dt is null or from_dt = ''  then from_dt ELSE to_char(from_dt::date,'yyyy-mm-dd') end from_dt,
+		CASE WHEN to_dt is null or to_dt = ''  then to_dt ELSE to_char(to_dt::date,'yyyy-mm-dd') end to_dt,
+		to_char(cret_dt::date,'yyyy-mm-dd')
 	from web.bldg_dtl
 	where bldg_cd=#{bldgCd}
 	</select>

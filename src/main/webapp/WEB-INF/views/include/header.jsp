@@ -15,6 +15,7 @@
 <script src="../js/include/common.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+<script src="../js/include/jquery.ajax-cross-origin.min.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" /> 
 <link rel="icon" href="../image/icon_favicon.ico" type="image/ico"> 
 <!-- <link rel="shortcut icon" href="../image/icon_favicon.ico"/> -->
