@@ -543,7 +543,7 @@ function addBuilding(){
              if(bldgDetailView.items[i].dongNum == "" || bldgDetailView.items[i].dongNum == undefined){
                  alert("상세정보 " + (i+1) + "행 동번호를 입력하시기 바랍니다.");
                  return false;
-             }else if(bldgDetailView.items[i].cleanCnt == "" || bldgDetailView.items[i].cleanCnt == undefined){
+             }/* else if(bldgDetailView.items[i].cleanCnt == "" || bldgDetailView.items[i].cleanCnt == undefined){
                  alert("상세정보 " + (i+1) + "행 청소횟수를 입력하시기 바랍니다.");
                  return false;
              }else if(bldgDetailView.items[i].fromDt == "" || bldgDetailView.items[i].fromDt == undefined){
@@ -552,7 +552,7 @@ function addBuilding(){
              }else if(bldgDetailView.items[i].toDt == "" || bldgDetailView.items[i].toDt == undefined){
                  alert("상세정보 " + (i+1) + "행 종료일을 지정하시기 바랍니다.");
                  return false;
-             }else{
+             } */else{
                  detailParams.push(bldgDetailView.items[i]);
              }
          }
@@ -648,13 +648,13 @@ function buildingValidation(type){
     }else if(view.items.length == 0){
         alert("세부정보를 입력하시기 바랍니다.");
         return false;
-    }else if(form.conFromDt.value == ""){
+    }/* else if(form.conFromDt.value == ""){
         alert("계약시작일을 입력하시기 바랍니다.");
         return false;
     }else if(form.conToDt.value == ""){
         alert("계약종료일을 입력하시기 바랍니다.");
         return false;
-    }else if(form.conCost.value == ""){
+    } */else if(form.conCost.value == ""){
         alert("계약금액을 입력하시기 바랍니다.");
         return false;
     }else if(form.surtaxYn.value == ""){
@@ -783,7 +783,7 @@ function modifyBuilding(){
                     if(rows[i].dongNum == "" || rows[i].dongNum == undefined){
                         alert("동번호를 입력하시기 바랍니다.");
                         return false;
-                    }else if(rows[i].cleanCnt == "" || rows[i].cleanCnt == undefined){
+                    }/* else if(rows[i].cleanCnt == "" || rows[i].cleanCnt == undefined){
                         alert("청소횟수를 입력하시기 바랍니다.");
                         return false;
                     }else if(rows[i].fromDt == "" || rows[i].fromDt == undefined){
@@ -792,7 +792,7 @@ function modifyBuilding(){
                     }else if(rows[i].toDt == "" || rows[i].toDt == undefined){
                         alert("종료일을 지정하시기 바랍니다.");
                         return false;
-                    }
+                    } */
                 }
                 var params = {
                     clientNm    : form.clientNm.value,
@@ -1015,14 +1015,14 @@ function saveGrid(){
 
                 value = wijmo.changeType(excelGrid.collectionView.items[i].계약시작일, wijmo.DataType.String, null);
                 var dateRegExp = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
-                if(!dateRegExp.test(value)){
+                if(value != null && value != '' && !dateRegExp.test(value)){
                     alert("계약시작일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
                     return false;
                 }
 
                 value = wijmo.changeType(excelGrid.collectionView.items[i].계약종료일, wijmo.DataType.String, null);
-                if(!dateRegExp.test(value)){
-                    alert("계약시작일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
+                if(value != null && value != '' && !dateRegExp.test(value)){
+                    alert("계약종일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
                     return false;
                 }
 
@@ -1033,13 +1033,13 @@ function saveGrid(){
                 }
 
                 value = wijmo.changeType(excelGrid.collectionView.items[i].시작일, wijmo.DataType.String, null);
-                if(!dateRegExp.test(value)){
+                if(value != null && value != '' && !dateRegExp.test(value)){
                     alert("시작일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
                     return false;
                 }
 
                 value = wijmo.changeType(excelGrid.collectionView.items[i].종료일, wijmo.DataType.String, null);
-                if(!dateRegExp.test(value)){
+                if(value != null && value != '' && !dateRegExp.test(value)){
                     alert("종료일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
                     return false;
                 }
@@ -1238,7 +1238,7 @@ function enterkey() {
                         </div>
                     </div>
                     <div class="row">
-                        <label for="contDate">계약기간<i>*</i></label>
+                        <label for="contDate">계약기간</label>
                         <input type="date" id="conFromDt" name="conFromDt" required>
                         <input type="date" id="conToDt" name="conToDt" required>
                     </div>
@@ -1327,7 +1327,7 @@ function enterkey() {
                         </div>
                     </div>
                     <div class="row">
-                        <label for="contDate">계약기간<i>*</i></label>
+                        <label for="contDate">계약기간</label>
                         <input type="date" id="conFromDt" name="conFromDt" required>
                         <input type="date" id="conToDt" name="conToDt" required>
                     </div>
@@ -1353,8 +1353,8 @@ function enterkey() {
                     </div>
                 </form>
                 <div class="popup_btn_area">
-                    <button type="button" class="popup_btn stroke" onClick="modifyBuilding();">수정</button>
-                    <button type="button" class="popup_btn fill" onClick="deleteBuilding();">삭제</button>
+                    <button type="button" class="popup_btn fill" onClick="modifyBuilding();" style="width:800px;">수정</button>
+                    <!-- <button type="button" class="popup_btn fill" onClick="deleteBuilding();">삭제</button> -->
                 </div>
             </div>
         </div>

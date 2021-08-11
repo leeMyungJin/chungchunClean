@@ -22,6 +22,10 @@
         @media print{
             .btn_wrap, .btn_wrap *{display: none;}
         }
+        span{display: inline-block; text-align:right;}
+        .year{width:50px;}
+        .mon{width:30px;}
+        .day{width:30px;}
     </style>
 </head>
 <script type="text/javascript">
@@ -95,6 +99,8 @@ function getToday(){
         <p>[제 2 조] ‘을’이 제1조의 작업을 시행하기 위하여 소요되는 청소용품 밑 소모자재는 ‘을’의 부담으로 한다.</p>
         <p>[제 3 조] ‘갑’은 청소용역비 금 <span class="line"><script type="text/javascript">viewKorean('${bldgContInfo.conCost}')</script></span>원 <span>(<script type="text/javascript">document.write(parseInt('${bldgContInfo.conCost}').toLocaleString('ko-KR'))</script>원</span>   (부가세별도)을 ‘을’의 청구에 의하여 청소 마지막날에(매월말일) 지급한다.</p>
         <p>[제 4 조] ‘갑’은 ‘을’에게 작업에 필요한 전기나 용수를 무상으로 제공한다.</p>
+         <p>[제 5 조] 본 계약기간은 <span class="year">${fn:substring(bldgContInfo.conFromDt,0,4)}</span>년<span class="mon">${fn:substring(bldgContInfo.conFromDt,5,7)}</span>월<span class="day">${fn:substring(bldgContInfo.conFromDt,8,10)}</span>일로부터 <span class="year">${fn:substring(bldgContInfo.conToDt,0,4)}</span>년<span class="mon">${fn:substring(bldgContInfo.conToDt,5,7)}</span>월<span class="day">${fn:substring(bldgContInfo.conToDt,8,10)}</span>일까지로 하며, ‘을’이 청소용역을 성실히 이행하지 않을 경우 또는 ‘을’이 청소 용역업 등을 수행할 능력이 없다고 인정된 경우에는 ‘갑’은 본 계약을 해지요청 할 수 있다. 
+
         <p>[제 5 조] 본 계약기간은 ${fn:substring(bldgContInfo.conFromDt,0,4)}년 ${fn:substring(bldgContInfo.conFromDt,5,7)}월 ${fn:substring(bldgContInfo.conFromDt,8,10)}일 로부터 ${fn:substring(bldgContInfo.conToDt,0,4)}년 ${fn:substring(bldgContInfo.conToDt,5,7)}월 ${fn:substring(bldgContInfo.conToDt,8,10)}일까지로 하며, ‘을’이 청소용역을 성실히 이행하지 않을 경우 또는 ‘을’이 청소 용역업 등을 수행할 능력이 없다고 인정된 경우에는 ‘갑’은 본 계약을 해지요청 할 수 있다. 
             또한 해지 한달전 통보가 되어야 하며 통보되지 않을시 자동으로 연장한다</p>
         <p>[제 6 조] 상기 계약 일반사항 이외에 아래 내용을 특약사항으로 정하며, 일반사항과 특약사항이 상충되는 경우에는 특약사항을 우선적으로 적용 하도록 한다.</p>

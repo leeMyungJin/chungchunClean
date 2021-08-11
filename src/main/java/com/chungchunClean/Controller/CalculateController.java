@@ -22,6 +22,10 @@ import com.chungchunClean.vo.CalculateVo;
 import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.DailyVo;
 import com.chungchunClean.vo.StockVo;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.body.MultipartBody;
 
 @Controller
 @RequestMapping("/calculate")
@@ -230,6 +234,24 @@ public class CalculateController {
     public void saveMsgTemplate(@RequestParam HashMap<String,Object> params, HttpServletRequest req){
     	
     	calculateService.saveMsgTemplate(params, req.getSession().getAttribute("staffId").toString());
+    }
+
+    
+    @RequestMapping(value = "/getMsgremainCash")
+    public void getMsgremainCash(){
+    	
+    	MultipartBody body = Unirest.post("http://221.139.14.189/API/remainCash")
+    	        					.field("api_key", "DCTMVYLLNTM0621");
+    	    HttpResponse<String> response;
+			try {
+				response = body.asString();
+				System.out.println(response);
+				
+			} catch(Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
     }
 
 

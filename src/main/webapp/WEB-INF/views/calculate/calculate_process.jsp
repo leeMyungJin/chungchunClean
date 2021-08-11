@@ -1491,34 +1491,67 @@ function importExcel(type){
 
 //알리미톡
 function getMsgremainCash(){
-	var param = {
-			api_key 	: "DCTMVYLLNTM0621"
-		};
+	
+	var formData = new FormData();
+	formData.append("api_key", "DCTMVYLLNTM0621");
+	
+	
+
+	/* $.ajax({
+        url : "/calculate/getMsgremainCash",
+        async : false, // 비동기모드 : true, 동기식모드 : false
+        type : 'POST',
+        success : function(result) {
+            console.log(result);
+            closePop();
+        },
+        error : function(request,status,error) {
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+	});  */
 	
 	//임시 
-	var result = { "remainCash":"1000"};
-	$("#msgRemainCash").text(Number(result.remainCash).toLocaleString('ko-KR')+ "원");
-	
-	/* $.ajax({
+	//var result = { "remainCash":"1000"};
+	//$("#msgRemainCash").text(Number(result.remainCash).toLocaleString('ko-KR')+ "원");
+/* 	
+	  $.ajax({
 	      type : 'POST',
 	      url : 'http://221.139.14.189/API/remainCash',
-	      async : false, // 비동기모드 : true, 동기식모드 : false
-	      dataType : null,
-	      data : param,
+		   processData: false,
+		   mimeType: "multipart/form-data",
+		   contentType: false,
+		   data: formData,
 	      success : function(result) {
+	    	console.log('getMsgremainCash');
 	      	console.log(result);
-	        $("#lableAddCost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
-	        $("#lableDepositCost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
-	        $("#lableOutCost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
-	        
-	        getMonTotalCost();
+	        $("#msgRemainCash").text(Number(result.remainCash).toLocaleString('ko-KR')+ "원");
 
 	      },
 	      error: function(request, status, error) {
 	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 
 	      }
-	  }); */
+	  }); 
+	 
+	  */
+	 /* 
+	 var form = new FormData();
+	 form.append("api_key", "DCTMVYLLNTM0621");
+
+	 var settings = {
+	   "url": "http://221.139.14.189/API/remainCash",
+	   "method": "POST",
+	   "timeout": 0,
+	   "processData": false,
+	   "mimeType": "multipart/form-data",
+	   "contentType": false,
+	   "data": form
+	 };
+
+	 $.ajax(settings).done(function (response) {
+	   console.log(response);
+	 });
+	  */
 }
 
 function getMsgTemplate(){
