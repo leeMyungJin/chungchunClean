@@ -31,6 +31,7 @@
 <!-- Wijmo 컨트롤 (옵션, 필요한 컨트롤 만 추가) -->
 <script src="../wijmo/Dist/controls/wijmo.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.input.min.js"></script>
+<script src="../wijmo/Dist/controls/wijmo.nav.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.grid.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.grid.filter.min.js"></script>
 <script src="../wijmo/Dist/controls/wijmo.grid.sheet.min.js"></script>

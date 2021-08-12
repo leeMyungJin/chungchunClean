@@ -30,10 +30,13 @@
         <li>
             <a id="income" href="/income/" class="dept1 manage">매출관리</a>
         </li>
+        <li>
+            <a id="terms" href="/terms/termseditor " class="dept1 terms">약관관리</a>
+        </li>
     </ul>
     <div class="terms_area">
-        <a href="#">이용약관</a>
-        <a href="#">개인정보수집약관</a>
+        <a href="/terms/service">이용약관</a>
+        <a href="/terms/privacy">개인정보수집약관</a>
     </div>
     <a href="javascript:_logOut()" class="admin_out">로그아웃</a>
 </aside>

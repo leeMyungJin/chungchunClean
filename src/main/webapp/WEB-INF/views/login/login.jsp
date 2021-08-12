@@ -124,8 +124,8 @@ function enterkey() {
             <p>아이디 / 비밀번호 찾기는 관리자에게 문의바랍니다</p>
         </div>
         <div class="terms_area">
-            <a href="#">청춘클린 이용약관</a>
-            <a href="#">청춘클린 개인정보수집약관</a>
+            <a href="/terms/service">청춘클린 이용약관</a>
+            <a href="/terms/privacy">청춘클린 개인정보수집약관</a>
         </div>
     </div>
 </body>

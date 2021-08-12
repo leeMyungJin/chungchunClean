@@ -1239,7 +1239,7 @@
 }
 
 .wj-tabpanel > div > .wj-tabheaders > .wj-tabheader.wj-state-active {
-  color: #0085c7;
+  color: #35374D;
 }
 
 .wj-tabpanel > div > .wj-tabheaders > .wj-tabheader:not(.wj-state-active):not(.wj-state-disabled):focus {

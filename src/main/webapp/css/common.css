@@ -99,6 +99,9 @@
 .admin_nav .dept1.manage:before {
     background-position: -100px 0;
 }
+.admin_nav .dept1.terms:before {
+    background-position: -120px 0;
+}
 
 .admin_nav .dept1.current {
     padding-right: 40px;
@@ -129,6 +132,10 @@
 
 .admin_nav .dept1.current.manage:before {
     background-position: -100px -20px;
+}
+
+.admin_nav .dept1.current.terms:before {
+    background-position: -120px -20px;
 }
 
 .admin_nav .dept2 a {
