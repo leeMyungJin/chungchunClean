@@ -57,6 +57,17 @@ public class CalculateController {
     	return calculateList;
     }
     
+    
+    @RequestMapping(value = "/getMonErrorList")
+    @ResponseBody
+    public List<CalculateVo> getMonErrorList(@RequestParam HashMap<String,Object> params){
+    	
+    	List<CalculateVo> calculateList = calculateService.getMonErrorList(params);
+    	
+    	return calculateList;
+    }
+    
+    
     @RequestMapping(value = "/getMonlableCost")
     @ResponseBody
     public HashMap<String,Object> getMonlableCost(@RequestParam HashMap<String,Object> params){
@@ -120,6 +131,11 @@ public class CalculateController {
     	return calculateList;
     }
     
+    @RequestMapping(value="/deleteMonError", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void deleteMonError(@RequestBody List<CalculateVo> params, HttpServletRequest req){
+    	calculateService.deleteMonError(params, req.getSession().getAttribute("staffId").toString());
+    }
     
     @RequestMapping(value="/deleteAdd", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
@@ -170,6 +186,24 @@ public class CalculateController {
     	
     }
     
+    @RequestMapping(value="/saveMonErrorExcel", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public Integer saveMonErrorExcel(@RequestBody List<CalculateVo> params, HttpServletRequest req){
+    	int cnt = 0;
+        for(CalculateVo vo : params){
+            vo.setCretId(req.getSession().getAttribute("staffId").toString());
+            vo.setUpdtId(req.getSession().getAttribute("staffId").toString());
+            try {
+            	calculateService.saveMonErrorExcel(vo);
+                cnt++;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return cnt;
+    	
+    }
+    
     @RequestMapping(value="/saveAddExcel", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
     public Integer saveAddExcel(@RequestBody List<CalculateVo> params, HttpServletRequest req){
@@ -188,6 +222,12 @@ public class CalculateController {
     	
     }
   
+    @RequestMapping(value="/saveUpdateMonError", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void saveUpdateMonError(@RequestBody List<CalculateVo> params, HttpServletRequest req){
+    	calculateService.saveUpdateMonError(params, req.getSession().getAttribute("staffId").toString());
+    }
+    
     @RequestMapping(value="/saveUpdateAdd", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
     public void saveUpdateAdd(@RequestBody List<CalculateVo> params, HttpServletRequest req){

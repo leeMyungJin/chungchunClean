@@ -41,7 +41,13 @@ public class CalculateVo {
 	private String rownum;
 	private String totalCost;
 	private String quoteTotalCost;
+
 	private String surtaxTotalCost;
+	
+	private String ammeSeq;
+	private Integer errorCost;
+	private Integer errorCount;
+	private Integer noneCount;
 
 	public String getAreaCd() {
 		return areaCd;
@@ -277,6 +283,31 @@ public class CalculateVo {
 	public void setSurtaxTotalCost(String surtaxTotalCost) {
 		this.surtaxTotalCost = surtaxTotalCost;
 	}
+
+	public Integer getErrorCost() {
+		return errorCost;
+	}
+	public void setErrorCost(Integer errorCost) {
+		this.errorCost = errorCost;
+	}
+	public Integer getErrorCount() {
+		return errorCount;
+	}
+	public void setErrorCount(Integer errorCount) {
+		this.errorCount = errorCount;
+	}
+	public String getAmmeSeq() {
+		return ammeSeq;
+	}
+	public void setAmmeSeq(String ammeSeq) {
+		this.ammeSeq = ammeSeq;
+	}
+	public Integer getNoneCount() {
+		return noneCount;
+	}
+	public void setNoneCount(Integer noneCount) {
+		this.noneCount = noneCount;
+	}
 	@Override
 	public String toString() {
 		return "CalculateVo [areaCd=" + areaCd + ", areaNm=" + areaNm + ", bldgNm=" + bldgNm + ", bldgCd=" + bldgCd
@@ -289,9 +320,11 @@ public class CalculateVo {
 				+ classifiCd + ", classifiNm=" + classifiNm + ", itemCd=" + itemCd + ", itemNm=" + itemNm + ", type="
 				+ type + ", conCost=" + conCost + ", addSeq=" + addSeq + ", zone=" + zone + ", monMt=" + monMt
 				+ ", rownum=" + rownum + ", totalCost=" + totalCost + ", quoteTotalCost=" + quoteTotalCost
-				+ ", surtaxTotalCost=" + surtaxTotalCost + "]";
+				+ ", surtaxTotalCost=" + surtaxTotalCost + ", ammeSeq=" + ammeSeq + ", errorCost=" + errorCost
+				+ ", errorCount=" + errorCount + ", noneCount=" + noneCount + "]";
 	}
 	
+
 	
 	
     

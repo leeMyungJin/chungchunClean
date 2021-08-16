@@ -15,6 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface CalculateMapper  {
 	
 	public List<CalculateVo> getMonList(HashMap<String,Object> params);
+	public List<CalculateVo> getMonErrorList(HashMap<String,Object> params);
 	public HashMap<String, Object> getMonTotalCost();
 	public HashMap<String, Object> getMonlableCost(HashMap<String,Object> params);
 	
@@ -26,6 +27,7 @@ public interface CalculateMapper  {
 	public List<CalculateVo> getItemList(HashMap<String,Object> params);
 	public List<CalculateVo> getBldgList(HashMap<String,Object> params);
 	
+    public void deleteMonError(CalculateVo params);
     public void deleteAdd(CalculateVo params);
     public void deleteClassifi(CalculateVo params);
     public void deleteItem(CalculateVo params);
@@ -33,7 +35,9 @@ public interface CalculateMapper  {
     public void saveMon(CalculateVo params);
     public void saveAdd(CalculateVo params);
     public void saveMonExcel(CalculateVo params);
+    public void saveMonErrorExcel(CalculateVo params);
     public void saveAddExcel(CalculateVo params);
+    public void saveUpdateMonError(CalculateVo params);
     public void saveUpdateAdd(CalculateVo params);
     public void saveClassifi(CalculateVo params);
     public void saveItem(CalculateVo params);
