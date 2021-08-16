@@ -14,6 +14,12 @@ var monGrid;
 var monColumns;
 var monSelector;
 
+var monErrorView;
+var monErrorGridPager;
+var monErrorGrid;
+var monErrorColumns;
+var monErrorSelector;
+
 var addView;
 var addGridPager;
 var addGrid;
@@ -35,6 +41,10 @@ var classifiList;
 var monExcelGrid;
 var monExcelView;
 var monExcelSelector;
+
+var monErrorExcelGrid;
+var monErrorExcelView;
+var monErrorExcelSelector;
 
 var addExcelGrid;
 var addExcelView;
@@ -92,7 +102,7 @@ function enterkey(type) {
 //그리드 초기 셋팅
 function loadGridList(type, result){
 	  if(type == "init"){ 
-		  //월관리
+		  //******************************월관리
 		   monView = new wijmo.collections.CollectionView(result, {
 			   pageSize: 100
 		   });
@@ -206,8 +216,68 @@ function loadGridList(type, result){
 	     	// 체크박스 생성
 	     	monSelector = new wijmo.grid.selector.Selector(monGrid);
 	     	monSelector.column = monGrid.columns[0];
-	        
-			//부가수익 
+	     	
+	     	
+	     	//************************************월관리 오입금
+		   monErrorView = new wijmo.collections.CollectionView(result, {
+			   pageSize: 100
+		   });
+		    
+		   monErrorGridPager = new wijmo.input.CollectionViewNavigator('#monErrorGridPager', {
+		        byPage: true,
+		        headerFormat: '{currentPage:n0} / {pageCount:n0}',
+		        cv: monErrorView
+		    });
+		    
+ 		   monErrorColumns = [
+ 			  	  { isReadOnly: true, width: 35, align:"center"},
+ 			  	  { binding: 'ammeSeq', header: '시퀀스', isReadOnly: true, width: 150, align:"center", visible: false},
+ 			  	  { binding: 'depositCost', header: '입금금액', isReadOnly: false, width: 150, align:"center" },
+			      { binding: 'depositDt', header: '입금날짜', isReadOnly: false, width: 150, align:"center" },
+			      { binding: 'depositor', header: '입금자명', isReadOnly: false, width: 100, align:"center" },
+			      { binding: 'memo', header: '비고', isReadOnly: false, width: "*", align:"center" }
+			];
+		    
+		   monErrorGrid = new wijmo.grid.FlexGrid('#monErrorGrid', {
+			    autoGenerateColumns: false,
+			    alternatingRowStep: 0,
+			    columns: monErrorColumns,
+			    itemsSource: monErrorView,
+	            beginningEdit: function (s, e) {
+	                s.columns.getColumn("depositDt").editor = depositDtEditor;
+	                let depositDt = e.getRow().dataItem.depositDt;
+	                if (!depositDt) {
+	                    return;
+	                }
+	            },
+	            cellEditEnding: function (s, e) {
+	                var col = s.columns[e.col];
+	                var inven = s.columns[e.col - 1];
+	                if (col.binding == 'depositCost') {
+	                    var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
+	                    if( !wijmo.isNumber(value)){
+	                        e.cancel = true;
+	                        e.stayInEditMode = false;
+	                        alert('숫자로만 입력 가능합니다.');
+	                        return false;
+	                    }
+	                    
+	                }
+	                
+	                if(col.binding == "depositDt"){
+	                    e.getRow().dataItem.depositDt = s.activeEditor.value;
+	                    
+	                }
+	            } 
+			  });
+	
+	     	// 체크박스 생성
+	     	monErrorSelector = new wijmo.grid.selector.Selector(monErrorGrid);
+	     	monErrorSelector.column = monErrorGrid.columns[0];
+        
+	     	
+		     	
+			//*************************************부가수익 
 		 	addView = new wijmo.collections.CollectionView(result, {
 		       pageSize: 100
 		   });
@@ -325,7 +395,7 @@ function loadGridList(type, result){
 		   	_setUserGridLayout('addLayout', addGrid, addColumns);
 	        
 	        
-	        //분류 추가 팝업 그리드
+	        //*******************************분류 추가 팝업 그리드
 	        classifiView = new wijmo.collections.CollectionView(result, {
 	            pageSize: 100
 	        });
@@ -378,7 +448,7 @@ function loadGridList(type, result){
 	        classifiSelector = new wijmo.grid.selector.Selector(classifiGrid);
 	        
 	        
-	      //분류 내역 추가 팝업 그리드
+	      //*****************************분류 내역 추가 팝업 그리드
 	        itemView = new wijmo.collections.CollectionView(result, {
 	            pageSize: 100
 	        });
@@ -436,7 +506,7 @@ function loadGridList(type, result){
 	        
 	        itemSelector = new wijmo.grid.selector.Selector(itemGrid);
 	        
-	        //수정용 그리드
+	        //********************수정용 그리드
 	        editGrid = new wijmo.grid.FlexGrid('#editGrid', {
 	            itemsSource: classifiView.itemsEdited,
 	            isReadOnly: true
@@ -452,6 +522,21 @@ function loadGridList(type, result){
 
 	        //행번호 표시하기
 	        monExcelGrid.itemFormatter = function (panel, r, c, cell) { 
+	            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+	                cell.textContent = (r + 1).toString();
+	            }
+	        };
+	        
+	      //**********엑셀그리드 월관리청소 오입금********************
+	        monErrorExcelGrid = new wijmo.grid.FlexGrid('#monErrorExcelGrid', {
+	            autoGenerateColumns: false,
+	            alternatingRowStep: 0,
+	            columns : monErrorColumns,
+	            itemsSource: monErrorExcelView
+	        });
+
+	        //행번호 표시하기
+	        monErrorExcelGrid.itemFormatter = function (panel, r, c, cell) { 
 	            if (panel.cellType == wijmo.grid.CellType.RowHeader) {
 	                cell.textContent = (r + 1).toString();
 	            }
@@ -484,6 +569,15 @@ function loadGridList(type, result){
 		  monGridPager.cv = monView;
 		  monGrid.itemsSource = monView;
 		  
+	  }else if(type == "monError"){
+			//월관리
+		   monErrorView = new wijmo.collections.CollectionView(result, {
+		       pageSize: 100
+		   	   ,trackChanges: true
+		   });
+		  monErrorGridPager.cv = monErrorView;
+		  monErrorGrid.itemsSource = monErrorView;
+		  
 	  }else if(type == "add"){	  
 		  //부가수익 
 		   addView = new wijmo.collections.CollectionView(result, {
@@ -515,6 +609,7 @@ function loadGridList(type, result){
 	  
 	  // 페이징 초기 셋팅
 	  refreshPaging(monGrid.collectionView.totalItemCount, 1, monGrid, 'monGrid');  
+	  refreshPaging(monErrorGrid.collectionView.totalItemCount, 1, monErrorGrid, 'monErrorGrid'); 
 	  refreshPaging(addGrid.collectionView.totalItemCount, 1, addGrid, 'addGrid');  
 	  refreshPaging(classifiGrid.collectionView.totalItemCount, 1, classifiGrid, 'classifiGrid');  
 	  refreshPaging(itemGrid.collectionView.totalItemCount, 1, itemGrid, 'itemGrid'); 
@@ -537,6 +632,8 @@ function getMonTotalCost(){
 	        $("#totalOutcost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
 	        $("#totalDepositcost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
 	        $("#totalAddcost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
+	        $("#totalErrorCount").text(Number(result.errorcount).toLocaleString('ko-KR')+ "개");
+	        $("#totalErrorCost").text(Number(result.errorcost).toLocaleString('ko-KR')+ "원");
 
 	      },
 	      error: function(request, status, error) {
@@ -610,6 +707,7 @@ function getMonList(){
 	        $("#lableAddCost").text(Number(result.addcost).toLocaleString('ko-KR')+ "원");
 	        $("#lableDepositCost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
 	        $("#lableOutCost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
+	        $("#lableNoneCount").text(Number(result.nonecount).toLocaleString('ko-KR')+ "개");
 	        
 	        getMonTotalCost();
 
@@ -620,6 +718,35 @@ function getMonList(){
 	      }
 	  });
 }
+
+function getMonErrorList(){
+	var param = {
+		date : $('#date').val()
+	};
+	
+	if($('#date').val() == null || $('#date').val() == ""){
+		alert("조회월은 필수 검색조건입니다.");
+		return false;
+	}
+	
+	$.ajax({
+      type : 'POST',
+      url : '/calculate/getMonErrorList',
+      async : false, // 비동기모드 : true, 동기식모드 : false
+      dataType : null,
+      data : param,
+      success : function(result) {
+	      	loadGridList('monError', result);
+      },
+      error: function(request, status, error) {
+      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+      }
+  	});
+	
+	getMonTotalCost();
+}
+
 
 function getAddList(){
 	$("#addDiv").show();
@@ -723,7 +850,35 @@ function deleteRows(type){
                 });
             }
         }
-    }else if(type == 'classifi'){
+   }else if(type == 'monError'){
+	   var item = monErrorGrid.rows.filter(r => r.isSelected); 
+	   var rows = [];
+	   var params;
+	    if(item.length == 0){
+	       alert("선택된 행이 없습니다.");
+	       return false;
+	   }else{
+	       for(var i =0; i< item.length ; i++){
+	           rows.push(item[i].dataItem);
+	       }
+	       if(confirm("선택한 행들을 삭제 하시겠습니까??")){
+	           $.ajax({
+	               url : "/calculate/deleteMonError",
+	               async : false, // 비동기모드 : true, 동기식모드 : false
+	               type : 'POST',
+	               contentType: 'application/json',
+	               data: JSON.stringify(rows),
+	               success : function(result) {
+	                   alert("삭제되었습니다.");
+	                   getMonErrorList();
+	               },
+	               error : function(request,status,error) {
+	                   alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+	               }
+	           });
+	       }
+	   }
+	}else if(type == 'classifi'){
         var item = classifiGrid.rows.filter(r => r.isSelected);
         var rows = [];
         var params;
@@ -811,7 +966,36 @@ function saveGrid(type){
               }
           });
       }
-  }else if(type == 'add'){
+  }else if(type == 'monError'){
+      if(monErrorView.itemCount > 0){
+    	    var editItem = monErrorView.itemsEdited;
+    		var editRows = [];
+
+    		for(var i =0; i< editItem.length; i++){
+    			if(!saveVal(type, editItem[i])) return false;
+    			
+    	    	editRows.push(editItem[i]);
+    	    }
+    		
+          wijmo.Control.getControl("#editGrid").refresh(true);
+          if(confirm("저장 하시겠습니까?")){
+        	  $.ajax({
+	                url : "/calculate/saveUpdateMonError",
+	                async : false, // 비동기모드 : true, 동기식모드 : false
+	                type : 'POST',
+	                contentType: 'application/json',
+	                data: JSON.stringify(editRows),
+	                success : function(result) {
+	                    alert("저장되었습니다.");
+	                    getMonErrorList();
+	                },
+	                error : function(request,status,error) {
+	                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+	                }
+	            });
+          }
+      }
+     }else if(type == 'add'){
       if(addView.itemCount > 0){
     	  var addItem  = addView.itemsAdded;
     	    var addItem  = addView.itemsAdded;
@@ -966,23 +1150,11 @@ function saveGrid(type){
                  return false;
              }
              
-             value = wijmo.changeType(monExcelGrid.collectionView.items[i].지역코드, wijmo.DataType.Number, null);
-             if(!wijmo.isNumber(value)){
-                 alert("지역코드는 숫자만 입력 가능합니다.");
-                 return false;
-
-             }else if(!(value == 11 || value == 26 || value == 27 || value == 28 || value == 30 || value == 41 || value == 43 
-                 || value == 44 || value == 45 || value == 46 || value == 47 || value == 48 || value == 50)){
-                     alert("지역코드는 코드참고표 시트에 있는 코드만 입력하시기 바랍니다.");
-                     return false;
-             }
-        	 
              txt = wijmo.changeType(monExcelGrid.collectionView.items[i].건물코드, wijmo.DataType.String, null);
              if(!wijmo.isString(txt) || txt.length != 11){
                  alert("건물코드를 바르게 입력하시기 바랍니다.");
                  return false;
              }
-             
              
              var bldgItem = bldgList.filter(item => item.id == monExcelGrid.collectionView.items[i].건물코드);
              if(bldgItem.length <= 0){
@@ -991,14 +1163,14 @@ function saveGrid(type){
              }
              
              value = wijmo.changeType(monExcelGrid.collectionView.items[i].추가금, wijmo.DataType.Number, null);
-             if(!wijmo.isNumber(value)){
+             if(value != null && value != '' && !wijmo.isNumber(value)){
                  alert("추가금은 숫자만 입력 가능합니다.");
                  return false;
              }
              
-             value = wijmo.changeType(monExcelGrid.collectionView.items[i].관리비입금, wijmo.DataType.Number, null);
+             value = wijmo.changeType(monExcelGrid.collectionView.items[i].추가입금, wijmo.DataType.Number, null);
              if(!wijmo.isNumber(value)){
-                 alert("관리비입금은 숫자만 입력 가능합니다.");
+                 alert("추가입금은 숫자만 입력 가능합니다.");
                  return false;
              }
              
@@ -1011,15 +1183,12 @@ function saveGrid(type){
          
              params={
             	 monMt :  monExcelGrid.collectionView.items[i].월
-            	 , areaCd : monExcelGrid.collectionView.items[i].지역코드
-            	 , zone : monExcelGrid.collectionView.items[i].구분
             	 , bldgCd : monExcelGrid.collectionView.items[i].건물코드
-            	 , taxBill : monExcelGrid.collectionView.items[i].세금계산
+            	 , taxBill : monExcelGrid.collectionView.items[i].세금계산서
             	 , addCost : monExcelGrid.collectionView.items[i].추가금
-            	 , depositCost : monExcelGrid.collectionView.items[i].관리비입금
+            	 , depositCost : monExcelGrid.collectionView.items[i].추가입금
             	 , depositDt : monExcelGrid.collectionView.items[i].입금날짜
             	 , depositor : monExcelGrid.collectionView.items[i].입금자명
-            	 , pnum : monExcelGrid.collectionView.items[i].전화번호
                  , memo : monExcelGrid.collectionView.items[i].비고
              }
              rows.push(params);
@@ -1034,6 +1203,55 @@ function saveGrid(type){
                  success : function(result) {
                      alert("총 " + result + "건이 저장되었습니다.");
                      getMonList();
+                 },
+                 error : function(request,status,error) {
+                     alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                 }
+             });
+         }
+     }else if(type == 'monErrorExcel'){// 엑셀 업로드 저장하기
+         var item  = monErrorExcelGrid.rows;
+         var rows = [];
+         var params;
+         
+         for(var i=0; i< item.length; i++){
+             var dateRegExp = /^(19|20)\d{2}.(0[1-9]|1[012]).(0[1-9]|[12][0-9]|3[0-1])$/;
+             var value = wijmo.changeType(monErrorExcelGrid.collectionView.items[i].입금날짜, wijmo.DataType.String, null);
+             if(value != null && value != '' && !dateRegExp.test(value)){
+                 alert("입금날짜는 YYYY.MM.DD 형태로 입력하시기 바랍니다.");
+                 return false;
+             }
+        	 
+        	 value = wijmo.changeType(monErrorExcelGrid.collectionView.items[i].입금금액, wijmo.DataType.Number, null);
+             if(!wijmo.isNumber(value)){
+                 alert("입금금액은 숫자만 입력 가능합니다.");
+                 return false;
+             }
+             
+             value = wijmo.changeType(monErrorExcelGrid.collectionView.items[i].입금자명, wijmo.DataType.String, null);
+             if(value == null || value == ''){
+                 alert("입금자명을 입력하시기 바랍니다.");
+                 return false;
+             }
+         
+             params={
+            	 depositCost : monErrorExcelGrid.collectionView.items[i].입금금액
+            	 , depositDt : monErrorExcelGrid.collectionView.items[i].입금날짜
+            	 , depositor : monErrorExcelGrid.collectionView.items[i].입금자명
+                 , memo : monErrorExcelGrid.collectionView.items[i].비고
+             }
+             rows.push(params);
+         }
+         if(confirm("저장 하시겠습니까?")){
+             $.ajax({
+                 url : "/calculate/saveMonErrorExcel",
+                 async : false, // 비동기모드 : true, 동기식모드 : false
+                 type : 'POST',
+                 contentType: 'application/json',
+                 data: JSON.stringify(rows),
+                 success : function(result) {
+                     alert("총 " + result + "건이 저장되었습니다.");
+                     closePop(type);
                  },
                  error : function(request,status,error) {
                      alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -1176,6 +1394,21 @@ function saveVal(type, item){
 				return false;
 			}
 		}
+		
+	}else if(type == "monError"){
+		if(item.depositCost == null || item.depositCost == ''){
+			alert("입금금액을 입력해주세요.");
+			return false;
+			
+		}else if(item.depositDt == null || item.depositDt == ''){
+			alert("입금날짜를 입력해주세요.");
+			return false;
+			
+		}else if(item.depositor == null || item.depositor == ''){
+			alert("입금자명을 입력해주세요.");
+			return false;
+		}
+		
 	}else if(type == "add"){
 		
 		if(item.classifiCd == null || item.classifiCd == ''){
@@ -1342,6 +1575,23 @@ function showPop(pop){
 	
 	}else if(pop == "pop_sendMsgUpdate"){
 		getMsgTemplate();
+		
+	}else if(pop == "add_monError"){
+		$("#monErrorGrid").show();
+		$("#monErrorGridPager").show();
+		$("#saveMonErrorTop").show();
+		$("#saveMonErrorBottom").show();
+		$("#saveMonErrorTopDelete").show();
+		$("#saveMonErrorBottomDelete").show();
+		 
+	    $("#monErrorExcelGrid").hide();
+		$("#saveMonErrorTopExcel").hide();
+		$("#saveMonErrorBottomExcel").hide();
+		
+		getMonErrorList();
+	
+	}else if(pop == "add_monErrorExcel"){
+		pop = "add_monError";
 	}
 	
 	$('#'+pop).addClass('is-visible');
@@ -1417,6 +1667,9 @@ function downTemplate(type){
     if(type == 'mon'){
     	window.location.assign("<%=request.getContextPath()%>" + "/template/월관리청소양식.xlsx");
     	
+	}else if(type == 'monError'){
+    	window.location.assign("<%=request.getContextPath()%>" + "/template/오입금양식.xlsx");
+    	
 	}else if(type == 'add'){
 		window.location.assign("<%=request.getContextPath()%>" + "/template/부가수익양식.xlsx");
 	}
@@ -1431,6 +1684,10 @@ function findFile(type){
 	}else if(type == 'add'){
 		$("#addImportFile").val("");
 	    document.all.addImportFile.click();	
+	
+	}else if(type == 'monError'){
+		$("#monErrorImportFile").val("");
+	    document.all.monErrorImportFile.click();	
 	}
 }
 
@@ -1458,6 +1715,32 @@ function importExcel(type){
 	        })
 	      });
 	    }
+	        
+	}else if(type == 'monError'){
+		showPop('add_monErrorExcel');
+		
+		$("#monErrorGrid").hide();
+		$("#monErrorGridPager").hide();
+		$("#saveMonErrorTop").hide();
+		$("#saveMonErrorBottom").hide();
+		$("#saveMonErrorTopDelete").hide();
+		$("#saveMonErrorBottomDelete").hide();
+	                                                                                                                                                                  	 
+	    $("#monErrorExcelGrid").show();
+		$("#saveMonErrorTopExcel").show();
+		$("#saveMonErrorBottomExcel").show();
+	   	monView = new wijmo.collections.CollectionView(null, {});
+	        var inputEle =  document.querySelector('#monErrorImportFile');
+	        if (inputEle.files[0]) {
+	            wijmo.grid.xlsx.FlexGridXlsxConverter.loadAsync(monErrorExcelGrid, inputEle.files[0],{includeColumnHeaders: true}, (w) => {
+	        // 데이터 바인딩할 함수 호출
+	        bindImportedDataIntoModel(monErrorExcelGrid);
+	        monErrorExcelGrid.columns.forEach(col => {
+	          col.width = 200,
+	          col.align = "center"
+	        })
+	      });
+	    } 
 	        
 	}else if(type == 'add'){
 		$("#addDiv").hide();
@@ -1673,6 +1956,10 @@ $(function(){
         importExcel('mon');
     });
     
+    $("#monErrorImportFile").on('change', function (params) {
+        importExcel('monError');
+    });
+    
     $("#addImportFile").on('change', function (params) {
         importExcel('add');
     });
@@ -1700,13 +1987,21 @@ $(function(){
                             <dt>총 누적미수금(이월금)</dt>
                             <dd id="totalOutcost">0원</dd>
                         </dl>
-                        <dl>
+                        <dl style="display:none;">
                             <dt>총 입금금액</dt>
                             <dd id="totalDepositcost">0원</dd>
                         </dl>
-                        <dl>
+                        <dl style="display:none;">
                             <dt>총 추가금</dt>
                             <dd id="totalAddcost">0원</dd>
+                        </dl>
+                        <dl>
+                            <dt>오입금 금액</dt>
+                            <dd id="totalErrorCost">0원</dd>
+                        </dl>
+                        <dl>
+                            <dt>오입금 수</dt>
+                            <dd id="totalErrorCount">0개</dd>
                         </dl>
                         <dl>
                             <dt>문자 잔액</dt>
@@ -1717,8 +2012,13 @@ $(function(){
                         <label for="date">조회월</label>
                         <input type="month" id="date" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey('mon');">
                         <button class="admin_utility_btn"  onClick="getMonList();">조회</button>
+                        <button class="admin_utility_btn" onClick="showPop('add_monError');">오입금 내역</button>
                         <div class="admin_btn">
                         	<input type="file" class="form-control" style="display:none" id="monImportFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12" />
+                        	<input type="file" class="form-control" style="display:none" id="monErrorImportFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12" />
+                        	
+                        	<button class="btn" onClick="downTemplate('monError');">오입금 엑셀 템플릿</button>
+                        	<button class="btn" onClick="findFile('monError');">오입금 업로드</button>
                         	<button class="btn" onClick="downTemplate('mon');">엑셀 템플릿</button>
                             <button class="btn" onClick="findFile('mon');">엑셀 업로드</button>
                             <button class="btn" onClick="exportExcel('mon');">엑셀 다운로드</button>
@@ -1740,6 +2040,10 @@ $(function(){
                                 <button type="button" onClick="getMonList();">조회</button>
                             </form>
                             <div class="summary">
+                                <dl>
+                                    <dt>미입금 수</dt>
+                                    <dd id="lableNoneCount">0원</dd>
+                                </dl>
                                 <dl>
                                     <dt>미수금</dt>
                                     <dd id="lableOutCost">0원</dd>
@@ -1965,6 +2269,39 @@ $(function(){
         </div>
     </div>
     <!--문자수정 팝업 영역 끝 -->
+        <!-- 팝업 : 오입금내역 -->
+    <div class="popup" id="add_monError">
+        <div class="popup_container" style="min-height:100px;">
+            <div class="popup_head">
+                <p class="popup_title">오입금내역</p>
+                <button type="button" class="popup_close" onClick="closePop('sendMsgUpdate');">x</button>
+            </div>
+            <div class="popup_grid">
+                <div class="popup_btn_area">
+                    <div class="right">
+                        <button type="button" class="popup_btn" id="saveMonErrorTop" onClick="saveGrid('monError')">저장</button>
+	                    <button type="button" class="popup_btn" id="saveMonErrorTopDelete" onclick="deleteRows('monError')">삭제</button>
+                        <button type="button" class="popup_btn" id="saveMonErrorTopExcel" onClick="saveGrid('monErrorExcel')">저장</button>
+                    </div>
+                </div>
+                <div class="popup_grid_area">
+                    <div class="popup_grid">
+	                    <div id="monErrorGrid" style="width:860px;  height:300px;"></div>
+	                    <div id="monErrorGridPager" class="pager"></div>
+	                    <div id="monErrorExcelGrid" style="width:860px;" style="display:none;"></div>
+                    </div>
+                </div>
+                <div class="popup_btn_area">
+                    <div class="right">
+                        <button type="button" class="popup_btn" id="saveMonErrorBottom" onClick="saveGrid('monError')">저장</button>
+	                    <button type="button" class="popup_btn" id="saveMonErrorBottomDelete" onclick="deleteRows('monError')">삭제</button>
+                        <button type="button" class="popup_btn" id="saveMonErrorBottomExcel" onClick="saveGrid('monErrorExcel')">저장</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--오입금내역 팝업 영역 끝 -->
     
     <!-- 추가된 행 / 수정된 행 처리용 그리드 -->
     <div class="grid_wrap" id="editDiv" style="display:none;">
