@@ -70,7 +70,7 @@ function pageLoad(){
 	loadGridList('init');
 	getMonTotalCost();
 	getAddTotalCost();
-	getMsgremainCash();
+	//getMsgremainCash();
 	getMsgTemplate();
 	
 	getMonList();
@@ -1786,8 +1786,7 @@ function getMsgremainCash(){
         data: param,
         dataType:'json',
         success : function(result) {
-            var rVal = result;
-            $("#msgRemainCash").text(Number(rVal.remainCash).toLocaleString('ko-KR')+ "원");
+            $("#msgRemainCash").text(Number(result.remainCash).toLocaleString('ko-KR')+ "원");
         },
         error : function(request,status,error) {
             alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
