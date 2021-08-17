@@ -28,6 +28,14 @@ public class CalculateServiceImpl implements CalculateService{
 		List<CalculateVo> calculateList = calculateMapper.getMonList(params);
 		return calculateList;
 	}
+	
+	@Override
+	public List<CalculateVo> getMonErrorList(HashMap<String,Object> params){
+              		
+		List<CalculateVo> calculateList = calculateMapper.getMonErrorList(params);
+		return calculateList;
+	}
+
 
 	@Override
 	public HashMap<String, Object> getMonTotalCost(){
@@ -88,6 +96,12 @@ public class CalculateServiceImpl implements CalculateService{
 	}
 	
 	@Override
+	public void deleteMonError(List<CalculateVo> params, String id) {
+		for(CalculateVo vo : params)
+			calculateMapper.deleteMonError(vo);
+	}
+	
+	@Override
 	public void deleteAdd(List<CalculateVo> params, String id) {
 		for(CalculateVo vo : params)
 			calculateMapper.deleteAdd(vo);
@@ -138,6 +152,18 @@ public class CalculateServiceImpl implements CalculateService{
 		calculateMapper.saveAddExcel(params);
 	}	
 	
+	@Override
+	public void saveMonErrorExcel(CalculateVo params) {
+		calculateMapper.saveMonErrorExcel(params);
+	}
+	
+	@Override
+	public void saveUpdateMonError(List<CalculateVo> params, String id) {
+		for(CalculateVo vo : params){
+			vo.setUpdtId(id);
+			calculateMapper.saveUpdateMonError(vo);
+		}	
+	}
 	
 	@Override
 	public void saveUpdateAdd(List<CalculateVo> params, String id) {

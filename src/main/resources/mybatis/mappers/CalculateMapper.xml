@@ -82,10 +82,29 @@
 </select>
 
 
+<select id="getMonErrorList" parameterType="hashMap" resultType="CalculateVo">
+	select amme_seq
+		, to_char(deposit_dt , 'YYYY-MM-DD') as deposit_dt 
+		, depositor
+		, deposit_cost
+		, memo
+		, cret_dt
+		, cret_id
+		, updt_dt
+		, updt_id
+	from web.adjust_mt_manage_error
+	where 1=1 
+	<if test="date != null">
+		and to_char(deposit_dt, 'YYYY-MM') = #{date}
+	</if>
+</select>
+
 <select id="getMonTotalCost" resultType="HashMap">
 	select coalesce(sum(bb.con_cost), 0) + coalesce(sum(bb.surtax), 0) + coalesce(sum(amm.add_cost), 0) - coalesce(sum(amm.deposit_cost), 0) as outCost -- 금년 미수금
 		,coalesce(sum(amm.deposit_cost), 0) as depositCost -- 금년 입금금액 (부가세포함)
       	,coalesce(sum(amm.add_cost), 0) as addCost --금년 추가금
+      	, (select count(*) from web.adjust_mt_manage_error where extract('YEAR' from deposit_dt) = extract('YEAR' from now())) as errorCount
+		, (select coalesce(sum(deposit_cost), 0) from web.adjust_mt_manage_error where extract('YEAR' from deposit_dt) = extract('YEAR' from now())) as errorCost
 	from web.adjust_mt_manage amm left join web.bldg_bas bb on amm.bldg_cd = bb.bldg_cd
 	where 1=1
 	and extract('YEAR' from deposit_dt) = extract('YEAR' from now())
@@ -95,6 +114,7 @@
 	select coalesce(sum(bb.con_cost), 0) + coalesce(sum(bb.surtax), 0) + coalesce(sum(amm.add_cost), 0) - coalesce(sum(amm.deposit_cost), 0) as outCost -- 미수금
 		,coalesce(sum(amm.deposit_cost), 0) as depositCost -- 금년 입금금액 (부가세포함)
       ,coalesce(sum(amm.add_cost), 0) as addCost --금년 추가금
+      ,COUNT(CASE WHEN deposit_cost is null THEN 1 END) as noneCount --미입금
 	from web.bldg_bas bb left join (select * 
 									from web.adjust_mt_manage 
 									<if test="date != null">
@@ -310,6 +330,10 @@ from web.adjust_add aa
 	order by bldg_cd
 </select>
 
+<delete id="deleteMonError" parameterType="CalculateVo">
+delete from web.adjust_mt_manage_error
+where amme_seq = #{ammeSeq}::numeric
+</delete>
 
 <delete id="deleteAdd" parameterType="CalculateVo">
 DELETE FROM WEB.adjust_add
@@ -420,7 +444,7 @@ insert into web.adjust_add (
 	,updt_dt
 	,updt_id
 )values(
-	(select max(add_seq)+1 from WEB.adjust_add) -- 시퀀스
+	(select coalesce(max(add_seq)+1, 1) from WEB.adjust_add) -- 시퀀스
 	,#{areaNm}
 	,#{bldgNm}
 	,#{classifiCd}
@@ -441,6 +465,17 @@ insert into web.adjust_add (
 	,#{updtId}
 )
 </insert>
+
+<update id="saveUpdateMonError" parameterType="CalculateVo">
+update web.adjust_mt_manage_error set 
+	deposit_dt = #{depositDt}::timestamp
+	, depositor = #{depositor}
+	, deposit_cost = #{depositCost}
+	, memo = #{memo}
+	, updt_dt = NOW()
+	, updt_id = #{updtId}
+where amme_seq = #{ammeSeq}::numeric
+</update>
 
 <update id="saveUpdateAdd" parameterType="CalculateVo">
 update web.adjust_add set
@@ -546,7 +581,7 @@ select bb.area_cd
 	, #{depositCost}
 	, #{depositDt}::timestamp
 	, #{depositor}
-	, #{pnum}
+	, bb.pnum
 	, #{memo}
 	, now()
 	, #{cretId}
@@ -564,7 +599,6 @@ from web.bldg_bas bb left join (select *
 																group by bldg_cd)
 								) oc on bb.bldg_cd = oc.bldg_cd
 where bb.active_yn = 'Y'
-and bb.area_cd = #{areaCd}
 and bb.bldg_cd = #{bldgCd}
 ON CONFLICT(mon_mt , bldg_cd) DO
 UPDATE
@@ -589,10 +623,33 @@ UPDATE
 		deposit_cost = #{depositCost},
 		deposit_dt = #{depositDt}::timestamp,
 		depositor = #{depositor},
-		pnum = #{pnum},
 		memo = #{memo},
 		updt_dt		= now(),
 		updt_id		= #{updtId}
+</insert>
+
+<insert id="saveMonErrorExcel" parameterType="CalculateVo">
+insert into web.adjust_mt_manage_error(
+	amme_seq
+	, deposit_dt
+	, depositor
+	, deposit_cost
+	, memo
+	, cret_dt
+	, cret_id
+	, updt_dt
+	, updt_id
+) values(
+	(select coalesce(max(amme_seq)+1, 1) from web.adjust_mt_manage_error)
+	, #{depositDt}::timestamp
+	, #{depositor}
+	, #{depositCost}
+	, #{memo}
+	, NOW()
+	, #{cretId}
+	, NOW()
+	, #{updtId}
+)
 </insert>
 
 <insert id="saveAddExcel" parameterType="CalculateVo">
@@ -617,7 +674,7 @@ insert into web.adjust_add (
 	,updt_dt
 	,updt_id
 )values(
-	(select max(add_seq)+1 from WEB.adjust_add) -- 시퀀스
+	(select coalesce(max(add_seq)+1, 1) from WEB.adjust_add) -- 시퀀스
 	,#{areaNm}
 	,#{bldgNm}
 	,#{classifiCd}
