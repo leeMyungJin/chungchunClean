@@ -1880,8 +1880,6 @@ function sendMsg(){
         			, send_reserve : 0 									//즉시발송 0, 예약발송 1
         		};
     		
-    		console.log(param);
-    	 	
          	$.ajax({
                 url : "/calculate/sendMsg",
                 async : false, // 비동기모드 : true, 동기식모드 : false
@@ -1889,15 +1887,12 @@ function sendMsg(){
                 data: param,
                 dataType:'json',
                 success : function(result) {
-                	console.log(result);
                 	
                 	if(result.result == "100"){
                 		msgSuccess += 1;
-                    	console.log(result);
                 	}else{
                 		msgError += item[i].dataItem.bldgNm+" :"+result.result;
                         msgErrorFlag = true;
-                        console.log(result);
                 	}
                 },
                 error : function(request,status,error) {
