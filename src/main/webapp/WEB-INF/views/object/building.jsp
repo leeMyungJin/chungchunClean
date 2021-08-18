@@ -1043,6 +1043,24 @@ function saveGrid(){
                     alert("종료일은 YYYY-MM-DD 형태로 입력하시기 바랍니다.");
                     return false;
                 }
+                
+                value = wijmo.changeType(excelGrid.collectionView.items[i].건물명, wijmo.DataType.String, null);
+                if(value == null || value == ''){
+                    alert("건물명을 입력하시기 바랍니다.");
+                    return false;
+                }
+                
+                value = wijmo.changeType(excelGrid.collectionView.items[i].구역, wijmo.DataType.String, null);
+                if(value == null || value == ''){
+                    alert("구역을 입력하시기 바랍니다.");
+                    return false;
+                }
+                
+                value = wijmo.changeType(excelGrid.collectionView.items[i].상세주소, wijmo.DataType.String, null);
+                if(value == null || value == ''){
+                    alert("상세주소을 입력하시기 바랍니다.");
+                    return false;
+                }
 
 
                 params={
