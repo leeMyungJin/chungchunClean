@@ -817,6 +817,8 @@ function addRow(type){
         
     }else if(type == 'item'){
         itemGrid.allowAddNew = true;
+    }else if(type == 'error'){
+        monErrorGrid.allowAddNew = true;
     }
 }
 
@@ -2065,7 +2067,7 @@ $(function(){
                         <input type="month" id="date2" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey('add');">
                         <button class="admin_utility_btn" onClick="getAddList();">조회</button>
                         <div class="admin_btn">
-                            <input type="file" class="form-control" style="display:none" id="addImportFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12" />
+                            <input type="fiadle" class="form-control" style="display:none" id="addImportFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12" />
                             <button class="btn" onClick="popSpecification();">거래명세서 출력</button>
                         	<button class="btn" onClick="downTemplate('add');">엑셀 템플릿</button>
                             <button class="btn" onClick="findFile('add');">엑셀 업로드</button>
@@ -2154,10 +2156,12 @@ $(function(){
                     </div>
                 </div>
                 <div class="popup_grid_area">
-                   <button class="btn" onclick="addRow('classifi');">+ 행 추가</button>
+                   <button class="btn" style="display:block;" onclick="addRow('classifi');">+ 행 추가</button>
                     <div id="classifiGrid" style="width:860px; height:300px;"></div>
+					<div>
+					<button class="btn" onclick="addRow('classifi');">+ 행 추가</button>
+					</div>
                     <div id="classifiGridPager" class="pager"></div>
-                    <button class="btn" onclick="addRow('classifi');">+ 행 추가</button>
                 </div>
                 <div class="popup_btn_area">
 	                <div class="right">
@@ -2184,10 +2188,12 @@ $(function(){
                     </div>
                 </div>
                 <div class="popup_grid_area">
-                   <button class="btn" onclick="addRow('item');">+ 행 추가</button>
+                   <button class="btn" style="display:block;" onclick="addRow('item');">+ 행 추가</button>
                     <div id="itemGrid" style="width:860px; height:300px;"></div>
+					<div>
+					<button class="btn" onclick="addRow('item');">+ 행 추가</button>
+					</div>
                     <div id="itemGridPager" class="pager"></div>
-                    <button class="btn" onclick="addRow('item');">+ 행 추가</button>
                 </div>
                 <div class="popup_btn_area">
 	                <div class="right">
@@ -2246,7 +2252,11 @@ $(function(){
                 </div>
                 <div class="popup_grid_area">
                     <div class="popup_grid">
+						<button class="btn" style="display:block;" onclick="addRow('error');">+ 행 추가</button>
 	                    <div id="monErrorGrid" style="width:860px;  height:300px;"></div>
+						<div>
+						<button class="btn" onclick="addRow('error');">+ 행 추가</button>
+						</div>
 	                    <div id="monErrorGridPager" class="pager"></div>
 	                    <div id="monErrorExcelGrid" style="width:860px;" style="display:none;"></div>
                     </div>

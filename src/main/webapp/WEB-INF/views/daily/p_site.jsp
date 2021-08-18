@@ -116,6 +116,10 @@
                     <span>${dailyInfo.bldgNm}</span>
                 </p>
                 <p>
+                    <strong>동번호</strong>
+                    <span>${dailyInfo.dongNum}</span>
+                </p>
+                <p>
                     <strong>주소</strong>
                     <span>${dailyInfo.dtlAddr}</span>
                 </p>

@@ -716,12 +716,12 @@ function getError(item,prop){
                     </div>
                 </div>
                 <div class="popup_grid_area">
-                    <button class="btn" onclick="addRow('category');">+ 행 추가</button>
+                    <button class="btn" style="display:block;"onclick="addRow('category');">+ 행 추가</button>
                     <div id="categoryGrid" style="width:860px; height:300px;"></div>
-                    <div id="categoryGridPager" class="pager"></div>
                     <div>
                     <button class="btn" onclick="addRow('category');">+ 행 추가</button>
                     </div>
+                    <div id="categoryGridPager" class="pager"></div>
                 </div>
                 <div class="popup_btn_area">
                     <div class="right">

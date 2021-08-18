@@ -103,6 +103,7 @@
 				, dm.food_chip_cnt 
 				, dm.memo
 				, dm.dmemo
+				, dm.dong_num
 				, to_char(dm.cret_dt, 'YYYY-MM-DD') as cret_dt
 				, dm.cret_id 
 				, to_char(dm.updt_dt, 'YYYY-MM-DD') as updt_dt 
