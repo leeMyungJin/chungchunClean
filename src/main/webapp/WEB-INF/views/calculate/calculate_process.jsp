@@ -70,7 +70,7 @@ function pageLoad(){
 	loadGridList('init');
 	getMonTotalCost();
 	getAddTotalCost();
-	getMsgremainCash();
+	//getMsgremainCash();
 	getMsgTemplate();
 	
 	getMonList();
@@ -1775,66 +1775,24 @@ function importExcel(type){
 //알리미톡
 function getMsgremainCash(){
 	
-	var formData = new FormData();
-	formData.append("api_key", "DCTMVYLLNTM0621");
-	
-	
+	var param = {
+			api_key : "DCTMVYLLNTM0621"
+		};
 
-	/* $.ajax({
-        url : "/calculate/getMsgremainCash",
+	$.ajax({
+        url : "/calculate/remainCash",
         async : false, // 비동기모드 : true, 동기식모드 : false
         type : 'POST',
+        data: param,
+        dataType:'json',
         success : function(result) {
-            console.log(result);
-            closePop();
+            $("#msgRemainCash").text(Number(result.remainCash).toLocaleString('ko-KR')+ "원");
         },
         error : function(request,status,error) {
             alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
         }
-	});  */
+	});  
 	
-	//임시 
-	//var result = { "remainCash":"1000"};
-	//$("#msgRemainCash").text(Number(result.remainCash).toLocaleString('ko-KR')+ "원");
-/* 	
-	  $.ajax({
-	      type : 'POST',
-	      url : 'http://221.139.14.189/API/remainCash',
-		   processData: false,
-		   mimeType: "multipart/form-data",
-		   contentType: false,
-		   data: formData,
-	      success : function(result) {
-	    	console.log('getMsgremainCash');
-	      	console.log(result);
-	        $("#msgRemainCash").text(Number(result.remainCash).toLocaleString('ko-KR')+ "원");
-
-	      },
-	      error: function(request, status, error) {
-	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-
-	      }
-	  }); 
-	 
-	  */
-	 /* 
-	 var form = new FormData();
-	 form.append("api_key", "DCTMVYLLNTM0621");
-
-	 var settings = {
-	   "url": "http://221.139.14.189/API/remainCash",
-	   "method": "POST",
-	   "timeout": 0,
-	   "processData": false,
-	   "mimeType": "multipart/form-data",
-	   "contentType": false,
-	   "data": form
-	 };
-
-	 $.ajax(settings).done(function (response) {
-	   console.log(response);
-	 });
-	  */
 }
 
 function getMsgTemplate(){
@@ -1880,6 +1838,8 @@ function sendMsg(){
 	var addCost;
 	var totalCost;
 	var msgError = "[ 발신메세지 오류 내역 ]\n세부오류는 http://www.alimtalkme.com 의 <발송 및 예약 내역> 메뉴에서 확인 할 수 있습니다.\n\n";
+	var msgErrorFlag = false;
+	var msgSuccess = 0;
 	
 	var item = monGrid.rows.filter(r => r.isSelected);
 	if(item.length == 0){
@@ -1898,7 +1858,7 @@ function sendMsg(){
     		totalCost = (Number((item[i].dataItem.conCost == null ? 0 : item[i].dataItem.conCost))
 						  + Number((item[i].dataItem.surtax == null ? 0 : item[i].dataItem.surtax))
 						  + Number((item[i].dataItem.addCost == null ? 0 : item[i].dataItem.addCost))
-						//+ Number((item[i].overCost == null ? 0 : item[i].overCost)) //이월금
+						  + Number((item[i].dataItem.overCost == null ? 0 : item[i].dataItem.overCost)) //이월금
 						).toLocaleString('ko-KR');
     		
     		
@@ -1907,9 +1867,11 @@ function sendMsg(){
     			  +"추가금액 "+addCost+"원\n"
     			  +"총 "+totalCost+"원\n\n"
     			  +$("#msgUpdate").val();
+    			  
+    		//msg = "test";	  
     		
     		param = {
-        			api_key 	: "DCTMVYLLNTM0621"
+    				api_key : "DCTMVYLLNTM0621"
         			, msg : msg
         			, subject : "[청춘클린 "+item[i].dataItem.monMt+"월 정산 안내]"	//lms 제목
         			, callback : "01058743499"							//-를 제외한 발신번호 
@@ -1917,38 +1879,36 @@ function sendMsg(){
         			, send_reserve : 0 									//즉시발송 0, 예약발송 1
         		};
     		
-    		console.log(param);
-    	/* 	
-        	$.ajax({
-                url : "http://221.139.14.189/API/sms_send",
+         	$.ajax({
+                url : "/calculate/sendMsg",
                 async : false, // 비동기모드 : true, 동기식모드 : false
                 type : 'POST',
-                data : param,
+                data: param,
+                dataType:'json',
                 success : function(result) {
+                	
+                	if(result.result == "100"){
+                		msgSuccess += 1;
+                	}else{
+                		msgError += item[i].dataItem.bldgNm+" :"+result.result;
+                        msgErrorFlag = true;
+                	}
                 },
                 error : function(request,status,error) {
-                    alert("code:"+request.result+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
-                    msgError += item[i].bldgNm+" :"+request.result;
-                    
+                    console.log("code:"+request.result+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
                 }
-        	});  */
+        	}); 
         }
     	
+    	if(msgErrorFlag){
+    		alert(msgError);
+    	}else{
+    		alert(msgSuccess+"건의 문자발송이 완료되었습니다.");
+    	}
+    	
     }
-	
-	/* var item = bldgGrid.rows.filter(r => r.isSelected);
-	var selectBldg;
-	
-	if(item.length == 0){
-        alert("선택된 행이 없습니다.");
-        return false;
-    }else{
-    	selectBldg = item[0].dataItem.bldgCd + item[0].dataItem.dongNum; */
-	
-	
-	
-
 }
+
 
 //이벤트 처리 
 $(function(){
