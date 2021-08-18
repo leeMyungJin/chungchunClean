@@ -103,6 +103,7 @@
 				, dm.food_chip_cnt 
 				, dm.memo
 				, dm.dmemo
+				, dm.dong_num
 				, to_char(dm.cret_dt, 'YYYY-MM-DD') as cret_dt
 				, dm.cret_id 
 				, to_char(dm.updt_dt, 'YYYY-MM-DD') as updt_dt 
@@ -233,7 +234,7 @@
 			</choose>
 		</if>
 		<if test="fromDate != null and toDate != null">
-			and dm.cret_dt between #{fromDate}::timestamp and #{toDate}::timestamp 
+			and dm.cret_dt between #{fromDate}::timestamp and (to_date(#{toDate}, 'YYYY-MM-DD')+1)::timestamp
 		</if>
 		group by dm.officer_nm, to_char(dm.cret_dt, 'YYYY-MM-DD')) as a
 	</select>	

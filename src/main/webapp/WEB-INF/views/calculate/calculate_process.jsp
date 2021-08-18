@@ -721,7 +721,7 @@ function getMonList(){
 
 function getMonErrorList(){
 	var param = {
-		date : $('#date').val()
+		//date : null//$('#date').val()
 	};
 	
 	if($('#date').val() == null || $('#date').val() == ""){
