@@ -33,6 +33,9 @@ function pageLoad(){
 	$('#object').addClass("current");
 	$('#building').addClass("current");
     maxBldgCd = parseInt("${fn:substring(maxBldgCd,1,11)}");
+	if(isNaN(maxBldgCd)){
+		maxBldgCd = 0;
+	}
     loadGridStockList('init');
     getBuildingInfo();
     getBuildingList();
@@ -86,34 +89,37 @@ function loadGridStockList(type, result){
             cv: bldgView
         });
         bldgColumns =  [
-                { isReadOnly: true, width: 50, align:"center"},
-                { binding: 'areaCd', header: '지역코드', isReadOnly: true, width: 60, visible: false, align:"center"},
-                { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 60, visible: false, align:"center"},
-                { binding: 'clientNm', header: '고객명', isReadOnly: true, width: 60, visible: false, align:"center"},
-                { binding: 'zone', header: '구역', isReadOnly: true, width: 100, align:"center"},                
-                { binding: 'dtlAddr', header: '상세주소', isReadOnly: false, width: 300, align:"center"},
-                { binding: 'bldgCd', header: '건물코드', isReadOnly: true, width: 60, visible: false,align:"center"},
-                { binding: 'bldgNm', header: '건물명', isReadOnly: false, width: 150, align:"center"},
-                { binding: 'pnum', header: '전화번호', isReadOnly: false, width: 120, align:"center"},
-                { binding: 'conCost', header: '계약금액', isReadOnly: false,  width: 150, align:"center"},
-                { binding: 'conFromDt', header: '계약시작일', isReadOnly: true, width: 60, visible: false,align:"center"},
-                { binding: 'conToDt', header: '계약종료일', isReadOnly: true, width: 60, visible: false,align:"center"},
-                { binding: 'surtaxYn', header: '부가세여부', isReadOnly: true, width: 60, visible: false,align:"center" },
-                { binding: 'surtax', header: '부가세', isReadOnly: true, visible: false, width: 150, align:"center"},
-                { binding: 'dongNum', header: '동번호', isReadOnly: true, width: 60, align:"center"},
-                { binding: 'memo', header: '메모', isReadOnly: false, width: 280, align:"center"  },
-                { binding: 'activeYn', header: '활성화', isReadOnly: false, width: 80, align:"center", dataMap: activeList, dataMapEditor: 'DropDownList'},
-                { binding: 'cretDt', header: '계정생성일', isReadOnly: true, width: 175, align:"center"},
-                { binding: 'edit', header: '정보수정', isReadOnly: true, width: 150, align:"center",
-                    cellTemplate: wijmo.grid.cellmaker.CellMaker.makeButton({
-                        text: '<b>수정</b>',
-                        click: (e, ctx) => {
-                            showPop('modify_building');
-                        }
-                        
-                    })
-                }
-            ]
+            { isReadOnly: true, width: 50, align:"center"},
+            { binding: 'areaCd', header: '지역코드', isReadOnly: true, width: 60, visible: false, align:"center"},
+            { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 60, visible: false, align:"center"},
+            { binding: 'zone', header: '구역', isReadOnly: true, width: 100, align:"center"},                
+            { binding: 'dtlAddr', header: '상세주소', isReadOnly: false, width: 300, align:"center"},
+            { binding: 'bldgCd', header: '건물번호', isReadOnly: true, width: 150, align:"center"},
+            { binding: 'bldgNm', header: '건물명', isReadOnly: false, width: 150, align:"center"},
+            { binding: 'clientNm', header: '고객명', isReadOnly: true, width: 80, align:"center"},
+            { binding: 'pnum', header: '전화번호', isReadOnly: false, width: 120, align:"center"},
+            { binding: 'conCost', header: '계약금액', isReadOnly: false,  width: 150, align:"center"},
+            { binding: 'conFromDt', header: '계약시작일', isReadOnly: true, width: 175, align:"center"},
+            { binding: 'conToDt', header: '계약종료일', isReadOnly: true, width: 175, align:"center"},
+            { binding: 'surtaxYn', header: '부가세여부', isReadOnly: true, width: 100, align:"center" },
+            { binding: 'surtax', header: '부가세', isReadOnly: true, width: 100, align:"center"},
+            { binding: 'dongNum', header: '동번호', isReadOnly: true, width: 60, align:"center"},
+            { binding: 'cleanCnt', header: '청소횟수', isReadOnly: true, width: 100, align:"center"},
+            { binding: 'fromDt', header: '상세시작일', isReadOnly: true, width: 175, align:"center"},
+            { binding: 'toDt', header: '상세종료일', isReadOnly: true, width: 175, align:"center"},
+            { binding: 'memo', header: '메모', isReadOnly: false, width: 280, align:"center"  },
+            { binding: 'activeYn', header: '활성화', isReadOnly: false, width: 80, align:"center", dataMap: activeList, dataMapEditor: 'DropDownList'},
+            { binding: 'cretDt', header: '계정생성일', isReadOnly: true, width: 175, align:"center"},
+            { binding: 'edit', header: '정보수정', isReadOnly: true, width: 150, align:"center",
+                cellTemplate: wijmo.grid.cellmaker.CellMaker.makeButton({
+                    text: '<b>수정</b>',
+                    click: (e, ctx) => {
+                        showPop('modify_building');
+                    }
+                    
+                })
+            }
+        ]
 		  
 		// hostElement에 Wijmo의 FlexGird 생성
         // itemsSource: data - CollectionView로 데이터를 그리드에 바인딩
@@ -327,7 +333,7 @@ function loadGridStockList(type, result){
         bldgSelector.column = bldgGrid.columns[0];
     }else{
         bldgView = new wijmo.collections.CollectionView(result, {
-            pageSize: 100,
+            pageSize: Number($('#bldgGridPageCount').val()),
             groupDescriptions: ['areaNm', 'bldgNm'],
             trackChanges : true
         });
@@ -1178,6 +1184,11 @@ function enterkey() {
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
+                   		<select id="bldgGridPageCount" onchange="getBuildingList()">
+							<option value="30">30</option>
+							<option value="50">50</option>
+							<option value="100" selected="selected">100</option>
+						</select>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('bldgLayout', bldgGrid);">칼럼위치저장</button>
                             <button type="button" class="stroke" onClick="_resetUserGridLayout('bldgLayout', bldgGrid,bldgColumns);">칼럼초기화</button>

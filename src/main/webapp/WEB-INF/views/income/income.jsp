@@ -95,10 +95,10 @@ function loadGridIncomeList(type, result){
 			      { binding: 'type', header: '분야', isReadOnly: true, width: 150, align:"center", allowMerging: true },
 			      { binding: 'areaNm', header: '지역', isReadOnly: true, width: 150, align:"center", allowMerging: true },
 			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 200, align:"center", allowMerging: false  },
-			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 150, align:"center" , allowMerging: false  },
-			      { binding: 'conCost', header: '계약금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false  },
-			      { binding: 'addCost', header: '추가금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false   },
-			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false  },
+			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 150, align:"center" , allowMerging: false   },
+			      { binding: 'conCost', header: '계약금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false },
+			      { binding: 'addCost', header: '추가금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false },
+			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false },
 			      { binding: 'depositCost', header: '입금금액', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', allowMerging: false  }
 			];
 		    
@@ -128,7 +128,7 @@ function loadGridIncomeList(type, result){
 	  }else{	
 		  //월관리
 		   incomeView = new wijmo.collections.CollectionView(result, {
-		       pageSize: 100
+		       pageSize: Number($('#incomeGridPageCount').val())
 		       ,groupDescriptions: ['depositDt']
 		   });
 		  incomeGridPager.cv = incomeView;
@@ -293,6 +293,11 @@ function exportExcel(){
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
+                    	<select id="incomeGridPageCount" onchange="getIncomeList()">
+							<option value="30">30</option>
+							<option value="50">50</option>
+							<option value="100" selected="selected">100</option>
+						</select>
                         <div class="btn_wrap">
                             <button type="button" class="stroke"  onClick="_getUserGridLayout('incomeLayout', incomeGrid);">칼럼위치저장</button>
                             <button type="button" class="stroke"  onClick="_resetUserGridLayout('incomeLayout', incomeGrid, incomeColumns);">칼럼초기화</button>

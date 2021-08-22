@@ -252,7 +252,7 @@ function loadGridCurrentList(type, result){
 			  
 	  }else{		  
 		   currentView = new wijmo.collections.CollectionView(result, {
-		       pageSize: 100,
+		       pageSize: Number($('#currentGridPageCount').val()),
 		       trackChanges: true
 		   });
 		  currentGridPager.cv = currentView;
@@ -600,6 +600,11 @@ function saveUpdateGrid(editRows){
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
+                    	<select id="currentGridPageCount" onchange="getCurrentList()" class="left">
+							<option value="30">30</option>
+							<option value="50">50</option>
+							<option value="100" selected="selected">100</option>
+						</select>
                     	<button type="button" class="stroke left" onClick="addRow()">+ 이력추가</button>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('currentLayout', currentGrid);">칼럼위치저장</button>

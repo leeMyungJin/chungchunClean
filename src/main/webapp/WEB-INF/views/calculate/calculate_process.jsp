@@ -24,7 +24,7 @@ var addView;
 var addGridPager;
 var addGrid;
 var addColumns;
-var addSelector;
+var addSelector; 
 
 var classifiGrid;
 var classifiView;
@@ -70,7 +70,7 @@ function pageLoad(){
 	loadGridList('init');
 	getMonTotalCost();
 	getAddTotalCost();
-	//getMsgremainCash();
+	getMsgremainCash();
 	getMsgTemplate();
 	
 	getMonList();
@@ -562,7 +562,7 @@ function loadGridList(type, result){
 	  }else if(type == "mon"){
 		//월관리
 		   monView = new wijmo.collections.CollectionView(result, {
-		       pageSize: 100
+		       pageSize: Number($('#monGridPageCount').val())
 		       ,groupDescriptions: ['areaNm']
 		   		,trackChanges: true
 		   });
@@ -572,7 +572,7 @@ function loadGridList(type, result){
 	  }else if(type == "monError"){
 			//월관리
 		   monErrorView = new wijmo.collections.CollectionView(result, {
-		       pageSize: 100
+		       pageSize: Number($('#monGridPageCount').val())
 		   	   ,trackChanges: true
 		   });
 		  monErrorGridPager.cv = monErrorView;
@@ -581,7 +581,7 @@ function loadGridList(type, result){
 	  }else if(type == "add"){	  
 		  //부가수익 
 		   addView = new wijmo.collections.CollectionView(result, {
-		       pageSize: 100
+		       pageSize: Number($('#addGridPageCount').val())
 		       ,groupDescriptions: ['bldgNm']
 	   			,trackChanges: true
 		   });
@@ -590,7 +590,7 @@ function loadGridList(type, result){
 		  
 	  }else if(type == "classifi"){
 	        classifiView = new wijmo.collections.CollectionView(result, {
-	            pageSize: 100,
+	            pageSize: Number($('#classifiGridPageCount').val()),
 	            trackChanges: true
 	        });
 	        classifiGridPager.cv = classifiView;
@@ -599,7 +599,7 @@ function loadGridList(type, result){
 	  }else if(type == "item"){
 		    classifiList = new wijmo.grid.DataMap(getClassifiList('itemPop'), 'id', 'name');
 	        itemView = new wijmo.collections.CollectionView(result, {
-	            pageSize: 100,
+	            pageSize: Number($('#itemGridPageCount').val()),
 	            trackChanges: true
 	        });
 	        itemGridPager.cv = itemView;
@@ -2022,6 +2022,11 @@ $(function(){
                         </div>
                         <!-- 보드 영역 admin_dashboard-->
                         <div class="admin_dashboard">
+	                        <select id="monGridPageCount" onchange="getMonList()">
+								<option value="30">30</option>
+								<option value="50">50</option>
+								<option value="100" selected="selected">100</option>
+							</select>
                             <div class="btn_wrap">
                                 <button type="button" class="stroke"  onClick="_getUserGridLayout('monLayout', monGrid);">칼럼위치저장</button>
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('monLayout', monGrid, monColumns);">칼럼초기화</button>
@@ -2112,7 +2117,12 @@ $(function(){
                         </div>
                         <!-- 보드 영역 admin_dashboard -->
                         <div class="admin_dashboard">
-                            <button type="button" class="stroke left" onClick="addRow('add');">+ 건물추가</button>
+                            <select id="addGridPageCount" onchange="getAddList()">
+								<option value="30">30</option>
+								<option value="50">50</option>
+								<option value="100" selected="selected">100</option>
+							</select>
+							<button type="button" class="stroke left" onClick="addRow('add');">+ 건물추가</button>
                             <div class="btn_wrap">
                                 <button type="button" class="stroke" onClick="_getUserGridLayout('addLayout', addGrid);">칼럼위치저장</button>
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('addLayout', addGrid, addColumns);">칼럼초기화</button>
@@ -2157,9 +2167,14 @@ $(function(){
                 </div>
                 <div class="popup_grid_area">
                    <button class="btn" style="display:block;" onclick="addRow('classifi');">+ 행 추가</button>
+                   <select class="pageCount" id="classifiGridPageCount" onchange="getClassifiList()">
+						<option value="30">30</option>
+						<option value="50">50</option>
+						<option value="100" selected="selected">100</option>
+					</select>
                     <div id="classifiGrid" style="width:860px; height:300px;"></div>
 					<div>
-					<button class="btn" onclick="addRow('classifi');">+ 행 추가</button>
+					<button class="stroke left btn" onclick="addRow('classifi');">+ 행 추가</button>
 					</div>
                     <div id="classifiGridPager" class="pager"></div>
                 </div>
@@ -2189,6 +2204,11 @@ $(function(){
                 </div>
                 <div class="popup_grid_area">
                    <button class="btn" style="display:block;" onclick="addRow('item');">+ 행 추가</button>
+                   <select class="pageCount" id="itemGridPageCount" onchange="getItemList()">
+						<option value="30">30</option>
+						<option value="50">50</option>
+						<option value="100" selected="selected">100</option>
+					</select>
                     <div id="itemGrid" style="width:860px; height:300px;"></div>
 					<div>
 					<button class="btn" onclick="addRow('item');">+ 행 추가</button>
@@ -2252,6 +2272,11 @@ $(function(){
                 </div>
                 <div class="popup_grid_area">
                     <div class="popup_grid">
+	                    <select id="monErrorGridPageCount" onchange="getMonErrorList()">
+							<option value="30">30</option>
+							<option value="50">50</option>
+							<option value="100" selected="selected">100</option>
+						</select>
 						<button class="btn" style="display:block;" onclick="addRow('error');">+ 행 추가</button>
 	                    <div id="monErrorGrid" style="width:860px;  height:300px;"></div>
 						<div>

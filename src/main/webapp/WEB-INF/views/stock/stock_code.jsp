@@ -181,15 +181,14 @@ function loadGridStockList(type, result){
         };
     }else if(type == "category"){
         categoryView = new wijmo.collections.CollectionView(result, {
-            pageSize: 100,
-            trackChanges: true,
-            getError
+            pageSize: Number($('#categoryGridPageCount').val()),
+            trackChanges: true
         });
         categoryGridPager.cv = categoryView;
         categoryGrid.itemsSource = categoryView;
 	}else{
         stockView = new wijmo.collections.CollectionView(result, {
-            pageSize: 100,
+            pageSize: Number($('#stockGridPageCount').val()),
             trackChanges: true,
             groupDescriptions: ['lCategyNm']
         });
@@ -674,6 +673,11 @@ function getError(item,prop){
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
+                    	<select id="stockGridPageCount" onchange="getStockList()">
+							<option value="30">30</option>
+							<option value="50">50</option>
+							<option value="100" selected="selected">100</option>
+						</select>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('stockLayout', stockGrid);">칼럼위치저장</button>
                             <button type="button" class="stroke" onClick="_resetUserGridLayout('stockLayout', stockGrid,stockColumns);">칼럼초기화</button>
@@ -717,6 +721,11 @@ function getError(item,prop){
                 </div>
                 <div class="popup_grid_area">
                     <button class="btn" style="display:block;"onclick="addRow('category');">+ 행 추가</button>
+                    <select class="pageCount" id="categoryGridPageCount" onchange="getCategyList()">
+						<option value="30">30</option>
+						<option value="50">50</option>
+						<option value="100" selected="selected">100</option>
+					</select>
                     <div id="categoryGrid" style="width:860px; height:300px;"></div>
                     <div>
                     <button class="btn" onclick="addRow('category');">+ 행 추가</button>
