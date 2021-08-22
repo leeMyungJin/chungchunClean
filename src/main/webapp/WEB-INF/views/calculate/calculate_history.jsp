@@ -169,7 +169,7 @@ function loadGridMonList(type, result){
 	  }else if(type == "mon"){
 		//월관리
 		   monView = new wijmo.collections.CollectionView(result, {
-		       pageSize: 100
+		       pageSize: Number($('#monGridPageCount').val())
 		       ,groupDescriptions: ['monMt','areaNm']
 		   });
 		  monGridPager.cv = monView;
@@ -179,7 +179,7 @@ function loadGridMonList(type, result){
 	  }else{
 		  //부가수익 
 		   addView = new wijmo.collections.CollectionView(result, {
-		       pageSize: 100
+		       pageSize: Number($('#addGridPageCount').val())
 		       ,groupDescriptions: ['areaNm']
 		   });
 		  addGridPager.cv = addView;
@@ -433,6 +433,11 @@ function addExportExcel(){
                         </div>
                         <!-- 보드 영역 admin_dashboard-->
                         <div class="admin_dashboard">
+                        	<select id="monGridPageCount" onchange="getMonList()">
+								<option value="30">30</option>
+								<option value="50">50</option>
+								<option value="100" selected="selected">100</option>
+							</select>
                             <div class="btn_wrap">
                                 <button type="button" class="stroke" onClick="_getUserGridLayout('monLayout', monGrid);">칼럼위치저장</button>
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('monLayout', monGrid, monColumns);">칼럼초기화</button>
@@ -513,6 +518,11 @@ function addExportExcel(){
                         </div>
                         <!-- 보드 영역 admin_dashboard-->
                         <div class="admin_dashboard">
+                        	<select id="addGridPageCount" onchange="getMonList()">
+								<option value="30">30</option>
+								<option value="50">50</option>
+								<option value="100" selected="selected">100</option>
+							</select>
                             <div class="btn_wrap">
  	                           	<button type="button" class="stroke" onClick="_getUserGridLayout('addLayout', addGrid);">칼럼위치저장</button>
 	                            <button type="button" class="stroke" onClick="_resetUserGridLayout('addLayout', addGrid, addColumns);">칼럼초기화</button>

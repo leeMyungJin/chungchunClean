@@ -88,7 +88,7 @@ function loadGridDailyList(type, result){
 			  
 	  }else{		  
 		   dailyView = new wijmo.collections.CollectionView(result, {
-		       pageSize: 100
+		       pageSize: Number($('#dailyGridPageCount').val())
 		   });
 		  dailyGridPager.cv = dailyView;
 		  dailyGrid.itemsSource = dailyView;
@@ -236,6 +236,11 @@ function copyUrl(){
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
+                    	<select id="dailyGridPageCount" onchange="getDailyList()" class="left">
+							<option value="30">30</option>
+							<option value="50">50</option>
+							<option value="100" selected="selected">100</option>
+						</select>
                     	<select name="subcon" id="subcon" class="left">
                             <option value="all" selected="selected">전체</option>
                             <option value="work">근태</option>

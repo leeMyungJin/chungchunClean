@@ -87,7 +87,7 @@ function loadGridStaffList(type, result){
 			  
 	  }else{
 		   staffView = new wijmo.collections.CollectionView(result, {
-		       pageSize: 100
+		       pageSize: Number($('#staffGridPageCount').val())
 		   });
 		  staffGridPager.cv = staffView;
 		  staffGrid.itemsSource = staffView;
@@ -435,6 +435,11 @@ function exportExcel(){
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
+                    	<select id="staffGridPageCount" onchange="getStaffList()">
+							<option value="30">30</option>
+							<option value="50">50</option>
+							<option value="100" selected="selected">100</option>
+						</select>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('staffLayout', staffGrid);">칼럼위치저장</button>
                             <button type="button" class="stroke" onClick="_resetUserGridLayout('staffLayout', staffGrid, staffColumns);">칼럼초기화</button>

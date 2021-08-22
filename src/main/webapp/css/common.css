@@ -810,8 +810,13 @@
     border: 1px solid #a8a8a8;
     border-radius: 30px;
     padding: 5px 12px;
+    float:left;
 }
 
+.popup_grid_area .pageCount {
+    float:right; 
+    margin: 10px 0px 10px 0px;
+}
 
 /*# sourceMappingURL=common.css.map */
 

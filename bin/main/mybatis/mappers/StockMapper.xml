@@ -272,7 +272,7 @@ insert into web.category_dtl_sar (
 		, updt_nm -- 등록자명
 )
 values(
-		(select max(cate_sar_seq)+1 from WEB.category_dtl_sar) -- 시퀀스
+		(select coalesce(max(cate_sar_seq)+1, 1) from WEB.category_dtl_sar) -- 시퀀스
 		, #{lCategyCd} -- 대카테고리코드
 		, (select l_categy_nm from WEB.CATEGORY_BAS where l_categy_cd = #{lCategyCd}) -- 대카테고리명
 		, #{itemCd}-- 물품코드

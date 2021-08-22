@@ -68,9 +68,9 @@ function loadGridStockList(type, result){
                 { binding: 'lCategyNm', header: '카테고리명', isReadOnly: true, width: 230, align:"center"},
                 { binding: 'itemNm', header: '물품명', isReadOnly: true, width: '*', align:"center"  },
                 { binding: 'itemCd', header: '코드번호', isReadOnly: true, width: 200, align:"center"},
-                { binding: 'cost', header: '원가', isReadOnly: true, width: 200, align:"center"},
-                { binding: 'quantity', header: '재고수량', isReadOnly: true, width: 200, align:"center"},
-                { binding: 'add', header: '추가입고', isReadOnly: false, format: 'c0', width: 200, align:"center"}
+                { binding: 'cost', header: '원가', isReadOnly: true, width: 200, align:"center", aggregate: 'Sum', allowMerging: false},
+                { binding: 'quantity', header: '재고수량', isReadOnly: true, width: 200, align:"center", visible: false, aggregate: 'Sum', allowMerging: false},
+                { binding: 'add', header: '추가입고', isReadOnly: false, format: 'c0', width: 200, align:"center", visible: false}
             ]
 		  
 		// hostElement에 Wijmo의 FlexGird 생성
@@ -78,6 +78,7 @@ function loadGridStockList(type, result){
         // autoGenerateColumns: false >> 컬럼 사용자 정의 
         stockMngGrid = new wijmo.grid.FlexGrid('#stockMngGrid', {
             autoGenerateColumns: false,
+            allowMerging: 'Cells',
             alternatingRowStep: 0,
             columns : stockMngColumns,
             itemsSource: stockMngView,
@@ -130,6 +131,9 @@ function loadGridStockList(type, result){
             }
         });
 
+        stockMngGrid.columnFooters.rows.push(new wijmo.grid.GroupRow());
+        stockMngGrid.bottomLeftCells.setCellData(0, 0, 'Σ');
+        
         _setUserGridLayout('stockMngLayout', stockMngGrid, stockMngColumns );
 
         //행번호 표시하기
@@ -186,7 +190,7 @@ function loadGridStockList(type, result){
         excelSelector.column = excelGrid.columns[0];
     }else{
         stockMngView = new wijmo.collections.CollectionView(result, {
-            pageSize: 100,
+            pageSize: Number($('#stockMngGridPageCount').val()),
             groupDescriptions: ['lCategyNm']
         });
         stockMngGrid.columns[0].width = 50;
@@ -385,6 +389,11 @@ function saveGrid(){
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
                     <div class="admin_dashboard">
+                    	<select id="stockMngGridPageCount" onchange="getStockList()">
+							<option value="30">30</option>
+							<option value="50">50</option>
+							<option value="100" selected="selected">100</option>
+						</select>
                         <div class="mark">
                             <span><dfn class="mark_enough"></dfn> 충분</span>
                             <span><dfn class="mark_short"></dfn> 부족</span>

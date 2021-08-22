@@ -158,6 +158,9 @@
 		BAS.con_to_dt,
 		DTL.dong_num ,
 		DTL.dong_qr_url ,
+		DTL.clean_cnt,
+		DTL.from_dt,
+		DTL.to_dt,
 		BAS.memo ,
 		TO_CHAR(BAS.cret_dt, 'YYYY-MM-DD') cret_dt
 	FROM
