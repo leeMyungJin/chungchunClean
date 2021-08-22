@@ -686,11 +686,11 @@ function getError(item,prop){
                             <button type="button" onclick="deleteRows('stock')">삭제</button>
                         </div>
                         <div class="grid_wrap" id="stockDiv" style="position:relative;">
-                        	<div id="stockGrid"  style="height:500px;"></div>
+                        	<div id="stockGrid"></div>
                         	<div id="stockGridPager" class="pager"></div>
                         </div>
                         <div class="grid_wrap" id="excelDiv" style="position:relative;">
-                        	<div id="excelGrid"  style="height:500px;"></div>
+                        	<div id="excelGrid"></div>
                         </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onclick="_getUserGridLayout('stockLayout', stockGrid);">칼럼위치저장</button>
@@ -781,10 +781,10 @@ function getError(item,prop){
     <!--물품추가 팝업 영역 끝-->
     <!-- 추가된 행 / 수정된 행 처리용 그리드 -->
     <div class="grid_wrap" id="addDiv" style="display:none;">
-        <div id="addGrid"  style="height:500px;"></div>
+        <div id="addGrid" ></div>
     </div>
     <div class="grid_wrap" id="editDiv" style="display:none;">
-        <div id="editGrid"  style="height:500px;"></div>
+        <div id="editGrid"></div>
     </div>
 </body>
 </html>

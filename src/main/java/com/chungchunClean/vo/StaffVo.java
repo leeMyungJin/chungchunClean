@@ -16,6 +16,7 @@ public class StaffVo {
 	private String updtId;		//수정자 
 	private String passwordKey; //비밀번호 솔트
 	private String position; //직급 
+	private String appversion;
 	public String getStaffId() {
 		return staffId;
 	}
@@ -106,13 +107,22 @@ public class StaffVo {
 	public void setPosition(String position) {
 		this.position = position;
 	}
+	public String getAppversion() {
+		return appversion;
+	}
+	public void setAppversion(String appversion) {
+		this.appversion = appversion;
+	}
+	
 	@Override
 	public String toString() {
 		return "StaffVo [staffId=" + staffId + ", staffPass=" + staffPass + ", staffName=" + staffName + ", staffPnum="
 				+ staffPnum + ", staffEmail=" + staffEmail + ", memo=" + memo + ", activeYn=" + activeYn + ", adminYn="
 				+ adminYn + ", lateassDt=" + lateassDt + ", cretDt=" + cretDt + ", cretId=" + cretId + ", updtDt="
-				+ updtDt + ", updtId=" + updtId + ", passwordKey=" + passwordKey + ", position=" + position + "]";
+				+ updtDt + ", updtId=" + updtId + ", passwordKey=" + passwordKey + ", position=" + position
+				+ ", appversion=" + appversion + "]";
 	}
+	
 	
 	
 	

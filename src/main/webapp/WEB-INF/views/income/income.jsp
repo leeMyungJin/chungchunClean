@@ -303,7 +303,7 @@ function exportExcel(){
                             <button type="button" class="stroke"  onClick="_resetUserGridLayout('incomeLayout', incomeGrid, incomeColumns);">칼럼초기화</button>
                         </div>
                         <div class="grid_wrap">
-                        	<div id="incomeGrid"  style="height:500px;"></div>
+                        	<div id="incomeGrid"></div>
                         	<div id="incomeGridPager" class="pager"></div>
                         </div>
                         <div class="btn_wrap">

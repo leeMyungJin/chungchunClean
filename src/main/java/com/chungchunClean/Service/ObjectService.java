@@ -3,6 +3,8 @@ package com.chungchunClean.Service;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.chungchunClean.vo.BldgVo;
 import com.chungchunClean.vo.CodeVo;
 import com.chungchunClean.vo.StaffVo;
@@ -54,6 +56,10 @@ public interface ObjectService {
     public void updateBuilding(BldgVo vo);
 
     public void excelUploadBuilding(BldgVo vo);
+    
+    public StaffVo getAppVersion();
+    
+    public void saveAppVersion(HashMap<String,Object> params);
 
 
 }

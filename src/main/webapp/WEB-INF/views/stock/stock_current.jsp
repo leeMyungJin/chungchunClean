@@ -613,7 +613,7 @@ function saveUpdateGrid(editRows){
                             <button type="button" onclick="deleteRows()">삭제</button>
                         </div>
                         <div class="grid_wrap">
-                        	<div id="currentGrid"  style="height:500px;"></div>
+                        	<div id="currentGrid"></div>
                         	<div id="currentGridPager" class="pager"></div>
                         </div>
                         <div class="btn_wrap">
@@ -628,10 +628,10 @@ function saveUpdateGrid(editRows){
         </div>
     </div>
     <div class="grid_wrap" id="addDiv" style="display:none;">
-        <div id="addGrid"  style="height:500px;"></div>
+        <div id="addGrid" ></div>
     </div>
     <div class="grid_wrap" id="editDiv" style="display:none;">
-        <div id="editGrid"  style="height:500px;"></div>
+        <div id="editGrid" ></div>
     </div>
 </body>
 </html>

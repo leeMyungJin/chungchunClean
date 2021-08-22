@@ -58,4 +58,8 @@ public interface ObjectMapper  {
     public void updateBuilding(BldgVo vo);
 
     public void excelUploadBuilding(BldgVo vo);
+    
+    public StaffVo getAppVersion();
+    
+    public void saveAppVersion(HashMap<String,Object> params);
 }

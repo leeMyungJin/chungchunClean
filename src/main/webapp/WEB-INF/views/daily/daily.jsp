@@ -254,7 +254,7 @@ function copyUrl(){
                         </div>
                         <div class="grid_wrap" style="position:relative;">
                         <!--Grid 영역 -->
-                        	<div id="dailyGrid"  style="height:500px;"></div>
+                        	<div id="dailyGrid"></div>
                         	<div id="dailyGridPager" class="pager"></div>
                         </div>
                         <div class="btn_wrap">

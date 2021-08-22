@@ -404,11 +404,11 @@ function saveGrid(){
                             <button type="button" id="saveBtn" onclick="saveGrid()">저장</button>
                         </div>
                         <div class="grid_wrap" id = "stockDiv" style="position:relative;">
-                            <div id="stockMngGrid"  style="height:500px;"></div>
+                            <div id="stockMngGrid"></div>
                         	<div id="stockMngGridPager" class="pager"></div>
                         </div>
                         <div class="grid_wrap" id="excelDiv" style="position:relative;">
-                        	<div id="excelGrid"  style="height:500px;"></div>
+                        	<div id="excelGrid"></div>
                         </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('stockMngLayout', stockMngGrid);">칼럼위치저장</button>

@@ -26,6 +26,7 @@ function pageLoad(){
 	loadGridStaffList('init');
 	
 	getStaffList();
+	getAppversion();
 }
 
 function enterkey() {
@@ -390,6 +391,43 @@ function exportExcel(){
 	 );
 }
 
+function getAppversion(){
+		$.ajax({
+            url : '/object/getAppVersion',
+            async : false, // 비동기모드 : true, 동기식모드 : false
+            type : 'POST',
+            cache : false,
+            dataType : null,
+            success : function(data) {
+            	$("#appver").val(data.appversion);
+            },
+            error : function(request,status,error) {
+              alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+      });
+}
+
+function saveAppversion(){
+	var params = {
+          	appversion : $('#appver').val()
+      	};
+		
+		$.ajax({
+            url : '/object/saveAppVersion',
+            async : false, // 비동기모드 : true, 동기식모드 : false
+            type : 'POST',
+            cache : false,
+            dataType : null,
+            data : params,
+            success : function(data) {
+            	alert('정상적으로 저장되었습니다.');
+            },
+            error : function(request,status,error) {
+              alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+      });
+}
+
 </script>
 
 <body onload="pageLoad();">
@@ -431,6 +469,10 @@ function exportExcel(){
                             <label for="inq" onkeyup="enterkey();"></label>
                             <input type="text" id="inq" placeholder=",로 다중검색 가능" onkeyup="enterkey();">
                             <button type="button" onClick="getStaffList();">조회</button>
+                            
+                            <!-- <label for="">APP 버전</label>
+                            <input class="left" id="appver" type="text">
+                            <button type="button" onClick="saveAppversion();">수정</button> -->
                         </form>
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
@@ -446,7 +488,7 @@ function exportExcel(){
                         </div>
                         <div class="grid_wrap" style="position:relative;">
                         <!--Grid 영역 -->
-                        	<div id="staffGrid"  style="height:500px;"></div>
+                        	<div id="staffGrid" ></div>
                         	<div id="staffGridPager" class="pager"></div>
                         </div>
                         <div class="btn_wrap">

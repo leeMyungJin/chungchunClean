@@ -1196,11 +1196,11 @@ function enterkey() {
                             <button type="button" onClick="saveGrid();">저장</button>
                         </div>
                         <div class="grid_wrap" id="bldgDiv" style="position:relative;">
-                        	<div id="bldgGrid"  style="height:500px;"></div>
+                        	<div id="bldgGrid"></div>
                         	<div id="bldgGridPager" class="pager"></div>
                         </div>
                         <div class="grid_wrap" id="excelDiv" style="position:relative;">
-                        	<div id="excelGrid"  style="height:500px;"></div>
+                        	<div id="excelGrid" ></div>
                         </div>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('bldgLayout', bldgGrid);">칼럼위치저장</button>

@@ -2036,11 +2036,11 @@ $(function(){
                                 <button type="button" id="saveMonTopExcel" onClick="saveGrid('monExcel')">저장</button>
                             </div>
                             <div class="grid_wrap" id="monDiv" style="position:relative;">
-                                <div id="monGrid"  style="height:500px;"></div>
+                                <div id="monGrid"></div>
                         		<div id="monGridPager" class="pager"></div>
                             </div>
 	                        <div class="grid_wrap" id="monExcelDiv" style="position:relative;">
-	                        	<div id="monExcelGrid"  style="height:500px;"></div>
+	                        	<div id="monExcelGrid"></div>
 	                        </div>
                             <div class="btn_wrap">
                                 <button type="button" class="stroke"  onClick="_getUserGridLayout('monLayout', monGrid);">칼럼위치저장</button>
@@ -2131,11 +2131,11 @@ $(function(){
                                 <button type="button" id="saveAddTopDelete" onclick="deleteRows('add')">삭제</button>
                             </div>
                             <div class="grid_wrap" id="addDiv" style="position:relative;">
-                                <div id="addGrid"  style="height:500px;"></div>
+                                <div id="addGrid"></div>
                         		<div id="addGridPager" class="pager"></div>
                             </div>
 	                        <div class="grid_wrap" id="addExcelDiv" style="position:relative;">
-	                        	<div id="addExcelGrid"  style="height:500px;"></div>
+	                        	<div id="addExcelGrid"></div>
 	                        </div>
                             <div class="btn_wrap">
                                 <button type="button" class="stroke" onClick="_getUserGridLayout('addLayout', addGrid);">칼럼위치저장</button>
@@ -2300,7 +2300,7 @@ $(function(){
     
     <!-- 추가된 행 / 수정된 행 처리용 그리드 -->
     <div class="grid_wrap" id="editDiv" style="display:none;">
-        <div id="editGrid"  style="height:500px;"></div>
+        <div id="editGrid" ></div>
     </div>
 </body>
 </html>
