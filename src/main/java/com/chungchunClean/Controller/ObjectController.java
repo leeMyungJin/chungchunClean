@@ -80,8 +80,7 @@ public class ObjectController {
         staffInfo.setMemo(req.getParameter("memo"));
         staffInfo.setPosition(req.getParameter("position"));
         staffInfo.setPasswordKey(password_key);
-       // staffInfo.setCretId(session.getAttribute("id").toString());
-        staffInfo.setCretId("testUser");
+        staffInfo.setCretId(req.getSession().getAttribute("staffId").toString());
         try{
         	objectService.saveNewStaff(staffInfo);
         }catch(Exception e){
@@ -283,5 +282,19 @@ public class ObjectController {
             }
         }
         return cnt;
+    }
+    
+    @RequestMapping(value = "/getAppVersion")
+    @ResponseBody
+    public StaffVo getAppVersion(){
+    	
+    	return objectService.getAppVersion();
+    }
+    
+    @RequestMapping(value = "/saveAppVersion")
+    @ResponseBody
+    public void saveAppVersion(@RequestParam HashMap<String,Object> params){
+    	
+    	objectService.saveAppVersion(params);
     }
 }

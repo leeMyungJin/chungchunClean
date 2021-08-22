@@ -386,4 +386,13 @@
 	  AND bldg_cd = #{bldgCd}
 	</update>
 	
+	<select id="getAppVersion" resultType="StaffVo">
+	select appversion from app.appver_check
+	</select>
+	
+	<update id="saveAppVersion" parameterType="StaffVo">
+	update app.appver_check set
+		appversion = #{appversion}
+	</update>
+	
 </mapper>

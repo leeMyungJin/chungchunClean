@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.chungchunClean.Mappers.ObjectMapper;
 import com.chungchunClean.Service.ObjectService;
@@ -175,4 +176,15 @@ public class ObjectServiceImpl implements ObjectService {
 		objectMapper.excelUploadBuilding(vo);
 	}
 	
+	@Override
+	public StaffVo getAppVersion(){
+    	
+    	return objectMapper.getAppVersion();
+    }
+	
+	@Override
+	public void saveAppVersion(@RequestParam HashMap<String,Object> params){
+    	
+		objectMapper.saveAppVersion(params);
+    }
 }

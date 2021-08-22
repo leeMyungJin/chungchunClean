@@ -443,7 +443,7 @@ function addExportExcel(){
                                 <button type="button" class="stroke" onClick="_resetUserGridLayout('monLayout', monGrid, monColumns);">칼럼초기화</button>
                             </div>
                             <div class="grid_wrap">
-                                <div id="monGrid"  style="height:500px;"></div>
+                                <div id="monGrid" ></div>
                         		<div id="monGridPager" class="pager"></div>
                             </div>
                             <div class="btn_wrap">
@@ -528,7 +528,7 @@ function addExportExcel(){
 	                            <button type="button" class="stroke" onClick="_resetUserGridLayout('addLayout', addGrid, addColumns);">칼럼초기화</button>
                             </div>
                             <div class="grid_wrap">
-                                <div id="addGrid"  style="height:500px;"></div>
+                                <div id="addGrid" ></div>
                         		<div id="addGridPager" class="pager"></div>
                             </div>
                             <div class="btn_wrap">
