@@ -34,8 +34,23 @@ public class BldgVo {
     private String toDt;
     private String addr;
     private String zone;
+    private String team;
 
     
+
+    /**
+     * @return String return the team
+     */
+    public String getTeam() {
+        return team;
+    }
+
+    /**
+     * @param team the team to set
+     */
+    public void setTeam(String team) {
+        this.team = team;
+    }
 
      /**
      * @return String return the visitDay

@@ -92,7 +92,8 @@ function loadGridStockList(type, result){
             { isReadOnly: true, width: 50, align:"center"},
             { binding: 'areaCd', header: '지역코드', isReadOnly: true, width: 60, visible: false, align:"center"},
             { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 60, visible: false, align:"center"},
-            { binding: 'zone', header: '구역', isReadOnly: true, width: 100, align:"center"},                
+            { binding: 'zone', header: '구역', isReadOnly: true, width: 100, align:"center"},
+            { binding: 'team', header: '담당팀', isReadOnly: true, width: 100, align:"center"},                                
             { binding: 'dtlAddr', header: '상세주소', isReadOnly: false, width: 300, align:"center"},
             { binding: 'bldgCd', header: '건물번호', isReadOnly: true, width: 150, align:"center"},
             { binding: 'bldgNm', header: '건물명', isReadOnly: false, width: 150, align:"center"},
@@ -387,6 +388,7 @@ function showPop(pop){
         form.areaCd.value="";
         form.areaNm.value="";
         form.zone.value="";
+        form.team.value="";
         form.dtlAddr.value="";
         form.bldgNm.value="";
         form.bldgCd.value = "B" + _fillZero(10, String(maxBldgCd+1) );
@@ -411,6 +413,7 @@ function showPop(pop){
         form.areaCd.value = bldgView.items[bldgView._idx].areaCd;
         form.areaNm.value = bldgView.items[bldgView._idx].areaNm;
         form.zone.value = bldgView.items[bldgView._idx].zone;
+        form.team.value = bldgView.items[bldgView._idx].team;
         form.dtlAddr.value = bldgView.items[bldgView._idx].dtlAddr;
         form.bldgNm.value = bldgView.items[bldgView._idx].bldgNm;
         form.conCost.value = bldgView.items[bldgView._idx].conCost;
@@ -575,6 +578,7 @@ function addBuilding(){
              bldgNm      : form.bldgNm.value,
              dtlAddr     : form.dtlAddr.value,
              pnum        : form.pnum.value,
+             team        : form.team.value,
              activeYn    : 'Y',
              conCost     : form.conCost.value.split(",").join(""),
              surtax      : form.surtax.value.split(",").join(""),
@@ -813,6 +817,7 @@ function modifyBuilding(){
                     bldgNm      : form.bldgNm.value,
                     dtlAddr     : form.dtlAddr.value,
                     pnum        : form.pnum.value,
+                    team        : form.team.value,
                     activeYn    : form.activeYn.checked == true? 'Y' : 'N',
                     conCost     : form.conCost.value.split(",").join(""),
                     surtax      : form.surtax.value == '' ? 0 :form.surtax.value.split(",").join(""),
@@ -1082,6 +1087,7 @@ function saveGrid(){
                     clientNm : excelGrid.collectionView.items[i].입금자명,
                     dtlAddr : excelGrid.collectionView.items[i].상세주소,
                     pnum : excelGrid.collectionView.items[i].전화번호,
+                    team : excelGrid.collectionView.items[i].담당팀,
                     conCost : excelGrid.collectionView.items[i].계약금액,
                     surtax : excelGrid.collectionView.items[i].부가세,
                     surtaxYn : excelGrid.collectionView.items[i].부가세포함여부,
@@ -1260,6 +1266,10 @@ function enterkey() {
                         <input type="text" id="bldgCd" name="bldgCd" onfocus="this.blur()" readonly>
                     </div>
                     <div class="row">
+                        <label for="team">담당팀<i>*</i></label>
+                        <input type="text" id="team" name="team" maxlength=13>
+                    </div>
+                    <div class="row">
                         <label for="pnum">전화번호<i>*</i></label>
                         <input type="text" id="pnum" maxlength=13 name="pnum" oninput="this.value = this.value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1');">
                     </div>
@@ -1347,6 +1357,10 @@ function enterkey() {
                     <div class="row">
                         <label for="bldgCd">건물번호<i>*</i></label>
                         <input type="text" id="bldgCd" name="bldgCd" onfocus="this.blur()" readonly>
+                    </div>
+                    <div class="row">
+                        <label for="team">담당팀<i>*</i></label>
+                        <input type="text" id="team" name="team" maxlength=13>
                     </div>
                     <div class="row">
                         <label for="pnum">전화번호<i>*</i></label>

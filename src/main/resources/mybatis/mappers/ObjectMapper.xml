@@ -151,6 +151,7 @@
 		BAS.dtl_addr ,
 		BAS.zone,
 		BAS.pnum ,
+		BAS.team ,
 		BAS.surtax ,
 		BAS.surtax_yn ,
 		BAS.active_yn ,
@@ -235,9 +236,9 @@
 
 	<insert id="addBuildingBas" parameterType="hashMap">
 	insert into web.bldg_Bas 
-	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, con_cost, con_from_dt, con_to_dt,  surtax_yn, surtax ,cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
+	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, team, con_cost, con_from_dt, con_to_dt,  surtax_yn, surtax ,cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
 	values
-	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, replace(#{pnum},'-',''), #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxYn}
+	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, replace(#{pnum},'-',''), #{team}, #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxYn}
 	<choose>
 		<when test="surtax != null and surtax != ''">
 			, #{surtax}::numeric
@@ -277,6 +278,7 @@
 	   ,con_to_dt
 	   ,con_cost
 	   ,pnum
+	   ,team
 	   ,dtl_addr
 	from web.bldg_bas
 	where bldg_cd= #{bldgCd}
@@ -297,9 +299,9 @@
 
 	<insert id="modifyBuilding" parameterType="hashMap">
 	insert into web.bldg_Bas 
-	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, con_cost, con_from_dt, con_to_dt,  surtax_yn, surtax, cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
+	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, team, con_cost, con_from_dt, con_to_dt,  surtax_yn, surtax, cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
 	values
-	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, replace(#{pnum},'-',''), #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxYn}, #{surtax}::numeric, now(), #{id}, now(), #{id}, #{zone}, #{memo}, #{activeYn})
+	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, replace(#{pnum},'-',''), #{team}, #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxYn}, #{surtax}::numeric, now(), #{id}, now(), #{id}, #{zone}, #{memo}, #{activeYn})
 	ON CONFLICT(bldg_cd) DO
 	UPDATE SET
 	  client_nm = #{clientNm},
@@ -308,6 +310,7 @@
 	  bldg_nm = #{bldgNm},
 	  dtl_addr = #{dtlAddr},
 	  pnum = replace(#{pnum},'-',''),
+	  team = #{team},
 	  con_cost = #{conCost}::numeric,
 	  con_from_dt = #{conFromDt},
 	  con_to_dt = #{conToDt},
@@ -351,9 +354,9 @@
 
 	<insert id="excelUploadBuilding" parameterType="BldgVo">
 	insert into web.bldg_Bas 
-	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm, dtl_addr, pnum, con_cost, visit_cnt, visit_day, con_from_dt, con_to_dt,  surtax_yn, surtax, cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
+	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm, dtl_addr, pnum, con_cost, visit_cnt, visit_day,  team, con_from_dt, con_to_dt,  surtax_yn, surtax, cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
 	values
-	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, replace(#{pnum},'-',''), #{conCost}::numeric, #{visitCnt}, #{visitDay}, #{conFromDt}, #{conToDt}, #{surtaxYn}, #{surtax}::numeric, now(), #{cretId}, now(), #{updtId}, #{zone}, #{memo}, #{activeYn})
+	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, replace(#{pnum},'-',''), #{conCost}::numeric, #{visitCnt}, #{visitDay}, #{team}, #{conFromDt}, #{conToDt}, #{surtaxYn}, #{surtax}::numeric, now(), #{cretId}, now(), #{updtId}, #{zone}, #{memo}, #{activeYn})
 	ON CONFLICT(bldg_cd) DO
 	UPDATE SET
 	  client_nm = #{clientNm},
@@ -364,6 +367,7 @@
 	  pnum = replace(#{pnum},'-',''),
 	  visit_cnt = #{visitCnt},
 	  visit_day = #{visitDay},
+	  team = #{team},
 	  con_cost = #{conCost}::numeric,
 	  con_from_dt = #{conFromDt},
 	  con_to_dt = #{conToDt},
