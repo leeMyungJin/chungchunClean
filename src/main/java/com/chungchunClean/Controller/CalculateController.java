@@ -456,30 +456,30 @@ public class CalculateController {
             }
             data    = buff.toString().trim();
 
-//            OutputStreamWriter outStream = new OutputStreamWriter(http.getOutputStream(), "UTF-8");
-//            PrintWriter writer = new PrintWriter(outStream);
-//            writer.write(buffer.toString());
-//            writer.flush();
-//
-//
-//            //--------------------------
-//            //   Response Code
-//            //--------------------------
-//            //http.getResponseCode();
-//
-//
-//            //-------------------------- 
-//            //   서버에서 전송받기 
-//            //-------------------------- 
-//            InputStreamReader tmp = new InputStreamReader(http.getInputStream(), "UTF-8");
-//            BufferedReader reader = new BufferedReader(tmp);
-//            StringBuilder builder = new StringBuilder();
-//            String str;
-//            while ((str = reader.readLine()) != null) {
-//                builder.append(str + "\n");
-//            }
-//            myResult = builder.toString();
-//            return myResult;
+           OutputStreamWriter outStream = new OutputStreamWriter(http.getOutputStream(), "UTF-8");
+           PrintWriter writer = new PrintWriter(outStream);
+           writer.write(buffer.toString());
+           writer.flush();
+
+
+           //--------------------------
+           //   Response Code
+           //--------------------------
+           //http.getResponseCode();
+
+
+           //-------------------------- 
+           //   서버에서 전송받기 
+           //-------------------------- 
+           InputStreamReader tmp = new InputStreamReader(http.getInputStream(), "UTF-8");
+           BufferedReader reader = new BufferedReader(tmp);
+           StringBuilder builder = new StringBuilder();
+           String str;
+           while ((str = reader.readLine()) != null) {
+               builder.append(str + "\n");
+           }
+           myResult = builder.toString();
+           return myResult;
 
         } catch (MalformedURLException e) {
             e.printStackTrace();

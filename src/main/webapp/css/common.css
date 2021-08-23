@@ -380,6 +380,11 @@
     text-indent: -9999px;
 }
 
+.admin_filter button.btn {
+    background-image: none;
+    text-indent: 0;
+  }
+
 .admin_filter .summary {
     position: absolute;
     top: 30px;
@@ -851,3 +856,4 @@
     background-color: #ffc962;
     border-radius: 5px;
 }
+

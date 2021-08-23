@@ -1,5 +1,10 @@
 package com.chungchunClean.vo;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class BldgVo {
 
     private String areaCd;
@@ -23,6 +28,8 @@ public class BldgVo {
     private String conFromDt;
     private String conToDt;
     private Integer cleanCnt;
+    private Integer visitCnt;
+    private String visitDay;
     private String fromDt;
     private String toDt;
     private String addr;
@@ -30,7 +37,35 @@ public class BldgVo {
 
     
 
+     /**
+     * @return String return the visitDay
+     */
+    public String getVisitDay() {
+        return visitDay;
+    }
+
     /**
+     * @param visitDay the visitDay to set
+     */
+    public void setVisitDay(String visitDay) {
+        this.visitDay = visitDay;
+    }
+
+    /**
+     * @return Integer return the visitCnt
+     */
+    public Integer getVisitCnt() {
+        return visitCnt;
+    }
+
+    /**
+     * @param visitCnt the visitCnt to set
+     */
+    public void setVisitCnt(Integer visitCnt) {
+        this.visitCnt = visitCnt;
+    }
+
+     /**
      * @return String return the areaCd
      */
     public String getAreaCd() {

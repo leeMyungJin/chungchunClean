@@ -96,7 +96,7 @@ function loadGridStockList(type, result){
             { binding: 'dtlAddr', header: '상세주소', isReadOnly: false, width: 300, align:"center"},
             { binding: 'bldgCd', header: '건물번호', isReadOnly: true, width: 150, align:"center"},
             { binding: 'bldgNm', header: '건물명', isReadOnly: false, width: 150, align:"center"},
-            { binding: 'clientNm', header: '고객명', isReadOnly: true, width: 80, align:"center"},
+            { binding: 'clientNm', header: '입금자명', isReadOnly: true, width: 80, align:"center"},
             { binding: 'pnum', header: '전화번호', isReadOnly: false, width: 120, align:"center"},
             { binding: 'conCost', header: '계약금액', isReadOnly: false,  width: 150, align:"center"},
             { binding: 'conFromDt', header: '계약시작일', isReadOnly: true, width: 175, align:"center"},
@@ -104,7 +104,8 @@ function loadGridStockList(type, result){
             { binding: 'surtaxYn', header: '부가세여부', isReadOnly: true, width: 100, align:"center" },
             { binding: 'surtax', header: '부가세', isReadOnly: true, width: 100, align:"center"},
             { binding: 'dongNum', header: '동번호', isReadOnly: true, width: 60, align:"center"},
-            { binding: 'cleanCnt', header: '청소횟수', isReadOnly: true, width: 100, align:"center"},
+            { binding: 'visitCnt', header: '주방문횟수', isReadOnly: true, width: 100, align:"center"},
+            { binding: 'visitDay', header: '방문요일', isReadOnly: true, width: 100, align:"center"},
             { binding: 'fromDt', header: '상세시작일', isReadOnly: true, width: 175, align:"center"},
             { binding: 'toDt', header: '상세종료일', isReadOnly: true, width: 175, align:"center"},
             { binding: 'memo', header: '메모', isReadOnly: false, width: 280, align:"center"  },
@@ -160,7 +161,8 @@ function loadGridStockList(type, result){
         bldgDetailColumns =  [
                 { binding: 'bldgCd', header: '건물코드', isReadOnly: true, visible : false, width: 80, align:"center"},
                 { binding: 'dongNum', header: '동번호', isReadOnly: false, width: "*", align:"center"},
-                { binding: 'cleanCnt', header: '청소횟수', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'visitCnt', header: '주방문횟수', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'visitDay', header: '방문요일', isReadOnly: false, width: "*", align:"center"},
                 { binding: 'fromDt', header: '시작일', isReadOnly: false, width: "*", align:"center"},
                 { binding: 'toDt', header: '종료일', isReadOnly: false, width: "*", align:"center"},
                 { binding: 'dongQrUrl', header: 'QrUrl', isReadOnly: false, visible : false,width: "*", align:"center"}
@@ -195,7 +197,7 @@ function loadGridStockList(type, result){
             cellEditEnding: function (s, e) {
                 var col = s.columns[e.col];
                 var inven = s.columns[e.col - 1];
-                if (col.binding == 'cleanCnt') {
+                if (col.binding == 'visitCnt') {
                     var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
                     if( !wijmo.isNumber(value)){
                         e.cancel = true;
@@ -229,7 +231,8 @@ function loadGridStockList(type, result){
         modifyDetailColumns =  [
                 { binding: 'bldgCd', header: '건물코드', isReadOnly: true, visible : false, width: 80, align:"center"},
                 { binding: 'dongNum', header: '동번호', isReadOnly: false, width: "*", align:"center"},
-                { binding: 'cleanCnt', header: '청소횟수', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'visitCnt', header: '주방문횟수', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'visitDay', header: '방문요일', isReadOnly: false, width: "*", align:"center"},
                 { binding: 'fromDt', header: '시작일', isReadOnly: false, width: "*", align:"center"},
                 { binding: 'toDt', header: '종료일', isReadOnly: false, width: "*", align:"center"},
                 { binding: 'cretDt', header: '생성일', isReadOnly: false, visible : false, width: "*", align:"center"},
@@ -275,7 +278,7 @@ function loadGridStockList(type, result){
             cellEditEnding: function (s, e) {
                 var col = s.columns[e.col];
                 var inven = s.columns[e.col - 1];
-                if (col.binding == 'cleanCnt') {
+                if (col.binding == 'visitCnt') {
                     var value = wijmo.changeType(s.activeEditor.value, wijmo.DataType.Number, col.format);
                     if( !wijmo.isNumber(value)){
                         e.cancel = true;
@@ -308,7 +311,8 @@ function loadGridStockList(type, result){
                 { binding: 'bldgCd', header: '건물코드', isReadOnly: true, visible : false, width: 80, align:"center"},
                 { binding: 'bldg', header: '건물코드', isReadOnly: true, visible : false, width: 80, align:"center"},
                 { binding: 'dongNum', header: '동번호', isReadOnly: false, width: "*", align:"center"},
-                { binding: 'cleanCnt', header: '청소횟수', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'visitCnt', header: '주방문횟수', isReadOnly: false, width: "*", align:"center"},
+                { binding: 'visitDay', header: '방문요일', isReadOnly: false, width: "*", align:"center"},
                 { binding: 'fromDt', header: '시작일', isReadOnly: false, width: "*", align:"center"},
                 { binding: 'toDt', header: '종료일', isReadOnly: false, width: "*", align:"center"},
                 { binding: 'cretDt', header: '생성일', isReadOnly: false, visible : false, width: "*", align:"center"},
@@ -1013,11 +1017,11 @@ function saveGrid(){
                     alert("부가세는 숫자만 입력 가능합니다.");
                     return false;
                 }
-                value = wijmo.changeType(excelGrid.collectionView.items[i].전화번호, wijmo.DataType.String, null);
-                if(value.length != 11){
-                    alert("전화번호는 숫자 11자리까지 입력 가능합니다.");
-                    return false;
-                }
+                // value = wijmo.changeType(excelGrid.collectionView.items[i].전화번호, wijmo.DataType.String, null);
+                // if(value.length != 13){
+                //     alert("전화번호는 13자리까지 입력 가능합니다.");
+                //     return false;
+                // }
 
                 value = wijmo.changeType(excelGrid.collectionView.items[i].계약시작일, wijmo.DataType.String, null);
                 var dateRegExp = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
@@ -1075,7 +1079,7 @@ function saveGrid(){
                     areaCd :  excelGrid.collectionView.items[i].지역코드,
                     areaNm :  excelGrid.collectionView.items[i].지역명,
                     zone : excelGrid.collectionView.items[i].구역,
-                    clientNm : excelGrid.collectionView.items[i].고객명,
+                    clientNm : excelGrid.collectionView.items[i].입금자명,
                     dtlAddr : excelGrid.collectionView.items[i].상세주소,
                     pnum : excelGrid.collectionView.items[i].전화번호,
                     conCost : excelGrid.collectionView.items[i].계약금액,
@@ -1086,7 +1090,8 @@ function saveGrid(){
                     conToDt : excelGrid.collectionView.items[i].계약종료일,
                     activeYn : excelGrid.collectionView.items[i].활성화,
                     dongNum : excelGrid.collectionView.items[i].동번호,
-                    cleanCnt : excelGrid.collectionView.items[i].청소횟수,
+                    visitCnt : excelGrid.collectionView.items[i].주방문횟수,
+                    visitDay : excelGrid.collectionView.items[i].방문요일,
                     fromDt : excelGrid.collectionView.items[i].시작일,
                     toDt : excelGrid.collectionView.items[i].종료일,
                     dongQrUrl : excelGrid.collectionView.items[i].건물코드+excelGrid.collectionView.items[i].동번호
@@ -1174,7 +1179,7 @@ function enterkey() {
                             <select name="con" id="con">
                                 <option value="all" selected="selected">전체</option>
                                 <option value="area">지역</option>
-                                <option value="client">고객명</option>
+                                <option value="zone">구역</option>
                                 <option value="building">건물명</option>
                             </select>
                             <label for="inq"></label>
@@ -1225,7 +1230,7 @@ function enterkey() {
                 <dfn>필수항목 *</dfn>
                 <form id="newBuildingForm"  onsubmit="return false;">
                     <div class="row">
-                        <label for="clientNm">고객명<i>*</i></label>
+                        <label for="clientNm">입금자명<i>*</i></label>
                         <input type="text" id="clientNm" name="clientNm" required>
                     </div>
                     <div class="row">
@@ -1256,7 +1261,7 @@ function enterkey() {
                     </div>
                     <div class="row">
                         <label for="pnum">전화번호<i>*</i></label>
-                        <input type="text" id="pnum" maxlength=11 name="pnum"  placeholder="숫자만 입력하세요" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                        <input type="text" id="pnum" maxlength=13 name="pnum" oninput="this.value = this.value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1');">
                     </div>
                     <div class="row" style= "display: flex;">
                         <label for="codeNum">상세정보<i>*</i></label>
@@ -1314,7 +1319,7 @@ function enterkey() {
                         <input type="checkbox" id="activeYn" name="activeYn">체크 시, 활성화
                     </div>
                     <div class="row">
-                        <label for="clientNm">고객명<i>*</i></label>
+                        <label for="clientNm">입금자명<i>*</i></label>
                         <input type="text" id="clientNm" name="clientNm" required>
                     </div>
                     <div class="row">

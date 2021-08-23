@@ -469,10 +469,11 @@ function saveAppversion(){
                             <label for="inq" onkeyup="enterkey();"></label>
                             <input type="text" id="inq" placeholder=",로 다중검색 가능" onkeyup="enterkey();">
                             <button type="button" onClick="getStaffList();">조회</button>
-                            
-                            <!-- <label for="">APP 버전</label>
+                            <div style="position:absolute; right:20px; top:25%;">
+                            <label for="">APP 버전</label>
                             <input class="left" id="appver" type="text">
-                            <button type="button" onClick="saveAppversion();">수정</button> -->
+                            <button type="button" class="btn" onClick="saveAppversion();">수정</button>
+                            </div>
                         </form>
                     </div>
                     <!-- 보드 영역 admin_dashboard-->
