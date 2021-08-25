@@ -21,6 +21,7 @@
 			   , active_yn
 			   , admin_yn
 			   , position
+			   , department
 			   , to_char(cret_dt, 'YYYY-MM-DD') as cret_dt 
 			   , cret_id
 			   , to_char(updt_dt, 'YYYY-MM-DD') as updt_dt 
@@ -43,10 +44,16 @@
 						staff_id LIKE '%' || #{item} || '%'
 					</foreach>
 				</when>
-				<when test="con == 'mail'">
+				<when test="con == 'department'">
 					<foreach collection="inq" item="item"
 						index="index" open="(" close=")" separator="or">
-						staff_email LIKE '%' || #{item} || '%'
+						department LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
+				<when test="con == 'position'">
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						position LIKE '%' || #{item} || '%'
 					</foreach>
 				</when>
 				<otherwise>
@@ -54,7 +61,8 @@
 						index="index" open="(" close=")" separator="or">
 						staff_name LIKE '%' || #{item} || '%'
 						or staff_id LIKE '%' || #{item} || '%'
-						or staff_email LIKE '%' || #{item} || '%'
+						or department LIKE '%' || #{item} || '%'
+						or position LIKE '%' || #{item} || '%'
 					</foreach>
 				</otherwise>
 			</choose>
@@ -72,6 +80,7 @@
 			   , active_yn
 			   , admin_yn
 			   , position
+			   , department
 			   , to_char(cret_dt, 'YYYY-MM-DD') as cret_dt 
 			   , cret_id
 			   , to_char(updt_dt, 'YYYY-MM-DD') as updt_dt 
@@ -97,6 +106,7 @@
 			   , staff_email
 			   , memo
 			   , position
+			   , department
 			   , password_key
 			   , cret_dt
 			   , cret_id
@@ -110,6 +120,7 @@
 			   , #{staffEmail}
 			   , #{memo}
 			   , #{position}
+			   , #{department}
 			   , #{passwordKey}
 			   , NOW()
 			   , #{cretId}
@@ -133,6 +144,7 @@
 		   staff_email=#{mail}, 
 		   memo=#{memo}, 
 		   position=#{position},
+		   department=#{department},
 		   active_yn=#{active}, 
 		   admin_yn=#{admin}, 
 		   updt_dt=NOW(),

@@ -17,6 +17,14 @@ public class StaffVo {
 	private String passwordKey; //비밀번호 솔트
 	private String position; //직급 
 	private String appversion;
+	private String department; //부서
+
+	public String getDepartment() {
+		return department;
+	}
+	public void setDepartment(String department) {
+		this.department = department;
+	}
 	public String getStaffId() {
 		return staffId;
 	}

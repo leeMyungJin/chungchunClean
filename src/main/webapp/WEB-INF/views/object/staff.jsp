@@ -56,6 +56,7 @@ function loadGridStaffList(type, result){
 		      { binding: 'activeYn', header: '활성화', isReadOnly: true, width: 60, align:"center"  },
 		      { binding: 'staffPnum', header: '전화번호', isReadOnly: true, width: 120, align:"center"  },
 		      { binding: 'staffEmail', header: '이메일', isReadOnly: true, width: 200, align:"center"  },
+              { binding: 'department', header: '부서', isReadOnly: true, width: 100, align:"center" },
 		      { binding: 'position', header: '직급', isReadOnly: true, width: 100, align:"center" },
 		      { binding: 'memo', header: '메모', isReadOnly: true, width: 400, align:"center" },
 		      { binding: 'lateassDt', header: '최근접속일', isReadOnly: true, width: 100 , align:"center" },
@@ -132,6 +133,7 @@ function showPop(pop){
 		newStaffForm.id.value = "";
 		newStaffForm.password.value = "";
 		newStaffForm.name.value = "";
+        newStaffForm.department.value="";
 		newStaffForm.telPhone.value = "";
 		newStaffForm.mail.value = "";
 		newStaffForm.memo.value = "";
@@ -144,6 +146,7 @@ function showPop(pop){
 		updateStaffForm.id.value = staffGrid.collectionView.currentItem["staffId"];
 		updateStaffForm.password.value = "";
 		updateStaffForm.name.value = staffGrid.collectionView.currentItem["staffName"];
+        updateStaffForm.department.value = staffGrid.collectionView.currentItem["department"];
 		updateStaffForm.telPhone.value = staffGrid.collectionView.currentItem["staffPnum"];
 		updateStaffForm.mail.value = staffGrid.collectionView.currentItem["staffEmail"];
 		updateStaffForm.memo.value = staffGrid.collectionView.currentItem["memo"];
@@ -221,6 +224,7 @@ function saveNewStaff(){
     		id 		:	newStaffForm.id.value
     		,password:	newStaffForm.password.value
     		,name	:	newStaffForm.name.value
+            ,department: newStaffForm.department.value
     		,telPhone:	newStaffForm.telPhone.value
     		,mail	:	newStaffForm.mail.value
     		,memo	:	newStaffForm.memo.value
@@ -348,6 +352,7 @@ function updateStaff(){
        	, id 		: updateStaffForm.id.value
        	, password 	: updateStaffForm.password.value
        	, name 		: updateStaffForm.name.value
+        , department: updateStaffForm.department.value
        	, telPhone 	: updateStaffForm.telPhone.value	
        	, mail 		: updateStaffForm.mail.value	
        	, memo 		: updateStaffForm.memo.value	
@@ -464,7 +469,8 @@ function saveAppversion(){
                                 <option value="all" selected="selected">전체</option>
                                 <option value="name">이름</option>
                                 <option value="id">ID</option>
-                                <option value="mail">이메일</option>
+                                <option value="department">부서</option>
+                                <option value="position">직급</option>
                             </select>
                             <label for="inq" onkeyup="enterkey();"></label>
                             <input type="text" id="inq" placeholder=",로 다중검색 가능" onkeyup="enterkey();">
@@ -526,6 +532,10 @@ function saveAppversion(){
                         <input type="text" id="name" name="name" required>
                     </div>
                     <div class="row">
+                        <label for="department">부서<i>*</i></label>
+                        <input type="text" id="department" name="department" required>
+                    </div>
+                    <div class="row">
                         <label for="name">직급</label>
                         <input type="text" id="position" name="position" required>
                     </div>
@@ -578,6 +588,10 @@ function saveAppversion(){
                     <div class="row">
                         <label for="name">이름<i>*</i></label>
                         <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="row">
+                        <label for="department">부서<i>*</i></label>
+                        <input type="text" id="department" name="department" required>
                     </div>
                     <div class="row">
                         <label for="name">직급</label>

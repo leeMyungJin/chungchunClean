@@ -38,12 +38,6 @@
 						bb.area_nm LIKE '%' || #{item} || '%'
 					</foreach>
 				</when>
-				<when test="con == 'client'">
-					<foreach collection="inq" item="item"
-						index="index" open="(" close=")" separator="or">
-						bb.client_nm LIKE '%' || #{item} || '%'
-					</foreach>
-				</when>
 				<when test="con == 'building'">
 					<foreach collection="inq" item="item"
 						index="index" open="(" close=")" separator="or">
@@ -60,7 +54,6 @@
 					<foreach collection="inq" item="item"
 						index="index" open="(" close=")" separator="or">
 						bb.area_nm LIKE '%' || #{item} || '%'
-						or bb.client_nm LIKE '%' || #{item} || '%'
 						or bb.bldg_nm LIKE '%' || #{item} || '%'
 						or dm.officer_nm LIKE '%' || #{item} || '%'
 					</foreach>

@@ -19,7 +19,7 @@
 		, oc.over_cost as over_cost_temp 
 		, amm.deposit_cost 
 		, to_char(amm.deposit_dt , 'YYYY-MM-DD') as deposit_dt 
-		, amm.depositor 
+		, bb.client_nm 
 		, bb.pnum 
 		, amm.memo
 		, coalesce(amm.mon_mt, #{date}) as mon_mt
@@ -49,6 +49,8 @@
 					or
 					bb.bldg_nm LIKE '%' || #{item} || '%'
 					or
+					bb.zone LIKE '%' || #{item} || '%'
+					or
 					amm.depositor LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
@@ -59,6 +61,13 @@
 					bb.area_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
+			<when test="con == 'zone'">
+				AND 
+					<foreach collection="inq" item="item"
+						index="index" open="(" close=")" separator="or">
+						bb.zone LIKE '%' || #{item} || '%'
+					</foreach>
+				</when>
 			<when test="con == 'building'">
 			AND 
 				<foreach collection="inq" item="item"
@@ -70,7 +79,7 @@
 			AND 
 				<foreach collection="inq" item="item"
 					index="index" open="(" close=")" separator="or">
-					amm.depositor LIKE '%' || #{item} || '%'
+					bb.client_nm  LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 		</choose>

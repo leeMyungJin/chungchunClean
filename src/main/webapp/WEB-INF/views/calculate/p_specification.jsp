@@ -67,7 +67,7 @@ function pageLoad(){
                     <tr>
                         <th rowspan="5">공<br>급<br>자</th>
                         <td>등록번호</td>
-                        <td colspan="3">307-86-01667</td>
+                        <td colspan="3">337-86-01667</td>
                     </tr>
                     <tr>
                         <td>상호</td>

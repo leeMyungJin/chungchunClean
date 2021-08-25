@@ -23,6 +23,7 @@ public class CalculateVo {
 	private String cretId;
 	private String updtDt;
 	private String updtId;
+	private String clientNm;
 	
 	private Integer outscCost;
 	private Integer materCost;
@@ -49,6 +50,12 @@ public class CalculateVo {
 	private Integer errorCount;
 	private Integer noneCount;
 
+	public String getClientNm() {
+		return clientNm;
+	}
+	public void setClientNm(String clientNm) {
+		this.clientNm = clientNm;
+	}
 	public String getAreaCd() {
 		return areaCd;
 	}

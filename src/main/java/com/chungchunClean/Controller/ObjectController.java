@@ -79,6 +79,7 @@ public class ObjectController {
         staffInfo.setStaffEmail((req.getParameter("mail")));
         staffInfo.setMemo(req.getParameter("memo"));
         staffInfo.setPosition(req.getParameter("position"));
+        staffInfo.setDepartment(req.getParameter("department"));
         staffInfo.setPasswordKey(password_key);
         staffInfo.setCretId(req.getSession().getAttribute("staffId").toString());
         try{

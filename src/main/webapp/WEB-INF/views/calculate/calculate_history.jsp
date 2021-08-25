@@ -80,9 +80,10 @@ function loadGridMonList(type, result){
 			  	  { binding: 'monMt', header: '월', isReadOnly: true, width: 100, align:"center"},
  			   	  { binding: 'areaCd', header: '지역', isReadOnly: true, width: 100, align:"center", visible: false },
  			   	  { binding: 'areaNm', header: '지역명', isReadOnly: true, width: 100, align:"center" },
- 			   	  { binding: 'zone', header: '구분', isReadOnly: true, width: 100, align:"center" },
+ 			   	  { binding: 'zone', header: '구역', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'bldgCd', header: '건물코드', isReadOnly: true, width: 0, align:"center", visible: false},
 			      { binding: 'bldgNm', header: '건물명', isReadOnly: true, width: 100, align:"center" },
+				  { binding: 'clientNm', header: '입금자명', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'conCost', header: '관리비', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum'  },
 			      { binding: 'surtax', header: '부가세', isReadOnly: true, width: 150, align:"center" , aggregate: 'Sum' },
 			      { binding: 'taxBill', header: '세금계산서', isReadOnly: true, width: 150, align:"center"  },
@@ -92,7 +93,6 @@ function loadGridMonList(type, result){
 			      { binding: 'overCostTemp', header: '이월금 Temp', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' , visible: false},
 			      { binding: 'depositCost', header: '관리비입금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
 			      { binding: 'depositDt', header: '입금날짜', isReadOnly: true, width: 150, align:"center" },
-			      { binding: 'depositor', header: '입금자명', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 150, align:"center" },
 			      { binding: 'memo', header: '비고', isReadOnly: true, width: 200, align:"center" }
 			];
@@ -409,6 +409,7 @@ function addExportExcel(){
                                 <select name="con" id="con">
                                     <option value="all" selected="selected">전체</option>
                                     <option value="site">지역</option>
+									<option value="zone">구역</option>
                                     <option value="building">건물명</option>
                                     <option value="depositor">입금자명</option>
                                 </select>

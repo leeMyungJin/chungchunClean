@@ -211,7 +211,6 @@ function copyUrl(){
                             <select name="con" id="con">
                                 <option value="all" selected="selected">전체</option>
                                 <option value="area">지역</option>
-                                <option value="client">사업주명</option>
                                 <option value="building">건물명</option>
                                 <option value="officer">담당자명</option>
                             </select>
