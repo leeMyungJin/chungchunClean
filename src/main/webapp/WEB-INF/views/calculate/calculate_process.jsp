@@ -114,7 +114,7 @@ function loadGridList(type, result){
 		    });
 		   
  		   monColumns = [
- 			  	  { isReadOnly: true, width: 35, align:"center"},
+ 			  	  { isReadOnly: true, width: 35, align:"left", cssClass:'cell-check'},
  			  	  { binding: 'monMt', header: '월', isReadOnly: true, width: 100, align:"center"},
  			   	  { binding: 'areaCd', header: '지역', isReadOnly: true, width: 100, align:"center", visible: false },
  			   	  { binding: 'areaNm', header: '지역', isReadOnly: true, width: 100, align:"center" },
@@ -563,7 +563,7 @@ function loadGridList(type, result){
 		//월관리
 		   monView = new wijmo.collections.CollectionView(result, {
 		       pageSize: Number($('#monGridPageCount').val())
-		       ,groupDescriptions: ['areaNm']
+		       ,groupDescriptions: ['areaNm','zone']
 		   		,trackChanges: true
 		   });
 		  monGridPager.cv = monView;

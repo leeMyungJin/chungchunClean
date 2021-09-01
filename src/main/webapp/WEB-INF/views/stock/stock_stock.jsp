@@ -69,9 +69,10 @@ function loadGridStockList(type, result){
                 { binding: 'itemNm', header: '물품명', isReadOnly: true, width: '*', align:"center"  },
                 { binding: 'itemCd', header: '코드번호', isReadOnly: true, width: 200, align:"center"},
                 { binding: 'cost', header: '원가', isReadOnly: true, width: 200, align:"center", aggregate: 'Sum', allowMerging: false},
-                { binding: 'quantity', header: '재고수량', isReadOnly: true, width: 200, align:"center", visible: false, aggregate: 'Sum', allowMerging: false},
-                { binding: 'add', header: '추가입고', isReadOnly: false, format: 'c0', width: 200, align:"center", visible: false}
-            ]
+                { binding: 'quantity', header: '재고수량', isReadOnly: true, width: 200, align:"center", aggregate: 'Sum', allowMerging: false},
+                { binding: 'add', header: '추가입고', isReadOnly: false, format: 'c0', width: 200, align:"center"},
+                { binding: 'sum', header: '합계', isReadOnly: false, format: 'c0', width: 200, align:"center", aggregate: 'Sum', allowMerging: false}
+        ]
 		  
 		// hostElement에 Wijmo의 FlexGird 생성
         // itemsSource: data - CollectionView로 데이터를 그리드에 바인딩

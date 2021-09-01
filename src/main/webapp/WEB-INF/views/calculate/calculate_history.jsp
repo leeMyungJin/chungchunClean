@@ -170,7 +170,7 @@ function loadGridMonList(type, result){
 		//월관리
 		   monView = new wijmo.collections.CollectionView(result, {
 		       pageSize: Number($('#monGridPageCount').val())
-		       ,groupDescriptions: ['monMt','areaNm']
+		       ,groupDescriptions: ['monMt','areaNm','zone']
 		   });
 		  monGridPager.cv = monView;
 		  monGrid.itemsSource = monView;

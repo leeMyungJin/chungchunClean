@@ -10,6 +10,7 @@ public class StockVo {
 	private String qrUrl;          		//QR코드 URL
     private Integer quantity; 		    // 재고
     private String status;          		// 재고 상태
+	private Integer sum;				//합계
     private String regDate;        		//등록일시 coalesce(updtDt, cretDt)
     private String cretDt;         		//등록일
     private String cretId;         		//등록자
@@ -66,6 +67,12 @@ public class StockVo {
 	}
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+	}
+	public Integer getSum() {
+		return sum;
+	}
+	public void setSum(Integer sum) {
+		this.sum = sum;
 	}
 	public String getStatus() {
 		return status;

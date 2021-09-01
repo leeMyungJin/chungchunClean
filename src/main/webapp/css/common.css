@@ -429,6 +429,9 @@
 .admin_dashboard input {
     padding: 10px 30px 10px 12px;
 }
+.cell-check{
+    padding-left: 15px !important;
+}
 
 .admin_dashboard button {
     margin-left: 10px;

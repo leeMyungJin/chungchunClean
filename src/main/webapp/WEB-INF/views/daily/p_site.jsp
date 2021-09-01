@@ -29,14 +29,16 @@
          AOS.init();
          
          var imgPath = '${imgPath}'.split(',');
-       
+         var errorImg = "../image/error_img.png"
          if(imgPath.length > 0){
          	for(var i=0; i<imgPath.length; i++){
          		console.log(imgPath[i]);
-         		$('#site_img').append('<li class="aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out"><img src="'+imgPath[i]+'" alt="현장점검이미지" height="400" width="400"></li>');
+
+         		$('#site_img').append('<li class="aos-init aos-animate" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out"><img src="'+imgPath[i]+'" onerror=this.src="'+errorImg+'" alt="현장점검이미지" height="400" width="400"></li>');
          	}
          }
      } );
+
    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
