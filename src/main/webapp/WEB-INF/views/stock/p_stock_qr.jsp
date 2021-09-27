@@ -33,7 +33,7 @@ function setStockQr(){
 	sessionCheck(staffId);
 	
 	var qrList = "${qrCnt}";
-	console.log("${qrList}");
+	<%--console.log("${qrList}");--%>
 	 for(var i =1; i<=qrList; i++){
 		console.log($("#barcode_"+i).attr("cd"));
 		let qrCode = new wijmo.barcode.common.QrCode('#barcode_'+i , {

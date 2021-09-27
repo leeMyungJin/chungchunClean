@@ -55,6 +55,7 @@ var editGridView;
 
 var staffId = "<%=session.getAttribute("staffId")%>";
 
+
 function pageLoad(){
 	sessionCheck(staffId);
 	
@@ -112,7 +113,7 @@ function loadGridList(type, result){
 		        headerFormat: '{currentPage:n0} / {pageCount:n0}',
 		        cv: monView
 		    });
-		   
+
  		   monColumns = [
  			  	  { isReadOnly: true, width: 35, align:"left", cssClass:'cell-check'},
  			  	  { binding: 'monMt', header: '월', isReadOnly: true, width: 100, align:"center"},
@@ -124,7 +125,7 @@ function loadGridList(type, result){
 				  { binding: 'clientNm', header: '입금자명', isReadOnly: true, width: 100, align:"center" },
 			      { binding: 'conCost', header: '관리비', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum'  },
 			      { binding: 'surtax', header: '부가세', isReadOnly: true, width: 150, align:"center" , aggregate: 'Sum' },
-			      { binding: 'taxBill', header: '세금계산서', isReadOnly: false, width: 150, align:"center"  },
+			      { binding: 'taxBill', header: '세금계산서', isReadOnly: false, width: 150, align:"center" },
 			      { binding: 'addCost', header: '추가금', isReadOnly: false, width: 150, align:"center", aggregate: 'Sum' },
 			      { binding: 'outCost', header: '미수금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum'  },
 			      { binding: 'overCost', header: '이월금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
@@ -289,20 +290,20 @@ function loadGridList(type, result){
 		    });
 		   
 		   classifiList = new wijmo.grid.DataMap(getClassifiList('drop'), 'id', 'name');
-		   itemList = new wijmo.grid.DataMap(getItemList('drop'), 'id', 'name');
-		   itemList.getDisplayValues = function (dataItem) {
-			    let validItem = getItemList('drop').filter(itemCd => itemCd.classifiCd == dataItem.classifiCd);
-			    return validItem.map(itemCd => itemCd.name);
-			}; 
-		    
+		   // itemList = new wijmo.grid.DataMap(getItemList('drop'), 'id', 'name');
+		   // itemList.getDisplayValues = function (dataItem) {
+			//     let validItem = getItemList('drop').filter(itemCd => itemCd.classifiCd == dataItem.classifiCd);
+			//     return validItem.map(itemCd => itemCd.name);
+			// };
+
 		   addColumns = [
 			   	  { isReadOnly: true, width: 35, align:"center"},
 			      { binding: 'addSeq', header: '시퀀스', isReadOnly: true, width: 150, align:"center", visible: false},
-			   	  { binding: 'addDt', header: '일자', isReadOnly: true, width: 150, align:"center" },
+			   	  { binding: 'addDt', header: '일자', isReadOnly: false, width: 150, align:"center" },
 			      { binding: 'classifiCd', header: '분류', isReadOnly: false, width: 150, align:"center" , dataMap: classifiList, dataMapEditor: 'DropDownList' },
 			      { binding: 'classifiNm', header: '분류명', isReadOnly: false, width: 100, align:"center", visible: false},
-			      { binding: 'itemCd', header: '내역', isReadOnly: false, width: 150, align:"center" , dataMap: itemList, dataMapEditor: 'DropDownList'},
-			      { binding: 'itemNm', header: '내역명', isReadOnly: false, width: 150, align:"center", visible: false},
+			      { binding: 'itemCd', header: '내역', isReadOnly: false, width: 150, align:"center", visible: false},
+			      { binding: 'itemNm', header: '내역명', isReadOnly: false, width: 150, align:"center"},
 			      { binding: 'areaNm', header: '지역', isReadOnly: false, width: 150, align:"center"},
 			      { binding: 'bldgNm', header: '건물명', isReadOnly: false, width: 200, align:"center"},
 			      { binding: 'quoteCost', header: '견적', isReadOnly: false, width: 120, align:"center", aggregate: 'Sum'  },
@@ -316,14 +317,16 @@ function loadGridList(type, result){
 			      { binding: 'depositor', header: '입금자명', isReadOnly: false, width: 100, align:"center" }
 			];
 		   var depositDtEditor = new wijmo.input.InputDate(document.createElement("div"));
-		   addGrid = new wijmo.grid.FlexGrid('#addGrid', {
+           var monMtEditor = new wijmo.input.InputDate(document.createElement("div"));
+          addGrid = new wijmo.grid.FlexGrid('#addGrid', {
 			    autoGenerateColumns: false,
 			    alternatingRowStep: 0,
 			    columns: addColumns,
 			    itemsSource: addView,
 			    beginningEdit: function (s, e) {
 	                s.columns.getColumn("depositDt").editor = depositDtEditor;
-	                let depositDt = e.getRow().dataItem.depositDt;
+                    s.columns.getColumn("addDt").editor = monMtEditor;
+                        let depositDt = e.getRow().dataItem.depositDt;
 	                if (!depositDt) {
 	                    return;
 	                }
@@ -1275,15 +1278,15 @@ function saveGrid(type){
                  return false;
              }
              
-             var itemLItem = itemL.filter(item => item.id == addExcelGrid.collectionView.items[i].내역);
-             if(itemLItem.length <= 0){
-            	 alert("등록되지 않은 내역이 존재합니다. - "+addExcelGrid.collectionView.items[i].내역);
-                 return false;
-                 
-             }else if(itemLItem[0].classifiCd != addExcelGrid.collectionView.items[i].분류){
-            	 alert("해당 분류에 존재하지 않는 내역입니다. - 분류 : "+addExcelGrid.collectionView.items[i].분류 +", 내역 : "+addExcelGrid.collectionView.items[i].내역);
-                 return false;
-             }
+             // var itemLItem = itemL.filter(item => item.id == addExcelGrid.collectionView.items[i].내역);
+             // if(itemLItem.length <= 0){
+            	//  alert("등록되지 않은 내역이 존재합니다. - "+addExcelGrid.collectionView.items[i].내역);
+             //     return false;
+             //
+             // }if(itemLItem[0].classifiCd != addExcelGrid.collectionView.items[i].분류){
+            	//  alert("해당 분류에 존재하지 않는 내역입니다. - 분류 : "+addExcelGrid.collectionView.items[i].분류 +", 내역 : "+addExcelGrid.collectionView.items[i].내역);
+             //     return false;
+             // }
         	 
         	 var value = wijmo.changeType(addExcelGrid.collectionView.items[i].일자, wijmo.DataType.String, null);
              var dateRegExp = /^(19|20)\d{2}.(0[1-9]|1[012]).(0[1-9]|[12][0-9]|3[0-1])$/;
@@ -1348,7 +1351,7 @@ function saveGrid(type){
              params={
             	 addDt :  addExcelGrid.collectionView.items[i].일자,
             	 classifiCd : addExcelGrid.collectionView.items[i].분류,
-            	 itemCd : addExcelGrid.collectionView.items[i].내역,
+            	 itemNm : addExcelGrid.collectionView.items[i].내역,
             	 areaNm : addExcelGrid.collectionView.items[i].지역, 
             	 bldgNm : addExcelGrid.collectionView.items[i].건물, 
             	 quoteCost : addExcelGrid.collectionView.items[i].견적, 
@@ -1685,8 +1688,8 @@ function findFile(type){
 	    
 	}else if(type == 'add'){
 		$("#addImportFile").val("");
-	    document.all.addImportFile.click();	
-	
+	    document.all.addImportFile.click();
+
 	}else if(type == 'monError'){
 		$("#monErrorImportFile").val("");
 	    document.all.monErrorImportFile.click();	
@@ -2066,14 +2069,14 @@ $(function(){
                             <dd id="totalAddOutcost">${totalAddCost.outcost}원</dd>
                         </dl>
                         <a href="javascript:void(0);" onclick="showPop('add_category');">분류명생성</a>
-                    	<a href="javascript:void(0);" onclick="showPop('add_breakdown');">내역생성</a>
+<%--                    	<a href="javascript:void(0);" onclick="showPop('add_breakdown');">내역생성</a>--%>
                     </div>
                     <div class="admin_utility">
                         <label for="date2">조회일</label>
                         <input type="month" id="date2" onfocusout="_fnisMonth(this.value, this.id)" onkeyup="enterkey('add');">
                         <button class="admin_utility_btn" onClick="getAddList();">조회</button>
                         <div class="admin_btn">
-                            <input type="fiadle" class="form-control" style="display:none" id="addImportFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12" />
+                            <input type="file" class="form-control" style="display:none" id="addImportFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel.sheet.macroEnabled.12" />
                             <button class="btn" onClick="popSpecification();">거래명세서 출력</button>
                         	<button class="btn" onClick="downTemplate('add');">엑셀 템플릿</button>
                             <button class="btn" onClick="findFile('add');">엑셀 업로드</button>

@@ -6,7 +6,7 @@ public class CalculateVo {
 	private String bldgNm;
 	private String bldgCd; 
 	private Integer surtax;
-	private String surtaxYn;
+	private String surtaxFlag;
 	private String taxBill; 
 	private Integer outCost;
 	private Integer overCost;
@@ -50,6 +50,8 @@ public class CalculateVo {
 	private Integer errorCount;
 	private Integer noneCount;
 
+	public String getSurtaxFlag() {return surtaxFlag; }
+	public void setSurtaxFlag(String surtaxFlag){ this.surtaxFlag = surtaxFlag;}
 	public String getClientNm() {
 		return clientNm;
 	}
@@ -85,12 +87,6 @@ public class CalculateVo {
 	}
 	public void setSurtax(Integer surtax) {
 		this.surtax = surtax;
-	}
-	public String getSurtaxYn() {
-		return surtaxYn;
-	}
-	public void setSurtaxYn(String surtaxYn) {
-		this.surtaxYn = surtaxYn;
 	}
 	public String getTaxBill() {
 		return taxBill;
@@ -318,7 +314,7 @@ public class CalculateVo {
 	@Override
 	public String toString() {
 		return "CalculateVo [areaCd=" + areaCd + ", areaNm=" + areaNm + ", bldgNm=" + bldgNm + ", bldgCd=" + bldgCd
-				+ ", surtax=" + surtax + ", surtaxYn=" + surtaxYn + ", taxBill=" + taxBill + ", outCost=" + outCost
+				+ ", surtax=" + surtax + ", surtaxYn=" + surtaxFlag + ", taxBill=" + taxBill + ", outCost=" + outCost
 				+ ", overCost=" + overCost + ", overCostTemp=" + overCostTemp + ", manageCost=" + manageCost
 				+ ", addCost=" + addCost + ", depositCost=" + depositCost + ", depositMt=" + depositMt + ", depositDt="
 				+ depositDt + ", depositor=" + depositor + ", pnum=" + pnum + ", memo=" + memo + ", cretDt=" + cretDt

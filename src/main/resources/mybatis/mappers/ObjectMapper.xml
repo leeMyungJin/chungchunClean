@@ -165,7 +165,7 @@
 		BAS.pnum ,
 		BAS.team ,
 		BAS.surtax ,
-		BAS.surtax_yn ,
+		BAS.surtax_flag ,
 		BAS.active_yn ,
 		BAS.con_from_dt,
 		BAS.con_to_dt,
@@ -212,6 +212,16 @@
 				</otherwise>
 			</choose>
 		</if>
+		<if test="subcon != null">
+			<choose>
+				<when test="subcon == 'active'">
+					and BAS.active_yn = 'Y'
+				</when>
+				<when test="subcon == 'activeN'">
+					and BAS.active_yn = 'N'
+				</when>
+			</choose>
+		</if>
 	order by BAS.CRET_DT
 	</select>
 	
@@ -248,9 +258,9 @@
 
 	<insert id="addBuildingBas" parameterType="hashMap">
 	insert into web.bldg_Bas 
-	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, team, con_cost, con_from_dt, con_to_dt,  surtax_yn, surtax ,cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
+	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, team, con_cost, con_from_dt, con_to_dt,  surtax_flag, surtax ,cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
 	values
-	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, replace(#{pnum},'-',''), #{team}, #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxYn}
+	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, replace(#{pnum},'-',''), #{team}, #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxFlag}
 	<choose>
 		<when test="surtax != null and surtax != ''">
 			, #{surtax}::numeric
@@ -311,9 +321,9 @@
 
 	<insert id="modifyBuilding" parameterType="hashMap">
 	insert into web.bldg_Bas 
-	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, team, con_cost, con_from_dt, con_to_dt,  surtax_yn, surtax, cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
+	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm,  dtl_addr, pnum, team, con_cost, con_from_dt, con_to_dt,  surtax_flag, surtax, cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
 	values
-	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, replace(#{pnum},'-',''), #{team}, #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxYn}, #{surtax}::numeric, now(), #{id}, now(), #{id}, #{zone}, #{memo}, #{activeYn})
+	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, replace(#{pnum},'-',''), #{team}, #{conCost}::numeric, #{conFromDt}, #{conToDt}, #{surtaxFlag}, #{surtax}::numeric, now(), #{id}, now(), #{id}, #{zone}, #{memo}, #{activeYn})
 	ON CONFLICT(bldg_cd) DO
 	UPDATE SET
 	  client_nm = #{clientNm},
@@ -326,7 +336,7 @@
 	  con_cost = #{conCost}::numeric,
 	  con_from_dt = #{conFromDt},
 	  con_to_dt = #{conToDt},
-	  surtax_yn  =#{surtaxYn},
+	  surtax_flag  =#{surtaxFlag},
 	  surtax = #{surtax}::numeric,
 	  updt_dt = now(),
 	  updt_id = #{id},
@@ -366,9 +376,9 @@
 
 	<insert id="excelUploadBuilding" parameterType="BldgVo">
 	insert into web.bldg_Bas 
-	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm, dtl_addr, pnum, con_cost, visit_cnt, visit_day,  team, con_from_dt, con_to_dt,  surtax_yn, surtax, cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
+	(client_nm,area_cd, area_nm, bldg_Cd, bldg_nm, dtl_addr, pnum, con_cost, visit_cnt, visit_day,  team, con_from_dt, con_to_dt,  surtax_flag, surtax, cret_dt, cret_id, updt_dt, updt_id, zone, memo, active_yn)
 	values
-	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, replace(#{pnum},'-',''), #{conCost}::numeric, #{visitCnt}, #{visitDay}, #{team}, #{conFromDt}, #{conToDt}, #{surtaxYn}, #{surtax}::numeric, now(), #{cretId}, now(), #{updtId}, #{zone}, #{memo}, #{activeYn})
+	(#{clientNm}, #{areaCd}, #{areaNm}, #{bldgCd}, #{bldgNm}, #{dtlAddr}, replace(#{pnum},'-',''), #{conCost}::numeric, #{visitCnt}, #{visitDay}, #{team}, #{conFromDt}, #{conToDt}, #{surtaxFlag}, #{surtax}::numeric, now(), #{cretId}, now(), #{updtId}, #{zone}, #{memo}, #{activeYn})
 	ON CONFLICT(bldg_cd) DO
 	UPDATE SET
 	  client_nm = #{clientNm},
@@ -383,7 +393,7 @@
 	  con_cost = #{conCost}::numeric,
 	  con_from_dt = #{conFromDt},
 	  con_to_dt = #{conToDt},
-	  surtax_yn  =#{surtaxYn},
+	  surtax_flag  =#{surtaxFlag},
 	  surtax = #{surtax}::numeric,
 	  updt_dt = now(),
 	  updt_id = #{updtId},

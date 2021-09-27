@@ -75,7 +75,7 @@
 		<if test="fromDate != null and toDate != null">
 			and dm.cret_dt between #{fromDate}::timestamp and (to_date(#{toDate}, 'YYYY-MM-DD')+1)::timestamp
 		</if>
-		order by dm.daily_mntr_cd
+		order by on_work_dt desc nulls last
 	</select>	
 	
 	

@@ -36,7 +36,7 @@ if(cookies !=null){
                   dataType : 'text',
                   data : {id : "<%=tempCookie.getValue()%>"},
                   success : function(data) {
-                    location.href="/statistics/";
+                      location.href="/statistics/";
                   },
                   error : function(request,status,error) {
                     alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);

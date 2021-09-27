@@ -25,12 +25,19 @@ var maxBldgCd;
 var dupCheck = false;
 var activeList = ['Y', 'N'];
 
+var surtaxFlag = [
+    { id: 'B', name: '현금영수증'},
+    { id: 'E', name: '전자세금계산서'},
+    { id: 'T', name: '세금계산서(부가세포함)'},
+    { id: 'N', name: '세금계산서(부가세불포함)'},
+    { id: 'X', name: '해당없음'}
+];
+
 var staffId = "<%=session.getAttribute("staffId")%>";
 
 function pageLoad(){
 	sessionCheck(staffId);
-	
-	$('#object').addClass("current");
+    $('#object').addClass("current");
 	$('#building').addClass("current");
     maxBldgCd = parseInt("${fn:substring(maxBldgCd,1,11)}");
 	if(isNaN(maxBldgCd)){
@@ -75,7 +82,8 @@ function getModifyError(item,prop){
 }
 //그리드 초기 셋팅
 function loadGridStockList(type, result){
-    
+    var surtaxFlagMap = new wijmo.grid.DataMap(surtaxFlag, 'id', 'name');
+
     if(type == "init"){
         $("#excelDiv").hide();
         $("#saveBtn").hide();
@@ -88,6 +96,8 @@ function loadGridStockList(type, result){
             headerFormat: '{currentPage:n0} / {pageCount:n0}',
             cv: bldgView
         });
+
+
         bldgColumns =  [
             { isReadOnly: true, width: 50, align:"center"},
             { binding: 'areaCd', header: '지역코드', isReadOnly: true, width: 60, visible: false, align:"center"},
@@ -102,7 +112,7 @@ function loadGridStockList(type, result){
             { binding: 'conCost', header: '계약금액', isReadOnly: false,  width: 150, align:"center"},
             { binding: 'conFromDt', header: '계약시작일', isReadOnly: true, width: 175, align:"center"},
             { binding: 'conToDt', header: '계약종료일', isReadOnly: true, width: 175, align:"center"},
-            { binding: 'surtaxYn', header: '부가세여부', isReadOnly: true, width: 100, align:"center" },
+            { binding: 'surtaxFlag', header: '세금계산서', isReadOnly: true, width: 200, align:"center", dataMap: surtaxFlagMap, dataMapEditor: 'DropDownList'},
             { binding: 'surtax', header: '부가세', isReadOnly: true, width: 100, align:"center"},
             { binding: 'dongNum', header: '동번호', isReadOnly: true, width: 60, align:"center"},
             { binding: 'visitCnt', header: '주방문횟수', isReadOnly: true, width: 100, align:"center"},
@@ -354,8 +364,9 @@ function getBuildingList(){
     $("#bldgDiv").show();
     var params = {
             inq : $("#inq").val(),
-            con : $("#con").val()
-    	}
+            con : $("#con").val(),
+        subcon : $('#subcon').val()
+    }
     	$.ajax({
             url : "/object/getBuildingList",
             async : false, // 비동기모드 : true, 동기식모드 : false
@@ -419,8 +430,8 @@ function showPop(pop){
         form.conCost.value = bldgView.items[bldgView._idx].conCost;
         form.conCost.value = form.conCost.value.replace(/[^0-9.]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         form.memo.value = bldgView.items[bldgView._idx].memo;
-        form.surtaxYn.value = bldgView.items[bldgView._idx].surtaxYn;
-        if( form.surtaxYn.value == 'N'){
+        form.surtaxFlag.value = bldgView.items[bldgView._idx].surtaxFlag;
+        if( form.surtaxFlag.value == 'N'){
             $("[name=tax]").show();
             form.surtax.value = bldgView.items[bldgView._idx].surtax;  
             form.surtax.value = form.surtax.value.replace(/[^0-9.]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -567,6 +578,7 @@ function addBuilding(){
                  return false;
              } */else{
                  detailParams.push(bldgDetailView.items[i]);
+                 console.log(bldgDetailView.items[i]);
              }
          }
              var params = {
@@ -578,11 +590,12 @@ function addBuilding(){
              bldgNm      : form.bldgNm.value,
              dtlAddr     : form.dtlAddr.value,
              pnum        : form.pnum.value,
+             id          : staffId,
              team        : form.team.value,
              activeYn    : 'Y',
              conCost     : form.conCost.value.split(",").join(""),
              surtax      : form.surtax.value.split(",").join(""),
-             surtaxYn    : form.surtaxYn.value,
+             surtaxFlag    : form.surtaxFlag.value,
              memo        : form.memo.value,
              clientNm    : form.clientNm.value,
              conFromDt   : form.conFromDt.value,
@@ -671,10 +684,10 @@ function buildingValidation(type){
     } */else if(form.conCost.value == ""){
         alert("계약금액을 입력하시기 바랍니다.");
         return false;
-    }else if(form.surtaxYn.value == ""){
+    }else if(form.surtaxFlag.value == ""){
         alert("부가세여부를 선택하시기 바랍니다.");
         return false;
-    }else if(form.surtaxYn.value == "N" && form.surtax.value == ""){
+    }else if(form.surtaxFlag.value == "N" && form.surtax.value == ""){
         alert("부가세 금액을 입력하시기 바랍니다.")    ;
         return false;
     }else{
@@ -821,7 +834,7 @@ function modifyBuilding(){
                     activeYn    : form.activeYn.checked == true? 'Y' : 'N',
                     conCost     : form.conCost.value.split(",").join(""),
                     surtax      : form.surtax.value == '' ? 0 :form.surtax.value.split(",").join(""),
-                    surtaxYn    : form.surtaxYn.value,
+                    surtaxFlag  : form.surtaxFlag.value,
                     memo        : form.memo.value,
                     clientNm    : form.clientNm.value,
                     conFromDt   : form.conFromDt.value,
@@ -1007,14 +1020,14 @@ function saveGrid(){
                     return false;
                 }
                 var flag = wijmo.changeType(excelGrid.collectionView.items[i].부가세포함여부, wijmo.DataType.String, null);
-                if(flag != 'Y' && flag != 'N'){
-                    alert("부가세포함여부는 Y/N 중 하나를 입력하시기 바랍니다.");
+                if(flag != 'B' && flag != 'E' && flag != 'T' && flag != 'N' && flag != 'X'){
+                    alert("부가세포함여부는 B/E/T/N/X 중 하나를 입력하시기 바랍니다.");
                     return false;
                 }
                 value = wijmo.changeType(excelGrid.collectionView.items[i].부가세, wijmo.DataType.Number, null);
-                if(flag == 'Y' ){
+                if(flag == 'B' || flag == 'E' || flag == 'T' || flag == 'X'){
                     if(value > 0){
-                        alert("부가세포함여부가 Y인 경우, 부가세를 입력할 수 없습니다.");
+                        alert("부가세포함여부가 X인 경우만, 부가세를 입력할 수 있습니다.");
                         return false;
                     }
                 }
@@ -1090,7 +1103,7 @@ function saveGrid(){
                     team : excelGrid.collectionView.items[i].담당팀,
                     conCost : excelGrid.collectionView.items[i].계약금액,
                     surtax : excelGrid.collectionView.items[i].부가세,
-                    surtaxYn : excelGrid.collectionView.items[i].부가세포함여부,
+                    surtaxFlag : excelGrid.collectionView.items[i].부가세포함여부,
                     memo : excelGrid.collectionView.items[i].메모,
                     conFromDt : excelGrid.collectionView.items[i].계약시작일,
                     conToDt : excelGrid.collectionView.items[i].계약종료일,
@@ -1127,7 +1140,7 @@ function saveGrid(){
 
 // 이벤트 처리 
 $(function(){
-    $("[name=surtaxYn]").change(function(){
+    $("[name=surtaxFlag]").change(function(){
         if(this.value == "N"){
             $("[name=tax]").show();
         }else{
@@ -1200,6 +1213,12 @@ function enterkey() {
 							<option value="50">50</option>
 							<option value="100" selected="selected">100</option>
 						</select>
+                        <select name="subcon" id="subcon" class="left">
+                            <option value="all">전체</option>
+                            <option value="active" selected="selected">활성화</option>
+                            <option value="activeN">비활성화</option>
+                        </select>
+                        <button type="button" class="att left" onClick="getBuildingList();">보기</button>
                         <div class="btn_wrap">
                             <button type="button" class="stroke" onClick="_getUserGridLayout('bldgLayout', bldgGrid);">칼럼위치저장</button>
                             <button type="button" class="stroke" onClick="_resetUserGridLayout('bldgLayout', bldgGrid,bldgColumns);">칼럼초기화</button>
@@ -1291,11 +1310,14 @@ function enterkey() {
                         <input type="text" id="conCost" name="conCost" required placeholder="숫자만 입력하세요" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');"> 
                     </div>
                     <div class="row">
-                        <label for="surtaxYn">부가세 여부<i>*</i></label>
-                        <select name="surtaxYn" id="surtaxYn">
+                        <label for="surtaxFlag">부가세 여부<i>*</i></label>
+                        <select name="surtaxFlag" id="surtaxFlag">
                                 <option value="" selected="selected">선택</option>
-                                <option value="Y">포함</option>
-                                <option value="N">불포함</option>
+                                <option value="B">현금영수증</option>
+                                <option value="E">전자세금계산서</option>
+                                <option value="T">세금계산서(부가세포함)</option>
+                                <option value="N">세금계산서(부가세불포함)</option>
+                                <option value="X">해당없음</option>
                         </select>
                     </div>
                     <div class="row" id="tax" name="tax" style="display:none;">
@@ -1384,11 +1406,14 @@ function enterkey() {
                         <input type="text" id="conCost" name="conCost" required placeholder="숫자만 입력하세요" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ',');"> 
                     </div>
                     <div class="row">
-                        <label for="surtaxYn">부가세 여부<i>*</i></label>
-                        <select name="surtaxYn" id="surtaxYn">
+                        <label for="surtaxFlag">부가세 여부<i>*</i></label>
+                        <select name="surtaxFlag" id="surtaxFlag">
                                 <option value="" selected="selected">선택</option>
-                                <option value="Y">포함</option>
-                                <option value="N">불포함</option>
+                                <option value="B">현금영수증</option>
+                                <option value="E">전자세금계산서</option>
+                                <option value="T">세금계산서(부가세포함)</option>
+                                <option value="N">세금계산서(부가세불포함)</option>
+                                <option value="X">해당없음</option>
                         </select>
                     </div>
                     <div class="row"id="tax" name="tax" style="display:none;">

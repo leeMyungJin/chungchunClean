@@ -83,8 +83,8 @@ public class MobileController {
 	            returnObj.put("area2", area2);
 	            returnObj.put("area3", area3);
 	            returnObj.put("area4", area1+" "+area2);
-		    returnObj.put("area5", area1+" "+area2+" "+area3);
-		    returnObj.put("area6", area1+" "+area2+" "+area3+" "+area4+"-"+area5);
+		    	returnObj.put("area5", area1+" "+area2+" "+area3);
+		    	returnObj.put("area6", area1+" "+area2+" "+area3+" "+area4+"-"+area5);
 	            returnObj.put("area7", area2+" "+area3+" "+area4+"-"+area5);
 
 	            return returnObj.toString();

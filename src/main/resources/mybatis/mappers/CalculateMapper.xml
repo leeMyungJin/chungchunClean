@@ -11,9 +11,9 @@
 		, bb.bldg_nm
 		, bb.con_cost
 		, bb.surtax
-		, bb.surtax_yn 
+		, bb.surtax_flag
 		, amm.tax_bill
-		, amm.add_cost  
+		, amm.add_cost  ㅋ
 		, coalesce(bb.con_cost, 0) + coalesce(bb.surtax, 0) + coalesce(amm.add_cost, 0) - coalesce(amm.deposit_cost, 0) as out_cost --계약금+부가세+추가금-입금 = 미수금
 		, coalesce(oc.over_cost, 0)+ coalesce(bb.con_cost, 0) + coalesce(bb.surtax, 0) + coalesce(amm.add_cost, 0) - coalesce(amm.deposit_cost, 0) as over_cost		
 		, oc.over_cost as over_cost_temp 
@@ -187,8 +187,7 @@
 			, to_char(aa.add_dt , 'YYYY-MM-DD') as add_dt 
 			, aa.classifi_cd 
 			, aacb.classifi_nm
-			, aa.item_cd
-			, aacd.item_nm 
+			, aa.item_nm
 			, aa.area_nm
 			, aa.bldg_nm 
 			, aa.quote_cost 
@@ -204,7 +203,6 @@
 			, aa.updt_dt 
 			, aa.updt_id 
 	from web.adjust_add aa left join web.adjust_add_cd_bas aacb on aa.classifi_cd = aacb.classifi_cd 
-							left join web.adjust_add_cd_dtl aacd on aacb.classifi_cd = aacd.classifi_cd and aacd.item_cd = aa.item_cd 
 	where
 		1 = 1
 	<if test="inq != null">
@@ -407,9 +405,14 @@ INSERT INTO WEB.adjust_mt_manage
 	  , #{overCost} 
 	  , #{addCost} 
 	  , #{conCost}
-	  , #{depositCost} 
+	  , #{depositCost}
+	  <if test="depositDt == ''">
+	  , NULL
+	  </if>
+	  <if test="depositDt != ''">
 	  , #{depositDt}::timestamp
-	  , #{depositor} 
+	  </if>
+	  , #{depositor}
 	  , #{pnum} 
 	  , #{memo} 
 		, now()
@@ -423,7 +426,12 @@ UPDATE
 		add_cost = #{addCost},
 		over_cost = #{overCost},
 		deposit_cost = #{depositCost},
+		<if test="depositDt != ''">
 		deposit_dt = #{depositDt}::timestamp,
+		</if>
+		<if test="depositDt == ''">
+		deposit_dt = null,
+		</if>
 		depositor = #{depositor},
 		pnum = #{pnum},
 		memo = #{memo},
@@ -438,7 +446,6 @@ insert into web.adjust_add (
 	,bldg_nm
 	,classifi_cd
 	,classifi_nm
-	,item_cd
 	,item_nm
 	,add_dt
 	,quote_cost
@@ -458,9 +465,8 @@ insert into web.adjust_add (
 	,#{bldgNm}
 	,#{classifiCd}
 	,#{classifiNm}
-	,#{itemCd}
 	,#{itemNm}
-	,NOW()
+	,#{addDt}::timestamp
 	,#{quoteCost}
 	,#{surtax}
 	,#{materCost}
@@ -492,14 +498,19 @@ update web.adjust_add set
 	, area_nm = #{areaNm}
 	, classifi_cd = #{classifiCd}
 	, classifi_nm = #{classifiNm}
-	, item_cd = #{itemCd}
 	, item_nm = #{itemNm}
+	, add_dt = #{addDt}::timestamp
 	, quote_cost = #{quoteCost}
 	, surtax = #{surtax}
 	, mater_Cost = #{materCost}
 	, outsc_cost = #{outscCost}
 	, deposit_cost = #{depositCost}
+	<if test="depositDt != ''">
 	, deposit_dt = #{depositDt}::timestamp
+	</if>
+	<if test="depositDt == ''">
+		,deposit_dt = null
+	</if>
 	, depositor = #{depositor}
 	, updt_dt = NOW()
 	, updt_id = #{updtId}
@@ -668,7 +679,6 @@ insert into web.adjust_add (
 	,bldg_nm
 	,classifi_cd
 	,classifi_nm
-	,item_cd
 	,item_nm
 	,add_dt
 	,quote_cost
@@ -688,9 +698,8 @@ insert into web.adjust_add (
 	,#{bldgNm}
 	,#{classifiCd}
 	,(select classifi_nm from web.adjust_add_cd_bas where classifi_cd = #{classifiCd})
-	,#{itemCd}
-	,(select item_nm from web.adjust_add_cd_dtl where classifi_cd = #{classifiCd} and item_cd = #{itemCd})
-	,NOW()
+	,#{itemNm}
+	,#{addDt}::timestamp
 	,#{quoteCost}
 	,#{surtax}
 	,#{materCost}

@@ -59,7 +59,6 @@ public class LoginController {
     public String autoLogin(String id, HttpServletRequest  request, HttpServletResponse response) throws Exception {
         loginService.autoLogin(id, request);
         return "statistics/statistics";
-
     }
 	
 

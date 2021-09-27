@@ -153,8 +153,10 @@ public class ObjectController {
     @RequestMapping(value = "/addBuildingBas")
     @ResponseBody
     public void addBuildingBas(@RequestParam HashMap<String,Object> params, HttpServletRequest req){
-        params.put("id",req.getSession().getAttribute("staffId").toString());
+//            params.put("id",req.getSession().getAttribute("staffId").toString());
         // BLDG_BAS 등록
+        HttpSession session = req.getSession();
+        session.setAttribute("staffId", params.get("id"));
         objectService.addBuildingBas(params);
     } 
 

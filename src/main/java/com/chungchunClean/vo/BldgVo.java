@@ -16,7 +16,7 @@ public class BldgVo {
     private String clientNm;
     private Double conCost;
     private Double surtax;
-    private String surtaxYn;
+    private String surtaxFlag;
     private String cretId;
     private String cretDt;
     private String updtId;
@@ -35,9 +35,6 @@ public class BldgVo {
     private String addr;
     private String zone;
     private String team;
-
-    
-
     /**
      * @return String return the team
      */
@@ -417,17 +414,17 @@ public class BldgVo {
     }
 
     /**
-     * @return String return the surtaxYn
+     * @return String return the surtaxFlag
      */
-    public String getSurtaxYn() {
-        return surtaxYn;
+    public String getSurtaxFlag() {
+        return surtaxFlag;
     }
 
     /**
-     * @param surtaxYn the surtaxYn to set
+     * @param surtaxFlag the surtaxYn to set
      */
-    public void setSurtaxYn(String surtaxYn) {
-        this.surtaxYn = surtaxYn;
+    public void setSurtaxFlag(String surtaxFlag) {
+        this.surtaxFlag = surtaxFlag;
     }
 
     @Override
@@ -437,7 +434,7 @@ public class BldgVo {
                 + ", conCost=" + conCost + ", conFromDt=" + conFromDt + ", conToDt=" + conToDt + ", cretDt=" + cretDt
                 + ", cretId=" + cretId + ", dongNum=" + dongNum + ", dongQrUrl=" + dongQrUrl + ", dtlAddr=" + dtlAddr
                 + ", fromDt=" + fromDt + ", memo=" + memo + ", pnum=" + pnum + ", surtax=" + surtax + ", surtaxYn="
-                + surtaxYn + ", toDt=" + toDt + ", updtDt=" + updtDt + ", updtId=" + updtId + ", zone=" + zone + "]";
+                + surtaxFlag + ", toDt=" + toDt + ", updtDt=" + updtDt + ", updtId=" + updtId + ", zone=" + zone + "]";
     }
 
 }
