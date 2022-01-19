@@ -79,7 +79,6 @@ public class LoginServiceImpl implements LoginService {
 		//session.setAttribute("staffId", id);
 		StaffVo staffVo = new StaffVo();
 		staffVo.setStaffId(id);
-		System.out.println("준호" + staffVo);
 		staffVo = objectMapper.getStaffInfo(staffVo);
 		
 		if(staffVo != null ){

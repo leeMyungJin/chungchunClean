@@ -251,6 +251,7 @@
 select coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) as quoteCost --금년 견적
 		, coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) - coalesce(sum(aa.deposit_cost), 0) as outCost --금년 누적미수금 
 		, coalesce(sum(aa.deposit_cost), 0) as depositCost --금년 입금금액
+		, coalesce(sum(aa.quote_cost), 0) + coalesce(sum(aa.surtax), 0) - coalesce(sum(aa.mater_cost), 0) - coalesce(sum(aa.outsc_cost), 0) - coalesce(sum(aa.surtax), 0) as netprofit --순수익
 from web.adjust_add aa
 where extract('YEAR' from aa.deposit_dt) = extract('YEAR' from now())	
 </select>

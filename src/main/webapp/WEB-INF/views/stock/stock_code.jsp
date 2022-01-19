@@ -734,8 +734,7 @@ function getError(item,prop){
                 </div>
                 <div class="popup_btn_area">
                     <div class="right">
-                        <button type="button" class="popup_btn" onclick="deleteRows('category');">삭제</button>
-                        <button type="button" class="popup_btn" onclick="saveGrid('category');">저장</button>
+                         <button type="button" class="popup_btn" onclick="saveGrid('category');">저장</button>
                     </div>
                 </div>
             </div>

@@ -17,11 +17,11 @@
     <style>
         .error_wrap{width:100vw; height:100vh; background:#fff url(../../error/bg_error.png) center / contain no-repeat; transition:all 0.3s;}
         @media screen and (max-width:1099px){
-                .error_wrap{background-image: url(../../error/bg_mobile_error.png);}
-            }
+            .error_wrap{background-image: url(../../error/bg_mobile_error.png);}
+        }
     </style>
 </head>
 <body>
-    <div class="error_wrap"></div>
+<div class="error_wrap"></div>
 </body>
 </html>s

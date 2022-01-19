@@ -31,7 +31,7 @@ function pageLoad(){
 
 function enterkey() {
     if (window.event.keyCode == 13) {
-    	getStaffList();
+        getStaffList();
     }
 }
 

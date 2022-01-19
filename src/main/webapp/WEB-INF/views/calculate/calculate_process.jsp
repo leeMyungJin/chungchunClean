@@ -655,7 +655,7 @@ function getAddTotalCost(){
 	      success : function(result) {
 	        $("#totalAddDepositcost").text(Number(result.depositcost).toLocaleString('ko-KR')+ "원");
 	        $("#totalAddOutcost").text(Number(result.outcost).toLocaleString('ko-KR')+ "원");
-
+            $("#netProfit").text(Number(result.netprofit).toLocaleString('ko-KR')+ "원");
 	      },
 	      error: function(request, status, error) {
 	      	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -2067,6 +2067,10 @@ $(function(){
                         <dl>
                             <dt>총 미수금</dt>
                             <dd id="totalAddOutcost">${totalAddCost.outcost}원</dd>
+                        </dl>
+                        <dl>
+                            <dt>순수익</dt>
+                            <dd id="netProfit">${totalAddCost.netprofit}원</dd>
                         </dl>
                         <a href="javascript:void(0);" onclick="showPop('add_category');">분류명생성</a>
 <%--                    	<a href="javascript:void(0);" onclick="showPop('add_breakdown');">내역생성</a>--%>
