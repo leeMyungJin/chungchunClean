@@ -51,7 +51,7 @@
 					or
 					bb.zone LIKE '%' || #{item} || '%'
 					or
-					amm.depositor LIKE '%' || #{item} || '%'
+					bb.client_nm LIKE '%' || #{item} || '%'
 				</foreach>
 			</when>
 			<when test="con == 'site'">
