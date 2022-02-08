@@ -490,6 +490,5 @@ public class CalculateController {
         
     }
     
-
 }
 

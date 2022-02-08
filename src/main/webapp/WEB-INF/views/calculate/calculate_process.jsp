@@ -1390,14 +1390,14 @@ function saveVal(type, item){
 			return false;
 			
 		}else if(item.depositCost != null && item.depositCost != ''){
-			if(item.depositDt == null || item.depositDt == ''){
-				alert("입금날짜를 입력해주세요.");
-				return false;
-				
-			}else if(item.depositor == null || item.depositor == ''){
-				alert("입금자명을 입력해주세요.");
-				return false;
-			}
+			if(item.depositDt == null || item.depositDt == '') {
+                alert("입금날짜를 입력해주세요.");
+                return false;
+            }
+			// }else if(item.depositor == null || item.depositor == ''){
+			// 	alert("입금자명을 입력해주세요.");
+			// 	return false;
+			// }
 		}
 		
 	}else if(type == "monError"){
