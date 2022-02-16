@@ -38,7 +38,10 @@
 																	</if>
 																	group by bldg_cd)
 									) oc on bb.bldg_cd = oc.bldg_cd
-	where bb.active_yn = 'Y'
+	where active_yn = 'Y'
+	<if test="date != null">
+			AND to_date(bb.con_from_dt,'YYYY-MM') <![CDATA[ <= ]]> to_date(#{date},'YYYY-MM')
+	</if>
 	<if test="inq != null">
 		<choose>
 			<when test="con == 'all'">
