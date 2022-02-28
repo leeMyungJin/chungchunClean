@@ -13,7 +13,7 @@
 		, bb.surtax
 		, bb.surtax_flag
 		, amm.tax_bill
-		, amm.add_cost  ㅋ
+		, amm.add_cost
 		, coalesce(bb.con_cost, 0) + coalesce(bb.surtax, 0) + coalesce(amm.add_cost, 0) - coalesce(amm.deposit_cost, 0) as out_cost --계약금+부가세+추가금-입금 = 미수금
 		, coalesce(oc.over_cost, 0)+ coalesce(bb.con_cost, 0) + coalesce(bb.surtax, 0) + coalesce(amm.add_cost, 0) - coalesce(amm.deposit_cost, 0) as over_cost		
 		, oc.over_cost as over_cost_temp 
@@ -38,9 +38,10 @@
 																	</if>
 																	group by bldg_cd)
 									) oc on bb.bldg_cd = oc.bldg_cd
-	where active_yn = 'Y'
+	where 1=1
 	<if test="date != null">
-			AND to_date(bb.con_from_dt,'YYYY-MM') <![CDATA[ <= ]]> to_date(#{date},'YYYY-MM')
+		AND to_date(bb.con_from_dt,'YYYY-MM') <![CDATA[ <= ]]> to_date(#{date},'YYYY-MM')
+		AND (to_date(bb.con_to_dt,'YYYY-MM')   <![CDATA[ >= ]]>  to_date(#{date},'YYYY-MM') or bb.con_to_dt = '')
 	</if>
 	<if test="inq != null">
 		<choose>

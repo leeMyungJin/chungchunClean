@@ -1840,7 +1840,9 @@ function sendMsg(){
 	var param;
 	var msg;
 	var conCost;
+    var surtax;
 	var addCost;
+    var privateCost;
 	var totalCost;
 	var msgError = "[ 발신메세지 오류 내역 ]\n세부오류는 http://www.alimtalkme.com 의 <발송 및 예약 내역> 메뉴에서 확인 할 수 있습니다.\n\n";
 	var msgErrorFlag = false;
@@ -1855,20 +1857,29 @@ function sendMsg(){
     	//문자발송 시작
     	for(var i =0; i< item.length; i++){
     		conCost = (Number((item[i].dataItem.conCost == null ? 0 : item[i].dataItem.conCost))
-						+ Number((item[i].dataItem.surtax == null ? 0 : item[i].dataItem.surtax))
 					  ).toLocaleString('ko-KR');
+
+            surtax = (Number((item[i].dataItem.surtax == null ? 0 : item[i].dataItem.surtax))
+                    ).toLocaleString('ko-KR');
     		
     		addCost = Number((item[i].dataItem.addCost == null ? 0 : item[i].dataItem.addCost)).toLocaleString('ko-KR');
-    		
-    		totalCost = (Number((item[i].dataItem.conCost == null ? 0 : item[i].dataItem.conCost))
-						  + Number((item[i].dataItem.surtax == null ? 0 : item[i].dataItem.surtax))
-						  + Number((item[i].dataItem.addCost == null ? 0 : item[i].dataItem.addCost))
-						  + Number((item[i].dataItem.overCost == null ? 0 : item[i].dataItem.overCost)) //이월금
+
+            privateCost = (   Number((item[i].dataItem.conCost == null ? 0 : item[i].dataItem.conCost))
+                            + Number((item[i].dataItem.surtax == null ? 0 : item[i].dataItem.surtax))
+                            - Number((item[i].dataItem.overCost == null ? 0 : item[i].dataItem.overCost))
+                            + Number((item[i].dataItem.conCost == null ? 0 : item[i].dataItem.conCost))
+                            + Number((item[i].dataItem.surtax == null ? 0 : item[i].dataItem.surtax))
+            ).toLocaleString('ko-KR');
+
+
+            totalCost = (Number((item[i].dataItem.overCost == null ? 0 : item[i].dataItem.overCost)) //이월금
 						).toLocaleString('ko-KR');
     		
     		
     		msg = "[ "+item[i].dataItem.bldgNm+" ]\n"
-    			  +"월관리비 "+conCost.toLocaleString('ko-KR')+"원\n"
+                  +"전월입금액"+privateCost+"원\n"
+    			  +"당월관리비 "+conCost.toLocaleString('ko-KR')+"원\n"
+                  +"부가세 "+surtax.toLocaleString('ko-KR')+"원\n"
     			  +"추가금액 "+addCost+"원\n"
     			  +"총 "+totalCost+"원\n\n"
     			  +$("#msgUpdate").val();
@@ -1879,7 +1890,7 @@ function sendMsg(){
     				api_key : "DCTMVYLLNTM0621"
         			, msg : msg
         			, subject : "[청춘클린 "+item[i].dataItem.monMt+"월 정산 안내]"	//lms 제목
-        			, callback : "01058743499"							//-를 제외한 발신번호 
+        			, callback : "01058743499"							//-를 제외한 발신번호
         			, dstaddr : item[i].dataItem.pnum					// -를 제외한 수신번호
         			, send_reserve : 0 									//즉시발송 0, 예약발송 1
         		};
@@ -2245,8 +2256,10 @@ $(function(){
             	<div class="row">
                     <label for="msgFix" style="vertical-align:top;">고정</label>
                     <textarea name="msgFix" id="msgFix" cols="60" rows="10" readonly>
-[ 건물명 ] 
-월관리비 000원
+[ 건물명 ]
+전월입금액 000원
+당월관리비 000원
+부가세 000원
 추가금액 000원
 총 000원</textarea>
                 </div>
