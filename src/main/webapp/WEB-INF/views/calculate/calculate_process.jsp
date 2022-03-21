@@ -132,25 +132,30 @@ function loadGridList(type, result){
 			      { binding: 'overCostTemp', header: '이월금 Temp', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum', visible: false},
 			      { binding: 'depositCost', header: '관리비입금', isReadOnly: true, width: 150, align:"center", aggregate: 'Sum' },
 			      { binding: 'add', header: '추가입금', isReadOnly: false, width: 150, align:"center" },
-			      { binding: 'depositDt', header: '입금날짜', isReadOnly: false, width: 150, align:"center" },
+			      { binding: 'depositDt', header: '입금날짜', isReadOnly: false, width: 150, align:"center",
+                        editor : new wijmo.input.InputDate(document.createElement('div'),{
+                            isRequired: false,
+                            value: null
+                        })
+                  },
 			      { binding: 'pnum', header: '전화번호', isReadOnly: true, width: 150, align:"center" },
 			      { binding: 'memo', header: '비고', isReadOnly: false, width: 200, align:"center" }
 			];
 		    
  		   
- 		  var depositDtEditor = new wijmo.input.InputDate(document.createElement("div"));
+ 		  // var depositDtEditor = new wijmo.input.InputDate(document.createElement("div"));
 		   monGrid = new wijmo.grid.FlexGrid('#monGrid', {
 			    autoGenerateColumns: false,
 			    alternatingRowStep: 0,
 			    columns: monColumns,
 			    itemsSource: monView,
-	            beginningEdit: function (s, e) {
-	                s.columns.getColumn("depositDt").editor = depositDtEditor;
-	                let depositDt = e.getRow().dataItem.depositDt;
-	                if (!depositDt) {
-	                    return;
-	                }
-	            },
+	            // beginningEdit: function (s, e) {
+	            //     s.columns.getColumn("depositDt").editor = depositDtEditor;
+	            //     let depositDt = e.getRow().dataItem.depositDt;
+	            //     if (!depositDt) {
+	            //         return;
+	            //     }
+	            // },
 	            cellEditEnding: function (s, e) {
 	                var col = s.columns[e.col];
 	                var inven = s.columns[e.col - 1];
@@ -1390,10 +1395,10 @@ function saveVal(type, item){
 			return false;
 			
 		}else if(item.depositCost != null && item.depositCost != ''){
-			if(item.depositDt == null || item.depositDt == '') {
-                alert("입금날짜를 입력해주세요.");
-                return false;
-            }
+			// if(item.depositDt == null || item.depositDt == '') {
+            //     alert("입금날짜를 입력해주세요.");
+            //     return false;
+            // }
 			// }else if(item.depositor == null || item.depositor == ''){
 			// 	alert("입금자명을 입력해주세요.");
 			// 	return false;

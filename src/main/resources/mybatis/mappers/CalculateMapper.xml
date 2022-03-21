@@ -246,7 +246,7 @@
 		</choose>
 	</if>
 	<if test="date != null">
-		and to_char(aa.cret_dt, 'YYYY-MM') = #{date}
+		and to_char(aa.add_dt, 'YYYY-MM') = #{date}
 	</if>
 	ORDER BY aa.add_dt, aa.classifi_cd, aa.item_cd
 </select>
