@@ -13,7 +13,8 @@
 		ctg_dtl.cost,
 		ctg_dtl.quantity,
 		case when ctg_dtl.quantity > 10 then 'O'
-		     else 'X' end as status
+		     else 'X' end as status,
+		ctg_dtl.cost * ctg_dtl.quantity  as sum
 	from
 		web.category_bas ctg_bas
 	left outer join WEB.category_dtl ctg_dtl on

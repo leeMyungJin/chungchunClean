@@ -69,6 +69,17 @@ public class StockController {
         return stockService.getCategoryList();
     }
 
+    /**
+     * 단위 리스트 가져오기
+     *
+     * @return
+     */
+    @RequestMapping(value="/getUnitList", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public List<StockVo> getUnitList(){
+        return stockService.getUnitList();
+    }
+
      /**
      * 카테고리 삭제하기
      * 
@@ -90,6 +101,18 @@ public class StockController {
     public List<StockVo> saveCategory(@RequestBody List<StockVo> params, HttpServletRequest req){
         stockService.saveCategory(params, req.getSession().getAttribute("staffId").toString());
         return stockService.getCategoryList(); // 카테고리 저장 후 다시 조회
+    }
+
+    /**
+     * 단위 저장하기
+     *
+     * @return
+     */
+    @RequestMapping(value="/saveUnit", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public List<StockVo> saveUnit(@RequestBody List<StockVo> params, HttpServletRequest req){
+        stockService.saveUnit(params, req.getSession().getAttribute("staffId").toString());
+        return stockService.getUnitList(); // 카테고리 저장 후 다시 조회
     }
 
     /**

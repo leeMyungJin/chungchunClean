@@ -64,6 +64,18 @@
 	ORDER BY l_categy_cd
 </select>
 
+<select id="getUnitList" resultType="StockVo">
+	SELECT
+		ctg_bas.l_categy_nm ,
+	    unit_bas.unit,
+		to_char(unit_bas.cret_dt,'yyyy-mm-dd HH24:MI:SS') as cret_dt,
+		to_char(unit_bas.updt_dt,'yyyy-mm-dd HH24:MI:SS') as updt_dt
+	FROM web.unit_bas unit_bas
+	left join web.category_bas ctg_bas
+	on ctg_bas.l_categy_cd = unit_bas.l_categy_cd
+	ORDER BY unit_bas.cret_dt desc
+</select>
+
 <select id="checkCategory" parameterType="StockVo" resultType="Integer">
 	SELECT count(l_categy_cd)
 	FROM web.category_bas ctg_bas
@@ -85,6 +97,17 @@ ON CONFLICT( l_categy_cd) DO
 UPDATE
 	SET l_categy_cd = #{lCategyCd},
 		l_categy_nm = #{lCategyNm},
+		updt_dt		= now(),
+		updt_id		= #{updtId}
+</insert>
+<insert id="saveUnit" parameterType="StockVo">
+	INSERT INTO WEB.unit_bas
+		(unit_cd, l_categy_cd, unit, cret_dt, cret_id, updt_dt, updt_id)
+	VALUES ((select coalesce(max(unit_cd)+1,1) from WEB.unit_bas), #{lCategyNm}, #{unit}, now(), #{cretId}, now(), #{updtId})
+		ON CONFLICT(unit_cd) DO
+	UPDATE
+		SET l_categy_cd = #{lCategyNm},
+		unit = #{unit},
 		updt_dt		= now(),
 		updt_id		= #{updtId}
 </insert>

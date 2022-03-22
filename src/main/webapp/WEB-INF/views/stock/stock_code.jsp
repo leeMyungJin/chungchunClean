@@ -15,6 +15,12 @@ var stockColumns;
 var categoryGrid;
 var categoryView;
 var categoryGridPager;
+var categoryFlag;
+var unitGrid;
+var unitView;
+var unitGridPager;
+var unitSelector;
+var unitSelectCnt = 0;
 var add = false;
 var stockSelector;
 var categorySelector;
@@ -31,7 +37,7 @@ var staffId = "<%=session.getAttribute("staffId")%>";
 
 function pageLoad(){
 	sessionCheck(staffId);
-	
+	getCategoryDtl("unit");
 	$('#stock').addClass("current");
 	$('#stock_code').addClass("current");
     loadGridStockList('init');
@@ -158,6 +164,41 @@ function loadGridStockList(type, result){
             itemsSource: categoryView,
         });
         categorySelector = new wijmo.grid.selector.Selector(categoryGrid);
+
+        var categoryFlagMap = new wijmo.grid.DataMap(categoryFlag, 'lCategyCd', 'lCategyNm');
+
+        unitView = new wijmo.collections.CollectionView(result, {
+            pageSize: 100
+        });
+        //단위 추가용 그리드 설정
+        unitGridPager = new wijmo.input.CollectionViewNavigator('#unitGridPager', {
+            byPage: true,
+            headerFormat: '{currentPage:n0} / {pageCount:n0}',
+            cv: unitView
+        });
+        unitGrid = new wijmo.grid.FlexGrid('#unitGrid', {
+            autoGenerateColumns: false,
+            alternatingRowStep: 0,
+            columns: [
+                { binding: 'lCategyNm', header: '카테고리', isReadOnly: false,  width: '*', align:"center", dataMap: categoryFlagMap},
+                { binding: 'unit', header: '단위', isReadOnly: false, width: 230, align:"center"  },
+                { binding: 'cretDt', header: '등록일', isReadOnly: true, width: 230, align:"center"  },
+                { binding: 'updtDt', header: '수정일', isReadOnly: true, width: 230, align:"center"  }
+            ],
+            beginningEdit: function (s, e) {
+                var col = s.columns[e.col];
+                var item = s.rows[e.row].dataItem;
+                if(item.regDate != undefined){
+                    if (col.binding == 'lCategyCd') {
+                        e.cancel = true;
+                        alert("카테고리코드는 신규 행일때만 입력이 가능합니다.");
+                    }
+                }
+            },
+            itemsSource: unitView,
+        });
+        unitSelector = new wijmo.grid.selector.Selector(unitGrid);
+
         editGrid = new wijmo.grid.FlexGrid('#editGrid', {
             itemsSource: categoryView.itemsEdited,
             isReadOnly: true
@@ -186,7 +227,14 @@ function loadGridStockList(type, result){
         });
         categoryGridPager.cv = categoryView;
         categoryGrid.itemsSource = categoryView;
-	}else{
+	}else if(type == "unit"){
+        unitView = new wijmo.collections.CollectionView(result, {
+            pageSize: Number($('#unitGridPageCount').val()),
+            trackChanges: true
+        });
+        unitGridPager.cv = unitView;
+        unitGrid.itemsSource = unitView;
+    } else{
         stockView = new wijmo.collections.CollectionView(result, {
             pageSize: Number($('#stockGridPageCount').val()),
             trackChanges: true,
@@ -237,6 +285,20 @@ function getCategyList(){
           });
 }
 
+function getUnitList(){
+    $.ajax({
+        url : "/stock/getUnitList",
+        async : false, // 비동기모드 : true, 동기식모드 : false
+        type : 'POST',
+        success : function(result) {
+            loadGridStockList('unit', result);
+        },
+        error : function(request,status,error) {
+            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+        }
+    });
+}
+
 //팝업 오픈
 function showPop(pop){
 	if(pop == "add_category"){
@@ -254,7 +316,9 @@ function showPop(pop){
         $("#product").val("");
         $("#cost").val("");
         $("#code").val("");
-	}
+	}else if("add_unit"){
+        getUnitList();
+    }
 	 $('#'+pop).addClass('is-visible');
     
 }
@@ -271,6 +335,8 @@ function addRow(type){
     add = true;
     if(type == 'category'){
         categoryGrid.allowAddNew = add;
+    }else if(type == 'unit'){
+        unitGrid.allowAddNew = add;
     }
 }
 
@@ -336,7 +402,7 @@ function deleteRows(type){
 }
 
 // 카테고리 동적으로 가져오기
-function getCategoryDtl() {
+function getCategoryDtl(type) {
     $.ajax({
             url : "/stock/getLCategoryList",
             async : false, // 비동기모드 : true, 동기식모드 : false
@@ -345,7 +411,11 @@ function getCategoryDtl() {
                 if(result.length > 0){
                     for(var i =0; i<result.length; i++)
                         $("#category1").append("<option value='" + result[i].lCategyCd + "'>" + result[i].lCategyNm + "</option>");
-                }       
+                    if(type == 'unit'){
+                        categoryFlag = result;
+                    }
+                }
+
             },
             error : function(request,status,error) {
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -398,7 +468,51 @@ function saveGrid(type){
                     }
                 });
             }
-        }else if(type == 'stock'){
+        }else if(type == 'unit'){
+            var editItem = unitView.itemsEdited;
+            var addItem  = unitView.itemsAdded;
+
+            var rows = [];
+
+            for(var i =0; i< editItem.length ; i++) {
+                if (editItem[i].lCategyNm == '' || editItem[i].lCategyNm == undefined) {
+                    alert("카테고리를 입력하시기 바랍니다.");
+                    return false;
+                } else if (editItem[i].unit == '' || editItem[i].unit == undefined) {
+                    alert("단위을 입력하시기 바랍니다.");
+                    return false;
+                }
+                rows.push(editItem[i]);
+            }
+            for(var i=0; i< addItem.length; i++){
+                if(addItem[i].lCategyNm == '' || addItem[i].lCategyNm == undefined ){
+                    alert("카테고리코드를 입력하시기 바랍니다.");
+                    return false;
+                }else if(addItem[i].lCategyNm == '' || addItem[i].lCategyNm == undefined){
+                    alert("카테고리명을 입력하시기 바랍니다.");
+                    return false;
+                }
+                rows.push(addItem[i]);
+            }
+
+                wijmo.Control.getControl("#editGrid").refresh(true);
+                if(confirm("변경한 내용을 저장 하시겠습니까??")){
+                    $.ajax({
+                        url : "/stock/saveUnit",
+                        async : false, // 비동기모드 : true, 동기식모드 : false
+                        type : 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(rows),
+                        success : function(result) {
+                            alert("저장되었습니다.");
+                            loadGridStockList('unit', result);
+                        },
+                        error : function(request,status,error) {
+                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                        }
+                    });
+                }
+        } else if(type == 'stock'){
             if(stockView.itemCount > 0){
                 var editItem = stockView.itemsEdited;
                 var addItem  = stockView.itemsAdded;
@@ -646,6 +760,7 @@ function getError(item,prop){
                     </dl>
                     
                     <a href="javascript:void(0);" onclick="showPop('add_category');">카테고리 추가</a>
+                    <a href="javascript:void(0);" onclick="showPop('add_unit');">단위 추가</a>
                     <a href="javascript:void(0);" onclick="showPop('add_product');">물품 추가</a>
                 </div>
                 <div class="admin_utility">
@@ -741,6 +856,43 @@ function getError(item,prop){
         </div>
     </div>
     <!--카테고리추가 팝업 영역 끝-->
+    <!-- 220321 단위추가 팝업 추가 -->
+    <!-- 팝업 : 단위추가-->
+    <div class="popup" id="add_unit">
+        <div class="popup_container">
+            <div class="popup_head">
+                <p class="popup_title">단위추가</p>
+                <button type="button" class="popup_close" onClick="closePop();">x</button>
+            </div>
+            <div class="popup_grid">
+                <div class="popup_btn_area">
+                    <div class="right">
+                        <button type="button" class="popup_btn" onclick="deleteRows('unit');">삭제</button>
+                        <button type="button" class="popup_btn" onclick="saveGrid('unit')">저장</button>
+                    </div>
+                </div>
+                <div class="popup_grid_area">
+                    <button class="btn" style="display:block;"onclick="addRow('unit');">+ 행 추가</button>
+                    <select class="pageCount" id="unitGridPageCount" onchange="getCategyList()">
+						<option value="30">30</option>
+						<option value="50">50</option>
+						<option value="100" selected="selected">100</option>
+					</select>
+                    <div id="unitGrid" style="width:860px; height:300px;"></div>
+                    <div>
+                    <button class="btn" onclick="addRow('unit');">+ 행 추가</button>
+                    </div>
+                    <div id="unitGridPager" class="pager"></div>
+                </div>
+                <div class="popup_btn_area">
+                    <div class="right">
+                         <button type="button" class="popup_btn" onclick="saveGrid('unit');">저장</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--카테고리추가 팝업 영역 끝-->
     <!-- 팝업 : 물품추가 -->
     <div class="popup" id="add_product">
         <div class="popup_container"> 
@@ -761,13 +913,23 @@ function getError(item,prop){
                         <input type="text" id="product" name="product" required>
                     </div>
                     <div class="row">
+                        <!-- 220321 단위 선택 추가 -->
+                        <label for="code">단위<i>*</i></label>
+                        <select name="" id="">
+                            <option value="option1">10L</option>
+                            <option value="option2">10L</option>
+                            <option value="option3">10L</option>
+                            <option value="option4">10L</option>
+                            <option value="option5">10L</option>
+                        </select>
+                    </div>
+                    <div class="row">
                         <label for="code">코드<i>*</i></label>
                         <input type="text" id="code" name="code"  maxlength = "4"  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
                     </div>
                     <div class="row">
                         <label for="cost">원가<i>*</i></label>
-                        <input type="number
-                        " id="cost" name="cost" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
+                        <input type="number" id="cost" name="cost" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required>
                     </div>
                 </form>
                 <div class="popup_btn_area">

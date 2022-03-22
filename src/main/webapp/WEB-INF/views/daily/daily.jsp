@@ -266,5 +266,38 @@ function copyUrl(){
             </section>
         </div>
     </div>
+	<!-- 220322 팝업 추가  -->
+	<!-- 팝업 : 소모품 사용내역 -->
+    <div class="popup" id="add_product">
+        <div class="popup_container"> 
+            <div class="popup_head">
+                <p class="popup_title">소모품 사용내역</p>
+                <button type="button" class="popup_close" onClick="closePop();">x</button>
+            </div>
+            <div class="popup_inner">
+                <dfn>필수항목 *</dfn>
+                <form action="#" method="post" onsubmit="return false;">
+                    <div class="row">
+                        <label for="product">담당자</label>
+                        <input type="text" id="product" name="product" required readonly>
+                    </div>
+					<div class="row">
+                        <label for="product">지역</label>
+                        <input type="text" id="product" name="product" required readonly>
+						<label for="product" style="margin-left:12px;">건물명</label>
+                        <input type="text" id="product" name="product" required readonly>
+                    </div>
+					<div class="row">
+                        <label for="product">상세주소</label>
+                        <input type="text" id="product" name="product" style="width:417px" required readonly>
+                    </div>
+                </form>
+				<!-- grid -->
+				<div>그리드 영역입니다</div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!--소모품 사용내역 팝업 영역 끝-->
 </body>
 </html>

@@ -10,8 +10,10 @@ import com.chungchunClean.vo.StockVo;
 public interface StockService {
     public List<StockVo> getStockList(HashMap<String,Object> params);
     public List<StockVo> getCategoryList();
+    public List<StockVo> getUnitList();
     public void deleteCategory(List<StockVo> params);
     public void saveCategory(List<StockVo> params, String id);
+    public void saveUnit(List<StockVo> params, String id);
     public List<StockVo> getLCategoryList();
     public List<StockVo> getMCategoryList();
     public String dupCheckItem(HashMap<String, String> params);

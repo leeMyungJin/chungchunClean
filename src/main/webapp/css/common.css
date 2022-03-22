@@ -95,7 +95,7 @@
 .admin_nav .dept1.calculate:before {
     background-position: -80px 0;
 }
-
+.admin_nav .dept1.notice:before{background: url(../image/icon_notice.png) center / cover ;}
 .admin_nav .dept1.manage:before {
     background-position: -100px 0;
 }
@@ -129,7 +129,7 @@
 .admin_nav .dept1.current.calculate:before {
     background-position: -80px -20px;
 }
-
+.admin_nav .dept1.current.notice:before{background-image:url(../image/icon_notice_act.png)}
 .admin_nav .dept1.current.manage:before {
     background-position: -100px -20px;
 }

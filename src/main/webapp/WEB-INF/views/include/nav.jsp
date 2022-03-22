@@ -28,6 +28,9 @@
             </ul>
         </li>
         <li>
+            <a id="notice" href="/notice/" class="dept1 notice">공지관리</a>
+        </li>
+        <li>
             <a id="income" href="/income/" class="dept1 manage">매출관리</a>
         </li>
         <li>

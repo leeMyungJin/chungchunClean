@@ -31,6 +31,11 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
+	public List<StockVo> getUnitList() {
+		return stockMapper.getUnitList();
+	}
+
+	@Override
 	public void deleteCategory(List<StockVo> params) {
 		for(StockVo vo : params)
 			stockMapper.deleteCategory(vo);
@@ -42,6 +47,15 @@ public class StockServiceImpl implements StockService {
 			vo.setUpdtId(id);
 			vo.setCretId(id);
 			stockMapper.saveCategory(vo);
+		}
+	}
+
+	@Override
+	public void saveUnit(List<StockVo> params, String id) {
+		for(StockVo vo : params){
+			vo.setUpdtId(id);
+			vo.setCretId(id);
+			stockMapper.saveUnit(vo);
 		}
 	}
 

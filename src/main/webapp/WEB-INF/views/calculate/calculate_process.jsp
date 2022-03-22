@@ -2022,6 +2022,11 @@ $(function(){
                                 <button type="button" onClick="getMonList();">조회</button>
                             </form>
                             <div class="summary">
+								<!-- 220321 summary item 추가  -->
+								<dl>
+                                    <dt>소모품비</dt>
+                                    <dd>0원</dd>
+                                </dl>
                                 <dl>
                                     <dt>미입금 수</dt>
                                     <dd id="lableNoneCount">0원</dd>

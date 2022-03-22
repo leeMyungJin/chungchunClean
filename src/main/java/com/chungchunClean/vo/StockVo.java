@@ -25,6 +25,8 @@ public class StockVo {
 	private Integer returnQuantity; 	//반품입출고수량
 	private String cretNm; 				//등록자명
 	private String activeYn;			//입출이력 수정가능여부
+
+	private String unit;                 //단위
 	
 	public String getlCategyCd() {
 		return lCategyCd;
@@ -157,6 +159,12 @@ public class StockVo {
 	}
 	public void setUpdtNm(String updtNm) {
 		this.updtNm = updtNm;
+	}
+	public String getUnit() {
+		return unit;
+	}
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 	@Override
 	public String toString() {
