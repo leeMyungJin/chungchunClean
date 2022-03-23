@@ -76,8 +76,9 @@ public class StockController {
      */
     @RequestMapping(value="/getUnitList", method = {RequestMethod.POST , RequestMethod.GET})
     @ResponseBody
-    public List<StockVo> getUnitList(){
-        return stockService.getUnitList();
+    public List<StockVo> getUnitList(@RequestParam(required = false) String lCategyCd){
+        System.out.println(lCategyCd);
+        return stockService.getUnitList(lCategyCd);
     }
 
      /**
@@ -104,6 +105,17 @@ public class StockController {
     }
 
     /**
+     * 카테고리 삭제하기
+     *
+     * @return
+     */
+    @RequestMapping(value="/deleteUnit", method = {RequestMethod.POST , RequestMethod.GET})
+    @ResponseBody
+    public void deleteUnit(@RequestBody List<StockVo> params){
+        stockService.deleteUnit(params);
+    }
+
+    /**
      * 단위 저장하기
      *
      * @return
@@ -112,7 +124,7 @@ public class StockController {
     @ResponseBody
     public List<StockVo> saveUnit(@RequestBody List<StockVo> params, HttpServletRequest req){
         stockService.saveUnit(params, req.getSession().getAttribute("staffId").toString());
-        return stockService.getUnitList(); // 카테고리 저장 후 다시 조회
+        return stockService.getUnitList(null); // 카테고리 저장 후 다시 조회
     }
 
     /**

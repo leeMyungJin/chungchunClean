@@ -86,6 +86,7 @@ function loadGridStockList(type, result){
                 { binding: 'lCategyNm', header: '카테고리명', isReadOnly: true, width: 200, align:"center"},
                 { binding: 'itemCd', header: '물품코드', isReadOnly: false, width: 200, align:"center"  },
                 { binding: 'itemNm', header: '물품명', isReadOnly: false, width: 200, align:"center"  },
+                { binding: 'unit', header: '단위', isReadOnly: true, width: 100, align:"center"  },
                 { binding: 'cost', header: '원가', isReadOnly: false, width: '*', align:"center"}
             ]
 		  
@@ -180,8 +181,9 @@ function loadGridStockList(type, result){
             autoGenerateColumns: false,
             alternatingRowStep: 0,
             columns: [
-                { binding: 'lCategyNm', header: '카테고리', isReadOnly: false,  width: '*', align:"center", dataMap: categoryFlagMap},
-                { binding: 'unit', header: '단위', isReadOnly: false, width: 230, align:"center"  },
+                { binding: 'unitCd', header: '단위코드', isReadOnly: false,  width: '*', align:"center"},
+                { binding: 'lCategyNm', header: '카테고리', isReadOnly: false,  width: 150, align:"center", dataMap: categoryFlagMap},
+                { binding: 'unit', header: '단위', isReadOnly: false, width: 100, align:"center"  },
                 { binding: 'cretDt', header: '등록일', isReadOnly: true, width: 230, align:"center"  },
                 { binding: 'updtDt', header: '수정일', isReadOnly: true, width: 230, align:"center"  }
             ],
@@ -277,7 +279,6 @@ function getCategyList(){
             type : 'POST',
             success : function(result) {
         	    loadGridStockList('category', result);
-
             },
             error : function(request,status,error) {
              	alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -285,18 +286,47 @@ function getCategyList(){
           });
 }
 
-function getUnitList(){
-    $.ajax({
-        url : "/stock/getUnitList",
-        async : false, // 비동기모드 : true, 동기식모드 : false
-        type : 'POST',
-        success : function(result) {
-            loadGridStockList('unit', result);
-        },
-        error : function(request,status,error) {
-            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+function getUnitList(category){
+    if(category != null){
+        $('#unit')
+            .empty()
+            .append('<option selected="selected" value="-" selected>전체</option>')
+            .val("-");
+
+        var param = {
+            lCategyCd : category
         }
-    });
+
+        $.ajax({
+            url : "/stock/getUnitList",
+            async : false, // 비동기모드 : true, 동기식모드 : false
+            type : 'POST',
+            data : param,
+            success : function(result) {
+                if(result.length > 0){
+                    for(var i =0; i<result.length; i++)
+                        $("#unit").append("<option value='" + result[i].unit + "'>" + result[i].unit + "</option>");
+                    if(type == 'unit'){
+                        categoryFlag = result;
+                    }
+                }            },
+            error : function(request,status,error) {
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }else {
+        $.ajax({
+            url : "/stock/getUnitList",
+            async : false, // 비동기모드 : true, 동기식모드 : false
+            type : 'POST',
+            success : function(result) {
+                loadGridStockList('unit', result);
+            },
+            error : function(request,status,error) {
+                alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            }
+        });
+    }
 }
 
 //팝업 오픈
@@ -312,6 +342,10 @@ function showPop(pop){
             .append('<option selected="selected" value="all" selected>전체</option>'); */
         getCategoryDtl();
         $("#category1").val("all");
+        $('#unit')
+            .empty()
+            .append('<option selected="selected" value="-" selected>전체</option>');
+        $("#unit").val("-");
         $("#category2").val("all");
         $("#product").val("");
         $("#cost").val("");
@@ -398,7 +432,35 @@ function deleteRows(type){
                 });
             }
         }
-    }   
+    }else if(type == 'unit'){
+        var item = unitGrid.rows.filter(r => r.isSelected);
+        var rows = [];
+        var params;
+        if(item.length == 0){
+            alert("선택된 행이 없습니다.");
+            return false;
+        }else{
+            for(var i =0; i< item.length ; i++){
+                rows.push(item[i].dataItem);
+            }
+            if(confirm("선택한 행들을 삭제 하시겠습니까??")){
+                $.ajax({
+                    url : "/stock/deleteUnit",
+                    async : false, // 비동기모드 : true, 동기식모드 : false
+                    type : 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(rows),
+                    success : function(result) {
+                        alert("삭제되었습니다.");
+                        getUnitList();
+                    },
+                    error : function(request,status,error) {
+                        alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+                    }
+                });
+            }
+        }
+    }
 }
 
 // 카테고리 동적으로 가져오기
@@ -415,7 +477,6 @@ function getCategoryDtl(type) {
                         categoryFlag = result;
                     }
                 }
-
             },
             error : function(request,status,error) {
                 alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
@@ -475,7 +536,10 @@ function saveGrid(type){
             var rows = [];
 
             for(var i =0; i< editItem.length ; i++) {
-                if (editItem[i].lCategyNm == '' || editItem[i].lCategyNm == undefined) {
+                if(editItem[i].unitCd == '' || editItem[i].unitCd == undefined){
+                    alert("단위코드를 입력하시기 바랍니다.");
+                    return false;
+                } else if (editItem[i].lCategyNm == '' || editItem[i].lCategyNm == undefined) {
                     alert("카테고리를 입력하시기 바랍니다.");
                     return false;
                 } else if (editItem[i].unit == '' || editItem[i].unit == undefined) {
@@ -484,12 +548,16 @@ function saveGrid(type){
                 }
                 rows.push(editItem[i]);
             }
+
             for(var i=0; i< addItem.length; i++){
-                if(addItem[i].lCategyNm == '' || addItem[i].lCategyNm == undefined ){
+                if(addItem[i].unitCd == '' || addItem[i].unitCd == undefined){
+                    alert("단위코드를 입력하시기 바랍니다.");
+                    return false;
+                }else if(addItem[i].lCategyNm == '' || addItem[i].lCategyNm == undefined ){
                     alert("카테고리코드를 입력하시기 바랍니다.");
                     return false;
-                }else if(addItem[i].lCategyNm == '' || addItem[i].lCategyNm == undefined){
-                    alert("카테고리명을 입력하시기 바랍니다.");
+                } else if (addItem[i].unit == '' || addItem[i].unit == undefined) {
+                    alert("단위을 입력하시기 바랍니다.");
                     return false;
                 }
                 rows.push(addItem[i]);
@@ -634,7 +702,8 @@ function addItem(){
             lCategyCd : $("#category1").val(),
             itemCd : $("#category1").val() + $("#code").val(),
             itemNm : $("#product").val(),
-            cost : $("#cost").val()
+            cost : $("#cost").val(),
+            unit : $("#unit").val()
         };
         $.ajax({
             url : "/stock/addItem",
@@ -905,7 +974,7 @@ function getError(item,prop){
                 <form action="#" method="post" onsubmit="return false;">
                     <div class="row">
                         <label for="category1">카테고리<i>*</i></label>
-                            <select name="category1" id="category1">
+                            <select name="category1" id="category1" onchange="getUnitList(this.value);">
                             </select>
                     </div>
                     <div class="row">
@@ -914,13 +983,8 @@ function getError(item,prop){
                     </div>
                     <div class="row">
                         <!-- 220321 단위 선택 추가 -->
-                        <label for="code">단위<i>*</i></label>
-                        <select name="" id="">
-                            <option value="option1">10L</option>
-                            <option value="option2">10L</option>
-                            <option value="option3">10L</option>
-                            <option value="option4">10L</option>
-                            <option value="option5">10L</option>
+                        <label for="unit">단위</label>
+                        <select name="unit" id="unit">
                         </select>
                     </div>
                     <div class="row">

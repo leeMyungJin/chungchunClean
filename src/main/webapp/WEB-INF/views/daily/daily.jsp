@@ -67,7 +67,14 @@ function loadGridDailyList(type, result){
 			      { binding: 'memo', header: '근태특이사항', isReadOnly: true, width: 300, align:"center" },
 			      { binding: 'siteMntrUrl', header: '현장점검 URL', isReadOnly: true, width: 200, align:"center" },
 			      { binding: 'dmemo', header: '점검특이사항', isReadOnly: true, width: 300, align:"center" },
-			      { binding: 'etcmemo', header: '사용소모품내역', isReadOnly: true, width: 300, align:"center" },
+			      { binding: 'etcmemo', header: '종량제 및 음식물칩', isReadOnly: true, width: 300, align:"center",
+                      cellTemplate: wijmo.grid.cellmaker.CellMaker.makeButton({
+                          text: '<b>보기</b>',
+                          click: (e, ctx) => {
+                              showPop('show_history');
+                          }
+                      })
+                  },
 			      { binding: 'postLocNm', header: '근태위치', isReadOnly: true, width: 200, align:"center" }
 			];
 		  
@@ -182,6 +189,27 @@ function copyUrl(){
 	}
 }
 
+//팝업 오픈
+function showPop(pop){
+    if(pop == "show_history"){
+        history_form.manager.value = dailyView.items[dailyView._idx].bldgNm;
+        history_form.location.value = dailyView.items[dailyView._idx].clientNm;
+        history_form.building.value = dailyView.items[dailyView._idx].clientNm;
+        history_form.address.value = dailyView.items[dailyView._idx].clientNm;
+    }
+
+    $('#'+pop).addClass('is-visible');
+
+}
+
+//팝업 종료
+function closePop(){
+    $('.popup').removeClass('is-visible');
+    // add = false;
+    // categoryGrid.allowAddNew = add;
+    // categorySelectCnt = 0;
+}
+
 </script>
 
 <body onload="pageLoad()">
@@ -268,7 +296,7 @@ function copyUrl(){
     </div>
 	<!-- 220322 팝업 추가  -->
 	<!-- 팝업 : 소모품 사용내역 -->
-    <div class="popup" id="add_product">
+    <div class="popup" id="show_history">
         <div class="popup_container"> 
             <div class="popup_head">
                 <p class="popup_title">소모품 사용내역</p>
@@ -276,20 +304,20 @@ function copyUrl(){
             </div>
             <div class="popup_inner">
                 <dfn>필수항목 *</dfn>
-                <form action="#" method="post" onsubmit="return false;">
+                <form id="history_form" name="history_form" action="#" method="post" onsubmit="return false;">
                     <div class="row">
-                        <label for="product">담당자</label>
-                        <input type="text" id="product" name="product" required readonly>
+                        <label for="manager">담당자</label>
+                        <input type="text" id="manager" name="manager" required readonly>
                     </div>
 					<div class="row">
-                        <label for="product">지역</label>
-                        <input type="text" id="product" name="product" required readonly>
-						<label for="product" style="margin-left:12px;">건물명</label>
-                        <input type="text" id="product" name="product" required readonly>
+                        <label for="location">지역</label>
+                        <input type="text" id="location" name="location" required readonly>
+						<label for="building" style="margin-left:12px;">건물명</label>
+                        <input type="text" id="building" name="building" required readonly>
                     </div>
 					<div class="row">
-                        <label for="product">상세주소</label>
-                        <input type="text" id="product" name="product" style="width:417px" required readonly>
+                        <label for="address">상세주소</label>
+                        <input type="text" id="address" name="address" style="width:417px" required readonly>
                     </div>
                 </form>
 				<!-- grid -->

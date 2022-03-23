@@ -12,10 +12,11 @@ import org.apache.ibatis.annotations.Mapper;
 public interface StockMapper  {
 	public List<StockVo> getStockList(HashMap<String, Object> params);
 	public List<StockVo> getCategoryList();
-    public List<StockVo> getUnitList();
+    public List<StockVo> getUnitList(String lCategyCd);
 	public void deleteCategory(StockVo params); 
 	public void saveCategory(StockVo params);
     public void saveUnit(StockVo params);
+    public void deleteUnit(StockVo params);
     public List<StockVo> getLCategoryList();
 	public List<StockVo> getMCategoryList();
     public String dupCheckItem(HashMap<String, String> params);

@@ -67,6 +67,7 @@ function loadGridStockList(type, result){
                 { binding: 'lCategyCd', header: '카테고리코드', isReadOnly: true, visible: false, width: 200, align:"center"},
                 { binding: 'lCategyNm', header: '카테고리명', isReadOnly: true, width: 230, align:"center"},
                 { binding: 'itemNm', header: '물품명', isReadOnly: true, width: '*', align:"center"  },
+                { binding: 'unit', header: '단위', isReadOnly: true, width: 80, align:"center"  },
                 { binding: 'itemCd', header: '코드번호', isReadOnly: true, width: 200, align:"center"},
                 { binding: 'cost', header: '원가', isReadOnly: true, width: 200, align:"center", aggregate: 'Sum', allowMerging: false},
                 { binding: 'quantity', header: '재고수량', isReadOnly: true, width: 200, align:"center", aggregate: 'Sum', allowMerging: false},

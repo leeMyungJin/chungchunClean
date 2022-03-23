@@ -26,6 +26,7 @@ public class StockVo {
 	private String cretNm; 				//등록자명
 	private String activeYn;			//입출이력 수정가능여부
 
+	private String unitCd; 			//단위 시퀀스
 	private String unit;                 //단위
 	
 	public String getlCategyCd() {
@@ -159,6 +160,12 @@ public class StockVo {
 	}
 	public void setUpdtNm(String updtNm) {
 		this.updtNm = updtNm;
+	}
+	public String getUnitCd() {
+		return unitCd;
+	}
+	public void setUnitCd(String unitCd) {
+		this.unitCd = unitCd;
 	}
 	public String getUnit() {
 		return unit;

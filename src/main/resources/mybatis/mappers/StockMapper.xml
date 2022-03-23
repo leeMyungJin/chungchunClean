@@ -12,6 +12,7 @@
 		ctg_dtl.qr_url,
 		ctg_dtl.cost,
 		ctg_dtl.quantity,
+	    ctg_dtl.unit,
 		case when ctg_dtl.quantity > 10 then 'O'
 		     else 'X' end as status,
 		ctg_dtl.cost * ctg_dtl.quantity  as sum
@@ -66,6 +67,7 @@
 
 <select id="getUnitList" resultType="StockVo">
 	SELECT
+	    unit_bas.unit_cd,
 		ctg_bas.l_categy_nm ,
 	    unit_bas.unit,
 		to_char(unit_bas.cret_dt,'yyyy-mm-dd HH24:MI:SS') as cret_dt,
@@ -73,6 +75,10 @@
 	FROM web.unit_bas unit_bas
 	left join web.category_bas ctg_bas
 	on ctg_bas.l_categy_cd = unit_bas.l_categy_cd
+	where 1=1
+	<if test="lCategyCd != null">
+	and unit_bas.l_categy_cd = #{lCategyCd}
+	</if>
 	ORDER BY unit_bas.cret_dt desc
 </select>
 
@@ -100,10 +106,16 @@ UPDATE
 		updt_dt		= now(),
 		updt_id		= #{updtId}
 </insert>
+<delete id="deleteUnit" parameterType="StockVo">
+	DELETE
+	FROM WEB.unit_bas
+	WHERE 1=1
+	  AND unit_cd = #{unitCd}
+</delete>
 <insert id="saveUnit" parameterType="StockVo">
 	INSERT INTO WEB.unit_bas
 		(unit_cd, l_categy_cd, unit, cret_dt, cret_id, updt_dt, updt_id)
-	VALUES ((select coalesce(max(unit_cd)+1,1) from WEB.unit_bas), #{lCategyNm}, #{unit}, now(), #{cretId}, now(), #{updtId})
+	VALUES (#{unitCd}, #{lCategyNm}, #{unit}, now(), #{cretId}, now(), #{updtId})
 		ON CONFLICT(unit_cd) DO
 	UPDATE
 		SET l_categy_cd = #{lCategyNm},
@@ -128,8 +140,8 @@ AND item_cd = #{itemCd}
 
 <insert id="addItem" parameterType="StockVo">
 INSERT INTO WEB.CATEGORY_DTL
-(l_categy_cd,  item_cd, item_nm, cost, cret_dt, cret_id, updt_dt ,updt_id, quantity, qr_url)
-VALUES(#{lCategyCd}, #{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId},0, #{itemCd})	
+(l_categy_cd,  item_cd, item_nm, cost, cret_dt, cret_id, updt_dt ,updt_id, quantity, qr_url, unit)
+VALUES(#{lCategyCd}, #{itemCd}, #{itemNm}, #{cost}::numeric, now(), #{cretId}, now(), #{updtId},0, #{itemCd}, #{unit})
 </insert>
 
 <delete id="deleteItem" parameterType="StockVo">
