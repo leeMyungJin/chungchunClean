@@ -13,6 +13,9 @@ var dailyView;
 var dailyGridPager;
 var dailyGrid;
 var dailyColumns;
+var dailyUseView;
+var dailyUseGrid;
+var dailyUseColumns;
 
 var staffId = "<%=session.getAttribute("staffId")%>";
 
@@ -92,8 +95,39 @@ function loadGridDailyList(type, result){
 	        }; 
 			  
 		   	_setUserGridLayout('dailyLayout', dailyGrid, dailyColumns);
-			  
-	  }else{		  
+
+          dailyUseView = new wijmo.collections.CollectionView(result, {
+              pageSize: 100
+          });
+
+          dailyUseColumns = [
+              { binding: 'lCategyNm', header: '분류', isReadOnly: true, width: 130, align:"center" },
+              { binding: 'offWorkDt', header: '단위', isReadOnly: true, width: 80, align:"center"  },
+              { binding: 'officerNm', header: '단가', isReadOnly: true, width: 150, align:"center" },
+              { binding: 'areaNm', header: '사용수량', isReadOnly: true, width: 80, align:"center", aggregate: 'Sum' },
+              { binding: 'bldgNm', header: '금액', isReadOnly: true, width: 160, align:"center", aggregate: 'Sum' }
+          ];
+
+          dailyUseGrid = new wijmo.grid.FlexGrid('#dailyUseGrid', {
+              autoGenerateColumns: false,
+              alternatingRowStep: 0,
+              columns: dailyUseColumns,
+              itemsSource: dailyUseView
+          });
+
+          dailyUseGrid.itemFormatter = function (panel, r, c, cell) {
+              if (panel.cellType == wijmo.grid.CellType.RowHeader) {
+                  cell.textContent = (r + 1).toString();
+              }
+          };
+      }else if(type == 'dailyUse'){
+          //당일 종량제 및 음식물 칩 사용내역
+          dailyUseView = new wijmo.collections.CollectionView(result, {
+              pageSize: Number($('#monGridPageCount').val())
+              ,groupDescriptions: ['lCategyNm']  //분류로 묶기
+          });
+          dailyUseGrid.itemsSource = dailyUseView;
+      } else{
 		   dailyView = new wijmo.collections.CollectionView(result, {
 		       pageSize: Number($('#dailyGridPageCount').val())
 		   });
@@ -192,10 +226,12 @@ function copyUrl(){
 //팝업 오픈
 function showPop(pop){
     if(pop == "show_history"){
-        history_form.manager.value = dailyView.items[dailyView._idx].bldgNm;
-        history_form.location.value = dailyView.items[dailyView._idx].clientNm;
-        history_form.building.value = dailyView.items[dailyView._idx].clientNm;
-        history_form.address.value = dailyView.items[dailyView._idx].clientNm;
+        history_form.manager.value = dailyView.currentItem.officerNm;
+        history_form.location.value = dailyView.currentItem.areaNm;
+        history_form.building.value = dailyView.currentItem.bldgNm;
+        history_form.address.value = dailyView.currentItem.postLocNm;
+        var cretDt = dailyView.currentItem.cretDt;
+        document.getElementById("dailyUseGridLabel").textContent = cretDt.substring(0,10) + " 사용내역";
     }
 
     $('#'+pop).addClass('is-visible');
@@ -303,7 +339,6 @@ function closePop(){
                 <button type="button" class="popup_close" onClick="closePop();">x</button>
             </div>
             <div class="popup_inner">
-                <dfn>필수항목 *</dfn>
                 <form id="history_form" name="history_form" action="#" method="post" onsubmit="return false;">
                     <div class="row">
                         <label for="manager">담당자</label>
@@ -321,7 +356,13 @@ function closePop(){
                     </div>
                 </form>
 				<!-- grid -->
-				<div>그리드 영역입니다</div>
+				<div class="grid_wrap">
+                    <label for="dailyUseGrid" id="dailyUseGridLabel"></label>
+                    <div id="dailyUseGrid"></div>
+                </div>
+                <div class="grid_wrap" id="monthUseGridLabel">
+                    <div id="monthUseGrid"></div>
+                </div>
             </div>
             </div>
         </div>
