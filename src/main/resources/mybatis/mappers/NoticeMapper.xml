@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chungchunClean.Mappers.NoticeMapper">
+
+	<insert id="saveNewNotice" parameterType="HashMap">
+		INSERT INTO web.notice
+		(index
+		, title
+		, content
+		, active_yn
+		, must_yn
+		, cret_id
+		, cret_dt
+		, updt_id
+		, updt_dt
+		)VALUES(
+		(select coalesce(max(index)+1,1) from web.notice)::integer
+	   ,#{title}
+	   ,#{content}
+	   ,'Y'
+	   ,#{mustYn}
+	   ,#{cretId}
+	   ,NOW()
+	   ,#{cretId}
+	   ,NOW()
+		)
+	</insert>
+
+	<select id="getNoticeMainInfo" resultType="HashMap">
+		select * from
+			 (select count(index)  as totalNotice from web.notice where active_yn = 'Y') a,
+			 (select count(index) as mustNotice from web.notice where active_yn = 'Y' and must_yn ='Y') b
+	</select>
+
+	<select id="getNoticeList" parameterType="hashMap" resultType="NoticeVo">
+		select *
+		from web.notice
+		where 1=1
+		  AND cret_dt::date between #{searchDtFr}::date and #{searchDtTo}::date
+		<if test="subcon != 'all'">
+			AND active_yn = #{subcon}
+		</if>
+		order by cret_dt desc
+	</select>
+
+	<update id="updateNotice" parameterType="HashMap">
+		update web.notice set
+							  title = #{title},
+							  content = #{content},
+							  active_yn = #{activeYn},
+							  must_yn = #{mustYn},
+							  updt_id = #{updtId},
+							  updt_dt = NOW()
+		where 1=1
+		  and index = #{index}::integer
+	</update>
+
+	<delete id="deleteNotice" parameterType="HashMap">
+		delete from web.notice
+		where index = #{index}::integer
+	</delete>
+
+	<select id="getMustNotiList" resultType="NoticeVo">
+		select index,
+			   title,
+			   content,
+			   to_char(cret_dt,'YYYY-MM-DD') as cret_dt
+		from web.notice
+		where 1=1
+		  and must_yn = 'Y'
+		order by index desc
+	</select>
+
+	<select id="getFirstNotiList" resultType="NoticeVo">
+		select index,
+			   title,
+			   content,
+			   to_char(cret_dt,'YYYY-MM-DD') as cret_dt
+		from web.notice
+		where 1=1
+		  and active_yn = 'Y'
+		  and must_yn = 'N'
+		order by index desc
+			limit 20 offset 0
+	</select>
+
+	<select id="getNotice" parameterType="hashMap" resultType="NoticeVo">
+		select index,
+			   title,
+			   content,
+			   to_char(cret_dt,'YYYY-MM-DD') as cret_dt
+		from web.notice
+		where 1=1
+		  and active_yn = 'Y'
+		  and must_yn = 'N'
+		  and index <![CDATA[<=]]> #{lastNo}::Integer -1
+		and index <![CDATA[>]]> #{lastNo}::Integer -1 - 20
+		order by index desc
+	</select>
+	
+</mapper>
